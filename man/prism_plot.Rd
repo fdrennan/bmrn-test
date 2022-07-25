@@ -7,8 +7,8 @@
 prism_plot(
   data,
   tables,
-  trt_sel = input$treatmentPlotSelectors,
-  time_sel = input$timePlotSelectors,
+  trt_sel,
+  time_sel,
   endpoint,
   format,
   cfb,
@@ -20,7 +20,8 @@ prism_plot(
   bottom_height = 4,
   num_groups,
   type = "box",
-  inputs = NULL
+  inputs = NULL,
+  y_axis
 )
 }
 \description{

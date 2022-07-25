@@ -120,7 +120,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       width = 0.5, position = position_dodge(width = 0.7)
     ) +
     geom_errorbar(aes(
-      ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
+      ymin = Mean_Response, ymax = Mean_Response + sd_Response,
       color = Treatment
     ), position = position_dodge(width = 0.7), size = 0.75) +
     geom_point(

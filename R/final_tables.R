@@ -62,7 +62,6 @@ table_1 <- function(final_contrast, os_together, toi) {
 
 #' table_2
 #' @export
-
 table_2 <- function(final_contrast, os_together, toi) {
   # Ensure that the levels are ordered for this table
   # Vehicle versus the doses should be looked at first
@@ -149,7 +148,6 @@ table_2 <- function(final_contrast, os_together, toi) {
 
 #' table_3
 #' @export
-
 table_3 <- function(final_contrast, os_together, toi) {
   # Table 3
   # Needs to be generalized to more than 2 groups

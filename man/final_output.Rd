@@ -11,7 +11,8 @@ final_output(
   final_contrast,
   power,
   variable,
-  save = "No"
+  save = "No",
+  analysis_type
 )
 }
 \description{
