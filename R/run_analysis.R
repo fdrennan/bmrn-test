@@ -247,7 +247,6 @@ run_analysis <- function(analysis_data) {
       summary_stat <- summary_stat %>% inner_join(bt_together)
     }
 
-    source("R/final_tables.R")
     tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat)
     tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat)
     tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat)
