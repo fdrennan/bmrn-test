@@ -12,40 +12,43 @@ prism_plot <- function(data, tables, trt_sel,
                        time_sel, endpoint, format, cfb, power,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
                        top_height = 1, bottom_height = 4, num_groups, type = "box",
-                       inputs = NULL, y_axis) {
-  #browser()
+                       inputs = NULL) {
+  y_axis = inputs$y_axisPrism
   tab1 <- tables[[2]]
   tab2 <- tables[[3]]
   tab3 <- tables[[4]]
-
+  
   trans_name <- transform_table()
-
-
+  
+  
   trans_name <- trans_name$transform_name[which(trans_name$power == power)]
   trans_name <- gsub("A ", "", trans_name)
   trans_name <- gsub("An ", "", trans_name)
-
-  if (power == 1 & !as.logical(cfb)) {
+  
+  if (power == 1 | y_axis == 'no_transform') {
     ylab <- endpoint
+    data <- data %>%
+      mutate(Response_Transformed = Response)
   }
-
-  if (power != 1 & !as.logical(cfb)) {
+  
+  if (y_axis == 'transform') {
     ylab <- paste(trans_name, endpoint)
+    var = 'Response_Transformed'
   }
-
-
-  if (as.logical(cfb) & power == 1) {
+  
+  
+  if (y_axis == 'change_from_baseline' & power == 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
     ylab <- paste0("Change from Baseline \n", endpoint)
   }
-
-  if (as.logical(cfb) & power != 1) {
+  
+  if (y_axis == 'change_from_baseline' & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
     ylab <- paste0(trans_name, "\n Change from Baseline ", endpoint)
   }
-
+  
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
     select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
     mutate_at(.vars = 3:ncol(.), .funs = ~ as.character(.)) %>%
@@ -92,15 +95,15 @@ prism_plot <- function(data, tables, trt_sel,
       group1 %in% trt_sel,
       group2 %in% trt_sel
     )
-
-
+  
+  
   
   correct_level_order <- data %>%
     arrange(TreatmentNew) %>%
     distinct(Treatment, TreatmentNew) %>%
     dplyr::select(Treatment) %>%
     unlist()
-
+  
   data <- data %>%
     filter(Time == time_sel) %>%
     group_by(Treatment) %>%
@@ -109,7 +112,7 @@ prism_plot <- function(data, tables, trt_sel,
       Treatment = factor(Treatment, levels = correct_level_order)
     ) %>%
     ungroup()
-
+  
   if (type == "box") {
     full_prism <- ggplot(
       data %>% rename(group1 = Treatment),
@@ -157,7 +160,7 @@ prism_plot <- function(data, tables, trt_sel,
         sd_Response = sd(Response_Transformed)
       ) %>%
       rename(Response_Transformed = Mean_Response)
-
+    
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
       aes(x = group1, y = Response_Transformed, color = group1)
@@ -196,7 +199,7 @@ prism_plot <- function(data, tables, trt_sel,
       ylab(ylab) +
       xlab("Treatment")
   }
-
+  
   bottom <- full_prism +
     scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
     theme(plot.margin = margin(
@@ -211,8 +214,9 @@ prism_plot <- function(data, tables, trt_sel,
       axis.title = element_text(size = 10)
     )
   }
-
-  if (nrow(p_vals) > 0) {
+  
+  if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == 'change_from_baseline')|
+                          (as.logical(cfb) != TRUE & y_axis != 'change_from_baseline'))) {
     full_prism <- full_prism + add_pvalue(
       p_vals,
       label = "{sig}",
@@ -221,8 +225,8 @@ prism_plot <- function(data, tables, trt_sel,
       color = "black",
       size = 2
     )
-
-
+    
+    
     top <- full_prism +
       scale_y_continuous(limits = c(
         1.1 * max(data$Response_Transformed),

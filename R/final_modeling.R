@@ -13,7 +13,7 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
   )
 
   if(analysis_type == 'Exploratory'){
-   output_tables = map(.x = setNames(levels(transformed_data$Time),levels(transformed_data$Time)),
+   output_tables = future_map(.x = setNames(levels(transformed_data$Time),levels(transformed_data$Time)),
         .f =~{
           .x = unname(.x)
   contrast_list <- generate_contrasts(
