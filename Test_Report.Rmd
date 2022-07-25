@@ -1,0 +1,476 @@
+---
+title: "Statistical Report for Treatment Evaluation"
+author: Treatment Evaluation Statistical Tool, TEST 1
+output: 
+  bookdown::word_document2:
+    reference_docx: word_style.docx
+    toc: yes
+    number_sections: true
+bibliography: bib.bib
+biblio-style: apalike
+link-citations: yes
+date: "`r format(Sys.Date(), '%m/%d/%Y')`"
+params:
+  # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
+  uuid: '2e1048ec-079b-4fb7-98b5-23139c892f32'
+---
+
+```{r setup, include=FALSE}
+#key: '6650608c-7988-4f2e-9da7-b46e41b64584-final' positive control and log transformation
+#key: 'f031f88e-6d9a-4fca-a7ab-05d8aba6df8e-final' no transformation
+#key: 'd24fad66-e6a3-4cf6-ba61-beae48eef1e1-final' saving user inputs (name, consulting statis, etc)
+knitr::opts_chunk$set(echo = FALSE,
+                      dpi = 300,
+                      message = FALSE)
+library(test)
+# source('R/final_model.R')
+```
+
+```{r grab-the-data,echo=FALSE}
+st <- storr_rds("storr")
+# # Treatment
+# con <- connect_table()
+# sessions <- tbl(con, 'sessions') %>%
+#   arrange(desc(timestamp)) %>%
+#   head(1)
+key <- paste0(params$uuid,'-final')
+prismInputs <- paste0(params$uuid, '-prism')
+print(params$uuid)
+data <- st$get(key)
+prismInputs <- st$get(
+  prismInputs
+)
+
+trans_name <- transform_table() %>%
+        filter(power == data$plot$data$box_cox) %>%
+        select(transform_name) %>%
+        unlist() %>%
+        unname()
+
+groups_diff =  distinct(data$pre_modeling_input$transformed_data,Treatment,diff_group) %>% 
+   filter(diff_group != 'Pooled') %>% 
+   select(Treatment) %>% 
+   unlist() %>%
+   as.character()
+
+if(length(groups_diff) > 2){
+  groups_diff[length(groups_diff)] = paste('and', groups_diff[length(groups_diff)])
+  groups_diff[1:(length(groups_diff)-1)] = paste0(groups_diff[1:(length(groups_diff)-1)], ',')
+}
+
+if(length(groups_diff) == 2){
+  groups_diff[length(groups_diff)] = paste('and', groups_diff[length(groups_diff)])
+}
+
+toi = data$tables$tables$tab1$`Times Included`[!grepl('Average',data$tables$tables$tab1$`Times Included`)][1]
+
+var = data$pre_modeling_input$variable
+
+model_transformed = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = var)
+
+model_original = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = 'Response')
+
+
+data_check = data$plot$data %>% cbind.data.frame(resid_transformed = residuals(model_transformed),
+                                                 resid_orig = residuals(model_original))
+
+assumption.cap = 'Histogram (top) and Q-Q plots (bottom) to assess the normality of the residuals'
+
+
+scale = data$plot$ui_selections$y_axis
+
+if(scale == 'transform' & data$plot$data$box_cox != 1){
+  scale = 'Transformed Scale'
+}
+
+
+if(scale == "no_transform" | (scale == 'transform' & data$plot$data$box_cox == 1)){
+  scale = 'Orignal Scale'
+}
+
+if(scale == "change_from_baseline"){
+  scale = 'Change from Baseline'
+}
+```
+
+# TEST Session Summary 
+
+```{r test-session-summary, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, fig.width=9, fig.height=2}
+session_info = data$input_data$session_data %>% 
+  dplyr::select(-description ) %>%
+  t %>% data.frame(col2 = .) %>% 
+  tibble::rownames_to_column('col1') %>%
+  mutate(col1 = gsub('_', ' ', col1),
+         col1 = str_to_title(col1))
+
+session_info %>% flextable() %>% 
+  delete_part(part = "header") %>% 
+  theme_box() %>% 
+  width(width = 4) %>%
+  fontsize(size = 8) %>%
+  align(align = "center", part = "all")
+
+```
+
+# Study Background and Objectives
+
+`r data$input_data$session_data$description`
+
+# Statistical Methods
+
+## Overview 
+
+In a typical study supported by TEST 1, data is collected over time, and the primary interest is to evaluate a treatment in multiple doses. The study typically includes two types of subjects, wild type and non-wild type, and several controls, such as vehicle, negative control, positive control and other comparators. We will denote the Wild Type animals as the Wild Type group and the non-Wild Type groups as vehicle, negative control, positive control, other comparators, and the treatments as doses. Based on the study design and known study objective, TEST 1 defines a set of group comparisons to be evaluated statistically.  
+
+TEST 1 implements an algorithm that carries out a multiple-step analysis for statistical comparisons of groups.  The statistical comparisons are conducted through mixed effect repeated measure modeling. TEST 1 is designed to automatically determine the best data transformation, check model assumptions (such as normality and homogeneous variance) and the appropriate correlation structure for the repeated measures (data across time points). In addition, TEST 1 generates linear contrasts and carries out multiple testing adjustment for the pre-defined tests. 
+
+Explanations of these key steps are described below, and the workflow of TEST 1 is described in appendix (section 6).
+
+## Basic Model
+
+We define the basic model as a model that only considers the vehicle and treatment groups. These groups will be used to determine if a transformation is needed and which transformation is most appropriate. If the normality and homogeneous variance assumptions are not met in the basic model then further assistance is required and the consulting statistician will be contacted. The treatment and vehicle groups are used to remove the risk of contamination from the controls or wild type groups.     
+
+## Mixed Effects Modeling
+
+TEST 1 uses mixed effects models to evaluate statistical differences between multiple experimental (treatment) groups across multiple times points. The model evaluates factors including treatment, time, and the interaction between treatment and time. In addition, TEST 1 determines the appropriate correlation structure to account for the correlation between different time points. Some common correlation structures in consideration include auto-regressive (AR1) correlation structure which assumes that the correlation between time points decays at an exponential rate, compound symmetry (CS) correlation structure assumes that the correlation between time points is constant between any given two time points, and unstructured is the most flexible and has no constraints. 
+
+In TEST 1, we also allow mixed effects models can  use different variance/covariance structure for each group separately as needed.
+
+## Normality Assumption and Transformation
+
+A Shapiro-Wilk test is conducted to determine if the residuals from a linear model with a treatment, time, and treatment and time interaction term are normally distributed. The Shapiro Wilks test assumes that the residuals are normally distributed and looks for evidence for non-normality. If the Shapiro-Wilk test is rejected (there is enough evidence that the residuals do not follow a normal distribution), then a Box-Cox transformation is conducted to suggest an appropriate transformation. Note that the Shapiro Wilks test is rejected if the p-value is less than 0.05. Then the Shapiro-Wilk test is repeated on the residuals of the transformation to confirm that the residuals of the transformed data follow a normal distribution. If the Shapiro-Wilk test is rejected, then we recommend further discussion with a statistician as a transformation did not make data follow the normality assumption.
+
+In experiments that have technical replication, all of the data will be used to check the normality assumption and subsequently determine the most appropriate Box-Cox transformation (treating technical replicates as independent). After this step, the technical replicates will be averaged at each time point for each subject. The resulting dataset will be used for all of the remaining analysis steps.
+
+## Checking for Similar Variance between Groups
+
+### Basic Model
+
+For this application, we require that the variance for each of the groups in the basic model to be similar. To verify this assumption, first the variance is determined for each group and at each time point, and then averaged across the time points. In addition, a likelihood ratio test (LRT) is conducted between a model that estimates one common variance and a model that estimates an individual variance for each group. In this case, LRT helps determines if a more complex model fits the data significantly better than a less complex model. Thus, a significant (p-value < 0.05) LRT provides evidence that it would be beneficial to model the variances of the groups separately. The variance between groups will be considered different if one the following two conditions are met:
+
+1. If the p-value from the LRT is less than 0.05 (statistically significant) and the fold change between any group and the common variance is greater than 2, or
+
+2. If the p-value from the LRT is greater than 0.05 (not statistically significant) and the fold change between any group and the common variance is greater than 3.
+
+If the variance between groups are determined to be different, then no further analysis will be conducted  and the consulting statistician will be contacted. Otherwise, the application will move forward to the next modeling step.
+
+### Controls and Wild Type
+
+Once the variance for groups within basic model is determined to be similar, then a similar procedure is followed as above. A LRT is conducted for a model that has one common variance and a model with a common variance for the groups in the basic model and a different variance for the controls and wild type. A similar set of criteria as above to determine if a group has a different variance than the basic model:
+
+1. If the p-value from the LRT is less than 0.05 and the fold change between any group and the of the basic model is greater than 2, or
+
+2. If the p-value from the LRT is greater than 0.05 and the fold change between any group and variance of the basic model is greater than 3.
+
+If a group is determined to have a difference variance than the basic model then a estimation of the variance/covariance will be separate from the basic model. Otherwise, the application will move forward to fit the final mixed model with one single common variance component.
+
+
+## Selection of Correlation Sturcture
+
+The Akaike Information Criterion (AIC) is used to select the covariance structure that is most appropriate. The AIC strikes a balance between model complexity (number of parameters) and quality of the model fit (LRT). The candidate covariance structures are AR1 (ARH1), CS (CSH), Toeplitz (TOEP), and unstructured (UN) where the AR1 and CS are simplistic structures (only estimates one additional parameter) while UN correlation structure is the most complex (requires the estimation of $t*(t-1)/2$ additional parameters where $t$ is the number of time points). AR1H and CSH covariance structure allows for each time point to have a different variance.  
+
+## Comparison between Experimental Groups
+
+In this type of studies, there could be nine group comparisons:
+
+```{r, echo = F, fig.cap='List of the 9 combinations of experimental groups and their interpretation.'}
+contrasts =  data.frame(
+    Label = LETTERS[1:9],
+    Group_1 = c(
+      "Wild Type",
+      "Positive Control",
+      "Wild Type",
+      "Vehicle",
+      "Wild Type",
+      "Positive Control",
+      "Each Dose",
+      "Negative Control",
+      "Negative Control"
+    ),
+    Group_2 = c(
+      "Vehicle",
+      "Vehicle",
+      "Each Dose",
+      "Each Dose",
+      "Positive Control",
+      "Each Dose",
+      "Every Other Dose",
+      "Vehicle",
+      "Each Dose"
+    ),
+    `Purpose of Comparison` = c('Verify Disease Model.',
+                    'Verify the experiment.',
+                    'Can any doses reverse the disease?',
+                    'Are any treatments effective?',
+                    'Does Positive Control reverse disease?',
+                    'Which doses are similar to Positive Control?',
+                    'Do doses differ from each other?',
+                    'Rule out matrix effect.',
+                    'If H is rejected, then show Negative Control is not as good as treatment.'),
+  check.names = FALSE) %>%
+  mutate(Comparison = paste(Group_1, 'vs.', Group_2))
+
+contrasts_display = contrasts %>%  select(Label, Comparison,`Purpose of Comparison`)
+
+contrasts_ft <- flextable(contrasts_display)
+contrasts_ft <- width(contrasts_ft, width = c(0.75,3, 3))
+contrasts_ft = fontsize(contrasts_ft, size = 9, part = 'header')
+contrasts_ft = fontsize(contrasts_ft, size = 8)
+contrasts_ft
+    
+```
+
+## Multiple Hypothesis Testing
+
+Multiple comparisons arise when a statistical analysis involves multiple simultaneous statistical tests, each of which has a potential to produce a discovery. A stated confidence level generally applies only to each test considered individually, but often it is desirable to have a confidence level for the whole family of simultaneous tests. Controlling the overall Type 1 error rate, as opposed to the Type 1 error rate of each individual test, allows us to avoid rejecting a comparison simply due to random error. For instance, if 100 comparisons were conducted each with 5\% Type I error rate, we would expect 5 results to be false positives. P-value adjustment allows us to control the probability of obtaining at least one false positive in a family of tests.
+
+For each one the comparison groups described above, linear contrasts are constructed to allow for simultaneous testing of the groups, as wells as testing the groups at the pre-selected time point and over time course average. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] 
+
+For comparisons between doses, and doses and control there are multiple tests. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] There will be no p-value adjustments for the comparision between controls. 
+
+## Change from Baseline Analysis
+
+The user will be allowed to select whether the raw/transformed values are to be analysed or to analysis the change of each observation from a subject's baseline measurement. The normality check and Box-Cox transformation will be conducted ignoring the baseline, then the change from baseline will be the response studied for the remainder of the analysis. 
+
+## Software
+
+TEST 1 was developed using the R statistical software [@Rbase]. The nlme::gls [@nlme] (this syntax means) [function library]::[specific function]) was used to construct the mixed effects models, and then the emmeans::emmeans function [@emmeans] was used to compute the group and pairwise comparison summary statistics, as well as, adjust the p-values for multiple comparisons. R Shiny [@shiny] was used to generate the web tool and this reported was generated using RMarkdown [@rmarkdown]. The interactive plots within the web application were generated using the  plotly::ggplotly function which converts a plot from ggplot2 [@ggplot2] to plotly [@plotly]. The prism-style plots were generated using the ggprism[@ggprism] package which is an extension to the ggplot2 package.
+ 
+# Results
+
+## Assumptions and Correlation Structure Results
+
+`r paste(trans_name,'was applied to the data.')` of the data was determined by the algorithm. 
+
+`r paste(if_else(substr(data$pre_modeling_input$best_model,1,1) == 'A', 'An', 'A'), data$pre_modeling_input$best_model)` was determined by the algorithm.
+
+`r ifelse(length(groups_diff) == 0, 
+'All groups have similar variance ',
+paste(paste(groups_diff, collapse = ''), 
+'had a different variance from the basic model.'))`
+
+## `r ifelse(trans_name != "No transformation", "Graphical Summary of Residuals Before and After Transformation", "Graphical Summary of Residuals (No tranformation was needed")`
+
+```{r, fig.width=9, fig.height=5, fig.cap=assumption.cap}
+
+if(trans_name != "No transformation"){
+new_trans = ifelse(grepl('An' ,trans_name), gsub('An ', "", trans_name),
+                   gsub('A ', "", trans_name))
+
+ggarrange(plotlist = list(
+   ggplot(data = data_check, aes(x = resid_orig)) + 
+    geom_histogram(color = 'white') + theme_bw() + 
+    ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
+    theme(plot.title = element_text(size = 10)),
+  ggplot(data = data_check, aes(x = resid_transformed)) + 
+    geom_histogram(color = 'white') + theme_bw() + 
+    ggtitle(paste('Histogram of the Residuals from', new_trans, data$plot$endpoint)) +
+    theme(plot.title = element_text(size = 10)),
+  ggplot(data = data_check, aes(sample = resid_orig)) + 
+    stat_qq() + stat_qq_line() + theme_bw() + 
+    ggtitle(paste('Q-Q plot from', data$plot$endpoint)) +
+    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
+    theme(plot.title = element_text(size = 10)),
+  ggplot(data = data_check, aes(sample = resid_transformed)) + 
+    stat_qq() + stat_qq_line() + theme_bw() +  
+    ggtitle(paste('Q-Q plot from', new_trans, data$plot$endpoint)) +
+    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
+    theme(plot.title = element_text(size = 10)))
+  )
+}else{
+  ggarrange(plotlist = list(
+   ggplot(data = data_check, aes(x = resid_orig)) + 
+    geom_histogram(color = 'white') + theme_bw() + 
+    ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
+    theme(plot.title = element_text(size = 10)),
+  ggplot(data = data_check, aes(sample = resid_orig)) + 
+    stat_qq() + stat_qq_line() + theme_bw() + 
+    ggtitle(paste('Q-Q plot from', data$plot$endpoint)) +
+    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
+    theme(plot.title = element_text(size = 10))))
+}
+
+```
+
+
+## Plots 
+
+```{r, echo = F, error=F, warning=FALSE}
+pdata <- data$plot$data
+
+test_plot_theme_word <- function(x) {
+  
+    theme(plot.title = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
+        axis.text.y = element_text(size = 8),
+        strip.text = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+}
+
+# transformed_data = data$plot$data$transformed_data %>%
+#   filter(Time %in% data$plot$ui_selections$time_sel,
+#          Treatment %in% data$plot$ui_selections$trt_sel)
+
+plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE)
+
+boxplot_caption = paste0("Box plot for each group and time.")
+
+barplot_caption = paste0("Bar plot for each group and time.")
+
+
+line_caption = paste0("Group level trajectory across time where the line corresponds to the group average of ", scale, '. The vertical bars are standard error bars for each group at each time point.')
+
+
+trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
+
+prism_caption = paste0('Boxplot of ', scale, ' response values at ', toi, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+
+
+```
+
+```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=boxplot_caption}
+plots[[1]] + test_plot_theme_word()
+
+```
+
+```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap = line_caption}
+plots[[2]] +
+  test_plot_theme_word() +
+    theme(
+        legend.position = 'bottom')
+```
+
+
+```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=barplot_caption}
+plots[[3]] +
+  test_plot_theme_word() +
+    theme(
+        legend.position = 'bottom')
+
+```
+
+
+```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=trajectory_caption}
+
+plots[[4]] +
+  test_plot_theme_word() +
+    theme(
+        legend.position = 'bottom')
+
+
+```
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption, eval=FALSE}
+# source('R/prism_plot.R')
+transformed_data = data$plot$data$transformed_data
+prismInputs$palette = 'black_and_white'
+prismInputs$border = TRUE
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  prismInputs$timePlotSelectors,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'bar', 
+                   inputs=prismInputs) 
+prism
+```
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption, eval=FALSE}
+# source('R/prism_plot.R')
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  prismInputs$timePlotSelectors,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'box', 
+                   inputs=prismInputs) 
+prism
+```
+
+## Tables
+
+```{r , echo=FALSE, error=F, warning=FALSE}
+transform = data$tables$power != 1
+show_text <- transform
+footer <- if_else(!show_text,
+        "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
+        paste(trans_name, "transformation was applied to the data.  Difference and CI are estimated using model based LSmean")
+      )
+
+endpoint <- if_else(!show_text,
+        data$plot$endpoint,
+        paste(substr(x = trans_name, start = 3, stop = nchar(trans_name)), data$plot$endpoint)
+      )
+```
+
+`r if(!show_text) {"\\begin{comment}"}`
+
+### `r ifelse(show_text, 'Table 1\n   ',"")`
+
+<br>
+```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
+# source('R/word_tables.R')
+tab0 = data$tables$tables$tab0
+word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
+            footer = 'Group level summary on the original scale.') %>%
+  width(x = ., width = 1) 
+```
+
+\newpage
+
+`r if(!show_text) {"\\end{comment}"}`
+
+### `r ifelse(show_text, 'Table 2\n', 'Table 1\n')`
+
+<br>
+```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
+tab1 = data$tables$tables$tab1
+word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
+            footer = footer)  %>%
+  width(x = ., width = 1) 
+```
+
+\newpage
+
+### `r ifelse(show_text, 'Table 3\n', 'Table 2\n')`
+
+<br>
+```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
+tab2 = data$tables$tables$tab2
+
+word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
+            footer = footer) %>%
+  width(x = ., width = 0.75) 
+```
+\newpage
+
+### `r ifelse(show_text, 'Table 4\n', 'Table 3\n')`
+
+<br>
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
+tab3 = data$tables$tables$tab3
+
+word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
+            footer = footer) %>%
+  width(x = ., width = 1) 
+
+```
+
+# References
+
+<div id="refs"></div>
+
+\newpage
+
+# Appendix: Workflow Illustration
+
+![](TEST_workflow.PNG)
+
