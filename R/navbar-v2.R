@@ -6,30 +6,26 @@ ui_navbar <- function(id = "navbar", navbarId = "navbarNav") {
   id <- ns("navbarNav")
   id_hash <- paste0("#", id)
   div(
-    class = "d-flex justify-content-between align-items-center p-3",
+    class = "d-flex justify-content-between align-items-center m-2 p-2",
     actionButton(style='height: 100px',
       inputId = ns("goHome"),
-      # class = "btn btn-default action-button",
+      class = "p-1",
       label = div(
-        style = "width: 100px; height: 100px; filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
-        imageOutput(ns("svgIcon"), height='100px')
+        style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
+        imageOutput(ns("svgIcon"), height='90px')
       )
     ),
     div(
       div(
-        class = "d-flex justify-content-start",
-        h1("Treatment", class = "underline-first-letter p-2"),
-        h1("Evaluation", class = "underline-first-letter p-2"),
-        h1("Statistical", class = "underline-first-letter p-2"),
-        h1("Tools", class = "underline-first-letter p-2"),
-        class = "font-weight-bold px-3"
-      ),
-      div(
-        class = "d-flex justify-content-start",
-        h1("for", class = " p-2"),
-        h1("Research", class = "p-2"),
-        h1("Experiments", class = "p-2"),
-        class = "font-weight-bold px-3"
+        class = "d-flex justify-content-start align-items-center",
+        h2("Treatment", class = "underline-first-letter p-2"),
+        h2("Evaluation", class = "underline-first-letter p-2"),
+        h2("Statistical", class = "underline-first-letter p-2"),
+        h2("Tools", class = "underline-first-letter p-2"),
+        h2("for", class = " p-2"),
+        h2("Research", class = "p-2"),
+        h2("Experiments", class = "p-2"),
+        class = "font-weight-bold p-1"
       )
     )
   )
@@ -44,20 +40,11 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       ns <- session$ns
       output$svgIcon <- renderImage(
         {
-          width <- session$clientData$output_plot_width
-          height <- session$clientData$output_plot_height
-          mysvgwidth <- width / 96
-          mysvgheight <- height / 96
-          
-          # A temp file to save the output.
-          print(height)
-          print(width)
-          # Return a list containing the filename
           list(
             src = normalizePath("test_logo.svg"),
             contentType = "image/svg+xml",
-            width = width,
-            height = height
+            width = 100,
+            height = 100
           )
         },
         deleteFile = FALSE

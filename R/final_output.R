@@ -3,7 +3,7 @@
 
 
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
-                         variable, save = "No", analysis_type) {
+                         variable, save = "No") {
   final_contrast <- final_contrast %>%
     mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
@@ -22,7 +22,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
         mean = mean(Response),
         median = median(Response)
       ), .)
-  # Specific Time point
+  # Specific Time pointQ
 
   # Need to make sure that toi matches above
   ST_os <- transformed_data %>%
@@ -129,16 +129,10 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     data.frame() %>%
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
-
-  if (analysis_type == "Exploratory") {
-    summary_stat <- summary_stat %>% filter(Endpoint == "Specific Time")
-  }
-
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   empty_col <- tab1 %>% apply(2, function(a) sum(is.na(a)))
-
   tab1 <- tab1[, which(empty_col < nrow(tab1))] %>%
     rename(
       Treatment = TreatmentNew,
@@ -187,8 +181,8 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
 #' html_tables
 #' @export
 html_tables <- function(transformed_data, tab_list) {
-  #TODO sort the times only for exploratory
   trt_map <- distinct(transformed_data, Treatment, TreatmentNew)
+
   tab1 <- tab_list$tab1
   tab1 <- tab1[, which(apply(tab1, 2, function(a) !all(a == "")))]
   tab1 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
@@ -402,6 +396,7 @@ column_labels <- function(df_gt, column, label) {
 
 #' html_table_gt
 #' @export
+
 html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
@@ -412,6 +407,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
   if(analysis_type == 'Exploratory'){
     data = data %>% arrange(`Times Included`)
   }
+
   if (summary_only & transformation) {
     table_gt <- data %>%
       gt() %>%
@@ -456,15 +452,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) %>%
-          column_labels(., col1, "LSMEAN Difference (95% CI)") %>%
+          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
           fmt_markdown(columns = everything()) %>%
           column_labels(., col2, "p value") %>%
           cols_align(
             align = "center",
             columns = everything()
-          ) %>%
-          cols_width(
-            starts_with("Difference") ~ px(175)
           )
       }
     } else {
@@ -481,6 +474,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         tab_source_note(source_note = footer)
 
 
+
       if (transformation) {
         table_gt <- table_gt %>%
           tab_spanner(
@@ -490,15 +484,13 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           cols_label(
             `Transformed Scale Mean` = "Mean",
             `Transformed Scale SE` = "SE"
-          ) %>%
-          tab_spanner(
-            label = "Back Transformed",
-            columns = grep("Back Transformed", colnames(data), value = TRUE)
-          ) %>%
-          cols_label(
-            `Back Transformed Mean` = "Mean",
-            `Back Transformed SE` = "SE"
           )
+        # tab_spanner(
+        #   label = "Back Transform",
+        #   columns = grep('Back Transformed', colnames(data), value = TRUE)) %>%
+        # cols_label(
+        #   `Back Transformed Mean` = "Mean",
+        #   `Back Transformed SE` = "SE")
       } else {
         table_gt <- table_gt %>%
           tab_spanner(
@@ -525,15 +517,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) %>%
-          column_labels(., col1, "LSMEAN Difference (95% CI)") %>%
+          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
           fmt_markdown(columns = everything()) %>%
           column_labels(., col2, "p value") %>%
           cols_align(
             align = "center",
             columns = everything()
-          ) %>%
-          cols_width(
-            starts_with("Difference") ~ px(175),
           )
       }
     }
