@@ -34,8 +34,7 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
           model = final_model,
           contrast_list = contrast_list,
           data = transformed_data,
-          variable = var,
-          analysis_type = "Exploratory"
+          variable = var
         )
        
         output_tables <- final_output(
