@@ -5,7 +5,7 @@ library(test)
 # logo
 # Summer1$
 
-
+devtools::load_all()
 plan(multiprocess)
 options('test_version'='Version 1.11')
 if (isTRUE(getOption('production'))) {
