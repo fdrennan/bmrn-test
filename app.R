@@ -1,5 +1,4 @@
 library(test)
-# Notes
 # if exploratory drop out time, and use last date
 # Select timepoints to be included in table (table output selector)
 # run today
@@ -8,7 +7,7 @@ library(test)
 
 
 plan(multiprocess)
-options('test_version'='1.11')
+options('test_version'='Version 1.11')
 if (isTRUE(getOption('production'))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
