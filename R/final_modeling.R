@@ -44,8 +44,7 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
           emmeans_obj = contrasts_stats$emmeans_obj,
           final_contrast = contrasts_stats$final_contrast,
           power = power,
-          variable = var,
-          analysis_type = "Exploratory"
+          variable = var
         )
       }
     )
@@ -78,8 +77,7 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
       emmeans_obj = contrasts_stats$emmeans_obj,
       final_contrast = contrasts_stats$final_contrast,
       power = power,
-      variable = var,
-      analysis_type = "Confirmatory"
+      variable = var
     )
   }
   return(output_tables)
