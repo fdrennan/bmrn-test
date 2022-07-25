@@ -351,25 +351,25 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab0, title = "Table 1: Summary Statistics for Original Scale",
-              footer = "", include_summary = F, summary_only = T, transformation = T
+              footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type
             )
           ),
           list(
             table = html_table_gt(
               data = tables$tab1, title = "Table 2: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = T
+              footer = footer, include_summary = T, summary_only = F, transformation = , analysis_type = analysis_type
             )
           ),
           list(
             table = html_table_gt(
               data = tables$tab2, title = "Table 3: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = T
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
             )
           ),
           list(
             table = html_table_gt(
               data = tables$tab3, title = "Table 4: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = T
+              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type
             )
           )
         )
@@ -378,19 +378,19 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab1, title = "Table 1: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = F
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
             )
           ),
           list(
             table = html_table_gt(
               data = tables$tab2, title = " Table 2: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = F
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
             )
           ),
           list(
             table = html_table_gt(
               data = tables$tab3, title = "Table 3: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = F
+              footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type
             )
           )
         )
