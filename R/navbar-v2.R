@@ -27,11 +27,6 @@ ui_navbar <- function(id = "navbar", navbarId = "navbarNav") {
         h2("Experiments", class = "p-2"),
         class = "font-weight-bold p-1"
       )
-      # div(
-      #   class = "d-flex justify-content-start",
-      #   ,
-      #   class = "font-weight-bold px-3"
-      # )
     )
   )
 }
