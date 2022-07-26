@@ -289,7 +289,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         dplyr::select(Treatment, `Times Included`, grep("Original", colnames(.)))
       if(analysis_type == "Exploratory"){
         tables$tab0 = tables$tab0 %>%
-          arrange(`Times Included`)
+          arrange(Treatment, `Times Included`)
       }
       list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
     }
@@ -357,7 +357,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab1, title = "Table 2: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = , analysis_type = analysis_type
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
             )
           ),
           list(
