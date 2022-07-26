@@ -162,19 +162,6 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
-
-  wb <- createWorkbook()
-  addWorksheet(wb = wb, sheetName = "Table 1")
-  addWorksheet(wb = wb, sheetName = "Table 2")
-  addWorksheet(wb = wb, sheetName = "Table 3")
-  writeData(wb = wb, sheet = "Table 1", x = tab1)
-  writeData(wb = wb, sheet = "Table 2", x = tab2)
-  writeData(wb = wb, sheet = "Table 3", x = tab3)
-
-  if (save == "yes") {
-    saveWorkbook(wb, file = "Example.xlsx", overwrite = TRUE)
-  }
-
   return(list(tab1 = tab1, tab2 = tab2, tab3 = tab3, power = power))
 }
 

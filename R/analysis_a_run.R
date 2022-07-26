@@ -347,6 +347,16 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
     if (print_tables) {
       if (transformation) {
+        wb <- createWorkbook()
+        addWorksheet(wb = wb, sheetName = "Table 1")
+        addWorksheet(wb = wb, sheetName = "Table 2")
+        addWorksheet(wb = wb, sheetName = "Table 3")
+        addWorksheet(wb = wb, sheetName = "Table 4")
+        writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
+        writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
+        writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
+        writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
+    
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -374,6 +384,13 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       } else {
+        wb <- createWorkbook()
+        addWorksheet(wb = wb, sheetName = "Table 1")
+        addWorksheet(wb = wb, sheetName = "Table 2")
+        addWorksheet(wb = wb, sheetName = "Table 3")
+        writeData(wb = wb, sheet = "Table 1", x = tables$tab1)
+        writeData(wb = wb, sheet = "Table 2", x = tables$tab2)
+        writeData(wb = wb, sheet = "Table 3", x = tables$tab3)
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -395,6 +412,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
+        #saveWorkbook(wb, file = "Example.xlsx", overwrite = TRUE)
       div(
         map(
           .x = table_gt, .f = function(x) {
