@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '2e1048ec-079b-4fb7-98b5-23139c892f32'
+  uuid: 'e3e93104-48e2-4cf0-922a-9e905a467a8d'
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +23,6 @@ knitr::opts_chunk$set(echo = FALSE,
                       dpi = 300,
                       message = FALSE)
 library(test)
-# source('R/final_model.R')
 ```
 
 ```{r grab-the-data,echo=FALSE}
@@ -62,7 +61,7 @@ if(length(groups_diff) == 2){
   groups_diff[length(groups_diff)] = paste('and', groups_diff[length(groups_diff)])
 }
 
-toi = data$tables$tables$tab1$`Times Included`[!grepl('Average',data$tables$tables$tab1$`Times Included`)][1]
+toi = data$tables$tables$tab1$`Time Points`[!grepl('Average',data$tables$tables$tab1$`Time Points`)][1]
 
 var = data$pre_modeling_input$variable
 
@@ -379,6 +378,17 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
                    type = 'bar', 
                    inputs=prismInputs) 
 prism
+
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  prismInputs$timePlotSelectors,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'box', 
+                   inputs=prismInputs) 
+prism
 ```
 
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption, eval=FALSE}
@@ -417,7 +427,6 @@ endpoint <- if_else(!show_text,
 
 <br>
 ```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-# source('R/word_tables.R')
 tab0 = data$tables$tables$tab0
 word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.') %>%
@@ -445,7 +454,6 @@ word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = tr
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
 tab2 = data$tables$tables$tab2
-
 word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer) %>%
   width(x = ., width = 0.75) 

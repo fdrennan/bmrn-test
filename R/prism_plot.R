@@ -87,7 +87,7 @@ prism_plot <- function(data, tables, trt_sel,
     filter(`Time Points` == time_sel) %>%
     arrange(group2, group1) %>%
     mutate(y.position = seq(
-      1.25 * max(data$Response_Transformed),
+      1.55 * max(data$Response_Transformed),
       2.2 * max(data$Response_Transformed),
       length.out = nrow(.)
     )) %>%
@@ -120,7 +120,7 @@ prism_plot <- function(data, tables, trt_sel,
     ) +
       stat_boxplot(
         geom = "errorbar",
-        width = length(unique(data$Treatment)) / num_groups^2,
+        width = 3*length(unique(data$Treatment)) / num_groups^2,
         lwd = 1
       ) +
       geom_boxplot(
@@ -128,7 +128,7 @@ prism_plot <- function(data, tables, trt_sel,
         outlier.color = NA,
         lwd = 2,
         fatten = 1,
-        width = length(unique(data$Treatment)) / num_groups^2
+        width = 3*length(unique(data$Treatment)) / num_groups^2
       ) +
       geom_jitter(
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
@@ -166,10 +166,10 @@ prism_plot <- function(data, tables, trt_sel,
       aes(x = group1, y = Response_Transformed, color = group1)
     ) +
       geom_bar(
-        fill = "white",
+        aes(fill = group1),
         lwd = 2,
         stat = "identity",
-        width = 0.5,
+        width = 3*length(unique(data$Treatment)) / num_groups^2,
         position = position_dodge(width = 0.7)
       ) +
       geom_jitter(
@@ -186,7 +186,7 @@ prism_plot <- function(data, tables, trt_sel,
       ) +
       geom_errorbar(
         aes(ymin = Response_Transformed, ymax = Response_Transformed + sd_Response),
-        position = position_dodge(width = 0.7), width = 0.35,
+        position = position_dodge(width = 0.7), width = 3*length(unique(data$Treatment)) / num_groups^2,
         size = 2
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data_max$Response_Transformed))) +
