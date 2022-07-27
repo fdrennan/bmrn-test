@@ -390,11 +390,10 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
     mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`
-    )) %>%
-    arrange(Treatment, `Time Points`)
-  # if(analysis_type == 'Exploratory'){
-  #   data = data %>% arrange(`Time Points`)
-  # }
+    )) 
+  if(analysis_type == 'Exploratory'){
+    data = data %>% arrange(Treatment, `Time Points`)
+  }
 
   if (summary_only & transformation) {
     table_gt <- data %>%
