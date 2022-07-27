@@ -286,10 +286,10 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       )
 
       tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
-        dplyr::select(Treatment, `Times Included`, grep("Original", colnames(.)))
+        dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
       if(analysis_type == "Exploratory"){
         tables$tab0 = tables$tab0 %>%
-          arrange(Treatment, `Times Included`)
+          arrange(Treatment, `Time Points`)
       }
       list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
     }
@@ -339,10 +339,10 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     analysis_type = signal()$session$sessionMode
     times = input$timeTreatmentSelectorsTable
     if(analysis_type == 'Exploratory'){
-      tables$tab0 = tables$tab0 %>% filter(`Times Included` %in% times)
-      tables$tab1 = tables$tab1 %>% filter(`Times Included` %in% times)
-      tables$tab2 = tables$tab2 %>% filter(`Times Included` %in% times)
-      tables$tab3 = tables$tab3 %>% filter(`Times Included` %in% times)
+      tables$tab0 = tables$tab0 %>% filter(`Time Points` %in% times)
+      tables$tab1 = tables$tab1 %>% filter(`Time Points` %in% times)
+      tables$tab2 = tables$tab2 %>% filter(`Time Points` %in% times)
+      tables$tab3 = tables$tab3 %>% filter(`Time Points` %in% times)
     }
 
     if (print_tables) {

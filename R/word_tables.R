@@ -4,7 +4,7 @@
 word_tables <- function(data, include_summ_stat, transform, summary_only,
                         footer_i = 1, footer_j = 1, footer = "footer") {
   data <- data %>%
-    mutate(`Times Included` = gsub("Average.*", "Overall Average", `Times Included`)) %>%
+    mutate(`Time Points` = gsub("Average.*", "Overall Average", `Time Points`)) %>%
     mutate_at(
       .vars = grep("p value", colnames(.), value = TRUE),
       .funs = ~ as.numeric(ifelse(. == "< 0.001", "0.001", .))
@@ -21,7 +21,7 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
   if (summary_only) {
     data <- data %>%
       dplyr::select(
-        Treatment, `Times Included`,
+        Treatment, `Time Points`,
         grep("Original", colnames(.), value = T)
       )
     colnames(data) <- gsub("Original Scale ", "", colnames(data))
@@ -111,7 +111,7 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     if (include_summ_stat & transform) {
       data_ft <- add_header_row(data_ft,
         colwidths = c(2, 2, 2, rep(2, length(groups))),
-        values = c("", "Transformed Scale", "Back Transform", paste("vs.", groups))
+        values = c("", "Transformed Scale", "Back Transformed", paste("vs.", groups))
       )
     }
 

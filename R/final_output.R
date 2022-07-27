@@ -387,13 +387,13 @@ column_labels <- function(df_gt, column, label) {
 html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
-    mutate(`Times Included` = if_else(grepl("Average", `Times Included`),
+    mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
-      `Times Included`
+      `Time Points`
     )) %>%
-    arrange(Treatment, `Times Included`)
+    arrange(Treatment, `Time Points`)
   # if(analysis_type == 'Exploratory'){
-  #   data = data %>% arrange(`Times Included`)
+  #   data = data %>% arrange(`Time Points`)
   # }
 
   if (summary_only & transformation) {
@@ -472,13 +472,13 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           cols_label(
             `Transformed Scale Mean` = "Mean",
             `Transformed Scale SE` = "SE"
-          )
-        # tab_spanner(
-        #   label = "Back Transform",
-        #   columns = grep('Back Transformed', colnames(data), value = TRUE)) %>%
-        # cols_label(
-        #   `Back Transformed Mean` = "Mean",
-        #   `Back Transformed SE` = "SE")
+          ) %>%
+        tab_spanner(
+          label = "Back Transformed",
+          columns = grep('Back Transformed', colnames(data), value = TRUE)) %>%
+        cols_label(
+          `Back Transformed Mean` = "Mean",
+          `Back Transformed SE` = "SE")
       } else {
         table_gt <- table_gt %>%
           tab_spanner(

@@ -50,7 +50,7 @@ prism_plot <- function(data, tables, trt_sel,
   }
   
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
-    select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
+    select(Treatment, `Time Points`, grep("p value from", colnames(.))) %>%
     mutate_at(.vars = 3:ncol(.), .funs = ~ as.character(.)) %>%
     pivot_longer(
       cols = 3:ncol(.),
@@ -63,7 +63,7 @@ prism_plot <- function(data, tables, trt_sel,
     rename(group1 = Treatment) %>%
     filter(
       complete.cases(.),
-      `Times Included` != "Average Over Time",
+      `Time Points` != "Average Over Time",
       `p value` != ""
     ) 
   
@@ -84,7 +84,7 @@ prism_plot <- function(data, tables, trt_sel,
       )
     ) %>%
     filter(`p value` < 0.05) %>%
-    filter(`Times Included` == time_sel) %>%
+    filter(`Time Points` == time_sel) %>%
     arrange(group2, group1) %>%
     mutate(y.position = seq(
       1.25 * max(data$Response_Transformed),
