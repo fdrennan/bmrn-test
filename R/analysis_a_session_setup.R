@@ -7,10 +7,6 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     title = h4("Study Information"),
     textInput(ns("name"), "Name"),
     textInput(ns("email"), "Email"),
-    selectizeInput(
-      ns("department"), "Department",
-      choices = c("Dep 1", "Dep B")
-    ),
     tooltip(
       selectizeInput(
         ns("statistician"),
@@ -22,6 +18,10 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
         choices = c("Cheng Su", "Other"),
       ),
       title = "for support and review of analysis"
+    ),
+    selectizeInput(
+      ns("department"), "Therapeutic Areas",
+      choices = c("Dep 1", "Dep B")
     ),
     selectizeInput(
       ns("program"), "Program (select or type)",
