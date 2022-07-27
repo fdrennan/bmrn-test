@@ -89,7 +89,9 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     new_scale <- gsub("Original Scale ", "", old_scale)
     new_scale <- gsub("Transformed Scale ", "", new_scale)
     new_scale <- gsub("Back ", "", new_scale)
+    new_scale <- gsub("Transformed ", "", new_scale)
     names(new_scale) <- old_scale
+    
     data_ft <- flextable(data, col_keys = orig_cols) %>%
       set_header_labels(data_ft, values = new_scale)
 

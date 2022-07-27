@@ -147,7 +147,7 @@ prism_plot <- function(data, tables, trt_sel,
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
       guides(y = "prism_offset_minor") +
-      theme_prism(base_size = inputs$fontSize, palette = inputs$palette, border = inputs$border) +
+      theme_prism(base_size = inputs$fontSize, palette = inputs$palette) +
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")

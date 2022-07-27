@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = FALSE,
 library(test)
 ```
 
-```{r grab-the-data,echo=FALSE}
+```{r grab-the-data,echo=FALSE,include=FALSE}
 st <- storr_rds("storr")
 # # Treatment
 # con <- connect_table()
@@ -62,7 +62,8 @@ if(length(groups_diff) == 2){
 }
 
 toi = data$tables$tables$tab1$`Time Points`[!grepl('Average',data$tables$tables$tab1$`Time Points`)][1]
-
+analysis_type = data$input_data$session_data$sessionMode
+time = if_else(analysis_type == 'Exploratory',prismInputs$timePlotSelectors, toi)
 var = data$pre_modeling_input$variable
 
 model_transformed = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = var)
@@ -326,7 +327,7 @@ line_caption = paste0("Group level trajectory across time where the line corresp
 
 trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
 
-prism_caption = paste0('Boxplot of ', scale, ' response values at ', toi, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+prism_caption = paste0('Boxplot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
 
 
 ```
@@ -363,14 +364,14 @@ plots[[4]] +
 
 ```
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption, eval=FALSE}
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption}
 # source('R/prism_plot.R')
 transformed_data = data$plot$data$transformed_data
 prismInputs$palette = 'black_and_white'
 prismInputs$border = TRUE
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  prismInputs$timePlotSelectors,
+                   time_sel =  time,
                    endpoint = data$plot$endpoint, format = 'word', 
                    cfb = data$input_data$changeFromBaseline, 
                    power = data$tables$power, 
@@ -379,23 +380,12 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
                    inputs=prismInputs) 
 prism
 
-prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
-                   trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  prismInputs$timePlotSelectors,
-                   endpoint = data$plot$endpoint, format = 'word', 
-                   cfb = data$input_data$changeFromBaseline, 
-                   power = data$tables$power, 
-                   num_groups = length(levels(transformed_data$Treatment)), 
-                   type = 'box', 
-                   inputs=prismInputs) 
-prism
 ```
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption, eval=FALSE}
-# source('R/prism_plot.R')
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption}
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  prismInputs$timePlotSelectors,
+                   time_sel =  time,
                    endpoint = data$plot$endpoint, format = 'word', 
                    cfb = data$input_data$changeFromBaseline, 
                    power = data$tables$power, 
