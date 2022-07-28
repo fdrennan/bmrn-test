@@ -14,9 +14,9 @@ prism_plot <- function(data, tables, trt_sel,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL) {
   y_axis = inputs$y_axisPrism
-  tab1 <- tables[[2]]
-  tab2 <- tables[[3]]
-  tab3 <- tables[[4]]
+  tab1 <- tables$tab1
+  tab2 <- tables$tab2
+  tab3 <- tables$tab3
   
   trans_name <- transform_table()
   
@@ -31,7 +31,7 @@ prism_plot <- function(data, tables, trt_sel,
       mutate(Response_Transformed = Response)
   }
   
-  if (y_axis == 'transform') {
+  if (y_axis == 'transform' & power != 1 ) {
     ylab <- paste(trans_name, endpoint)
     var = 'Response_Transformed'
   }
