@@ -22,8 +22,8 @@ ui_landing <- function(id = "landing") {
         div(
           class = "d-flex justify-content-start",
           h2("for", class = " p-2"),
-          h2("Research", class = "p-2"),
-          h2("Experiments", class = "p-2"),
+          h2("Preclinical", class = "p-2"),
+          h2("Studies", class = "p-2"),
           class = "font-weight-bold px-3"
         )
       )

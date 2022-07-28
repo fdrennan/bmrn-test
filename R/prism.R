@@ -5,7 +5,7 @@ ui_prism <- function(id = "prism") {
   fluidRow(
     testSpinner(uiOutput(ns("plotsInputs"))),
     testSpinner(div(class = "py-5", box(
-      title = "Prism Output",
+      title = "",
       uiOutput(ns("plots")), maximizable = TRUE, collapsible = TRUE, width = 12,
       sidebar = boxSidebarTest(
         id = ns('boxSidebar'), 
@@ -156,7 +156,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           type = "box"
         )
         plot
-      })
+        })
 
       output$prismPlot_bar <- renderPlot({
         isolate(input)
@@ -176,7 +176,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           type = "bar"
         )
 
-        plot
+        plot 
       })
 
 

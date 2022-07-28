@@ -35,23 +35,25 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
   section_2 <- box(
     width = 12,
     title = h4("Study Description"),
-    wellPanel(
+    tooltip(
       selectizeInput(
-        ns("sessionMode"), "Objective",
+        ns("sessionMode"), div( class = "d-flex justify-content-between",
+                                "Objective", icon("info-circle")),
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      textAreaInput(ns("description"),
-        "Please give research objectives and experiment details",
-        height = "300px"
-      ),
-      fileInput(
-        placeholder = "",
-        inputId = ns("upload"),
-        label = h6("Upload supporting study documents."),
-        multiple = TRUE,
-        accept = "*"
-      )
+      title = 'TBD by Monika'
+    ),
+    textAreaInput(ns("description"),
+                  "Please give research objectives and experiment details",
+                  height = "300px"
+    ),
+    fileInput(
+      placeholder = "",
+      inputId = ns("upload"),
+      label = h6("Upload supporting study documents."),
+      multiple = TRUE,
+      accept = "*"
     )
   )
 

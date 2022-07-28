@@ -23,8 +23,8 @@ ui_navbar <- function(id = "navbar", navbarId = "navbarNav") {
         h2("Statistical", class = "underline-first-letter p-2"),
         h2("Tools", class = "underline-first-letter p-2"),
         h2("for", class = " p-2"),
-        h2("Research", class = "p-2"),
-        h2("Experiments", class = "p-2"),
+        h2("Preclinical", class = "p-2"),
+        h2("Studies", class = "p-2"),
         class = "font-weight-bold p-1"
       )
     )
