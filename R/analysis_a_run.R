@@ -412,8 +412,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
-      browser()
-        #saveWorkbook(wb, file = "Example.xlsx", overwrite = TRUE)
+      tables_path <- path_join(c(input_data()$session_data$full_path_files, 'tables.xlsx'))
+      saveWorkbook(wb, file = tables_path, overwrite = TRUE)
       div(
         map(
           .x = table_gt, .f = function(x) {
