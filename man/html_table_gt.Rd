@@ -11,7 +11,8 @@ html_table_gt(
   include_summary,
   summary_only,
   transformation,
-  analysis_type
+  analysis_type,
+  endpoint
 )
 }
 \description{

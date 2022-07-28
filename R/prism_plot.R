@@ -199,7 +199,6 @@ prism_plot <- function(data, tables, trt_sel,
       ylab(ylab) +
       xlab("Treatment")
   }
-  
   bottom <- full_prism +
     scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
     theme(plot.margin = margin(
@@ -217,6 +216,7 @@ prism_plot <- function(data, tables, trt_sel,
   
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == 'change_from_baseline')|
                           (as.logical(cfb) != TRUE & y_axis != 'change_from_baseline'))) {
+    
     full_prism <- full_prism + add_pvalue(
       p_vals,
       label = "{sig}",
@@ -224,7 +224,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = 0.02
+      step.increase = 0.02,
     )
     
     
@@ -259,10 +259,22 @@ prism_plot <- function(data, tables, trt_sel,
   } else {
     if(type == "box"){
       bottom = bottom +
-        ggtitle(paste('Box Chart for Treatment Groups at', time_sel))
+        ggtitle(paste('Box Chart for Treatment Groups at', time_sel)) +
+        theme(plot.margin = margin(
+          t = 0,
+          r = 0,
+          b = 0,
+          l = 0
+        ))
     }else{
       bottom = bottom +
-        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
+        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel)) +
+        theme(plot.margin = margin(
+          t = 0,
+          r = 0,
+          b = 0,
+          l = 0
+        ))
     }
     return(bottom)
   }

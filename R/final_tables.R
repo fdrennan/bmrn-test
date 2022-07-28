@@ -65,7 +65,9 @@ table_1 <- function(final_contrast, os_together, toi) {
 table_2 <- function(final_contrast, os_together, toi) {
   # Ensure that the levels are ordered for this table
   # Vehicle versus the doses should be looked at first
-  
+  if (all(!grepl('_st', rownames(final_contrast)))) {
+    rownames(final_contrast) = paste0(rownames(final_contrast), '_st') 
+  }
   os_table_2 <- os_together %>%
     filter(grepl("Dose|Vehicle", os_together$TreatmentNew)) %>%
     mutate(
@@ -77,12 +79,9 @@ table_2 <- function(final_contrast, os_together, toi) {
       )
     ) %>%
     arrange(TreatmentNew)
-  
-  
-  
+
   table_2 <- os_table_2 %>%
     select(TreatmentNew, Endpoint)
-  
   for (i in grep("Vehicle|Dose", levels(table_2$TreatmentNew)[-1], value = TRUE)) {
     num <- as.numeric(gsub("[A-z]| ", "", i))
     if (any(table_2$Endpoint == "Average")) {
@@ -135,7 +134,7 @@ table_2 <- function(final_contrast, os_together, toi) {
       gsub("Difference.", "", i)
     ))
   }
-  
+
   tab2 <- inner_join(os_together, table_2) %>%
     mutate(Endpoint = ifelse(grepl("Average", Endpoint),
                              "Average Over Time",
@@ -143,6 +142,7 @@ table_2 <- function(final_contrast, os_together, toi) {
     )) %>%
     rename("Time Points" = Endpoint)
   tab2[is.na(tab2)] <- ""
+
   return(tab2)
 }
 

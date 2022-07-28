@@ -2,7 +2,7 @@
 #' @export word_tables
 #'
 word_tables <- function(data, include_summ_stat, transform, summary_only,
-                        footer_i = 1, footer_j = 1, footer = "footer") {
+                        footer_i = 1, footer_j = 1, footer = "footer", endpoint) {
   data <- data %>%
     mutate(`Time Points` = gsub("Average.*", "Overall Average", `Time Points`)) %>%
     mutate_at(
@@ -30,7 +30,7 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
 
     data_ft <- add_header_row(data_ft,
       colwidths = c(2, 3),
-      values = c("", "Original Scale")
+      values = c("", endpoint)
     )
   } else {
     if (transform) {
@@ -121,7 +121,7 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     if (include_summ_stat & !transform) {
       data_ft <- add_header_row(data_ft,
         colwidths = c(2, 3, rep(2, length(groups))),
-        values = c("", "Original Scale", paste("vs.", groups))
+        values = c("",  endpoint,paste("vs.", groups))
       )
     }
     if (!include_summ_stat) {

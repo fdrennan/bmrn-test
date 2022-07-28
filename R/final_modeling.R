@@ -48,9 +48,15 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
         )
       }
     )
-   tab1 = map_dfr(.x = output_tables, .f = ~{.x$tab1 %>% dplyr::filter(!grepl('Average',`Time Points`))})
-   tab2 = map_dfr(.x = output_tables, .f = ~{.x$tab2 %>% dplyr::filter(!grepl('Average',`Time Points`))})
-   tab3 = map_dfr(.x = output_tables, .f = ~{.x$tab3 %>% dplyr::filter(!grepl('Average',`Time Points`))})
+
+   tab1 = data.frame()
+   tab2 = data.frame()
+   tab3 = data.frame()
+   for(i in 1:length(output_tables)){
+     tab1 = bind_rows(tab1, output_tables[[i]]$tab1 %>% mutate_all(~as.character(.))) %>% dplyr::filter(!grepl('Average',`Time Points`))
+     tab2 = bind_rows(tab2, output_tables[[i]]$tab2 %>% mutate_all(~as.character(.))) %>% dplyr::filter(!grepl('Average',`Time Points`))
+     tab3 = bind_rows(tab3, output_tables[[i]]$tab3 %>% mutate_all(~as.character(.))) %>% dplyr::filter(!grepl('Average',`Time Points`))
+   }
    output_tables = output_tables[[1]]
    output_tables$tab1 = tab1
    output_tables$tab2 = tab2
@@ -70,7 +76,6 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
       variable = var,
       analysis_type = "Confirmatory"
     )
-
     output_tables <- final_output(
       transformed_data = transformed_data,
       toi = toi,
