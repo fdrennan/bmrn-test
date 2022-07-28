@@ -11,7 +11,7 @@ is.outlier <- function(x) {
 prism_plot <- function(data, tables, trt_sel,
                        time_sel, endpoint, format, cfb, power,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
-                       top_height = 1, bottom_height = 4, num_groups, type = "box",
+                       top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL) {
   y_axis = inputs$y_axisPrism
   tab1 <- tables[[2]]
@@ -88,7 +88,7 @@ prism_plot <- function(data, tables, trt_sel,
     arrange(group2, group1) %>%
     mutate(y.position = seq(
       1.55 * max(data$Response_Transformed),
-      2.2 * max(data$Response_Transformed),
+      2.5 * max(data$Response_Transformed),
       length.out = nrow(.)
     )) %>%
     filter(
@@ -221,9 +221,10 @@ prism_plot <- function(data, tables, trt_sel,
       p_vals,
       label = "{sig}",
       tip.length = 0.02,
-      label.size = 10,
+      label.size = 8,
       color = "black",
-      size = 2
+      size = 2,
+      step.increase = 0.02
     )
     
     
@@ -242,13 +243,27 @@ prism_plot <- function(data, tables, trt_sel,
         r = 0,
         b = -10,
         l = 0
-      ))
+      )) 
+    if(type == "box"){
+      top = top +
+        ggtitle(paste('Box Chart for Treatment Groups at', time_sel))
+    }else{
+      top = top +
+        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
+    }
     return(ggarrange(
       plotlist = list(top, bottom),
       ncol = 1,
       heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
     ))
   } else {
+    if(type == "box"){
+      bottom = bottom +
+        ggtitle(paste('Box Chart for Treatment Groups at', time_sel))
+    }else{
+      bottom = bottom +
+        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
+    }
     return(bottom)
   }
 }
