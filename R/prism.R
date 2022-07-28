@@ -52,7 +52,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
-        toi <- input_prism$tables$tables$tab1$`Times Included`[2]
+        toi <- input_prism$tables$tables$tab1$`Time Points`[2]
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)

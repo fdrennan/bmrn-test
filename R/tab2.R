@@ -27,7 +27,7 @@
 #     Original.Scale.Mean = "Mean",
 #     Original.Scale.Median = "Median",
 #     Original.Scale.SE = "SE",
-#     Times.Included = 'Times Points Included') %>%
+#     Times.Included = 'Time Points Included') %>%
 #   cols_align(
 #     align = 'center',
 #     columns = everything()
