@@ -36,10 +36,13 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     width = 12,
     title = h4("Study Description"),
     wellPanel(
-      selectizeInput(
-        ns("sessionMode"), "Objective",
-        # options = list(create = TRUE),
-        choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
+      tooltip(
+        selectizeInput(
+          ns("sessionMode"), "Objective",
+          # options = list(create = TRUE),
+          choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
+        ),
+        title = 'TBD by Monika'
       ),
       textAreaInput(ns("description"),
         "Please give research objectives and experiment details",
