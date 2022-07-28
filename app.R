@@ -7,7 +7,7 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options('test_version'='Version 1.11')
+options('test_version'='Version 1.12')
 if (isTRUE(getOption('production'))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")

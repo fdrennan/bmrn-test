@@ -20,8 +20,6 @@ data <- read.csv("plot_ready_data.csv") %>%
 # Load in p-values
 load("trans_table.RData")
 
-
-
 p_vals <- bind_rows(tab1, tab2, tab3) %>%
   select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
   pivot_longer(cols = 3:ncol(.), names_to = "group2", values_to = "p value") %>%

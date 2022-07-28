@@ -54,7 +54,7 @@ table_1 <- function(final_contrast, os_together, toi) {
                              "Average Over All Times",
                              toi
     )) %>%
-    rename("Times Included" = Endpoint)
+    rename("Time Points" = Endpoint)
   
   tab1[is.na(tab1)] <- ""
   return(tab1)
@@ -141,7 +141,7 @@ table_2 <- function(final_contrast, os_together, toi) {
                              "Average Over Time",
                              toi
     )) %>%
-    rename("Times Included" = Endpoint)
+    rename("Time Points" = Endpoint)
   tab2[is.na(tab2)] <- ""
   return(tab2)
 }
@@ -205,7 +205,7 @@ table_3 <- function(final_contrast, os_together, toi) {
                              "Average Over Time",
                              toi
     )) %>%
-    rename("Times Included" = Endpoint)
+    rename("Time Points" = Endpoint)
   tab3[is.na(tab3)] <- ""
   return(tab3)
 }

@@ -47,9 +47,9 @@ final_modeling <- function(ready_final_model, toi=NULL, analysis_type) {
         )
       }
     )
-   tab1 = map_dfr(.x = output_tables, .f = ~{.x$tab1 %>% dplyr::filter(!grepl('Average',`Times Included`))})
-   tab2 = map_dfr(.x = output_tables, .f = ~{.x$tab2 %>% dplyr::filter(!grepl('Average',`Times Included`))})
-   tab3 = map_dfr(.x = output_tables, .f = ~{.x$tab3 %>% dplyr::filter(!grepl('Average',`Times Included`))})
+   tab1 = map_dfr(.x = output_tables, .f = ~{.x$tab1 %>% dplyr::filter(!grepl('Average',`Time Points`))})
+   tab2 = map_dfr(.x = output_tables, .f = ~{.x$tab2 %>% dplyr::filter(!grepl('Average',`Time Points`))})
+   tab3 = map_dfr(.x = output_tables, .f = ~{.x$tab3 %>% dplyr::filter(!grepl('Average',`Time Points`))})
    output_tables = output_tables[[1]]
    output_tables$tab1 = tab1
    output_tables$tab2 = tab2

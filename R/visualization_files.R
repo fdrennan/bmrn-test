@@ -38,8 +38,12 @@ pre_modeling <- function(input_data, baseline) {
       variable = ready_final_model$variable
     ) %>%
     arrange(TreatmentNew, SubjectID, Time)
-
-  best_model <- cor_select(transformed_data = transformed_data_vc, variable = ready_final_model$variable)
+  best_model = future_map_dfr(.x = c('AR1','ARH1', 'CS', 'CSH', 'TOEP', 'UN'), .f = ~{
+  tmp = final_model(transformed_data = transformed_data_vc %>% filter(basic_model),
+                      best = .x, var = ready_final_model$variable)
+  data.frame(model = .x, AIC = AIC(tmp))
+  })
+  best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist
   ready_final_model$transformed_data <- transformed_data_vc
   ready_final_model$best_model <- best_model
 
