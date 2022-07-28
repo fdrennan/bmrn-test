@@ -323,7 +323,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
             inputId = ns("timeTreatmentSelectorsTable"),
             label = h4("Select Times to be Displayed"),
             selected = toi,
-            choices = timePlotSelectors, multiple = TRUE
+            choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
           ),
           "Use delete key to remove, mouse click to add."
         )
@@ -412,6 +412,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
+      browser()
         #saveWorkbook(wb, file = "Example.xlsx", overwrite = TRUE)
       div(
         map(
