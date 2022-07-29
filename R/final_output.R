@@ -384,7 +384,7 @@ column_labels <- function(df_gt, column, label) {
 #' html_table_gt
 #' @export
 
-html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type) {
+html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
     mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
@@ -402,7 +402,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         title = title
       ) %>%
       tab_spanner(
-        label = "Original Scale",
+        label = endpoint,
         columns = grep("Original", colnames(data), value = TRUE)
       ) %>%
       cols_label(
@@ -483,7 +483,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       } else {
         table_gt <- table_gt %>%
           tab_spanner(
-            label = "Original Scale",
+            label = endpoint,
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
           ) %>%
           cols_label(

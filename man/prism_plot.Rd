@@ -16,8 +16,8 @@ prism_plot(
   box_width = 2,
   axis_title_size = 30,
   axis_text_size = 24,
-  top_height = 1,
-  bottom_height = 4,
+  top_height = 2,
+  bottom_height = 3,
   num_groups,
   type = "box",
   inputs = NULL

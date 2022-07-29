@@ -271,6 +271,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           analysis_type = analysis_type
         )
       }
+
       tables <- html_tables(data$transformed_data, final_model)
 
       trans_name <- transform_table() %>%
@@ -321,7 +322,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         tooltip(
           selectizeInput(
             inputId = ns("timeTreatmentSelectorsTable"),
-            label = h4("Select Times to be Displayed"),
+            label = h4("Select Times (up to 5) to be Displayed"),
             selected = toi,
             choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
           ),
@@ -360,26 +361,39 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         table_gt <- list(
           list(
             table = html_table_gt(
-              data = tables$tab0, title = "Table 1: Summary Statistics for Original Scale",
-              footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type
+              data = tables$tab0, title = paste("Table 1: Summary Statistics for", signal()$input_data$endpoint),
+              footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab1, title = "Table 2: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab1, title = paste(
+                "Table 2: Comparison between Controls and Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = "Table 3: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab2, title = paste(
+                "Table 3: Comparison between Doses as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab3, title = "Table 4: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab3, title = paste(
+                "Table 4: Comparison between Doses and Controls/Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           )
         )
@@ -394,20 +408,32 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         table_gt <- list(
           list(
             table = html_table_gt(
-              data = tables$tab1, title = "Table 1: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab1, title = paste(
+                "Table 1: Comparison between Controls and Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = " Table 2: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab2, title = paste(
+                "Table 2: Comparison between Doses as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab3, title = "Table 3: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab3, title = paste(
+                "Table 3: Comparison between Doses and Controls/Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           )
         )
