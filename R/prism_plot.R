@@ -223,7 +223,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = 0.02,
+      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed))/10,
     )
 
 

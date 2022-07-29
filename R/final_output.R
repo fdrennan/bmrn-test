@@ -130,6 +130,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
+  #browser()
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   empty_col <- tab1 %>% apply(2, function(a) sum(is.na(a)))
@@ -144,6 +145,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     ) %>%
     select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab1) <- gsub("\\.", " ", colnames(tab1))
+
   empty_col <- tab2 %>% apply(2, function(a) sum(is.na(a)))
   tab2 <- tab2[, which(empty_col < nrow(tab2))] %>%
     rename(
@@ -392,7 +394,9 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       `Time Points`
     ))
   if (analysis_type == "Exploratory") {
-    data <- data %>% arrange(Treatment, `Time Points`)
+    data <- data %>%  mutate(num = as.numeric(gsub('[A-z]| ', '', `Time Points`))) %>% 
+      arrange(Treatment, num) %>%
+      select(-num)
   }
 
   if (summary_only & transformation) {

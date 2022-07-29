@@ -290,7 +290,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
       if (analysis_type == "Exploratory") {
         tables$tab0 <- tables$tab0 %>%
-          arrange(Treatment, `Time Points`)
+          mutate(num = as.numeric(gsub('[A-z]| ', '', `Time Points`))) %>% 
+          arrange(Treatment, num) %>%
+          select(-num)
       }
       list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
     }
