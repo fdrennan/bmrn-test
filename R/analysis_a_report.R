@@ -34,6 +34,21 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         data <- req(data())
         uuid <- data$uuid
         email <- data$email
+        studyId <- data$studyId
+        statistician <- data$statistician
+        uuid <- data$uuid
+        email_message <-
+          html(
+            as.character(div(
+              p(
+                paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
+              ),
+              p(
+                paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
+              ),
+              tableHTML(data)
+            ))
+          )
         tryCatch(
           {
             rmarkdown::render(
@@ -50,12 +65,12 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
-            browser()
+            files <- dir_ls(data$full_path_files)
             send.mail(
               from = Sys.getenv("EMAIL_USER"),
               to = email,
               subject = "Report Generated",
-              body = "<html><h1>TEST Results</h1><h2></h2></html>",
+              body = email_message,
               html = TRUE,
               smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
               attach.files = c("Test_Report.docx"),
