@@ -118,6 +118,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           full_path_file <- data$input_data$session_data$full_path_files
           full_path_file <- path_join(c(full_path_file, 'prism_data.xlsx'))
           save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+          save_prism_output(file, tfd, pow, as.logical(cfb))
         }
       )
 
