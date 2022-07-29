@@ -223,7 +223,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed))/10,
+      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed)) / 10,
     )
 
 
@@ -252,7 +252,7 @@ prism_plot <- function(data, tables, trt_sel,
     }
     return(ggarrange(
       plotlist = list(top, bottom),
-      ncol = 1,align = 'hv',
+      ncol = 1, align = "hv",
       heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
     ))
   } else {

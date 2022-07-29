@@ -44,7 +44,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           as.character(
             html(
               as.character(div(
-                p(paste0('Dear ', name, ',')),
+                p(paste0("Dear ", name, ",")),
                 p(
                   paste0("A statistical report has been generated for study ", studyName, " by the TEST 1 Application. ")
                 ),
@@ -52,9 +52,9 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
                 p(
                   paste0("If you have any questions please contact Cheng Su."),
                 ),
-                div('TEST TEAM'),
-                div('Quantitative Science, Data Science'),
-                div('WWRD')
+                div("TEST TEAM"),
+                div("Quantitative Science, Data Science"),
+                div("WWRD")
               ))
             )
           )
