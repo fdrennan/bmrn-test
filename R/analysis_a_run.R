@@ -440,7 +440,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
-      tables_path <- path_join(c(input_data()$session_data$full_path_files, "tables.xlsx"))
+      tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
       saveWorkbook(wb, file = tables_path, overwrite = TRUE)
       div(
         map(

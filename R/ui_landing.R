@@ -5,11 +5,11 @@ ui_landing <- function(id = "landing") {
   base <- Sys.getenv("BASE_DOMAIN")
   div(
     class = "h-100 d-flex align-items-center justify-content-around",
-    div(
+    div(class='p-3',
       style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
       imageOutput(ns("svgIcon"), height = "200px")
     ),
-    div(
+    fluidRow(class='p-3',
       div(
         class = "d-flex justify-content-start",
         h2("Treatment", class = "underline-first-letter p-2"),
@@ -18,13 +18,14 @@ ui_landing <- function(id = "landing") {
         h2("Tools", class = "underline-first-letter p-2"),
         class = "font-weight-bold px-3"
       ),
-      div(
-        class = "d-flex justify-content-start",
-        h2("for", class = " p-2"),
-        h2("Preclinical", class = "p-2"),
-        h2("Studies", class = "p-2"),
-        class = "font-weight-bold px-3"
-      )
+        div(
+          class = "d-flex justify-content-start",
+          h2("for", class = " p-2"),
+          h2("Preclinical", class = "p-2"),
+          h2("Studies", class = "p-2"),
+          class = "font-weight-bold px-3"
+      ),
+      h3("By Quantitative Science, Data Science", class='text-center my-4')
       # h3("By Quantitative Science, Data Science")
     )
   )
