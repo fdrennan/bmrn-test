@@ -78,7 +78,7 @@ table_2 <- function(final_contrast, os_together, toi) {
       )
     ) %>%
     arrange(TreatmentNew)
-
+  #browser()
   table_2 <- os_table_2 %>%
     select(TreatmentNew, Endpoint)
   for (i in grep("Vehicle|Dose", levels(table_2$TreatmentNew)[-1], value = TRUE)) {
