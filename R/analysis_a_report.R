@@ -48,7 +48,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
                 p(
                   paste0("A statistical report has been generated for study ", studyName, " by the TEST 1 Application. ")
                 ),
-                p(paste0("The test analysis id is ", div(uuid, style='font-weight: bold;'))),
+                p(paste0("The test analysis id is ", uuid)),
                 p(
                   paste0("If you have any questions please contact Cheng Su."),
                 ),
