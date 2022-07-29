@@ -40,7 +40,7 @@ ui <- div(
     header = dashboardHeader(
       div(
         headers(),
-        ui_navbar()
+        ui_navbar(),
       )
     ),
     body = dashboardBody(router$ui),
