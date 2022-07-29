@@ -390,9 +390,9 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
     mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`
-    )) 
-  if(analysis_type == 'Exploratory'){
-    data = data %>% arrange(Treatment, `Time Points`)
+    ))
+  if (analysis_type == "Exploratory") {
+    data <- data %>% arrange(Treatment, `Time Points`)
   }
 
   if (summary_only & transformation) {
@@ -472,12 +472,14 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             `Transformed Scale Mean` = "Mean",
             `Transformed Scale SE` = "SE"
           ) %>%
-        tab_spanner(
-          label = "Back Transformed",
-          columns = grep('Back Transformed', colnames(data), value = TRUE)) %>%
-        cols_label(
-          `Back Transformed Mean` = "Mean",
-          `Back Transformed SE` = "SE")
+          tab_spanner(
+            label = "Back Transformed",
+            columns = grep("Back Transformed", colnames(data), value = TRUE)
+          ) %>%
+          cols_label(
+            `Back Transformed Mean` = "Mean",
+            `Back Transformed SE` = "SE"
+          )
       } else {
         table_gt <- table_gt %>%
           tab_spanner(

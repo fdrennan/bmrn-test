@@ -7,8 +7,8 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options('test_version'='Version 1.12')
-if (isTRUE(getOption('production'))) {
+options("test_version" = "Version 1.12")
+if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
   Sys.setenv(BASE_DOMAIN = "/qsci/test")
@@ -49,7 +49,7 @@ ui <- div(
       div(
         class = "d-flex justify-content-around",
         div(
-          getOption('test_version')
+          getOption("test_version")
         ),
         div(
           "© 2022 BioMarin"

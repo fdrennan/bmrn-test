@@ -15,38 +15,38 @@ cor_select <- function(transformed_data, variable) {
     correlation = corAR1(form = ~ 1 | SubjectID)
   )
   print(AR1)
-  aic_AR1 <- c("AR1" = -2*logLik(AR1)[1] + 2*2)
+  aic_AR1 <- c("AR1" = -2 * logLik(AR1)[1] + 2 * 2)
   ARH1 <- gls(
     data = transformed_data %>% filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corAR1(form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
   )
-  aic_ARH1 <- c("ARH1" =  -2*logLik(ARH1)[1] +
-                  2*(2 + length(levels(transformed_data$Time))))
+  aic_ARH1 <- c("ARH1" = -2 * logLik(ARH1)[1] +
+    2 * (2 + length(levels(transformed_data$Time))))
   CS <- gls(
     data = transformed_data %>% filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corCompSymm(form = ~ 1 | SubjectID)
   )
   print(CS)
-  aic_CS <- c("CS" = -2*logLik(CS)[1] + 2*2)
+  aic_CS <- c("CS" = -2 * logLik(CS)[1] + 2 * 2)
   CSH <- gls(
     data = transformed_data %>% filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corCompSymm(form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
   )
-  aic_CSH <- c("CSH" = -2*logLik(CSH)[1] +
-                 2*(2 + length(levels(transformed_data$Time))))
+  aic_CSH <- c("CSH" = -2 * logLik(CSH)[1] +
+    2 * (2 + length(levels(transformed_data$Time))))
   TOEP <- gls(
     data = transformed_data %>% filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
   )
-  aic_TOEP <- c("TOEP" = -2*logLik(TOEP)[1] +
-                  2 * length(levels(transformed_data$Time)))
+  aic_TOEP <- c("TOEP" = -2 * logLik(TOEP)[1] +
+    2 * length(levels(transformed_data$Time)))
   UN <- try(gls(
     data = transformed_data %>% filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),

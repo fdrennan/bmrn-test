@@ -13,42 +13,42 @@ prism_plot <- function(data, tables, trt_sel,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL) {
-  y_axis = inputs$y_axisPrism
+  y_axis <- inputs$y_axisPrism
   tab1 <- tables[[2]]
   tab2 <- tables[[3]]
   tab3 <- tables[[4]]
-  
+
   trans_name <- transform_table()
-  
-  
+
+
   trans_name <- trans_name$transform_name[which(trans_name$power == power)]
   trans_name <- gsub("A ", "", trans_name)
   trans_name <- gsub("An ", "", trans_name)
-  
-  if (power == 1 | y_axis == 'no_transform') {
+
+  if (power == 1 | y_axis == "no_transform") {
     ylab <- endpoint
     data <- data %>%
       mutate(Response_Transformed = Response)
   }
-  
-  if (y_axis == 'transform') {
+
+  if (y_axis == "transform") {
     ylab <- paste(trans_name, endpoint)
-    var = 'Response_Transformed'
+    var <- "Response_Transformed"
   }
-  
-  
-  if (y_axis == 'change_from_baseline' & power == 1) {
+
+
+  if (y_axis == "change_from_baseline" & power == 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
     ylab <- paste0("Change from Baseline \n", endpoint)
   }
-  
-  if (y_axis == 'change_from_baseline' & power != 1) {
+
+  if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
     ylab <- paste0(trans_name, "\n Change from Baseline ", endpoint)
   }
-  
+
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
     select(Treatment, `Time Points`, grep("p value from", colnames(.))) %>%
     mutate_at(.vars = 3:ncol(.), .funs = ~ as.character(.)) %>%
@@ -56,18 +56,18 @@ prism_plot <- function(data, tables, trt_sel,
       cols = 3:ncol(.),
       names_to = "group2",
       values_to = "p value"
-    ) 
-  
-  p_vals <- 
+    )
+
+  p_vals <-
     p_vals %>%
     rename(group1 = Treatment) %>%
     filter(
       complete.cases(.),
       `Time Points` != "Average Over Time",
       `p value` != ""
-    ) 
-  
-  p_vals <- 
+    )
+
+  p_vals <-
     p_vals %>%
     mutate(
       group2 = gsub("p value from ", "", group2),
@@ -95,15 +95,15 @@ prism_plot <- function(data, tables, trt_sel,
       group1 %in% trt_sel,
       group2 %in% trt_sel
     )
-  
-  
-  
+
+
+
   correct_level_order <- data %>%
     arrange(TreatmentNew) %>%
     distinct(Treatment, TreatmentNew) %>%
     dplyr::select(Treatment) %>%
     unlist()
-  
+
   data <- data %>%
     filter(Time == time_sel) %>%
     group_by(Treatment) %>%
@@ -112,7 +112,7 @@ prism_plot <- function(data, tables, trt_sel,
       Treatment = factor(Treatment, levels = correct_level_order)
     ) %>%
     ungroup()
-  
+
   if (type == "box") {
     full_prism <- ggplot(
       data %>% rename(group1 = Treatment),
@@ -120,7 +120,7 @@ prism_plot <- function(data, tables, trt_sel,
     ) +
       stat_boxplot(
         geom = "errorbar",
-        width = 3*length(unique(data$Treatment)) / num_groups^2,
+        width = 3 * length(unique(data$Treatment)) / num_groups^2,
         lwd = 1
       ) +
       geom_boxplot(
@@ -128,7 +128,7 @@ prism_plot <- function(data, tables, trt_sel,
         outlier.color = NA,
         lwd = 2,
         fatten = 1,
-        width = 3*length(unique(data$Treatment)) / num_groups^2
+        width = 3 * length(unique(data$Treatment)) / num_groups^2
       ) +
       geom_jitter(
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
@@ -160,7 +160,7 @@ prism_plot <- function(data, tables, trt_sel,
         sd_Response = sd(Response_Transformed)
       ) %>%
       rename(Response_Transformed = Mean_Response)
-    
+
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
       aes(x = group1, y = Response_Transformed, color = group1)
@@ -169,7 +169,7 @@ prism_plot <- function(data, tables, trt_sel,
         aes(fill = group1),
         lwd = 2,
         stat = "identity",
-        width = 3*length(unique(data$Treatment)) / num_groups^2,
+        width = 3 * length(unique(data$Treatment)) / num_groups^2,
         position = position_dodge(width = 0.7)
       ) +
       geom_jitter(
@@ -186,7 +186,7 @@ prism_plot <- function(data, tables, trt_sel,
       ) +
       geom_errorbar(
         aes(ymin = Response_Transformed, ymax = Response_Transformed + sd_Response),
-        position = position_dodge(width = 0.7), width = 3*length(unique(data$Treatment)) / num_groups^2,
+        position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
         size = 2
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data_max$Response_Transformed))) +
@@ -199,7 +199,7 @@ prism_plot <- function(data, tables, trt_sel,
       ylab(ylab) +
       xlab("Treatment")
   }
-  
+
   bottom <- full_prism +
     scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
     theme(plot.margin = margin(
@@ -214,9 +214,9 @@ prism_plot <- function(data, tables, trt_sel,
       axis.title = element_text(size = 10)
     )
   }
-  
-  if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == 'change_from_baseline')|
-                          (as.logical(cfb) != TRUE & y_axis != 'change_from_baseline'))) {
+
+  if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
+    (as.logical(cfb) != TRUE & y_axis != "change_from_baseline"))) {
     full_prism <- full_prism + add_pvalue(
       p_vals,
       label = "{sig}",
@@ -226,8 +226,8 @@ prism_plot <- function(data, tables, trt_sel,
       size = 2,
       step.increase = 0.02
     )
-    
-    
+
+
     top <- full_prism +
       scale_y_continuous(limits = c(
         1.1 * max(data$Response_Transformed),
@@ -243,13 +243,13 @@ prism_plot <- function(data, tables, trt_sel,
         r = 0,
         b = -10,
         l = 0
-      )) 
-    if(type == "box"){
-      top = top +
-        ggtitle(paste('Box Chart for Treatment Groups at', time_sel))
-    }else{
-      top = top +
-        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
+      ))
+    if (type == "box") {
+      top <- top +
+        ggtitle(paste("Box Chart for Treatment Groups at", time_sel))
+    } else {
+      top <- top +
+        ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
     }
     return(ggarrange(
       plotlist = list(top, bottom),
@@ -257,12 +257,12 @@ prism_plot <- function(data, tables, trt_sel,
       heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
     ))
   } else {
-    if(type == "box"){
-      bottom = bottom +
-        ggtitle(paste('Box Chart for Treatment Groups at', time_sel))
-    }else{
-      bottom = bottom +
-        ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
+    if (type == "box") {
+      bottom <- bottom +
+        ggtitle(paste("Box Chart for Treatment Groups at", time_sel))
+    } else {
+      bottom <- bottom +
+        ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
     }
     return(bottom)
   }

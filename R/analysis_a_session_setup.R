@@ -37,16 +37,18 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     title = h4("Study Description"),
     tooltip(
       selectizeInput(
-        ns("sessionMode"), div( class = "d-flex justify-content-between",
-                                "Objective", icon("info-circle")),
+        ns("sessionMode"), div(
+          class = "d-flex justify-content-between",
+          "Objective", icon("info-circle")
+        ),
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      title = 'TBD by Monika'
+      title = "TBD by Monika"
     ),
     textAreaInput(ns("description"),
-                  "Please give research objectives and experiment details",
-                  height = "300px"
+      "Please give research objectives and experiment details",
+      height = "300px"
     ),
     fileInput(
       placeholder = "",

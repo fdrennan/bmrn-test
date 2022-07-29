@@ -30,12 +30,12 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
       observeEvent(input$runReport, {
         showNotification("Making Report")
-        
+
         data <- req(data())
         uuid <- data$uuid
         email <- data$email
-        tryCatch({
-            
+        tryCatch(
+          {
             rmarkdown::render(
               "Test_Report.Rmd",
               params = list(
@@ -47,11 +47,11 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
           }
         )
-        
-        tryCatch({
-          
+
+        tryCatch(
+          {
             send.mail(
-              from = Sys.getenv('EMAIL_USER'),
+              from = Sys.getenv("EMAIL_USER"),
               to = email,
               subject = "Report Generated",
               body = "<html><h1>TEST Results</h1><h2></h2></html>",
@@ -73,7 +73,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification("Report failed to email")
           }
         )
-        
       })
     }
   )

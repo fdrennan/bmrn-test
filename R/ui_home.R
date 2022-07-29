@@ -52,7 +52,7 @@ server_home <- function(id = "home") {
     function(input, output, session) {
       observe({
         showModal(modalDialog(
-          class = "h-100",
+          style = 'height: 500px;',
           ui_landing(),
           easyClose = TRUE,
           title = NULL,
@@ -60,7 +60,7 @@ server_home <- function(id = "home") {
             class = "text-right",
             "Contact xxx-xxx-xxxx",
             tags$br(),
-            getOption('test_version'),
+            getOption("test_version"),
           ),
           size = "xl"
         ))
