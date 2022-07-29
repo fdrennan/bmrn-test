@@ -70,17 +70,17 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         tryCatch(
           {
             files <- c("Test_Report.docx", files)
-            print(Sys.getenv("EMAIL_USER"))
+            print(getOption("EMAIL_USER"))
             print(email)
             print(email_message)
             print(files)
             send.mail(
-              from = Sys.getenv("EMAIL_USER"),
+              from = getOption("EMAIL_USER"),
               to = email,
               subject = "Report Generated",
               body = email_message,
               html = TRUE,
-              smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
+              smtp = list(host.name = "mail.bmrn.com", user.name = getOption("EMAIL_USER"), passwd = getOption("EMAIL_PASSWORD")),
               attach.files = files,
               authenticate = TRUE,
               send = getOption("send")
