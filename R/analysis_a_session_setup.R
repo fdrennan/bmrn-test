@@ -21,7 +21,12 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     ),
     selectizeInput(
       ns("department"), "Therapeutic Areas",
-      choices = c("Dep 1", "Dep B")
+      choices = c(
+        "Cardiovascular", "Central Nervous System",
+        "Musculoskeletal",
+        "Hematology",
+        "Other"
+      )
     ),
     selectizeInput(
       ns("program"), "Program (select or type)",
@@ -29,6 +34,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
       choices = unique(program_lists$Program)
     ),
     uiOutput(ns("selectizeInput")),
+    textInput(ns("studyTitle"), "Study Title"),
     textInput(ns("studyId"), "Study ID", "TB21-02")
   )
 
@@ -37,16 +43,18 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     title = h4("Study Description"),
     tooltip(
       selectizeInput(
-        ns("sessionMode"), div( class = "d-flex justify-content-between",
-                                "Objective", icon("info-circle")),
+        ns("sessionMode"), div(
+          class = "d-flex justify-content-between",
+          "Objective", icon("info-circle")
+        ),
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      title = 'TBD by Monika'
+      title = "TBD by Monika"
     ),
     textAreaInput(ns("description"),
-                  "Please give research objectives and experiment details",
-                  height = "300px"
+      "Please give research objectives and experiment details",
+      height = "300px"
     ),
     fileInput(
       placeholder = "",

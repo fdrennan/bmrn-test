@@ -29,7 +29,7 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
       value = "Analysis Results",
       fluidRow(
         class = "p-3",
-        testSpinner(uiOutput(ns('tableSelectors'))),
+        testSpinner(uiOutput(ns("tableSelectors"))),
         testSpinner(
           uiOutput(ns("analysisPanel"))
         )
@@ -57,8 +57,8 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 #' @export
 analysis_a_run_server <- function(input, output, session, user, is_admin, signal, cache = TRUE) {
   ns <- session$ns
-  
-  
+
+
   input_data <- reactive({
     req(signal())
     input_data <- signal()$input_data
@@ -70,23 +70,23 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     input_data$session_data <- data
     input_data
   })
-  
+
   output$typeAssignmentTablePlots <- renderUI({
     data <- input_data()$data
     type_inputs <- distinct(data, Type, type_snake)
     make_type_assignment_table(type_inputs, ns)
   })
-  
-  
-  
+
+
+
   output$groupAssignmentTablePlots <- renderUI({
     data <- input_data()$data
-    
+
     treatment_input <-
       distinct(data, treatment_snake, Treatment) %>%
       filter(complete.cases(.))
-    
-    
+
+
     map2(
       treatment_input$treatment_snake,
       treatment_input$Treatment,
@@ -98,7 +98,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       }
     )
   })
-  
+
 
   analysis_input <- reactive({
     req(signal())
@@ -243,7 +243,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(pre_modeling_output())
     input <- signal()$input_data
     data <- pre_modeling_output()
-    analysis_type = signal()$session_data$sessionMode
+    analysis_type <- signal()$session_data$sessionMode
     print_tables <- ifelse(all(!data$error), TRUE, FALSE)
     if (!print_tables) {
       message <- if_else(data$error$error_trans == TRUE,
@@ -264,15 +264,16 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       # showNotification("Analysis setup complete, you may visit the other panels.")
       # TODO timeshow is the new selector
       if (analysis_type == "Exploratory") {
-        final_model <- final_modeling(data,analysis_type = analysis_type)
-      }else{
+        final_model <- final_modeling(data, analysis_type = analysis_type)
+      } else {
         final_model <- final_modeling(data,
-                                      toi = signal()$timeSelectionInput,
-                                      analysis_type = analysis_type
+          toi = signal()$timeSelectionInput,
+          analysis_type = analysis_type
         )
       }
+
       tables <- html_tables(data$transformed_data, final_model)
-      
+
       trans_name <- transform_table() %>%
         filter(power == final_model$power) %>%
         select(transform_name) %>%
@@ -287,8 +288,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
       tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
         dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
-      if(analysis_type == "Exploratory"){
-        tables$tab0 = tables$tab0 %>%
+      if (analysis_type == "Exploratory") {
+        tables$tab0 <- tables$tab0 %>%
           arrange(Treatment, `Time Points`)
       }
       list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
@@ -299,19 +300,19 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     showNotification("Data submitted for review")
   })
 
-  
+
   output$tableSelectors <- renderUI({
     data <- pre_modeling_output()
     req(signal())
     sessionMode <- signal()$session_data$sessionMode
-    if(sessionMode=='Exploratory') {
+    if (sessionMode == "Exploratory") {
       timePlotSelectors <- unique(as.character(data$transformed_data$Time))
-      toi = timePlotSelectors[length(timePlotSelectors)]
+      toi <- timePlotSelectors[length(timePlotSelectors)]
     } else {
       toi <- signal()$timeSelectionInput
-      timePlotSelectors = toi
+      timePlotSelectors <- toi
     }
-    
+
     box(
       width = 12,
       title = "Options",
@@ -321,7 +322,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         tooltip(
           selectizeInput(
             inputId = ns("timeTreatmentSelectorsTable"),
-            label = h4("Select Times to be Displayed"),
+            label = h4("Select Times (up to 5) to be Displayed"),
             selected = toi,
             choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
           ),
@@ -330,19 +331,19 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       )
     )
   })
-  
+
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
     footer <- pre_tables_input()$footer
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
-    analysis_type = signal()$session$sessionMode
-    times = input$timeTreatmentSelectorsTable
-    if(analysis_type == 'Exploratory'){
-      tables$tab0 = tables$tab0 %>% filter(`Time Points` %in% times)
-      tables$tab1 = tables$tab1 %>% filter(`Time Points` %in% times)
-      tables$tab2 = tables$tab2 %>% filter(`Time Points` %in% times)
-      tables$tab3 = tables$tab3 %>% filter(`Time Points` %in% times)
+    analysis_type <- signal()$session$sessionMode
+    times <- input$timeTreatmentSelectorsTable
+    if (analysis_type == "Exploratory") {
+      tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
+      tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
+      tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
+      tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
     }
 
     if (print_tables) {
@@ -356,30 +357,43 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
         writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
         writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    
+
         table_gt <- list(
           list(
             table = html_table_gt(
-              data = tables$tab0, title = "Table 1: Summary Statistics for Original Scale",
-              footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type
+              data = tables$tab0, title = paste("Table 1: Summary Statistics for", signal()$input_data$endpoint),
+              footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab1, title = "Table 2: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab1, title = paste(
+                "Table 2: Comparison between Controls and Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = "Table 3: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab2, title = paste(
+                "Table 3: Comparison between Doses as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab3, title = "Table 4: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type
+              data = tables$tab3, title = paste(
+                "Table 4: Comparison between Doses and Controls/Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           )
         )
@@ -394,25 +408,37 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         table_gt <- list(
           list(
             table = html_table_gt(
-              data = tables$tab1, title = "Table 1: Comparison between Controls and Wild Type",
-              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab1, title = paste(
+                "Table 1: Comparison between Controls and Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = " Table 2: Comparison between Doses",
-              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab2, title = paste(
+                "Table 2: Comparison between Doses as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           ),
           list(
             table = html_table_gt(
-              data = tables$tab3, title = "Table 3: Comparison between Doses and Controls/Wild Type",
-              footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type
+              data = tables$tab3, title = paste(
+                "Table 3: Comparison between Doses and Controls/Wild Type as to",
+                signal()$input_data$endpoint
+              ),
+              footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type,
+              endpoint = signal()$input_data$endpoint
             )
           )
         )
       }
-      tables_path <- path_join(c(input_data()$session_data$full_path_files, 'tables.xlsx'))
+      tables_path <- path_join(c(input_data()$session_data$full_path_files, "tables.xlsx"))
       saveWorkbook(wb, file = tables_path, overwrite = TRUE)
       div(
         map(
@@ -508,7 +534,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     # TODO dont include baseline as a time, just check changefrombaseline logic and dont use it
     treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
     timePlotSelectors <- c("Baseline", unique(as.character(data$transformed_data$Time)))
-    
+
     box(
       width = 12,
       title = "Options",

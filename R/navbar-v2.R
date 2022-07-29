@@ -7,12 +7,13 @@ ui_navbar <- function(id = "navbar", navbarId = "navbarNav") {
   id_hash <- paste0("#", id)
   div(
     class = "d-flex justify-content-between align-items-center m-2 p-2",
-    actionButton(style='height: 100px',
+    actionButton(
+      style = "height: 100px",
       inputId = ns("goHome"),
       class = "p-1",
       label = div(
         style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
-        imageOutput(ns("svgIcon"), height='90px')
+        imageOutput(ns("svgIcon"), height = "90px")
       )
     ),
     div(

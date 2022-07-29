@@ -384,15 +384,15 @@ column_labels <- function(df_gt, column, label) {
 #' html_table_gt
 #' @export
 
-html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type) {
+html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
     mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`
-    )) 
-  if(analysis_type == 'Exploratory'){
-    data = data %>% arrange(Treatment, `Time Points`)
+    ))
+  if (analysis_type == "Exploratory") {
+    data <- data %>% arrange(Treatment, `Time Points`)
   }
 
   if (summary_only & transformation) {
@@ -402,7 +402,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         title = title
       ) %>%
       tab_spanner(
-        label = "Original Scale",
+        label = endpoint,
         columns = grep("Original", colnames(data), value = TRUE)
       ) %>%
       cols_label(
@@ -472,16 +472,18 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             `Transformed Scale Mean` = "Mean",
             `Transformed Scale SE` = "SE"
           ) %>%
-        tab_spanner(
-          label = "Back Transformed",
-          columns = grep('Back Transformed', colnames(data), value = TRUE)) %>%
-        cols_label(
-          `Back Transformed Mean` = "Mean",
-          `Back Transformed SE` = "SE")
+          tab_spanner(
+            label = "Back Transformed",
+            columns = grep("Back Transformed", colnames(data), value = TRUE)
+          ) %>%
+          cols_label(
+            `Back Transformed Mean` = "Mean",
+            `Back Transformed SE` = "SE"
+          )
       } else {
         table_gt <- table_gt %>%
           tab_spanner(
-            label = "Original Scale",
+            label = endpoint,
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
           ) %>%
           cols_label(
