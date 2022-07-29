@@ -34,8 +34,8 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
       choices = unique(program_lists$Program)
     ),
     uiOutput(ns("selectizeInput")),
-    textInput(ns("studyTitle"), "Study Title"),
-    textInput(ns("studyId"), "Study ID", "TB21-02")
+    textInput(ns("studyId"), "Study ID", "TB21-02"),
+    textInput(ns("studyTitle"), "Study Title")
   )
 
   section_2 <- box(
