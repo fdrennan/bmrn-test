@@ -37,17 +37,20 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         studyId <- data$studyId
         statistician <- data$statistician
         uuid <- data$uuid
+        full_path_files <- data$full_path_files
         email_message <-
-          html(
-            as.character(div(
-              p(
-                paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
-              ),
-              p(
-                paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
-              ),
-              tableHTML(data)
-            ))
+          as.character(
+            html(
+              as.character(div(
+                p(
+                  paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
+                ),
+                p(
+                  paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
+                ),
+                tableHTML(data)
+              ))
+            )
           )
         tryCatch(
           {
@@ -73,7 +76,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
               body = email_message,
               html = TRUE,
               smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
-              attach.files = c("Test_Report.docx"),
+              attach.files = c("Test_Report.docx", dir_ls(full_path_files)),
               authenticate = TRUE,
               send = getOption("send")
             )
