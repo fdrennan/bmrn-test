@@ -50,6 +50,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
+            browser()
             send.mail(
               from = Sys.getenv("EMAIL_USER"),
               to = email,

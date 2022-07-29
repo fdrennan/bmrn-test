@@ -52,15 +52,17 @@ server_home <- function(id = "home") {
     function(input, output, session) {
       observe({
         showModal(modalDialog(
-          style = 'height: 500px;',
+          style = "height: 500px;",
           ui_landing(),
           easyClose = TRUE,
           title = NULL,
           footer = div(
             class = "text-right",
-            "Contact xxx-xxx-xxxx",
+            "Contact: fr904103@bmrn.com",
             tags$br(),
             getOption("test_version"),
+            tags$br(),
+            em("By Quantitative Science, Data Science")
           ),
           size = "xl"
         ))

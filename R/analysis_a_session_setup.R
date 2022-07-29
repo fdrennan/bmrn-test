@@ -21,7 +21,12 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     ),
     selectizeInput(
       ns("department"), "Therapeutic Areas",
-      choices = c("Dep 1", "Dep B")
+      choices = c(
+        "Cardiovascular", "Central Nervous System",
+        "Musculoskeletal",
+        "Hematology",
+        "Other"
+      )
     ),
     selectizeInput(
       ns("program"), "Program (select or type)",
@@ -29,6 +34,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
       choices = unique(program_lists$Program)
     ),
     uiOutput(ns("selectizeInput")),
+    textInput(ns("studyTitle"), "Study Title"),
     textInput(ns("studyId"), "Study ID", "TB21-02")
   )
 

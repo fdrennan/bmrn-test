@@ -3,7 +3,8 @@
 ui_landing <- function(id = "landing") {
   ns <- NS(id)
   base <- Sys.getenv("BASE_DOMAIN")
-  div(class = "h-100 d-flex align-items-center justify-content-around",
+  div(
+    class = "h-100 d-flex align-items-center justify-content-around",
     div(
       style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
       imageOutput(ns("svgIcon"), height = "200px")
