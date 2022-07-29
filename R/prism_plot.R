@@ -251,9 +251,10 @@ prism_plot <- function(data, tables, trt_sel,
       top = top +
         ggtitle(paste('Bar Chart for Treatment Groups at', time_sel))
     }
+    browser()
     return(ggarrange(
       plotlist = list(top, bottom),
-      ncol = 1,
+      ncol = 1, align = 'hv',
       heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
     ))
   } else {
