@@ -38,6 +38,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         statistician <- data$statistician
         uuid <- data$uuid
         full_path_files <- data$full_path_files
+        files <- as.character(dir_ls(full_path_files))
         email_message <-
           as.character(
             html(
@@ -68,7 +69,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
-            files <- dir_ls(data$full_path_files)
+            
             send.mail(
               from = Sys.getenv("EMAIL_USER"),
               to = email,
@@ -76,7 +77,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
               body = email_message,
               html = TRUE,
               smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
-              attach.files = c("Test_Report.docx", dir_ls(full_path_files)),
+              attach.files = c("Test_Report.docx", files),
               authenticate = TRUE,
               send = getOption("send")
             )
