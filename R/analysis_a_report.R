@@ -30,7 +30,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
       observeEvent(input$runReport, {
         showNotification("Making Report")
-
         data <- req(data())
         uuid <- data$uuid
         email <- data$email
@@ -58,7 +57,8 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             rmarkdown::render(
               "Test_Report.Rmd",
               params = list(
-                uuid = uuid
+                uuid = uuid,
+                title = data$Studytitle
               )
             )
           },

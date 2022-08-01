@@ -1,5 +1,4 @@
 ---
-title: "Statistical Report for Treatment Evaluation"
 author: Treatment Evaluation Statistical Tool, TEST 1
 output: 
   bookdown::word_document2:
@@ -12,7 +11,12 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '0f4ceee9-6905-45d3-bec8-bbe98f080d23' 
+  uuid: 'a91c2e7e-bd70-4932-b019-7a0cfc7b163f' 
+  title: 'Something Cool'
+---
+
+---
+title: `r paste('Statistical Report for the Study Titled:', params$title)`
 ---
 
 ```{r setup, include=FALSE}
@@ -106,7 +110,7 @@ session_info = data$input_data$session_data %>%
                          col1 == 'sessionMode' ~ 'Objective Type',
                          !(col1 %in% c('statistician', 'name', 'sessionMode')) ~ col1),
          col1 = str_to_title(col1)) %>%
-  filter(!(col1 %in% c('Uuid','Base Dir', 'Rel Path Home', 'Full Path Files')))
+  filter(!(col1 %in% c('Uuid','Base Dir', 'Rel Path Home', 'Full Path Files', 'Studytitle')))
 
 session_info %>% flextable() %>% 
   delete_part(part = "header") %>% 
@@ -370,7 +374,6 @@ plots[[4]] +
 ```
 
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption}
-# source('R/prism_plot.R')
 transformed_data = data$plot$data$transformed_data
 prismInputs$palette = 'black_and_white'
 prismInputs$border = TRUE
@@ -422,7 +425,7 @@ endpoint <- if_else(!show_text,
 
 <br>
 ```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab0 = data$tables$tables$tab0
+tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
 word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
@@ -436,7 +439,7 @@ word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab1 = data$tables$tables$tab1
+tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
 word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)  %>%
   width(x = ., width = 1) 
@@ -448,7 +451,7 @@ word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = tr
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab2 = data$tables$tables$tab2
+tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
 word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)%>%
   width(x = ., width = 0.75) 
@@ -459,7 +462,7 @@ word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform
 
 <br>
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab3 = data$tables$tables$tab3
+tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
 
 word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
