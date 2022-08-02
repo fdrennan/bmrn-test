@@ -202,7 +202,7 @@ prism_plot <- function(data, tables, trt_sel,
   bottom <- full_prism +
     scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
     theme(plot.margin = margin(
-      t = -5,
+      t = -10,
       r = 0,
       b = 0,
       l = 0
@@ -222,7 +222,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed)) / 10
+      step.increase = 0.02
     )
 
 
@@ -239,9 +239,10 @@ prism_plot <- function(data, tables, trt_sel,
       theme(plot.margin = margin(
         t = 0,
         r = 0,
-        b = 0,
+        b = -10,
         l = 0
       ))
+
     if (type == "box") {
       top = top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
       combined = grid.arrange(grobs = list(top,bottom),, layout_matrix = rbind(1,2,2))
