@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: 'a91c2e7e-bd70-4932-b019-7a0cfc7b163f' 
+  uuid: '9a1324e1-a509-4759-a84a-00222a9a17df' 
 #  title: 'Something Cool'
 ---
 
@@ -453,6 +453,7 @@ word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = tr
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
 tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+
 word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)%>%
   width(x = ., width = 0.75) 
@@ -464,6 +465,7 @@ word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform
 <br>
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
 tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+
 
 word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
