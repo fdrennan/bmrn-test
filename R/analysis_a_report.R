@@ -31,9 +31,10 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
       observeEvent(input$runReport, {
         showNotification("Making Report")
         data <- req(data())
+        name <- data$name
         uuid <- data$uuid
         email <- data$email
-        studyId <- data$studyId
+        studyName <- data$studyName
         statistician <- data$statistician
         uuid <- data$uuid
         full_path_files <- data$full_path_files
@@ -42,13 +43,17 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           as.character(
             html(
               as.character(div(
+                p(paste0("Dear ", name, ",")),
                 p(
-                  paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
+                  paste0("A statistical report has been generated for study ", studyName, " by the TEST 1 Application. ")
                 ),
+                p(paste0("The test analysis id is ", uuid)),
                 p(
-                  paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
+                  paste0("If you have any questions please contact Cheng Su."),
                 ),
-                tableHTML(data)
+                div("TEST TEAM"),
+                div("Quantitative Science, Data Science"),
+                div("WWRD")
               ))
             )
           )

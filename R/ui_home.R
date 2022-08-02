@@ -61,8 +61,7 @@ server_home <- function(id = "home") {
             "Contact: fr904103@bmrn.com",
             tags$br(),
             getOption("test_version"),
-            tags$br(),
-            em("By Quantitative Science, Data Science")
+            tags$br()
           ),
           size = "xl"
         ))

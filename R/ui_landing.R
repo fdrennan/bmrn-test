@@ -24,7 +24,8 @@ ui_landing <- function(id = "landing") {
         h2("Preclinical", class = "p-2"),
         h2("Studies", class = "p-2"),
         class = "font-weight-bold px-3"
-      )
+      ),
+      h3("By Quantitative Science, Data Science", class='text-right')
     )
   )
 }

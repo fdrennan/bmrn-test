@@ -222,7 +222,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = 0.02
+      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed)) / 10
     )
 
 
@@ -249,7 +249,12 @@ prism_plot <- function(data, tables, trt_sel,
       top = top + ggtitle(paste("Bar chart for Treatment Groups at", time_sel))
       combined = grid.arrange(grobs = list(top,bottom), layout_matrix = rbind(1,2,2))
     }
-    return(combined)
+
+    return(ggarrange(
+      plotlist = list(top, bottom),
+      ncol = 1, align = "hv",
+      heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
+    ))
   } else {
     if (type == "box") {
       bottom <- bottom +
