@@ -70,5 +70,6 @@ Depends:
     mailR,
     shinyWidgets,
     plumber,
+    gridExtra,
     R (>= 4.00)
 LazyData: true

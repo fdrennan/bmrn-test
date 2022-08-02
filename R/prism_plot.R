@@ -189,7 +189,7 @@ prism_plot <- function(data, tables, trt_sel,
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
         size = 2
       ) +
-      scale_y_continuous(limits = c(NA, 3 * max(data_max$Response_Transformed))) +
+      scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
       # scale_shape_manual(values = 15:20) +
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
@@ -200,7 +200,7 @@ prism_plot <- function(data, tables, trt_sel,
       xlab("Treatment")
   }
   bottom <- full_prism +
-    scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
+    scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
     theme(plot.margin = margin(
       t = -10,
       r = 0,
@@ -213,7 +213,6 @@ prism_plot <- function(data, tables, trt_sel,
       axis.title = element_text(size = 10)
     )
   }
-
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
     (as.logical(cfb) != TRUE & y_axis != "change_from_baseline"))) {
     full_prism <- full_prism + add_pvalue(
@@ -223,13 +222,13 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = (max(data$Response_Transformed) - min(data$Response_Transformed))/10,
+      step.increase = 0.05
     )
 
 
     top <- full_prism +
       scale_y_continuous(limits = c(
-        1.1 * max(data$Response_Transformed),
+        1.55 * max(data$Response_Transformed),
         1.1 * max(p_vals$y.position)
       )) +
       theme(
@@ -240,21 +239,18 @@ prism_plot <- function(data, tables, trt_sel,
       theme(plot.margin = margin(
         t = 0,
         r = 0,
-        b = -10,
+        b = -5,
         l = 0
       ))
+    browser()
     if (type == "box") {
-      top <- top +
-        ggtitle(paste("Box Chart for Treatment Groups at", time_sel))
+      top = top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
+      combined = grid.arrange(grobs = list(top,bottom))
     } else {
-      top <- top +
-        ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
+      top = top + ggtitle(paste("Bar chart for Treatment Groups at", time_sel))
+      combined = grid.arrange(grobs = list(top,bottom))
     }
-    return(ggarrange(
-      plotlist = list(top, bottom),
-      ncol = 1,align = 'hv',
-      heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
-    ))
+    return(combined)
   } else {
     if (type == "box") {
       bottom <- bottom +
