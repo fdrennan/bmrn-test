@@ -128,7 +128,8 @@ prism_plot <- function(data, tables, trt_sel,
         outlier.color = NA,
         lwd = 2,
         fatten = 1,
-        width = 3 * length(unique(data$Treatment)) / num_groups^2
+        width = 3 * length(unique(data$Treatment)) / num_groups^2,
+        alpha = 0.5
       ) +
       geom_jitter(
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
@@ -170,7 +171,8 @@ prism_plot <- function(data, tables, trt_sel,
         lwd = 2,
         stat = "identity",
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
-        position = position_dodge(width = 0.7)
+        position = position_dodge(width = 0.7),
+        alpha = 0.5
       ) +
       geom_jitter(
         data = data %>% rename(group1 = Treatment),
