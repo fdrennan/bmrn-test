@@ -38,7 +38,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       }
     })
   } else {
-    final_contrast <- map_df(.x = LETTERS[1:9], .f = ~ {
+    final_contrast <- future_map_dfr(.x = LETTERS[1:9], .f = ~ {
       print(.x)
       #This needs to be removed if we include overall average.
       keep <- which(sapply(contrast_list[[.x]], function(i) {

@@ -461,7 +461,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot <- ylab_move(plot = ggplotly(plots$plots[[1]]), parameter = 0.02)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot
+    label_fix(plot = ggplotly(plot))
   })
 
   output$analysisPlot_2 <- renderPlotly({
@@ -503,7 +503,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         }
       }
     }
-    tmp
+    label_fix(plot = ggplotly(tmp))
   })
 
 
@@ -512,7 +512,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot <- label_fix(ggplotly(plots$plots[[4]]))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot
+    label_fix(plot = ggplotly(plot))
   })
 
 
