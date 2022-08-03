@@ -1,9 +1,4 @@
 library(test)
-# if exploratory drop out time, and use last date
-# Select timepoints to be included in table (table output selector)
-# run today
-# logo
-# Summer1$
 
 devtools::load_all()
 plan(multiprocess)
