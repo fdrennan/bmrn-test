@@ -115,6 +115,10 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
 
   bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
+    scale_x_discrete() +
+    scale_y_continuous(limits = c(min(0,min(transformed_data_sum$Mean_Response)), NULL), 
+                       expand = expansion(mult = c(0,1.1*max(transformed_data_sum$Mean_Response + 
+                                                                   transformed_data_sum$sd_Response)))) + 
     geom_bar(
       stat = "identity",
       aes(color = Treatment), fill = "white",
@@ -125,14 +129,12 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       color = Treatment
     ), position = position_dodge(width = 0.7), size = 0.75) +
     geom_point(
-      position = position_jitterdodge(dodge.width = 0.7),
       aes(y = Response_Transformed, color = Treatment), show.legend = FALSE,
-      data = transformed_data, size = 0.7
+      data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
     ) +
-    scale_x_discrete() +
     labs(color = "Treatment") +
     ylab(ylabel) +
-    ggtitle("Bar Plot for Each Group Over Time") +
+    ggtitle("Bar Chart for Each Group Over Time") +
     test_plot_theme() +
     scale_color_prism("floral") +
     scale_fill_prism("floral")

@@ -60,7 +60,7 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
       title = element_text(size = 16)
     ) +
     ylab(ylabel) +
-    ggtitle("Bar Plot for Each Group Across Time Points")
+    ggtitle("Bar Chart for Each Group Across Time Points")
 
 
   box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed_bc)) +
