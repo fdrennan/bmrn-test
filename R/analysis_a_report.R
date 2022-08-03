@@ -78,15 +78,18 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             print(getOption("EMAIL_USER"))
             print(email)
             print(email_message)
-            print(files)
+            zip_name <- 'test1output.zip'
+            zip(zip_name, files)
             send.mail(
               from = getOption("EMAIL_USER"),
               to = email,
               subject = "Report Generated",
               body = email_message,
               html = TRUE,
-              smtp = list(host.name = "mail.bmrn.com", user.name = getOption("EMAIL_USER"), passwd = getOption("EMAIL_PASSWORD")),
-              attach.files = files,
+              smtp = list(host.name = "mail.bmrn.com", 
+                          user.name = getOption("EMAIL_USER"), 
+                          passwd = getOption("EMAIL_PASSWORD")),
+              attach.files = zip_name,
               authenticate = TRUE,
               send = getOption("send")
             )
