@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   uuid: '9a1324e1-a509-4759-a84a-00222a9a17df' 
-#  title: 'Something Cool'
+  title: 'No title provided'
 ---
 
 <!-- --- -->

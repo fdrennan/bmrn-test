@@ -36,6 +36,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         email <- data$email
         studyName <- data$studyName
         statistician <- data$statistician
+        studyTitle <- data$studyTitle
         uuid <- data$uuid
         full_path_files <- data$full_path_files
         files <- as.character(dir_ls(full_path_files))
@@ -63,7 +64,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
               "Test_Report.Rmd",
               params = list(
                 uuid = uuid,
-                title = data$Studytitle
+                title = studyTitle
               )
             )
           },
