@@ -76,8 +76,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           {
             files <- c("Test_Report.docx", files)
             print(getOption("EMAIL_USER"))
-            print(email)
-            print(email_message)
             zip_name <- 'test1output.zip'
             zip(zip_name, files)
             send.mail(
