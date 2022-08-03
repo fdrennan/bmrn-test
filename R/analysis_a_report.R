@@ -74,6 +74,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
+            browser()
             files <- c("Test_Report.docx", files)
             print(getOption("EMAIL_USER"))
             zip_name <- 'test1output.zip'

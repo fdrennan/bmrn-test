@@ -133,7 +133,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
     },
     content = function(con) {
       writexl::write_xlsx(
-        readxl::read_xlsx("test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"), con
+        readxl::read_xlsx("test_example.xlsx"), con
       )
     }
   )
