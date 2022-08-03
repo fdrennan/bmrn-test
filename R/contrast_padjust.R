@@ -38,9 +38,13 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       }
     })
   } else {
-    final_contrast <- future_map_dfr(.x = LETTERS[1:9], .f = ~ {
+    final_contrast <- map_df(.x = LETTERS[1:9], .f = ~ {
       print(.x)
-      # Maybe there is a way to have NA for contrasts that don't exist
+      #This needs to be removed if we include overall average.
+      keep <- which(sapply(contrast_list[[.x]], function(i) {
+        all(i == floor(i))
+      }) == TRUE)
+      contrast_list <- lapply(keep, function(i) contrast_list[[.x]][[i]])
       out <- final_contrasts(model = model, cont_list = contrast_list[[.x]], est = est)
       if (!is.null(out)) {
         num_pairs <- nrow(out) / 2
