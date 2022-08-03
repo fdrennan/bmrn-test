@@ -104,6 +104,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
   iv$add_rule("email", sv_required())
   iv$add_rule("email", sv_email())
   iv$add_rule("description", sv_required())
+  iv$add_rule("studyTitle", sv_required())
   iv$enable()
 
   ns <- session$ns
