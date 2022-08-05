@@ -112,20 +112,23 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     summarize(
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
-    )
+    ) %>%
+    mutate(error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
+           ymin = if_else(Mean_Response < 0, error, Mean_Response),
+           ymax = if_else(Mean_Response < 0, Mean_Response, error))
+           
 
   bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
     scale_x_discrete() +
-    scale_y_continuous(limits = c(min(0,min(transformed_data_sum$Mean_Response)), NULL), 
-                       expand = expansion(mult = c(0,1.1*max(transformed_data_sum$Mean_Response + 
-                                                                   transformed_data_sum$sd_Response)))) + 
+    scale_y_continuous(limits = c(1.5*min(0,min(transformed_data_sum$ymin)), 1.5*max(transformed_data_sum$ymax)), 
+                       expand = expansion(mult = c(0,0))) + 
     geom_bar(
       stat = "identity",
       aes(color = Treatment), fill = "white",
       width = 0.5, position = position_dodge(width = 0.7)
     ) +
     geom_errorbar(aes(
-      ymin = Mean_Response, ymax = Mean_Response + sd_Response,
+      ymin = ymin, ymax = ymax,
       color = Treatment
     ), position = position_dodge(width = 0.7), size = 0.75) +
     geom_point(

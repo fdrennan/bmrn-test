@@ -17,6 +17,7 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type) {
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = ~ {
         .x <- unname(.x)
+        print(.x)
         contrast_list <- generate_contrasts(
           toi = .x,
           data = transformed_data,
@@ -32,12 +33,6 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type) {
           analysis_type = "Exploratory"
         )
 
-        contrasts_stats <- contrast_padjust(
-          model = final_model,
-          contrast_list = contrast_list,
-          data = transformed_data,
-          variable = var
-        )
 
         output_tables <- final_output(
           transformed_data = transformed_data,
