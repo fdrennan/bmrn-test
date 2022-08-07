@@ -9,3 +9,5 @@ yt
 .env.container
 app.db
 .Rprofile
+test_output
+
