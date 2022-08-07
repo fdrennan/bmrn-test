@@ -315,28 +315,30 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       timePlotSelectors <- toi
     }
 
-    box(
-      width = 12,
-      title = "Options",
-      collapsible = TRUE,
-      div(
-        class = "d-flex justify-content-around",
-        tooltip(
-          selectizeInput(
-            inputId = ns("timeTreatmentSelectorsTable"),
-            label = h4("Select Times (up to 5) to be Displayed"),
-            selected = toi,
-            choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
-          ),
-          "Use delete key to remove, mouse click to add."
-        )
-      )
-    )
+    # box(
+    #   width = 12,
+    #   title = "Options",
+    #   collapsible = TRUE,
+    #   div(
+    #     class = "d-flex justify-content-around",
+    #     tooltip(
+    #       selectizeInput(
+    #         inputId = ns("timeTreatmentSelectorsTable"),
+    #         label = h4("Select Times (up to 5) to be Displayed"),
+    #         selected = toi,
+    #         choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
+    #       ),
+    #       "Use delete key to remove, mouse click to add."
+    #     )
+    #   )
+    # )
+    # 
+    div()
   })
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
-    
+    browser()
     wb <- createWorkbook()
     addWorksheet(wb = wb, sheetName = "Table 1")
     addWorksheet(wb = wb, sheetName = "Table 2")
@@ -354,16 +356,16 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-    times <- input$timeTreatmentSelectorsTable
+    # times <- input$timeTreatmentSelectorsTable
     
 
     
-    if (analysis_type == "Exploratory") {
-      tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
-      tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
-      tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
-      tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
-    }
+    # if (analysis_type == "Exploratory") {
+    #   tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
+    #   tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
+    #   tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
+    #   tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
+    # }
 
     if (print_tables) {
       if (transformation) {
