@@ -336,11 +336,28 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
+    
+    wb <- createWorkbook()
+    addWorksheet(wb = wb, sheetName = "Table 1")
+    addWorksheet(wb = wb, sheetName = "Table 2")
+    addWorksheet(wb = wb, sheetName = "Table 3")
+    addWorksheet(wb = wb, sheetName = "Table 4")
+    writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
+    writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
+    writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
+    writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
+    
+    saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+    
     footer <- pre_tables_input()$footer
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
     times <- input$timeTreatmentSelectorsTable
+    
+
+    
     if (analysis_type == "Exploratory") {
       tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
       tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
@@ -350,16 +367,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
     if (print_tables) {
       if (transformation) {
-        wb <- createWorkbook()
-        addWorksheet(wb = wb, sheetName = "Table 1")
-        addWorksheet(wb = wb, sheetName = "Table 2")
-        addWorksheet(wb = wb, sheetName = "Table 3")
-        addWorksheet(wb = wb, sheetName = "Table 4")
-        writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
-        writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
-        writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
-        writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -400,13 +407,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       } else {
-        wb <- createWorkbook()
-        addWorksheet(wb = wb, sheetName = "Table 1")
-        addWorksheet(wb = wb, sheetName = "Table 2")
-        addWorksheet(wb = wb, sheetName = "Table 3")
-        writeData(wb = wb, sheet = "Table 1", x = tables$tab1)
-        writeData(wb = wb, sheet = "Table 2", x = tables$tab2)
-        writeData(wb = wb, sheet = "Table 3", x = tables$tab3)
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -440,8 +440,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
-      tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
-      saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+      
       div(
         map(
           .x = table_gt, .f = function(x) {

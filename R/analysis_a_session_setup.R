@@ -8,8 +8,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     textInput(ns("name"), "Name"),
     textInput(ns("email"), "Email"),
     tooltip(
-      selectizeInput(
-        ns("statistician"),
+      selectizeInput(ns("statistician"), 
         div(
           class = "d-flex justify-content-between",
           "Contact Statistician",
