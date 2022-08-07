@@ -76,23 +76,9 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         tryCatch(
           {
             browser()
-            files <- c("Test_Report.docx", files)
-            print(getOption("EMAIL_USER"))
-            zip_name <- 'test1output.zip'
-            zip(zip_name, files)
-            send.mail(
-              from = getOption("EMAIL_USER"),
-              to = email,
-              subject = "Report Generated",
-              body = email_message,
-              html = TRUE,
-              smtp = list(host.name = "mail.bmrn.com", 
-                          user.name = getOption("EMAIL_USER"), 
-                          passwd = getOption("EMAIL_PASSWORD")),
-              attach.files = zip_name,
-              authenticate = TRUE,
-              send = getOption("send")
-            )
+            
+            send_email(all_files=TRUE,to=email, files=files, email_message = email_message)
+            send_email(all_files=FALSE,to=email, files=files, email_message=email_message)
 
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
