@@ -8,8 +8,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     textInput(ns("name"), "Name"),
     textInput(ns("email"), "Email"),
     tooltip(
-      selectizeInput(
-        ns("statistician"),
+      selectizeInput(ns("statistician"), 
         div(
           class = "d-flex justify-content-between",
           "Contact Statistician",
@@ -31,7 +30,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     selectizeInput(
       ns("program"), "Program (select or type)",
       options = list(create = TRUE),
-      choices = unique(program_lists$Program)
+      choices = unique(program_lists$Program)[-1]
     ),
     uiOutput(ns("selectizeInput")),
     textInput(ns("studyId"), "Study ID", "TB21-02"),
@@ -50,7 +49,8 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      title = "TBD by Monika"
+      title = 
+        "Exploratory: for early (or first) studies to explore dose and time points\n\nConfirmatory: to confirm treatment effect at a particular time point"
     ),
     textAreaInput(ns("description"),
       "Please give research objectives and experiment details",
@@ -104,6 +104,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
   iv$add_rule("email", sv_required())
   iv$add_rule("email", sv_email())
   iv$add_rule("description", sv_required())
+  iv$add_rule("studyTitle", sv_required())
   iv$enable()
 
   ns <- session$ns
@@ -132,7 +133,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
     },
     content = function(con) {
       writexl::write_xlsx(
-        readxl::read_xlsx("test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"), con
+        readxl::read_xlsx("test_example.xlsx"), con
       )
     }
   )

@@ -36,6 +36,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
         email <- data$email
         studyName <- data$studyName
         statistician <- data$statistician
+        studyTitle <- data$studyTitle
         uuid <- data$uuid
         full_path_files <- data$full_path_files
         files <- as.character(dir_ls(full_path_files))
@@ -63,7 +64,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
               "Test_Report.Rmd",
               params = list(
                 uuid = uuid,
-                title = data$Studytitle
+                title = studyTitle
               )
             )
           },
@@ -74,22 +75,8 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
-            files <- c("Test_Report.docx", files)
-            print(getOption("EMAIL_USER"))
-            print(email)
-            print(email_message)
-            print(files)
-            send.mail(
-              from = getOption("EMAIL_USER"),
-              to = email,
-              subject = "Report Generated",
-              body = email_message,
-              html = TRUE,
-              smtp = list(host.name = "mail.bmrn.com", user.name = getOption("EMAIL_USER"), passwd = getOption("EMAIL_PASSWORD")),
-              attach.files = files,
-              authenticate = TRUE,
-              send = getOption("send")
-            )
+            send_email(all_files=TRUE,to=email, files=files, email_message = email_message)
+            send_email(all_files=FALSE,to=email, files=files, email_message=email_message)
 
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
@@ -98,6 +85,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             }
           },
           error = function(err) {
+            browser()
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
             showNotification("Report failed to email")
           }

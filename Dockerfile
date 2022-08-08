@@ -31,4 +31,4 @@ RUN R -e "devtools::install('.')"
 COPY word_style.docx .
 COPY bib.bib .
 COPY test_logo.svg test_logo.svg
-
+COPY test_example.xlsx .

@@ -14,11 +14,11 @@ make_test <- function(ns,
       collapsible = FALSE,
       width = 12,
       height = "310px",
-      div(
-        class = "h-100",
+      div(class='d-flex justify-content-between flex-column h-100 py-4',
+        # class = "h-100",
         tags$ul(
-          class = "h-75",
-          class = "px-3",
+          # class = "h-75 px-3",
+          # class = "px-3",
           map(details, ~ tags$li(h4(.)))
         ),
         div(

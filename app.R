@@ -1,13 +1,8 @@
 library(test)
-# if exploratory drop out time, and use last date
-# Select timepoints to be included in table (table output selector)
-# run today
-# logo
-# Summer1$
 
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.13")
+options("test_version" = "Version 1.14")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")

@@ -160,6 +160,11 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
       err <- as.character(err)
+      full_path_files <- signal()$session_data$full_path_files
+      email_message <- as.character(HTML(fluidRow(
+        tableHTML(as.data.frame(purrr::keep(signal(), ~ length(.) == 1)))
+      )))
+      send_email(all_files=TRUE,to=getOption('ERROR_EMAIL'), files=files, email_message = email_message)
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
       FALSE
@@ -261,8 +266,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       )
       req(FALSE)
     } else {
-      # showNotification("Analysis setup complete, you may visit the other panels.")
-      # TODO timeshow is the new selector
       if (analysis_type == "Exploratory") {
         final_model <- final_modeling(data, analysis_type = analysis_type)
       } else {
@@ -315,51 +318,60 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       timePlotSelectors <- toi
     }
 
-    box(
-      width = 12,
-      title = "Options",
-      collapsible = TRUE,
-      div(
-        class = "d-flex justify-content-around",
-        tooltip(
-          selectizeInput(
-            inputId = ns("timeTreatmentSelectorsTable"),
-            label = h4("Select Times (up to 5) to be Displayed"),
-            selected = toi,
-            choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
-          ),
-          "Use delete key to remove, mouse click to add."
-        )
-      )
-    )
+    # box(
+    #   width = 12,
+    #   title = "Options",
+    #   collapsible = TRUE,
+    #   div(
+    #     class = "d-flex justify-content-around",
+    #     tooltip(
+    #       selectizeInput(
+    #         inputId = ns("timeTreatmentSelectorsTable"),
+    #         label = h4("Select Times (up to 5) to be Displayed"),
+    #         selected = toi,
+    #         choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
+    #       ),
+    #       "Use delete key to remove, mouse click to add."
+    #     )
+    #   )
+    # )
+    # 
+    div()
   })
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
+    browser()
+    wb <- createWorkbook()
+    addWorksheet(wb = wb, sheetName = "Table 1")
+    addWorksheet(wb = wb, sheetName = "Table 2")
+    addWorksheet(wb = wb, sheetName = "Table 3")
+    addWorksheet(wb = wb, sheetName = "Table 4")
+    writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
+    writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
+    writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
+    writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
+    
+    saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+    
     footer <- pre_tables_input()$footer
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-    times <- input$timeTreatmentSelectorsTable
-    if (analysis_type == "Exploratory") {
-      tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
-      tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
-      tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
-      tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
-    }
+    # times <- input$timeTreatmentSelectorsTable
+    
+
+    
+    # if (analysis_type == "Exploratory") {
+    #   tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
+    #   tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
+    #   tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
+    #   tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
+    # }
 
     if (print_tables) {
       if (transformation) {
-        wb <- createWorkbook()
-        addWorksheet(wb = wb, sheetName = "Table 1")
-        addWorksheet(wb = wb, sheetName = "Table 2")
-        addWorksheet(wb = wb, sheetName = "Table 3")
-        addWorksheet(wb = wb, sheetName = "Table 4")
-        writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
-        writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
-        writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
-        writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -400,13 +412,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       } else {
-        wb <- createWorkbook()
-        addWorksheet(wb = wb, sheetName = "Table 1")
-        addWorksheet(wb = wb, sheetName = "Table 2")
-        addWorksheet(wb = wb, sheetName = "Table 3")
-        writeData(wb = wb, sheet = "Table 1", x = tables$tab1)
-        writeData(wb = wb, sheet = "Table 2", x = tables$tab2)
-        writeData(wb = wb, sheet = "Table 3", x = tables$tab3)
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -440,8 +445,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
-      tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
-      saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+      
       div(
         map(
           .x = table_gt, .f = function(x) {
