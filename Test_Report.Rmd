@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '0bc78fa7-d922-4e9c-97d5-04059c059173' 
+  uuid: 'eb9137b5-9565-4c2c-b37b-df447940dfb9' 
   title: 'No title provided'
 ---
 
@@ -378,13 +378,13 @@ plots[[4]] +
 
 \newpage
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6, fig.align='center',fig.cap=prism_caption}
-knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'))
+```{r, echo = FALSE, error=F, warning=FALSE, fig.align='center',fig.cap=prism_caption}
+knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'), )
 ```
 
 \newpage
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption}
+```{r, echo = FALSE, error=F, warning=FALSE,fig.align='center', fig.cap=prism_caption}
 try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg')))
 ```
 

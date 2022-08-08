@@ -318,24 +318,24 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       timePlotSelectors <- toi
     }
 
-    # box(
-    #   width = 12,
-    #   title = "Options",
-    #   collapsible = TRUE,
-    #   div(
-    #     class = "d-flex justify-content-around",
-    #     tooltip(
-    #       selectizeInput(
-    #         inputId = ns("timeTreatmentSelectorsTable"),
-    #         label = h4("Select Times (up to 5) to be Displayed"),
-    #         selected = toi,
-    #         choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
-    #       ),
-    #       "Use delete key to remove, mouse click to add."
-    #     )
-    #   )
-    # )
-    # 
+box(
+  width = 12,
+  title = "Options",
+  collapsible = TRUE,
+  div(
+    class = "d-flex justify-content-around",
+    tooltip(
+      selectizeInput(
+        inputId = ns("timeTreatmentSelectorsTable"),
+        label = h4("Select Times (up to 5) to be Displayed"),
+        selected = toi,
+        choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
+      ),
+      "Use delete key to remove, mouse click to add."
+    )
+  )
+)
+
     div()
   })
 
