@@ -341,7 +341,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
-    browser()
+    
     wb <- createWorkbook()
     addWorksheet(wb = wb, sheetName = "Table 1")
     addWorksheet(wb = wb, sheetName = "Table 2")

@@ -85,7 +85,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             }
           },
           error = function(err) {
-            browser()
+            
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
             showNotification("Report failed to email")
           }

@@ -2,7 +2,7 @@
 #' @export contrast_padjust
 #'
 contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory") {
-  #browser()
+  
   data <- data %>% rename(tmp = variable)
   est <- emmeans(
     object = model, ~ TreatmentNew * Time,

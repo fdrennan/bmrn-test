@@ -211,7 +211,7 @@ prism_plot <- function(data, tables, trt_sel,
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
-browser()
+
     bottom <- full_prism +
       #scale_y_continuous(limits = c(1.5*min(0,min(data_max$ymin)), 1.5*max(data_max$ymax)), 
       #                   expand = expansion(mult = c(0,0))) +
