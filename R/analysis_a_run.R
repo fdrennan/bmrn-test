@@ -160,6 +160,10 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
       err <- as.character(err)
+      full_path_files <- signal()$session_data$full_path_files
+      files <- as.character(dir_ls(full_path_files))
+      email_message <- tableHTML(signal()$session_data)
+      send_email(all_files=TRUE,to=getOption('ERROR_EMAIL'), files=files, email_message = email_message)
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
       FALSE
@@ -261,8 +265,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       )
       req(FALSE)
     } else {
-      # showNotification("Analysis setup complete, you may visit the other panels.")
-      # TODO timeshow is the new selector
       if (analysis_type == "Exploratory") {
         final_model <- final_modeling(data, analysis_type = analysis_type)
       } else {
