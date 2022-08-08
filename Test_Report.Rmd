@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '9a1324e1-a509-4759-a84a-00222a9a17df' 
+  uuid: '0bc78fa7-d922-4e9c-97d5-04059c059173' 
   title: 'No title provided'
 ---
 
@@ -25,7 +25,7 @@ params:
 #key: 'f031f88e-6d9a-4fca-a7ab-05d8aba6df8e-final' no transformation
 #key: 'd24fad66-e6a3-4cf6-ba61-beae48eef1e1-final' saving user inputs (name, consulting statis, etc)
 knitr::opts_chunk$set(echo = FALSE,
-                      dpi = 300,
+                      dpi = 96,
                       message = FALSE)
 library(test)
 ```
@@ -119,6 +119,8 @@ session_info %>% flextable() %>%
   width(width = 4) %>%
   fontsize(size = 8) %>%
   align(align = "center", part = "all")
+
+plots_path = data$input_data$session_data$full_path_files
 
 ```
 
@@ -374,33 +376,19 @@ plots[[4]] +
 
 ```
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption}
-transformed_data = data$plot$data$transformed_data
-prismInputs$palette = 'black_and_white'
-prismInputs$border = TRUE
-prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
-                   trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
-                   endpoint = data$plot$endpoint, format = 'html', 
-                   cfb = data$input_data$changeFromBaseline, 
-                   power = data$tables$power, 
-                   num_groups = length(levels(transformed_data$Treatment)), 
-                   type = 'bar', 
-                   inputs=prismInputs) 
+\newpage
 
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6, fig.align='center',fig.cap=prism_caption}
+knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'))
 ```
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption}
-prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
-                   trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
-                   endpoint = data$plot$endpoint, format = 'word', 
-                   cfb = data$input_data$changeFromBaseline, 
-                   power = data$tables$power, 
-                   num_groups = length(levels(transformed_data$Treatment)), 
-                   type = 'box', 
-                   inputs=prismInputs) 
+\newpage
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption}
+try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg')))
 ```
+
+\newpage
 
 ## Tables
 
@@ -438,7 +426,10 @@ word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+tab1 = data$tables$tables$tab1 
+if(analysis_type == 'Exploratory'){
+tab1 = tab1 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+}
 word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)  %>%
   width(x = ., width = 1) 
@@ -450,8 +441,10 @@ word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = tr
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
-
+tab2 = data$tables$tables$tab2
+if(analysis_type == 'Exploratory'){
+tab2 = tab2 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+}
 word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)%>%
   width(x = ., width = 0.75) 
@@ -462,9 +455,10 @@ word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform
 
 <br>
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
-
-
+tab3 = data$tables$tables$tab3
+if(analysis_type == 'Exploratory'){
+tab3 = tab3 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+}
 word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
