@@ -4,6 +4,7 @@
 
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
+  #browser()
   final_contrast <- final_contrast %>%
     mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
@@ -130,7 +131,6 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
-  # browser()
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   empty_col <- tab1 %>% apply(2, function(a) sum(is.na(a)))

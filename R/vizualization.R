@@ -35,6 +35,7 @@ label_fix <- function(plot) {
     is_first <- grepl("^\\(.*?,1\\)", plot$x$data[[i]]$name)
     # Extract the group identifier and assign it to the name and legendgroup arguments
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+\\)", "\\1", plot$x$data[[i]]$name)
+    plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+,NA\\)", "\\1", plot$x$data[[i]]$name)
     plot$x$data[[i]]$legendgroup <- plot$x$data[[i]]$name
     # Show the legend only for the first layer of the group
     if (is_first) plot$x$data[[i]]$showlegend <- FALSE
@@ -111,28 +112,35 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     summarize(
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
-    )
+    ) %>%
+    mutate(error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
+           ymin = if_else(Mean_Response < 0, error, Mean_Response),
+           ymax = if_else(Mean_Response < 0, Mean_Response, error))
+           
 
   bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
+    scale_x_discrete() +
+    scale_y_continuous(limits = c(1.5*min(0,min(transformed_data_sum$ymin)), 1.5*max(transformed_data_sum$ymax)), 
+                       expand = expansion(mult = c(0,0))) + 
     geom_bar(
       stat = "identity",
       aes(color = Treatment), fill = "white",
       width = 0.5, position = position_dodge(width = 0.7)
     ) +
     geom_errorbar(aes(
-      ymin = Mean_Response, ymax = Mean_Response + sd_Response,
+      ymin = ymin, ymax = ymax,
       color = Treatment
     ), position = position_dodge(width = 0.7), size = 0.75) +
     geom_point(
-      position = position_jitterdodge(dodge.width = 0.7),
       aes(y = Response_Transformed, color = Treatment), show.legend = FALSE,
-      data = transformed_data, size = 0.7
+      data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
     ) +
-    scale_x_discrete() +
     labs(color = "Treatment") +
     ylab(ylabel) +
-    ggtitle("Bar Plot for Each Group Over Time") +
-    test_plot_theme()
+    ggtitle("Bar Chart for Each Group Over Time") +
+    test_plot_theme() +
+    scale_color_prism("floral") +
+    scale_fill_prism("floral")
 
 
   box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
@@ -143,7 +151,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     ylab(ylabel) +
     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
     ggtitle("Box Plot for Each Group Over Time") +
-    test_plot_theme()
+    test_plot_theme() +
+    scale_color_prism("floral") +
+    scale_fill_prism("floral")
 
 
   sub_line_plot <- ggplot(
@@ -155,7 +165,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     ylab(ylabel) +
     facet_wrap(Treatment ~ ., nrow = 1) +
     ggtitle("Trajectory of Each Subject by Group") +
-    test_plot_theme()
+    test_plot_theme() +
+    scale_color_prism("floral") +
+    scale_fill_prism("floral")
 
   line_plot <- ggplot(transformed_data_sum, aes(
     x = Time, y = Mean_Response,
@@ -177,7 +189,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     ylab(ylabel) +
     ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
     guides(colour = guide_legend(override.aes = list(size = 10))) +
-    test_plot_theme()
+    test_plot_theme() +
+    scale_color_prism("floral") +
+    scale_fill_prism("floral")
 
   # Has not been implemented yet
   return(list(

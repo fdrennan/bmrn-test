@@ -152,6 +152,15 @@ prism_plot <- function(data, tables, trt_sel,
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
+    
+    bottom <- full_prism +
+      scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
+      theme(plot.margin = margin(
+        t = -10,
+        r = 0,
+        b = 0,
+        l = 0
+      ))
   } else {
     data_max <- data %>%
       group_by(Treatment) %>%
@@ -160,7 +169,10 @@ prism_plot <- function(data, tables, trt_sel,
         Mean_Response = mean(Response_Transformed),
         sd_Response = sd(Response_Transformed)
       ) %>%
-      rename(Response_Transformed = Mean_Response)
+      rename(Response_Transformed = Mean_Response)  %>%
+      mutate(error = if_else(Response_Transformed < 0, Response_Transformed - sd_Response, Response_Transformed + sd_Response),
+             ymin = if_else(Response_Transformed < 0, error, Response_Transformed),
+             ymax = if_else(Response_Transformed < 0, Response_Transformed, error))
 
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
@@ -187,12 +199,11 @@ prism_plot <- function(data, tables, trt_sel,
         show.legend = FALSE
       ) +
       geom_errorbar(
-        aes(ymin = Response_Transformed, ymax = Response_Transformed + sd_Response),
+        aes(ymin = ymin, ymax = ymax),
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
         size = 2
       ) +
       scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
-      # scale_shape_manual(values = 15:20) +
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
       guides(y = "prism_offset_minor") +
@@ -200,15 +211,17 @@ prism_plot <- function(data, tables, trt_sel,
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
+browser()
+    bottom <- full_prism +
+      #scale_y_continuous(limits = c(1.5*min(0,min(data_max$ymin)), 1.5*max(data_max$ymax)), 
+      #                   expand = expansion(mult = c(0,0))) +
+      theme(plot.margin = margin(
+        t = -10,
+        r = 0,
+        b = 0,
+        l = 0
+      ))
   }
-  bottom <- full_prism +
-    scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
-    theme(plot.margin = margin(
-      t = -10,
-      r = 0,
-      b = 0,
-      l = 0
-    ))
   if (format == "word") {
     bottom <- bottom + theme(
       axis.text = element_text(size = 8),
@@ -224,15 +237,13 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = 8,
       color = "black",
       size = 2,
-      step.increase = 0.02
+      step.increase = ifelse(type == 'word', 0.1, 0.25)
     )
 
-
+    if (format == "word") {
     top <- full_prism +
-      scale_y_continuous(limits = c(
-        1.55 * max(data$Response_Transformed),
-        1.1 * max(p_vals$y.position)
-      )) +
+      scale_y_continuous(limits = c(0.9*min(p_vals$y.position), 2*(max(p_vals$y.position)+max(0, .25*(nrow(p_vals)-6)))), 
+                         expand = expansion(mult = c(0,0))) +
       theme(
         line = element_blank(),
         axis.title = element_blank(),
@@ -241,16 +252,31 @@ prism_plot <- function(data, tables, trt_sel,
       theme(plot.margin = margin(
         t = 0,
         r = 0,
-        b = -10,
+        b = 5,
         l = 0
-      ))
-
+      )) 
+    }else{
+      top <- full_prism +
+        scale_y_continuous(limits = c(0.9*min(p_vals$y.position), 2*(max(p_vals$y.position)+max(0, .25*(nrow(p_vals)-6)))), 
+                           expand = expansion(mult = c(0,0))) +
+        theme(
+          line = element_blank(),
+          axis.title = element_blank(),
+          axis.text = element_blank()
+        ) +
+        theme(plot.margin = margin(
+          t = 0,
+          r = 0,
+          b = 5,
+          l = 0
+        )) 
+}
     if (type == "box") {
       top = top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined = grid.arrange(grobs = list(top,bottom),, layout_matrix = rbind(1,2,2))
+      combined = grid.arrange(grobs = list(top,bottom),, layout_matrix = rbind(1,2))
     } else {
-      top = top + ggtitle(paste("Bar chart for Treatment Groups at", time_sel))
-      combined = grid.arrange(grobs = list(top,bottom), layout_matrix = rbind(1,2,2))
+      top = top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
+      combined = grid.arrange(grobs = list(top,bottom), layout_matrix = rbind(1,2))
     }
 
     return(ggarrange(
@@ -261,7 +287,7 @@ prism_plot <- function(data, tables, trt_sel,
   } else {
     if (type == "box") {
       bottom <- bottom +
-        ggtitle(paste("Box Chart for Treatment Groups at", time_sel)) +
+        ggtitle(paste("Box Plot for Treatment Groups at", time_sel)) +
         theme(plot.margin = margin(
           t = 0,
           r = 0,

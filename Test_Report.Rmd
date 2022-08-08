@@ -381,13 +381,12 @@ prismInputs$border = TRUE
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
                    time_sel =  time,
-                   endpoint = data$plot$endpoint, format = 'word', 
+                   endpoint = data$plot$endpoint, format = 'html', 
                    cfb = data$input_data$changeFromBaseline, 
                    power = data$tables$power, 
                    num_groups = length(levels(transformed_data$Treatment)), 
                    type = 'bar', 
                    inputs=prismInputs) 
-prism
 
 ```
 
@@ -401,7 +400,6 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
                    num_groups = length(levels(transformed_data$Treatment)), 
                    type = 'box', 
                    inputs=prismInputs) 
-prism
 ```
 
 ## Tables
