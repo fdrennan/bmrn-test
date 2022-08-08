@@ -57,7 +57,8 @@ transformation_check <- function(analysis_data) {
     # Coonduct the box cox transformation
     bc <- MASS::boxcox(Response ~ TreatmentNew * Time,
       data = bc_data,
-      lambda = seq(-1, 2, 1 / 100)
+      lambda = seq(-1, 2, 1 / 100),
+      plotit = FALSE
     )
     # Put boxcox summary data in a data.frame. We are only considering common
     # transformations i.e. inverse (-1), inverse sqrt (-1/2), log (0), sqrt (1/2),
