@@ -126,7 +126,7 @@ prism_plot <- function(data, tables, trt_sel,
       geom_boxplot(
         aes(fill = group1),
         outlier.color = NA,
-        lwd = 2,
+        lwd = ifelse(format == 'word', 1,2),
         fatten = 1,
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         alpha = 0.5
@@ -135,7 +135,7 @@ prism_plot <- function(data, tables, trt_sel,
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
         # plot outliers only
         # aes(shape = group1),
-        size = 3,
+        size = ifelse(format == 'word', 1,3),
         position = position_dodge(width = 0.2)
       ) +
       stat_summary(
@@ -161,57 +161,6 @@ prism_plot <- function(data, tables, trt_sel,
         b = 0,
         l = 0
       ))
-    if(format == 'word'){
-      full_prism <- ggplot(
-        data %>% rename(group1 = Treatment),
-        aes(x = group1, y = Response_Transformed, color = group1)
-      ) +
-        stat_boxplot(
-          geom = "errorbar",
-          width = 3 * length(unique(data$Treatment)) / num_groups^2,
-          lwd = 1
-        ) +
-        geom_boxplot(
-          aes(fill = group1),
-          outlier.color = NA,
-          lwd = 1,
-          fatten = 1,
-          width = 3 * length(unique(data$Treatment)) / num_groups^2,
-          alpha = 0.5
-        ) +
-        geom_jitter(
-          # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
-          # plot outliers only
-          # aes(shape = group1),
-          size = 1,
-          position = position_dodge(width = 0.2)
-        ) +
-        stat_summary(
-          fun = "mean",
-          color = "black",
-          show.legend = FALSE,
-          size = 0.2
-        ) +
-        scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
-        # scale_shape_manual(values = 15:20) +
-        scale_color_prism("floral") +
-        scale_fill_prism("floral") +
-        guides(y = "prism_offset_minor") +
-        theme_prism(base_size = inputs$fontSize, palette = inputs$palette) +
-        theme(legend.position = "none") +
-        ylab(ylab) +
-        xlab("Treatment")
-      
-      bottom <- full_prism +
-        scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
-        theme(plot.margin = margin(
-          t = -10,
-          r = 0,
-          b = 0,
-          l = 0
-        ))
-    }
-    
   } else {
     
     data_max <- data %>%
@@ -319,12 +268,6 @@ prism_plot <- function(data, tables, trt_sel,
     
   }
   
-  if (format == "word") {
-    bottom <- bottom + theme(
-      axis.text = element_text(size = 8),
-      axis.title = element_text(size = 10)
-    )
-  }
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
     (as.logical(cfb) != TRUE & y_axis != "change_from_baseline"))) {
     full_prism <- full_prism + add_pvalue(
@@ -351,7 +294,12 @@ prism_plot <- function(data, tables, trt_sel,
         r = 0,
         b = 5,
         l = 0
-      )) 
+      ))
+      
+      bottom <- bottom + theme(
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 10)
+      ) 
     }else{
       top <- full_prism +
         scale_y_continuous(limits = c(0.9*min(p_vals$y.position), 2*(max(p_vals$y.position)+max(0, .25*(nrow(p_vals)-6)))), 
@@ -362,7 +310,7 @@ prism_plot <- function(data, tables, trt_sel,
           axis.text = element_blank()
         ) +
         theme(plot.margin = margin(
-          t = 0,
+          t = -20,
           r = 0,
           b = 5,
           l = 0
