@@ -339,7 +339,9 @@ line_caption = paste0("Group level trajectory across time where the line corresp
 
 trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
 
-prism_caption = paste0('Boxplot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+prism_caption_box = paste0('Box plot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+
+prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
 
 
 ```
@@ -376,16 +378,45 @@ plots[[4]] +
 
 ```
 
-\newpage
+<!-- \newpage -->
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.align='center',fig.cap=prism_caption}
-knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'), )
+<!-- ```{r, echo = FALSE, error=F, warning=FALSE, fig.align='center',fig.cap=prism_caption_bar, out.width='200%'} -->
+<!-- knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg')) -->
+<!-- ``` -->
+
+<!-- \newpage -->
+
+<!-- ```{r, echo = FALSE, error=F, warning=FALSE,fig.align='center', fig.cap=prism_caption_box} -->
+<!-- try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg'))) -->
+<!-- ``` -->
+
+
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_bar}
+transformed_data = data$plot$data$transformed_data
+prismInputs$palette = 'black_and_white'
+prismInputs$border = TRUE
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  time,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'bar', 
+                   inputs=prismInputs) 
 ```
 
-\newpage
-
-```{r, echo = FALSE, error=F, warning=FALSE,fig.align='center', fig.cap=prism_caption}
-try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg')))
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_box}
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  time,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'box', 
+                   inputs=prismInputs) 
 ```
 
 \newpage

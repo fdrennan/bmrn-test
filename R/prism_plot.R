@@ -161,7 +161,59 @@ prism_plot <- function(data, tables, trt_sel,
         b = 0,
         l = 0
       ))
+    if(format == 'word'){
+      full_prism <- ggplot(
+        data %>% rename(group1 = Treatment),
+        aes(x = group1, y = Response_Transformed, color = group1)
+      ) +
+        stat_boxplot(
+          geom = "errorbar",
+          width = 3 * length(unique(data$Treatment)) / num_groups^2,
+          lwd = 1
+        ) +
+        geom_boxplot(
+          aes(fill = group1),
+          outlier.color = NA,
+          lwd = 1,
+          fatten = 1,
+          width = 3 * length(unique(data$Treatment)) / num_groups^2,
+          alpha = 0.5
+        ) +
+        geom_jitter(
+          # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
+          # plot outliers only
+          # aes(shape = group1),
+          size = 1,
+          position = position_dodge(width = 0.2)
+        ) +
+        stat_summary(
+          fun = "mean",
+          color = "black",
+          show.legend = FALSE,
+          size = 0.2
+        ) +
+        scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
+        # scale_shape_manual(values = 15:20) +
+        scale_color_prism("floral") +
+        scale_fill_prism("floral") +
+        guides(y = "prism_offset_minor") +
+        theme_prism(base_size = inputs$fontSize, palette = inputs$palette) +
+        theme(legend.position = "none") +
+        ylab(ylab) +
+        xlab("Treatment")
+      
+      bottom <- full_prism +
+        scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
+        theme(plot.margin = margin(
+          t = -10,
+          r = 0,
+          b = 0,
+          l = 0
+        ))
+    }
+    
   } else {
+    
     data_max <- data %>%
       group_by(Treatment) %>%
       summarize(
@@ -211,6 +263,48 @@ prism_plot <- function(data, tables, trt_sel,
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
+    
+    if (format == "word") {
+      full_prism <- ggplot(
+        data_max %>% rename(group1 = Treatment),
+        aes(x = group1, y = Response_Transformed, color = group1)
+      ) +
+        geom_bar(
+          aes(fill = group1),
+          lwd = 1,
+          stat = "identity",
+          width = 3 * length(unique(data$Treatment)) / num_groups^2,
+          position = position_dodge(width = 0.7),
+          alpha = 0.5
+        ) +
+        geom_jitter(
+          data = data %>% rename(group1 = Treatment),
+          aes(y = Response_Transformed),
+          size = 1,
+          position = position_dodge(width = 0.2)
+        ) +
+        stat_summary(
+          data = data %>% rename(group1 = Treatment),
+          fun = "mean",
+          color = "black",
+          show.legend = FALSE
+        ) +
+        geom_errorbar(
+          aes(ymin = ymin, ymax = ymax),
+          position = position_dodge(width = 0.7), 
+          width = 3 * length(unique(data$Treatment)) / num_groups^2,
+          size = 1
+        ) +
+        scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
+        scale_color_prism("floral") +
+        scale_fill_prism("floral") +
+        guides(y = "prism_offset_minor") +
+        theme_prism(base_size = 12) +
+        theme(legend.position = "none") +
+        ylab(ylab) +
+        xlab("Treatment")
+    }
+
 
     bottom <- full_prism +
       theme(plot.margin = margin(
@@ -221,7 +315,10 @@ prism_plot <- function(data, tables, trt_sel,
       )) + 
       scale_y_continuous(limits = c(1.5*min(0,min(data_max$ymin)), 1.5*max(data_max$ymax)), 
                          expand = expansion(mult = c(0,0)))
+    
+    
   }
+  
   if (format == "word") {
     bottom <- bottom + theme(
       axis.text = element_text(size = 8),
@@ -234,10 +331,10 @@ prism_plot <- function(data, tables, trt_sel,
       p_vals,
       label = "{sig}",
       tip.length = 0.02,
-      label.size = 8,
+      label.size = ifelse(format == 'word', 6, 8),
       color = "black",
       size = 2,
-      step.increase = ifelse(type == 'word', 0.1, 0.25)
+      step.increase = ifelse(format == 'word', 0.1, 0.25)
     )
 
     if (format == "word") {
