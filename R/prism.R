@@ -116,7 +116,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           pow <- data$tables$power
           cfb <- data$input_data$changeFromBaseline
           full_path_file <- data$input_data$session_data$full_path_files
-          full_path_file <- path_join(c(full_path_file, 'prism_data.xlsx'))
+          full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
           save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
           save_prism_output(file, tfd, pow, as.logical(cfb))
         }
@@ -145,7 +145,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$border <- FALSE
         input$palette <- "black_and_white"
         data <- pre_prism_data()
-        path = path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
+        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
         print(path)
         plot <- prism_plot(
           data = data$plot_data,
@@ -160,7 +160,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           inputs = input,
           type = "box"
         )
-        ggsave(filename = path, plot = plot, device = 'jpg', width = 9, height = 6, units = 'in')
+        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
       })
 
@@ -169,7 +169,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         req(pre_prism_data())
         data <- pre_prism_data()
         browser()
-        path = path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
+        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
         print(path)
         plot <- prism_plot(
           data = data$plot_data,
@@ -184,7 +184,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           inputs = reactiveValuesToList(input),
           type = "bar"
         )
-        ggsave(filename = path, plot = plot, device = 'jpg', width = 9, height = 6, units = 'in')
+        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
       })
 

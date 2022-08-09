@@ -7,6 +7,7 @@ ui_analysis_a_report <- function(id = "analysis_a_report", session_id = "") {
     div(class = "col-xl-4 col-lg-4 col-md-4"),
     div(
       class = "col-xl-4 col-lg-4 col-md-4 d-flex justify-content-center",
+      uiOutput(ns('emailUI')),
       actionButton(ns("runReport"), "Run Report", class = "btn btn-primary")
     )
   )
@@ -27,10 +28,17 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           first() %>%
           collect()
       })
+      
+      output$emailUI <- renderUI({
+        data <- req(data())
+        email <- data$email
+        selectizeInput(ns('repemail'), 'Email', selected = email, choices=email, options = list(create = TRUE), multiple=TRUE)
+      })
 
       observeEvent(input$runReport, {
         showNotification("Making Report")
         data <- req(data())
+        req(input$repemail)
         name <- data$name
         uuid <- data$uuid
         email <- data$email
@@ -75,8 +83,8 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
-            send_email(all_files=TRUE,to=email, files=files, email_message = email_message)
-            send_email(all_files=FALSE,to=email, files=files, email_message=email_message)
+            send_email(all_files = TRUE, to = input$email, files = files, email_message = email_message)
+            send_email(all_files = FALSE, to = input$email, files = files, email_message = email_message)
 
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
@@ -85,7 +93,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             }
           },
           error = function(err) {
-            
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
             showNotification("Report failed to email")
           }

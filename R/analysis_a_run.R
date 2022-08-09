@@ -164,7 +164,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       email_message <- as.character(HTML(fluidRow(
         tableHTML(as.data.frame(purrr::keep(signal(), ~ length(.) == 1)))
       )))
-      send_email(all_files=TRUE,to=getOption('ERROR_EMAIL'), files=files, email_message = email_message)
+      send_email(all_files = TRUE, to = getOption("ERROR_EMAIL"), files = files, email_message = email_message)
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
       FALSE
@@ -335,13 +335,13 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     #     )
     #   )
     # )
-    # 
+    #
     div()
   })
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
-    
+
     wb <- createWorkbook()
     addWorksheet(wb = wb, sheetName = "Table 1")
     addWorksheet(wb = wb, sheetName = "Table 2")
@@ -352,17 +352,17 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
     tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
-    
+
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
-    
+
     footer <- pre_tables_input()$footer
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
     # times <- input$timeTreatmentSelectorsTable
-    
 
-    
+
+
     # if (analysis_type == "Exploratory") {
     #   tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
     #   tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
@@ -445,7 +445,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           )
         )
       }
-      
+
       div(
         map(
           .x = table_gt, .f = function(x) {

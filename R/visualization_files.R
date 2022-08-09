@@ -44,8 +44,8 @@ pre_modeling <- function(input_data, baseline) {
       transformed_data = transformed_data_vc %>% filter(basic_model),
       best = .x, var = ready_final_model$variable
     ))
-    if(class(tmp) != 'try-error'){
-    return(data.frame(model = .x, AIC = AIC(tmp)))
+    if (class(tmp) != "try-error") {
+      return(data.frame(model = .x, AIC = AIC(tmp)))
     }
   })
   best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()

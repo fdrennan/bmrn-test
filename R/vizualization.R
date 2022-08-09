@@ -113,15 +113,19 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
     ) %>%
-    mutate(error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
-           ymin = if_else(Mean_Response < 0, error, Mean_Response),
-           ymax = if_else(Mean_Response < 0, Mean_Response, error))
-           
+    mutate(
+      error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
+      ymin = if_else(Mean_Response < 0, error, Mean_Response),
+      ymax = if_else(Mean_Response < 0, Mean_Response, error)
+    )
+
 
   bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
     scale_x_discrete() +
-    scale_y_continuous(limits = c(1.5*min(0,min(transformed_data_sum$ymin)), 1.5*max(transformed_data_sum$ymax)), 
-                       expand = expansion(mult = c(0,0))) + 
+    scale_y_continuous(
+      limits = c(1.5 * min(0, min(transformed_data_sum$ymin)), 1.5 * max(transformed_data_sum$ymax)),
+      expand = expansion(mult = c(0, 0))
+    ) +
     geom_bar(
       stat = "identity",
       aes(color = Treatment), fill = "white",
@@ -132,7 +136,8 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       color = Treatment
     ), position = position_dodge(width = 0.7), size = 0.75) +
     geom_point(
-      aes(y = Response_Transformed, color = Treatment), show.legend = FALSE,
+      aes(y = Response_Transformed, color = Treatment),
+      show.legend = FALSE,
       data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
     ) +
     labs(color = "Treatment") +

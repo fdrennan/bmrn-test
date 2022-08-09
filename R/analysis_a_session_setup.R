@@ -8,7 +8,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     textInput(ns("name"), "Name"),
     textInput(ns("email"), "Email"),
     tooltip(
-      selectizeInput(ns("statistician"), 
+      selectizeInput(ns("statistician"),
         div(
           class = "d-flex justify-content-between",
           "Contact Statistician",
@@ -30,7 +30,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     selectizeInput(
       ns("program"), "Program (select or type)",
       options = list(create = TRUE),
-      choices = unique(program_lists$Program)[-1]
+      choices = c('Exploratory', unique(program_lists$Program)[-1])
     ),
     uiOutput(ns("selectizeInput")),
     textInput(ns("studyId"), "Study ID", "TB21-02"),
@@ -49,7 +49,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      title = 
+      title =
         "Exploratory: for early (or first) studies to explore dose and time points\n\nConfirmatory: to confirm treatment effect at a particular time point"
     ),
     textAreaInput(ns("description"),

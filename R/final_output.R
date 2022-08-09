@@ -4,7 +4,6 @@
 
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
-  
   final_contrast <- final_contrast %>%
     mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################

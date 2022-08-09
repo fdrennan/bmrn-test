@@ -2,7 +2,6 @@
 #' @export contrast_padjust
 #'
 contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory") {
-  
   data <- data %>% rename(tmp = variable)
   est <- emmeans(
     object = model, ~ TreatmentNew * Time,
@@ -41,7 +40,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
   } else {
     final_contrast <- future_map_dfr(.x = LETTERS[1:9], .f = ~ {
       print(.x)
-      #This needs to be removed if we include overall average.
+      # This needs to be removed if we include overall average.
       keep <- which(sapply(contrast_list[[.x]], function(i) {
         all(i == floor(i))
       }) == TRUE)
@@ -77,7 +76,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
             )
           )
         }
-        final_contrast = out %>% select(-contrast)
+        final_contrast <- out %>% select(-contrast)
       }
     })
   }
