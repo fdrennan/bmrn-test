@@ -66,7 +66,6 @@ prism_plot <- function(data, tables, trt_sel,
       `Time Points` != "Average Over Time",
       `p value` != ""
     )
-
   p_vals <-
     p_vals %>%
     mutate(
@@ -94,7 +93,8 @@ prism_plot <- function(data, tables, trt_sel,
     filter(
       group1 %in% trt_sel,
       group2 %in% trt_sel
-    )
+    ) %>% 
+    mutate(new_y.position = y.position + 0.5*row_number())
 
 
 
@@ -210,7 +210,7 @@ prism_plot <- function(data, tables, trt_sel,
         size = ifelse(format == 'word', 1,2)
       ) +
       guides(y = "prism_offset_minor") +
-      scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
+      scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$new_y.position))) +
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
       theme_prism(base_size = ifelse(format == 'word', 16,inputs$fontSize)) +
@@ -240,18 +240,19 @@ prism_plot <- function(data, tables, trt_sel,
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
     (as.logical(cfb) != TRUE & y_axis != "change_from_baseline"))) {
     full_prism <- full_prism + add_pvalue(
-      p_vals,
+      data = p_vals,
+      y.position = "new_y.position",
       label = "{sig}",
       tip.length = 0.02,
       label.size = ifelse(format == 'word', 4, 8),
       color = "black",
       size = 2,
-      step.increase = ifelse(type == "word", 0.1, 0.25)
+      step.increase = 0.02
     )
 
       top <- full_prism +
         scale_y_continuous(
-          limits = c(0.9 * min(p_vals$y.position), 2 * (max(p_vals$y.position) + max(0, .7 * (nrow(p_vals) - 6)))),
+          limits = c(0.9 * min(p_vals$new_y.position), 2.55 *(0.04 * nrow(p_vals)) + max(p_vals$new_y.position)),
           expand = expansion(mult = c(0, 0))
         ) 
       
@@ -271,7 +272,7 @@ prism_plot <- function(data, tables, trt_sel,
     } else {
       top <- full_prism +
         scale_y_continuous(
-          limits = c(0.9 * min(p_vals$y.position), 2 * (max(p_vals$y.position) + max(0, .7 * (nrow(p_vals) - 6)))),
+          limits = c(0.9 * min(p_vals$new_y.position), 2.5 *(0.04 * nrow(p_vals)) +  max(p_vals$new_y.position)),
           expand = expansion(mult = c(0, 0))
         ) +
         theme(
@@ -288,11 +289,11 @@ prism_plot <- function(data, tables, trt_sel,
     }
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1,2, 2)})
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2,2)}else{rbind(1,2, 2)})
     } else {
       
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2)})
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2,2)}else{rbind(1, 2, 2)})
     }
 
     return(combined)
