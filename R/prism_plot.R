@@ -243,7 +243,7 @@ prism_plot <- function(data, tables, trt_sel,
       p_vals,
       label = "{sig}",
       tip.length = 0.02,
-      label.size = ifelse(format == 'word', 6, 8),
+      label.size = ifelse(format == 'word', 4, 8),
       color = "black",
       size = 2,
       step.increase = ifelse(type == "word", 0.1, 0.25)
