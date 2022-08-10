@@ -53,7 +53,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
-        toi <- input_prism$tables$tables$tab1$`Time Points`[2]
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -146,7 +145,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$palette <- "black_and_white"
         data <- pre_prism_data()
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-        print(path)
+        
         plot <- prism_plot(
           data = data$plot_data,
           tables = data$tables,
@@ -168,7 +167,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         isolate(input)
         req(pre_prism_data())
         data <- pre_prism_data()
-        browser()
+        
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
         print(path)
         plot <- prism_plot(

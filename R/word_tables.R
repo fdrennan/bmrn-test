@@ -134,10 +134,22 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     data_ft <- set_header_labels(data_ft, values = new_names)
   }
   data_ft <- align(data_ft, align = "center", part = "all")
-  data_ft <- fontsize(data_ft, size = 9, part = "header")
+  data_ft <- fontsize(data_ft, size = 8, part = "header")
   data_ft <- fontsize(data_ft, size = 8)
   #  if(include_summ_stat){
   data_ft <- footnote(x = data_ft, i = footer_i, j = footer_j, value = as_paragraph(footer), ref_symbols = "")
+  data_ft <- fontsize(data_ft, size = 8, part = "footer")
   # }
   data_ft
+}
+
+#' FitFlextableToPage
+#' @export FitFlextableToPage
+#'
+FitFlextableToPage <- function(ft, pgwidth = 8){
+  
+  ft_out <- ft %>% autofit()
+  
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
 }

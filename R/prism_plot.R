@@ -113,6 +113,20 @@ prism_plot <- function(data, tables, trt_sel,
     ) %>%
     ungroup()
 
+  data_max <- data %>%
+    group_by(Treatment) %>%
+    summarize(
+      max = max(Response_Transformed),
+      Mean_Response = mean(Response_Transformed),
+      sd_Response = sd(Response_Transformed)
+    ) %>%
+    rename(Response_Transformed = Mean_Response) %>%
+    mutate(
+      error = if_else(Response_Transformed < 0, Response_Transformed - sd_Response, Response_Transformed + sd_Response),
+      ymin = if_else(Response_Transformed < 0, error, Response_Transformed),
+      ymax = if_else(Response_Transformed < 0, Response_Transformed, error)
+    )
+  
   if (type == "box") {
     full_prism <- ggplot(
       data %>% rename(group1 = Treatment),
@@ -126,7 +140,7 @@ prism_plot <- function(data, tables, trt_sel,
       geom_boxplot(
         aes(fill = group1),
         outlier.color = NA,
-        lwd = 2,
+        lwd = ifelse(format == 'word', 1,2),
         fatten = 1,
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         alpha = 0.5
@@ -144,45 +158,35 @@ prism_plot <- function(data, tables, trt_sel,
         show.legend = FALSE
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
-      # scale_shape_manual(values = 15:20) +
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
       guides(y = "prism_offset_minor") +
-      theme_prism(base_size = inputs$fontSize, palette = inputs$palette) +
+      theme_prism(base_size = ifelse(format == 'word', 16,inputs$fontSize)) + 
+                  #, palette = inputs$palette) +
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
 
     bottom <- full_prism +
-      scale_y_continuous(limits = c(NA, 1.55 * max(data$Response_Transformed))) +
+      scale_y_continuous(
+        limits = c(1.1 * min(0, min(data_max$ymin)), 1.1 * max(data_max$ymax)),
+        expand = expansion(mult = c(0, 0))
+      ) +
       theme(plot.margin = margin(
         t = -10,
         r = 0,
         b = 0,
         l = 0
-      ))
+      )) 
   } else {
-    data_max <- data %>%
-      group_by(Treatment) %>%
-      summarize(
-        max = max(Response_Transformed),
-        Mean_Response = mean(Response_Transformed),
-        sd_Response = sd(Response_Transformed)
-      ) %>%
-      rename(Response_Transformed = Mean_Response) %>%
-      mutate(
-        error = if_else(Response_Transformed < 0, Response_Transformed - sd_Response, Response_Transformed + sd_Response),
-        ymin = if_else(Response_Transformed < 0, error, Response_Transformed),
-        ymax = if_else(Response_Transformed < 0, Response_Transformed, error)
-      )
-
+    
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
       aes(x = group1, y = Response_Transformed, color = group1)
     ) +
       geom_bar(
         aes(fill = group1),
-        lwd = 2,
+        lwd = ifelse(format == 'word', 1,2),
         stat = "identity",
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         position = position_dodge(width = 0.7),
@@ -203,13 +207,14 @@ prism_plot <- function(data, tables, trt_sel,
       geom_errorbar(
         aes(ymin = ymin, ymax = ymax),
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
-        size = 2
+        size = ifelse(format == 'word', 1,2)
       ) +
+      guides(y = "prism_offset_minor") +
       scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
       scale_color_prism("floral") +
       scale_fill_prism("floral") +
-      guides(y = "prism_offset_minor") +
-      theme_prism(base_size = 16) +
+      theme_prism(base_size = ifelse(format == 'word', 16,inputs$fontSize)) +
+    #, palette = inputs$palette) +
       theme(legend.position = "none") +
       ylab(ylab) +
       xlab("Treatment")
@@ -221,10 +226,10 @@ prism_plot <- function(data, tables, trt_sel,
         b = 0,
         l = 0
       )) +
-      scale_y_continuous(
-        limits = c(1.5 * min(0, min(data_max$ymin)), 1.5 * max(data_max$ymax)),
-        expand = expansion(mult = c(0, 0))
-      )
+     scale_y_continuous(
+       limits = c(1.1 * min(0, min(data_max$ymin)), 1.1 * max(data_max$ymax)),
+       expand = expansion(mult = c(0, 0))
+     )
   }
   if (format == "word") {
     bottom <- bottom + theme(
@@ -238,19 +243,21 @@ prism_plot <- function(data, tables, trt_sel,
       p_vals,
       label = "{sig}",
       tip.length = 0.02,
-      label.size = 8,
+      label.size = ifelse(format == 'word', 4, 8),
       color = "black",
       size = 2,
       step.increase = ifelse(type == "word", 0.1, 0.25)
     )
 
-    if (format == "word") {
       top <- full_prism +
         scale_y_continuous(
           limits = c(0.9 * min(p_vals$y.position), 2 * (max(p_vals$y.position) + max(0, .25 * (nrow(p_vals) - 6)))),
           expand = expansion(mult = c(0, 0))
-        ) +
-        theme(
+        ) 
+      
+      if (format == "word") {
+        top = top +  
+          theme(
           line = element_blank(),
           axis.title = element_blank(),
           axis.text = element_blank()
@@ -281,17 +288,14 @@ prism_plot <- function(data, tables, trt_sel,
     }
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = rbind(1, 2))
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2, 2)})
     } else {
+      
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = rbind(1, 2))
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2, 2)})
     }
 
-    return(ggarrange(
-      plotlist = list(top, bottom),
-      ncol = 1, align = "hv",
-      heights = c((1 - 1 / nrow(p_vals)) * top_height, bottom_height)
-    ))
+    return(combined)
   } else {
     if (type == "box") {
       bottom <- bottom +
