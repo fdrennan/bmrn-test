@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '0bc78fa7-d922-4e9c-97d5-04059c059173' 
+  uuid: '40d8fb1f-18dc-4b80-9207-b61bf0834bea' 
   title: 'No title provided'
 ---
 
@@ -68,7 +68,11 @@ if(length(groups_diff) == 2){
 
 toi = data$tables$tables$tab1$`Time Points`[!grepl('Average',data$tables$tables$tab1$`Time Points`)][1]
 analysis_type = data$input_data$session_data$sessionMode
-time = if_else(analysis_type == 'Exploratory',prismInputs$timePlotSelectors, toi)
+if(analysis_type == 'Exploratory'){
+  time= data$inputs$timeTreatmentSelectorsTable
+  }else{
+    time = toi
+}
 var = data$pre_modeling_input$variable
 
 model_transformed = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = var)
@@ -339,7 +343,8 @@ line_caption = paste0("Group level trajectory across time where the line corresp
 
 trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
 
-prism_caption = paste0('Boxplot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+prism_caption_box = paste0('Box plot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
 
 
 ```
@@ -376,19 +381,46 @@ plots[[4]] +
 
 ```
 
-\newpage
+<!-- \newpage -->
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6, fig.align='center',fig.cap=prism_caption}
-knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'))
+<!-- ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6, fig.align='center',fig.cap=prism_caption} -->
+<!-- knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg')) -->
+<!-- ``` -->
+
+<!-- \newpage -->
+
+<!-- ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption} -->
+<!-- try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg'))) -->
+<!-- ``` -->
+
+<!-- \newpage -->
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_bar}
+transformed_data = data$plot$data$transformed_data
+prismInputs$palette = 'black_and_white'
+prismInputs$border = TRUE
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  time,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'bar', 
+                   inputs=prismInputs) 
 ```
 
-\newpage
-
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption}
-try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg')))
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_box}
+prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+                   trt_sel = levels(transformed_data$Treatment), 
+                   time_sel =  time,
+                   endpoint = data$plot$endpoint, format = 'word', 
+                   cfb = data$input_data$changeFromBaseline, 
+                   power = data$tables$power, 
+                   num_groups = length(levels(transformed_data$Treatment)), 
+                   type = 'box', 
+                   inputs=prismInputs) 
 ```
-
-\newpage
 
 ## Tables
 
@@ -412,7 +444,7 @@ endpoint <- if_else(!show_text,
 
 <br>
 ```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
+tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
 word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
@@ -426,10 +458,8 @@ word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab1 = data$tables$tables$tab1 
-if(analysis_type == 'Exploratory'){
-tab1 = tab1 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
-}
+tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
+
 word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)  %>%
   width(x = ., width = 1) 
@@ -441,10 +471,8 @@ word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = tr
 
 <br>
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab2 = data$tables$tables$tab2
-if(analysis_type == 'Exploratory'){
-tab2 = tab2 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
-}
+tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
+
 word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)%>%
   width(x = ., width = 0.75) 
@@ -455,10 +483,7 @@ word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform
 
 <br>
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
-tab3 = data$tables$tables$tab3
-if(analysis_type == 'Exploratory'){
-tab3 = tab3 %>% filter(`Time Points` %in% data$inputs$timeTreatmentSelectorsTable)
-}
+tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
 word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 

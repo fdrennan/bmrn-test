@@ -140,7 +140,7 @@ prism_plot <- function(data, tables, trt_sel,
       geom_boxplot(
         aes(fill = group1),
         outlier.color = NA,
-        lwd = 2,
+        lwd = ifelse(format == 'word', 1,2),
         fatten = 1,
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         alpha = 0.5
@@ -179,14 +179,14 @@ prism_plot <- function(data, tables, trt_sel,
         l = 0
       )) 
   } else {
-    browser()
+    
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
       aes(x = group1, y = Response_Transformed, color = group1)
     ) +
       geom_bar(
         aes(fill = group1),
-        lwd = 2,
+        lwd = ifelse(format == 'word', 1,2),
         stat = "identity",
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         position = position_dodge(width = 0.7),
@@ -207,7 +207,7 @@ prism_plot <- function(data, tables, trt_sel,
       geom_errorbar(
         aes(ymin = ymin, ymax = ymax),
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
-        size = 2
+        size = ifelse(format == 'word', 1,2)
       ) +
       guides(y = "prism_offset_minor") +
       scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$y.position))) +
@@ -243,7 +243,7 @@ prism_plot <- function(data, tables, trt_sel,
       p_vals,
       label = "{sig}",
       tip.length = 0.02,
-      label.size = 8,
+      label.size = ifelse(format == 'word', 6, 8),
       color = "black",
       size = 2,
       step.increase = ifelse(type == "word", 0.1, 0.25)
@@ -288,11 +288,11 @@ prism_plot <- function(data, tables, trt_sel,
     }
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = rbind(1, 2, 2, 2))
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2, 2)})
     } else {
       
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = rbind(1, 2, 2, 2))
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2, 2)})
     }
 
     return(combined)
