@@ -104,8 +104,10 @@ prism_plot <- function(data, tables, trt_sel,
     dplyr::select(Treatment) %>%
     unlist()
 
+  
   data <- data %>%
-    filter(Time == time_sel) %>%
+    filter(Time == time_sel,
+           Treatment %in% trt_sel) %>%
     group_by(Treatment) %>%
     mutate(
       outlier = is.outlier(Response_Transformed),
@@ -179,7 +181,6 @@ prism_plot <- function(data, tables, trt_sel,
         l = 0
       )) 
   } else {
-    
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
       aes(x = group1, y = Response_Transformed, color = group1)
@@ -246,7 +247,7 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = ifelse(format == 'word', 4, 8),
       color = "black",
       size = 2,
-      step.increase = 0.02
+      step.increase = ifelse(format == 'word', 0.02, 0.05),
     )
 
       top <- full_prism +
