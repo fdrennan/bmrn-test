@@ -148,7 +148,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$palette <- "black_and_white"
         data <- pre_prism_data()
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-        
+        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
         plot <- prism_plot(
           data = data$plot_data,
           tables = data$tables,
@@ -164,7 +164,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
         ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
-      })
+      }
+        })
 
       output$prismPlot_bar <- renderPlot({
         isolate(input)
@@ -174,6 +175,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
         
         print(path)
+        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
         plot <- prism_plot(
           data = data$plot_data,
           tables = data$tables,
@@ -189,7 +191,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
         ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
-      })
+      }
+        })
 
 
 

@@ -8,7 +8,7 @@ test_plot_theme <- function() {
       axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text = element_text(size = font_size),
+      axis.text = element_text(size = font_size, face = 'bold'),
       axis.title = element_text(size = font_size),
       strip.text = element_text(size = font_size),
       plot.title = element_text(size = font_size),
@@ -79,7 +79,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   }
 
-  if (!baseline) {
+  if (!baseline && !(ui_sel %in% 'Baseline')) {
     # Treatment
     times <- unique(as.character(transformed_data$Time))
     transformed_data <- transformed_data %>%
