@@ -194,9 +194,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       levels = times
     )
 
-    data$transformed_data <- filter(data$transformed_data, Treatment %in% input$treatmentPlotSelectors)
-    data$transformed_data <- filter(data$transformed_data, Time %in% input$timePlotSelectors)
-
     list(
       data = data, endpoint = endpoint, ui_selections = ui_selections
     )
@@ -206,16 +203,18 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(input$y_axis)
     req(pre_plot_input())
     data <- pre_plot_input()$data
+    ui_sel = pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-    req(input$y_axis)
+
     if (input$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = data$transformed_data,
         power = data$box_cox,
         endpoint = endpoint,
         baseline = FALSE || !baseline_selected, # logic is backwards in the functions
-        transformation = TRUE
+        transformation = TRUE,
+        ui_sel = ui_sel
       )
     }
     if (input$y_axis == "no_transform") {
@@ -224,7 +223,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         power = data$box_cox,
         endpoint = endpoint,
         transformation = FALSE,
-        baseline = FALSE || !baseline_selected
+        baseline = FALSE || !baseline_selected,
+        ui_sel = ui_sel
       )
     }
 
@@ -237,7 +237,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         power = data$box_cox,
         endpoint = endpoint,
         transformation = FALSE,
-        baseline = TRUE
+        baseline = TRUE,
+        ui_sel = ui_sel
       )
     }
     return(list(plots = plots, data = data, baseline_selected = baseline_selected))

@@ -13,6 +13,10 @@ prism_plot <- function(data, tables, trt_sel,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL) {
+  
+  orig_groups = levels(data$Treatment)
+  colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
+                                               
   y_axis <- inputs$y_axisPrism
   tab1 <- tables$tab1
   tab2 <- tables$tab2
@@ -160,8 +164,8 @@ prism_plot <- function(data, tables, trt_sel,
         show.legend = FALSE
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
-      scale_color_prism("floral") +
-      scale_fill_prism("floral") +
+      scale_fill_manual(values = colors, breaks = orig_groups) +
+      scale_color_manual(values = colors, breaks = orig_groups) +
       guides(y = "prism_offset_minor") +
       theme_prism(base_size = ifelse(format == 'word', 16,inputs$fontSize)) + 
                   #, palette = inputs$palette) +
@@ -212,8 +216,8 @@ prism_plot <- function(data, tables, trt_sel,
       ) +
       guides(y = "prism_offset_minor") +
       scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$new_y.position))) +
-      scale_color_prism("floral") +
-      scale_fill_prism("floral") +
+      scale_fill_manual(values = colors, breaks = orig_groups) +
+      scale_color_manual(values = colors, breaks = orig_groups) +
       theme_prism(base_size = ifelse(format == 'word', 16,inputs$fontSize)) +
     #, palette = inputs$palette) +
       theme(legend.position = "none") +

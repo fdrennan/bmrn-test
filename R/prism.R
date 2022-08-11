@@ -38,8 +38,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
         # TODO add select y, change from baseline
         #
         data <- isolate(test_1_output_data())
-        
-        plot_data <- data$pre_modeling_input$transformed_data
+        plot_data <- data$plot$data$transformed_data
+        print(levels(plot_data$Treatment))
         #%>%
         #  filter(Treatment %in% input$treatmentPlotSelectors) %>%
         #  mutate(Treatment = droplevels(Treatment))
