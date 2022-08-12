@@ -8,7 +8,7 @@ test_plot_theme <- function() {
       axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text = element_text(size = font_size),
+      axis.text = element_text(size = font_size, face = 'bold'),
       axis.title = element_text(size = font_size),
       strip.text = element_text(size = font_size),
       plot.title = element_text(size = font_size),
@@ -46,7 +46,14 @@ label_fix <- function(plot) {
 
 #' vizualization
 #' @export vizualization
-vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation) {
+vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel) {
+
+  orig_groups = levels(transformed_data$Treatment)
+  colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
+  
+  transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
+  transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
+  
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
     transform_name = c(
@@ -72,7 +79,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   }
 
-  if (!baseline) {
+  if (!baseline && !(ui_sel %in% 'Baseline')) {
     # Treatment
     times <- unique(as.character(transformed_data$Time))
     transformed_data <- transformed_data %>%
@@ -144,8 +151,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     ylab(ylabel) +
     ggtitle("Bar Chart for Each Group Over Time") +
     test_plot_theme() +
-    scale_color_prism("floral") +
-    scale_fill_prism("floral")
+    scale_color_manual(values = colors, breaks = orig_groups)
 
 
   box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
@@ -157,8 +163,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
     ggtitle("Box Plot for Each Group Over Time") +
     test_plot_theme() +
-    scale_color_prism("floral") +
-    scale_fill_prism("floral")
+    scale_color_manual(values = colors, breaks = orig_groups)
 
 
   sub_line_plot <- ggplot(
@@ -171,8 +176,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     facet_wrap(Treatment ~ ., nrow = 1) +
     ggtitle("Trajectory of Each Subject by Group") +
     test_plot_theme() +
-    scale_color_prism("floral") +
-    scale_fill_prism("floral")
+    scale_color_manual(values = colors, breaks = orig_groups)
 
   line_plot <- ggplot(transformed_data_sum, aes(
     x = Time, y = Mean_Response,
@@ -195,8 +199,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
     guides(colour = guide_legend(override.aes = list(size = 10))) +
     test_plot_theme() +
-    scale_color_prism("floral") +
-    scale_fill_prism("floral")
+    scale_color_manual(values = colors, breaks = orig_groups)
 
   # Has not been implemented yet
   return(list(

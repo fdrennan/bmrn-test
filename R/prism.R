@@ -18,7 +18,7 @@ ui_prism <- function(id = "prism") {
           selectInput(ns("plotType"), "Plot Type", c("Bar", "Box"), "Bar"),
           numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
           numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
-          numericInput(ns("plotHeight"), label = "Height", value = 600, min = 0, max = 3000, step = 50),
+          numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
         )
       )
     )))
@@ -36,17 +36,20 @@ server_prism <- function(id = "prism", test_1_output_data) {
       pre_prism_data <- reactive({
         # input$update
         # TODO add select y, change from baseline
+        #
         data <- isolate(test_1_output_data())
-        plot_data <- data$plot$data$transformed_data %>%
-          filter(Treatment %in% input$treatmentPlotSelectors) %>%
-          mutate(Treatment = droplevels(Treatment))
+        plot_data <- data$plot$data$transformed_data
+        print(levels(plot_data$Treatment))
+        #%>%
+        #  filter(Treatment %in% input$treatmentPlotSelectors) %>%
+        #  mutate(Treatment = droplevels(Treatment))
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
           ylab = data$plot$endpoint,
           cfb = data$input_data$changeFromBaseline, endpoint = data$plot$endpoint,
           power = data$tables$power,
-          num_groups = length(unique(data$plot$data$transformed_data$Treatment))
+          num_groups = length(levels(plot_data$Treatment))
         )
       })
 
@@ -145,12 +148,12 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$palette <- "black_and_white"
         data <- pre_prism_data()
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-        
+        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
         plot <- prism_plot(
           data = data$plot_data,
           tables = data$tables,
-          trt_sel = data$trt_sel,
-          time_sel = data$time_sel,
+          trt_sel = input$treatmentPlotSelectors,
+          time_sel = input$timePlotSelectors,
           endpoint = data$endpoint,
           format = "html",
           cfb = data$cfb,
@@ -161,7 +164,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
         ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
-      })
+      }
+        })
 
       output$prismPlot_bar <- renderPlot({
         isolate(input)
@@ -169,12 +173,14 @@ server_prism <- function(id = "prism", test_1_output_data) {
         data <- pre_prism_data()
         
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
+        
         print(path)
+        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
         plot <- prism_plot(
           data = data$plot_data,
           tables = data$tables,
-          trt_sel = data$trt_sel,
-          time_sel = data$time_sel,
+          trt_sel = input$treatmentPlotSelectors,
+          time_sel = input$timePlotSelectors,
           endpoint = data$endpoint,
           format = "html",
           cfb = data$cfb,
@@ -185,7 +191,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
         ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
         plot
-      })
+      }
+        })
 
 
 
