@@ -51,7 +51,7 @@ server_home <- function(id = "home") {
     function(input, output, session) {
       observe({
         showModal(modalDialog(
-          style = "height: 500px;",
+          style = "height: 580px;",
           ui_landing(),
           easyClose = TRUE,
           title = NULL,
