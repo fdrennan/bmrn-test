@@ -29,7 +29,7 @@ ui_landing <- function(id = "landing") {
       tags$br(),
       tags$br(),
       tags$br(),
-      h3("By Quantitative Science, Data Science", class = "text-center"),
+      h4("By Quantitative Science, Data Science", class = "text-center"),
       div(
         style='text-align: center',
         imageOutput(ns("dsIcon"), height = "200px")
