@@ -466,20 +466,24 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   })
 
   output$analysisPlot_1 <- renderPlotly({
+    #browser()
     plots <- interactive_plots()
     plot <- ylab_move(plot = ggplotly(plots$plots[[1]]), parameter = 0.02)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
+    plot$x$layout$legend$title$text = 'Treatment'
     label_fix(plot = ggplotly(plot))
   })
 
   output$analysisPlot_2 <- renderPlotly({
     plots <- interactive_plots()
+    plot$x$layout$legend$title$text = ''
     label_fix(plot = ggplotly(plots$plots[[2]]))
   })
 
 
   output$analysisPlot_3 <- renderPlotly({
+    #browser()
     req(pre_plot_input())
     plots <- interactive_plots()
     tmp <- ggplotly(plots$plots[[3]])
@@ -517,10 +521,12 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
 
   output$analysisPlot_4 <- renderPlotly({
+    #browser()
     plots <- interactive_plots()
     plot <- label_fix(ggplotly(plots$plots[[4]]))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
+    plot$x$layout$legend$title$text = 'Treatment'
     label_fix(plot = ggplotly(plot))
   })
 

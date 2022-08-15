@@ -49,10 +49,10 @@ label_fix <- function(plot) {
 vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel) {
 
   orig_groups = levels(transformed_data$Treatment)
-  #colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
-  colors = viridis(length(orig_groups))
-  transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
-  transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
+  colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
+  #colors = viridis(length(orig_groups))
+  #transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
+  #transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
   
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
