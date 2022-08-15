@@ -1,5 +1,4 @@
 ---
-title: ""
 author: Treatment Evaluation Statistical Tool, TEST 1
 output: 
   bookdown::word_document2:
@@ -14,9 +13,8 @@ params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   uuid: '9d181aba-7616-4c49-9f2f-f6d46536ad33'
   title: 'No title provided'
+title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
-
-#`r paste('Statistical Report for the Study Titled:', params$title)`
 
 ```{r setup, include=FALSE}
 #key: '6650608c-7988-4f2e-9da7-b46e41b64584-final' positive control and log transformation
