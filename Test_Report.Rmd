@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '1e50d506-53fa-4cec-8f30-d9bb45cd0fe8' 
+  uuid: '9d181aba-7616-4c49-9f2f-f6d46536ad33' 
   title: 'No title provided'
 ---
 
@@ -331,7 +331,7 @@ test_plot_theme_word <- function(x) {
 #   filter(Time %in% data$plot$ui_selections$time_sel,
 #          Treatment %in% data$plot$ui_selections$trt_sel)
 
-plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE)
+plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE, ui_sel = data$plot$ui_selections)
 
 boxplot_caption = paste0("Box plot for each group and time.")
 
