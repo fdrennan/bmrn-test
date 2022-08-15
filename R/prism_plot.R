@@ -277,7 +277,7 @@ prism_plot <- function(data, tables, trt_sel,
       top <- full_prism +
         scale_y_continuous(
           limits = c(0.9 * min(p_vals$new_y.position), NA),
-          expand = expansion(mult = c(0, 0.1))
+          expand = expansion(mult = c(0.25, 0.1))
         ) +
         theme(
           line = element_blank(),
@@ -291,13 +291,21 @@ prism_plot <- function(data, tables, trt_sel,
           l = 0
         ))
     }
+    layout = rbind(1, 2, 2)
+    if(nrow(p_vals) > 6 & nrow(p_vals) < 12){
+      layout = rbind(1, 2)
+    }
+    if(nrow(p_vals) >= 12){
+      layout = rbind(1,1, 2)
+    }
+      
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1,2, 2)})
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
     } else {
       
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = if(format == 'word'){rbind(1, 2, 2)}else{rbind(1, 2, 2)})
+      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
     }
 
     return(combined)

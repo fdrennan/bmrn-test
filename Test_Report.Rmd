@@ -464,7 +464,6 @@ FitFlextableToPage(tab1_ft)
 ```
 \newpage
 
-
 ### `r paste(ifelse(show_text, 'Table 3: Comparison between Doses as to', 'Table 2: Comparison between Doses as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
