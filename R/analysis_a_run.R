@@ -466,27 +466,30 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   })
 
   output$analysisPlot_1 <- renderPlotly({
-    #browser()
+    
     plots <- interactive_plots()
-    plot <- ylab_move(plot = ggplotly(plots$plots[[1]]), parameter = 0.02)
+    plot = plots$plots$box 
+    plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.04, y_parameter = 0.02)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot$x$layout$legend$title$text = 'Treatment'
+    plot = bold_interactive(plot,panel = TRUE)
     label_fix(plot = ggplotly(plot))
   })
 
   output$analysisPlot_2 <- renderPlotly({
+    
     plots <- interactive_plots()
-    plot$x$layout$legend$title$text = ''
-    label_fix(plot = ggplotly(plots$plots[[2]]))
+    plot = plots$plots$bar
+    plot = bold_interactive(plot,panel = FALSE)
+    label_fix(plot = ggplotly(plot))
   })
 
 
   output$analysisPlot_3 <- renderPlotly({
-    #browser()
+    
     req(pre_plot_input())
     plots <- interactive_plots()
-    tmp <- ggplotly(plots$plots[[3]])
+    tmp <- ggplotly(plots$plots$group_line)
     for (i in 1:length(tmp$x$data)) {
       tmp2 <- tmp$x$data[[i]]
       if (tmp2$type == "scatter") {
@@ -516,17 +519,18 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         }
       }
     }
+    tmp = bold_interactive(tmp,panel = FALSE)
     label_fix(plot = ggplotly(tmp))
   })
 
 
   output$analysisPlot_4 <- renderPlotly({
-    #browser()
+    
     plots <- interactive_plots()
-    plot <- label_fix(ggplotly(plots$plots[[4]]))
+    plot <- label_fix(ggplotly(plots$plots$sub_line))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot$x$layout$legend$title$text = 'Treatment'
+    plot = bold_interactive(plot,panel = TRUE)
     label_fix(plot = ggplotly(plot))
   })
 

@@ -21,10 +21,35 @@ test_plot_theme <- function() {
 #' ylab_move
 #' @export ylab_move
 
-ylab_move <- function(plot, parameter) {
+ylab_move <- function(plot, x_parameter, y_parameter) {
   str(plot[["x"]][["layout"]][["annotations"]])
-  plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -parameter
+  plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -x_parameter
+  plot[["x"]][["layout"]][["annotations"]][[2]][["x"]] <- -y_parameter
   return(plot)
+}
+
+#' bold_interactive
+#' @export bold_interactive
+
+bold_interactive = function(plot, panel){
+  if(any(class(plot) == 'plotly') == FALSE){
+    plot = ggplotly(plot)
+  }
+plot$x$layout$legend$title$text = '<b>Treatment'
+plot$x$layout$yaxis$title[1] = paste('<b>',plot$x$layout$yaxis$title)
+for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
+  plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
+}
+plot$x$layout$title$ticktext = paste('<b>', plot$x$layout$title$ticktext)
+plot$x$layout$title$text = paste('<b>',plot$x$layout$title$text)
+plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
+if(panel){
+for(i in 3:length(plot$x$layout$annotation)){
+  plot$x$layout$annotations[[i]]$text = paste('<b>', plot$x$layout$annotations[[i]]$text)
+}
+  plot$x$layout$annotations[[2]]$text = paste('<b>', plot$x$layout$annotations[[2]]$text)
+}
+return(plot)
 }
 
 #' label_fix
@@ -36,7 +61,8 @@ label_fix <- function(plot) {
     # Extract the group identifier and assign it to the name and legendgroup arguments
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+\\)", "\\1", plot$x$data[[i]]$name)
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+,NA\\)", "\\1", plot$x$data[[i]]$name)
-    plot$x$data[[i]]$legendgroup <- plot$x$data[[i]]$name
+    plot$x$data[[i]]$name =  paste('<b>',plot$x$data[[i]]$name)
+    plot$x$data[[i]]$legendgroup <-plot$x$data[[i]]$name
     # Show the legend only for the first layer of the group
     if (is_first) plot$x$data[[i]]$showlegend <- FALSE
   }

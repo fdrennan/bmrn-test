@@ -4,7 +4,7 @@
 \alias{ylab_move}
 \title{ylab_move}
 \usage{
-ylab_move(plot, parameter)
+ylab_move(plot, x_parameter, y_parameter)
 }
 \description{
 ylab_move
