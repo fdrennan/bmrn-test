@@ -37,17 +37,19 @@ bold_interactive = function(plot, panel){
   }
 plot$x$layout$legend$title$text = '<b>Treatment'
 plot$x$layout$yaxis$title[1] = paste('<b>',plot$x$layout$yaxis$title)
-for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
-  plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
-}
 plot$x$layout$title$ticktext = paste('<b>', plot$x$layout$title$ticktext)
 plot$x$layout$title$text = paste('<b>',plot$x$layout$title$text)
 plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
 if(panel){
-for(i in 3:length(plot$x$layout$annotation)){
+for(i in 1:length(plot$x$layout$annotations)){
   plot$x$layout$annotations[[i]]$text = paste('<b>', plot$x$layout$annotations[[i]]$text)
 }
-  plot$x$layout$annotations[[2]]$text = paste('<b>', plot$x$layout$annotations[[2]]$text)
+  
+for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
+  plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
+}
+}else{
+  plot$x$layout$xaxis$title[1] = '<b> Time'
 }
 return(plot)
 }
