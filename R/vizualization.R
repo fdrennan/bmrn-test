@@ -214,7 +214,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       color = Treatment, linetype = Treatment
     ),
     size = 1.25,
-    show.legend = T
+    show.legend = F
     ) +
     geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response),
       width = .5, show.legend = F

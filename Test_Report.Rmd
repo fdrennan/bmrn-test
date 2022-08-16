@@ -331,6 +331,9 @@ test_plot_theme_word <- function(x) {
 #   filter(Time %in% data$plot$ui_selections$time_sel,
 #          Treatment %in% data$plot$ui_selections$trt_sel)
 
+data$plot$ui_selection$trt_sel = data$plot$data$transformed_data$Treatment
+data$plot$ui_selections$time_sel = data$plot$data$transformed_data$Time
+
 plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE, ui_sel = data$plot$ui_selections)
 
 boxplot_caption = paste0("Box plot for each group and time.")
@@ -383,17 +386,19 @@ plots[[4]] +
 
 \newpage
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6, fig.align='center',fig.cap=prism_caption_bar, message=FALSE}
+```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=10, fig.align='center',fig.cap=prism_caption_bar, message=FALSE}
 knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'))
+show_plot = "prism_plots_box.jpg" %in% list.files(plots_path)
+```
+
+
+```{r, echo = FALSE, eval = show_plot ,error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption_box, message=FALSE}
+knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg'))
+
 ```
 
 \newpage
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption_box, message=FALSE}
-try(knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg')))
-```
-
-\newpage
 
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_bar}
 transformed_data = data$plot$data$transformed_data
@@ -450,7 +455,7 @@ tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform =
 FitFlextableToPage(tab0_ft)
 ```
 `r if(!show_text) {"\\end{comment}"}`
-
+\newpage
 ### `r paste(ifelse(show_text, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
