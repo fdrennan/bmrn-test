@@ -32,7 +32,7 @@ ylab_move <- function(plot, x_parameter, y_parameter) {
 #' @export bold_interactive
 
 bold_interactive = function(plot_orig, panel){
-  #browser()
+  #
   plot = plot_orig
   if(any(class(plot) == 'plotly') == FALSE){
     plot = ggplotly(plot)
@@ -51,7 +51,7 @@ for(i in 1:length(plot$x$layout$annotations)){
   plot$x$layout$xaxis$title[1] = '<b> Time'
   plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
   plot$x$layout$xaxis$ticktext = paste('<b>', plot$x$layout$xaxis$ticktext)
-  browser()
+  
   plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
   print(plot$x$layout$yaxis$title$text)
 }

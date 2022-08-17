@@ -469,7 +469,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     
     plots <- interactive_plots()
     plot = plots$plots$box 
-    plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.02)
+    plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
     plot = bold_interactive(plot,panel = TRUE)
@@ -530,7 +530,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot <- label_fix(ggplotly(plots$plots$sub_line))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.02)
+    plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
     plot = bold_interactive(plot,panel = TRUE)
     label_fix(plot = ggplotly(plot))
   })
