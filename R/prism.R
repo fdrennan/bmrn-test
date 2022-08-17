@@ -162,7 +162,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           inputs = input,
           type = "box"
         )
-        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
+        ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
         plot
       }
         })
@@ -189,7 +189,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           inputs = reactiveValuesToList(input),
           type = "bar"
         )
-        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
+        ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
         plot
       }
         })

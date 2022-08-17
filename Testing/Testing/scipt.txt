@@ -1,6 +1,6 @@
 library(test)
 
-file = list(datapath = 'Testing/Testing/Test Case 2/test_data2.xlsx')
+file = list(datapath = 'Testing/Testing/Test Case 5/test_data5.xlsx')
 
 data = clean_excel_data(file)$data %>%
   mutate(
@@ -13,11 +13,10 @@ data = clean_excel_data(file)$data %>%
 data_long = data %>%
   pivot_longer(cols = grep('Time', colnames(.), value = TRUE),
                values_to = 'Response', names_to = 'Time')
-source('R/cor_select.R')
 
 #Change baseline = TRUE for Test case 5
-transformed_data = pre_modeling(data_long, baseline = FALSE)
-final_data <- final_modeling(transformed_data, toi = 'Time 6', analysis_type = 'confirm')
+transformed_data = pre_modeling(data_long, baseline = TRUE)
+final_data <- final_modeling(transformed_data, toi = 'Time 2', analysis_type = 'confirm')
 
 
 

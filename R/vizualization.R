@@ -21,10 +21,40 @@ test_plot_theme <- function() {
 #' ylab_move
 #' @export ylab_move
 
-ylab_move <- function(plot, parameter) {
+ylab_move <- function(plot, x_parameter, y_parameter) {
   str(plot[["x"]][["layout"]][["annotations"]])
-  plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -parameter
+  plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -x_parameter
+  plot[["x"]][["layout"]][["annotations"]][[2]][["x"]] <- -y_parameter
   return(plot)
+}
+
+#' bold_interactive
+#' @export bold_interactive
+
+bold_interactive = function(plot_orig, panel){
+  #
+  plot = plot_orig
+  if(any(class(plot) == 'plotly') == FALSE){
+    plot = ggplotly(plot)
+  }
+plot$x$layout$legend$title$text = '<b>Treatment'
+plot$x$layout$title$ticktext = paste('<b>', plot$x$layout$title$ticktext)
+plot$x$layout$title$text = paste('<b>',plot$x$layout$title$text)
+if(panel){
+  for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
+    plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
+  }
+for(i in 1:length(plot$x$layout$annotations)){
+  plot$x$layout$annotations[[i]]$text = paste('<b>', plot$x$layout$annotations[[i]]$text)
+}
+}else{
+  plot$x$layout$xaxis$title[1] = '<b> Time'
+  plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
+  plot$x$layout$xaxis$ticktext = paste('<b>', plot$x$layout$xaxis$ticktext)
+  
+  plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
+}
+return(plot)
 }
 
 #' label_fix
@@ -36,7 +66,8 @@ label_fix <- function(plot) {
     # Extract the group identifier and assign it to the name and legendgroup arguments
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+\\)", "\\1", plot$x$data[[i]]$name)
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+,NA\\)", "\\1", plot$x$data[[i]]$name)
-    plot$x$data[[i]]$legendgroup <- plot$x$data[[i]]$name
+    plot$x$data[[i]]$name =  paste('<b>',plot$x$data[[i]]$name)
+    plot$x$data[[i]]$legendgroup <-plot$x$data[[i]]$name
     # Show the legend only for the first layer of the group
     if (is_first) plot$x$data[[i]]$showlegend <- FALSE
   }
@@ -50,7 +81,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
 
   orig_groups = levels(transformed_data$Treatment)
   colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
-  
+  #colors = viridis(length(orig_groups))
   transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
   transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
   
@@ -188,7 +219,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       color = Treatment, linetype = Treatment
     ),
     size = 1.25,
-    show.legend = T
+    show.legend = F
     ) +
     geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response),
       width = .5, show.legend = F
