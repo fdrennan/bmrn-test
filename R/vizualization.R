@@ -53,7 +53,6 @@ for(i in 1:length(plot$x$layout$annotations)){
   plot$x$layout$xaxis$ticktext = paste('<b>', plot$x$layout$xaxis$ticktext)
   
   plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
-  print(plot$x$layout$yaxis$title$text)
 }
 return(plot)
 }
