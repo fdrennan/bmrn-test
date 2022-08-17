@@ -50,6 +50,8 @@ for(i in 1:length(plot$x$layout$annotations)){
 }else{
   plot$x$layout$xaxis$title[1] = '<b> Time'
   plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
+  plot$x$layout$xaxis$ticktext = paste('<b>', plot$x$layout$xaxis$ticktext)
+  browser()
   plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
   print(plot$x$layout$yaxis$title$text)
 }
