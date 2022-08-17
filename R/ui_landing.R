@@ -7,7 +7,7 @@ ui_landing <- function(id = "landing") {
     column(5,
         style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6); my-5",
         class='d-flex justify-content-center align-items-center flex-col',
-        imageOutput(ns("svgIcon"), width = '100%')
+        imageOutput(ns("svgIcon"), width = '80%')
     ),
     column(7,
            tags$br(),
@@ -29,7 +29,7 @@ ui_landing <- function(id = "landing") {
       tags$br(),
       tags$br(),
       tags$br(),
-      h4("By Quantitative Science, Data Science", class = "text-center"),
+      h4("By Quantitative Science", class = "text-center"),
       div(
         style='text-align: center',
         imageOutput(ns("dsIcon"), height = "200px")
