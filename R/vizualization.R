@@ -31,25 +31,27 @@ ylab_move <- function(plot, x_parameter, y_parameter) {
 #' bold_interactive
 #' @export bold_interactive
 
-bold_interactive = function(plot, panel){
+bold_interactive = function(plot_orig, panel){
+  #browser()
+  plot = plot_orig
   if(any(class(plot) == 'plotly') == FALSE){
     plot = ggplotly(plot)
   }
 plot$x$layout$legend$title$text = '<b>Treatment'
-plot$x$layout$yaxis$title[1] = paste('<b>',plot$x$layout$yaxis$title)
 plot$x$layout$title$ticktext = paste('<b>', plot$x$layout$title$ticktext)
 plot$x$layout$title$text = paste('<b>',plot$x$layout$title$text)
-plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
 if(panel){
+  for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
+    plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
+  }
 for(i in 1:length(plot$x$layout$annotations)){
   plot$x$layout$annotations[[i]]$text = paste('<b>', plot$x$layout$annotations[[i]]$text)
 }
-  
-for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
-  plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
-}
 }else{
   plot$x$layout$xaxis$title[1] = '<b> Time'
+  plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
+  plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
+  print(plot$x$layout$yaxis$title$text)
 }
 return(plot)
 }
@@ -79,8 +81,8 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
   orig_groups = levels(transformed_data$Treatment)
   colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
   #colors = viridis(length(orig_groups))
-  #transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
-  #transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
+  transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
+  transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
   
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
