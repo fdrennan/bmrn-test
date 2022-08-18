@@ -12,4 +12,4 @@ app.db
 test_output
 storr/*
 *.zip
-
+^test_output
