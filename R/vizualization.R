@@ -215,23 +215,24 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
   )) +
     geom_point(size = 1.25, show.legend = F) +
     geom_line(aes(
-      x = Time, y = Mean_Response,
-      color = Treatment, linetype = Treatment
+      x = Time, y = Mean_Response,linetype = Treatment, color = Treatment
     ),
     size = 1.25,
-    show.legend = F
+    show.legend = T
     ) +
-    geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response),
+    geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
+                  color = Treatment),
       width = .5, show.legend = F
     ) +
     theme(legend.position = "bottom") +
-    labs(color = "Treatment", linetype = "Treatment") +
+    labs(color = "Treatment") +
     ylab(ylabel) +
     ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
-    guides(colour = guide_legend(override.aes = list(size = 10))) +
+    #guides(colour = guide_legend(override.aes = list(size = 10))) +
     test_plot_theme() +
-    scale_color_manual(values = colors, breaks = orig_groups)
-
+    scale_color_manual(values = colors, breaks = orig_groups) +
+    scale_linetype_manual(values = 1:length(orig_groups), breaks = orig_groups)
+  
   # Has not been implemented yet
   return(list(
     box = box_plot_transformed,
