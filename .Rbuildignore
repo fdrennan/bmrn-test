@@ -4,3 +4,14 @@
 ^\.Rproj\.user$
 test_output
 www
+.git
+.gitignore
+.idea
+^backend
+^cache
+^data
+^figure
+^inputs
+^nginx
+^output
+^storr
