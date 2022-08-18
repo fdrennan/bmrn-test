@@ -12,7 +12,7 @@ test_plot_theme <- function() {
       axis.title = element_text(size = font_size),
       strip.text = element_text(size = font_size),
       plot.title = element_text(size = font_size),
-      axis.title.y = element_text(margin = margin(t = 0, r = 0, b = 0, l = 0)),
+      axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
       axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
     )
   )
