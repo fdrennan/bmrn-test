@@ -165,7 +165,7 @@ prism_plot <- function(data, tables, trt_sel,
       stat_summary(
         fun = "mean",
         color = "black",
-        size = ifelse(format == "word", 0.2, 3),
+        size = ifelse(format == 'word', 0.2,0.5),
         show.legend = FALSE
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
@@ -180,7 +180,7 @@ prism_plot <- function(data, tables, trt_sel,
 
     bottom <- full_prism +
       scale_y_continuous(
-        limits = c(1.1 * min(0, min(data_max$ymin)), 1.1 * max(data_max$ymax)),
+        limits = c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed)),
         expand = expansion(mult = c(0, 0))
       ) +
       theme(plot.margin = margin(
@@ -188,7 +188,9 @@ prism_plot <- function(data, tables, trt_sel,
         r = 0,
         b = 0,
         l = 0
-      ))
+      ),
+      axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+      axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) 
   } else {
     full_prism <- ggplot(
       data_max %>% rename(group1 = Treatment),
@@ -235,11 +237,13 @@ prism_plot <- function(data, tables, trt_sel,
         r = 0,
         b = 0,
         l = 0
-      )) +
-      scale_y_continuous(
-        limits = c(1.1 * min(0, min(data_max$ymin)), 1.1 * max(data_max$ymax)),
-        expand = expansion(mult = c(0, 0))
-      )
+      ),
+      axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+      axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
+     scale_y_continuous(
+       limits = c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed)),
+       expand = expansion(mult = c(0, 0))
+     )
   }
   if (format == "word") {
     bottom <- bottom + theme(
@@ -257,7 +261,8 @@ prism_plot <- function(data, tables, trt_sel,
       label.size = ifelse(format == "word", 4, 8),
       color = "black",
       size = 2,
-      step.increase = ifelse(format == "word", 0.02, 0.05),
+
+      step.increase = ifelse(format == 'word', 0.02, 0.05)
     )
 
     top <- full_prism +
@@ -323,7 +328,9 @@ prism_plot <- function(data, tables, trt_sel,
           r = 0,
           b = 0,
           l = 0
-        ))
+        ),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
     } else {
       bottom <- bottom +
         ggtitle(paste("Bar Chart for Treatment Groups at", time_sel)) +
@@ -332,8 +339,10 @@ prism_plot <- function(data, tables, trt_sel,
           r = 0,
           b = 0,
           l = 0
-        ))
-    }
+        ),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
     return(bottom)
+  }
   }
 }

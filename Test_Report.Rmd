@@ -494,7 +494,7 @@ endpoint <- if_else(!show_text,
 
 ### `r ifelse(show_text, paste('Table 1: Summary of', data$plot$endpoint),"")`
 
-```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
+```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE}
 tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
 tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
@@ -505,7 +505,7 @@ FitFlextableToPage(tab0_ft)
 \newpage
 ### `r paste(ifelse(show_text, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
 
-```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
+```{r, echo = F, error=F, warning=FALSE}
 tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
 
 tab1_ft = word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
@@ -518,7 +518,7 @@ FitFlextableToPage(tab1_ft)
 
 ### `r paste(ifelse(show_text, 'Table 3: Comparison between Doses as to', 'Table 2: Comparison between Doses as to'),data$plot$endpoint)`
 
-```{r, echo = F, error=F, warning=FALSE, fig.width=9, fig.height=6}
+```{r, echo = F, error=F, warning=FALSE}
 tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
 
 tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
@@ -530,7 +530,7 @@ FitFlextableToPage(tab2_ft)
 \newpage
 ### `r paste(ifelse(show_text, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=6}
+```{r, echo = FALSE, error=F, warning=FALSE}
 tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
 tab3_ft = word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
