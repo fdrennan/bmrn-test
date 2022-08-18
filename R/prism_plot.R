@@ -15,7 +15,8 @@ prism_plot <- function(data, tables, trt_sel,
                        inputs = NULL) {
   
   orig_groups = levels(data$Treatment)
-  colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
+  colors = c(ggprism_data$colour_palettes$floral,
+             ggprism_data$colour_palettes$pastel)[1:length(orig_groups)]
                                                
   y_axis <- inputs$y_axisPrism
   tab1 <- tables$tab1

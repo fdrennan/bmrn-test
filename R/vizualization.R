@@ -79,8 +79,11 @@ label_fix <- function(plot) {
 #' @export vizualization
 vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel) {
 
-  orig_groups = levels(transformed_data$Treatment)
-  colors = ggprism_data$colour_palettes$floral[1:length(orig_groups)]
+  orig_groups = levels(factor(transformed_data$Treatment))
+  colors = c(ggprism_data$colour_palettes$floral,
+             ggprism_data$colour_palettes$pastel)[1:length(orig_groups)]
+  linetype =  (1:length(orig_groups)  %% 6)+1
+
   #colors = viridis(length(orig_groups))
   transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
   transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
@@ -231,7 +234,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     #guides(colour = guide_legend(override.aes = list(size = 10))) +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups) +
-    scale_linetype_manual(values = 1:length(orig_groups), breaks = orig_groups)
+    scale_linetype_manual(values = linetype, breaks = orig_groups)
   
   # Has not been implemented yet
   return(list(
