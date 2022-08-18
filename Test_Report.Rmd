@@ -11,11 +11,8 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-<<<<<<< HEAD
   uuid: '8bcb82fc-7964-4bb1-8fc4-e813ea4a8333' 
-=======
-  uuid: '9d181aba-7616-4c49-9f2f-f6d46536ad33'
->>>>>>> master
+
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -26,7 +23,13 @@ title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 #key: 'd24fad66-e6a3-4cf6-ba61-beae48eef1e1-final' saving user inputs (name, consulting statis, etc)
 knitr::opts_chunk$set(echo = FALSE,
                       dpi = 300,
-                      message = FALSE)
+                      message = FALSE,
+                      fig.show = 'asis',
+                      fig.keep = 'high',
+                      fig.width = 8,
+                      #fig.height = 9,
+                      fig.align='center',
+                      fig.asp = 0.7)
 library(test)
 ```
 
@@ -104,7 +107,7 @@ if(scale == "change_from_baseline"){
 
 # TEST Session Summary 
 
-```{r test-session-summary, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, fig.width=9, fig.height=2}
+```{r test-session-summary, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
 session_info = data$input_data$session_data %>% 
   dplyr::select(-description ) %>%
   t %>% data.frame(col2 = .) %>% 
@@ -267,13 +270,13 @@ paste(paste(groups_diff, collapse = ''),
 
 ## `r ifelse(trans_name != "No transformation", "Graphical Summary of Residuals Before and After Transformation", "Graphical Summary of Residuals (No tranformation was needed")`
 
-```{r, fig.width=9, fig.height=5, fig.cap=assumption.cap}
+```{r, fig.cap=assumption.cap}
 
 if(trans_name != "No transformation"){
 new_trans = ifelse(grepl('An' ,trans_name), gsub('An ', "", trans_name),
                    gsub('A ', "", trans_name))
 
-ggarrange(plotlist = list(
+assumptions = ggarrange(plotlist = list(
    ggplot(data = data_check, aes(x = resid_orig)) + 
     geom_histogram(color = 'white') + theme_bw() + 
     ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
@@ -294,7 +297,7 @@ ggarrange(plotlist = list(
     theme(plot.title = element_text(size = 10)))
   )
 }else{
-  ggarrange(plotlist = list(
+  assumptions = ggarrange(plotlist = list(
    ggplot(data = data_check, aes(x = resid_orig)) + 
     geom_histogram(color = 'white') + theme_bw() + 
     ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
@@ -305,6 +308,12 @@ ggarrange(plotlist = list(
     xlab('Theoretical Quantiles') + ylab('Sample quantile') +
     theme(plot.title = element_text(size = 10))))
 }
+
+pngfile <- fs::path(knitr::fig_path(),  "assumptions.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(assumptions)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
 
 ```
 
@@ -352,58 +361,81 @@ prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time,
 
 ```
 
-```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=boxplot_caption}
-plots[[1]] + test_plot_theme_word()
+```{r, echo=F, error=F, warning=FALSE, fig.cap=boxplot_caption}
+plot1 = plots[[1]] + test_plot_theme_word()
 
+pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(plot1)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
 ```
 
-```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap = line_caption}
-plots[[2]] +
+```{r, echo=F, error=F, warning=FALSE,fig.cap = line_caption}
+plot2 = plots[[2]] +
+  test_plot_theme_word() +
+    theme(legend.position = 'bottom') + 
+  guides(color = guide_legend(nrow = 1))
+
+pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(plot2)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
+```
+
+
+```{r, echo=F, error=F, warning=FALSE,fig.cap=barplot_caption}
+plot3 = plots[[3]] +
+  test_plot_theme_word() +
+    theme(
+        legend.position = 'bottom') + 
+  guides(colour = guide_legend(nrow = 1))
+
+pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(plot3)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
+```
+
+
+```{r, echo=F, error=F, warning=FALSE,fig.cap=trajectory_caption}
+
+plot4 = plots[[4]] +
   test_plot_theme_word() +
     theme(
         legend.position = 'bottom')
-```
 
-
-```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=barplot_caption}
-plots[[3]] +
-  test_plot_theme_word() +
-    theme(
-        legend.position = 'bottom')
+pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(plot4)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
 
 ```
 
+<!-- \newpage -->
 
-```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=9, fig.height=5, fig.cap=trajectory_caption}
-
-plots[[4]] +
-  test_plot_theme_word() +
-    theme(
-        legend.position = 'bottom')
+<!-- ```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar, message=FALSE} -->
+<!-- knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg')) -->
+<!-- show_plot = "prism_plots_box.jpg" %in% list.files(plots_path) -->
+<!-- ``` -->
 
 
-```
+<!-- ```{r, echo = FALSE, eval = show_plot ,error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption_box, message=FALSE} -->
+
+<!-- knitr::include_graphics(paste0(plots_path,'/prism_plots_box.png')) -->
+<!---```--->
 
 \newpage
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=10, fig.align='center',fig.cap=prism_caption_bar, message=FALSE}
-knitr::include_graphics(paste0(plots_path,'/prism_plots_bar.jpg'))
-show_plot = "prism_plots_box.jpg" %in% list.files(plots_path)
-```
 
-
-```{r, echo = FALSE, eval = show_plot ,error=F, warning=FALSE, fig.width=9, fig.height=6,fig.align='center', fig.cap=prism_caption_box, message=FALSE}
-knitr::include_graphics(paste0(plots_path,'/prism_plots_box.jpg'))
-
-```
-
-\newpage
-
-
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_bar}
+```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar, include = F}
 transformed_data = data$plot$data$transformed_data
 prismInputs$palette = 'black_and_white'
 prismInputs$border = TRUE
+prismInputs$fontsize = 30
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
                    time_sel =  time,
@@ -413,10 +445,8 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
                    num_groups = length(levels(transformed_data$Treatment)), 
                    type = 'bar', 
                    inputs=prismInputs) 
-```
 
-```{r, echo = FALSE, error=F, warning=FALSE, fig.width=9, fig.height=5, fig.cap=prism_caption_box}
-prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
+prism_box = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
                    time_sel =  time,
                    endpoint = data$plot$endpoint, format = 'word', 
@@ -425,6 +455,23 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
                    num_groups = length(levels(transformed_data$Treatment)), 
                    type = 'box', 
                    inputs=prismInputs) 
+```
+
+
+```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar}
+pngfile <- fs::path(knitr::fig_path(),  "bar.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(prism)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
+```
+
+```{r, echo = FALSE, error=F, warning=FALSE, fig.cap=prism_caption_box}
+pngfile <- fs::path(knitr::fig_path(),  "box.png")
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+plot(prism_box)
+invisible(dev.off())
+knitr::include_graphics(pngfile)
 ```
 
 ## Tables

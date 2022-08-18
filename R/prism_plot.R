@@ -155,12 +155,13 @@ prism_plot <- function(data, tables, trt_sel,
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
         # plot outliers only
         # aes(shape = group1),
-        size = 3,
+        size = ifelse(format == 'word', 1.5,3),
         position = position_dodge(width = 0.2)
       ) +
       stat_summary(
         fun = "mean",
         color = "black",
+        size = ifelse(format == 'word', 0.2,3),
         show.legend = FALSE
       ) +
       scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
@@ -200,15 +201,16 @@ prism_plot <- function(data, tables, trt_sel,
       geom_jitter(
         data = data %>% rename(group1 = Treatment),
         aes(y = Response_Transformed),
-        size = 3,
+        size = ifelse(format == 'word', 1.5,3),
         position = position_dodge(width = 0.2)
       ) +
-      stat_summary(
-        data = data %>% rename(group1 = Treatment),
-        fun = "mean",
-        color = "black",
-        show.legend = FALSE
-      ) +
+      # stat_summary(
+      #   data = data %>% rename(group1 = Treatment),
+      #   fun = "mean",
+      #   color = "black",
+      #   show.legend = FALSE,
+      #   ifelse(format == 'word', 1.5,3),
+      # ) +
       geom_errorbar(
         aes(ymin = ymin, ymax = ymax),
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
