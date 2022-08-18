@@ -286,8 +286,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
       footer <- if_else(
         trans_name == "No transformation",
-        "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
-        paste(trans_name, "transformation was applied to the data.  Difference and CI are estimated using model based LSmean")
+        "No transformation was applied to the data. Mean and SE are estimated using model based LSmean",
+        paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
       )
 
       tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
@@ -398,7 +398,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab2, title = paste(
-                "Table 3: Comparison between Doses as to",
+                "Table 3: Comparison among the Vehicle and Treatment Groups as to",
                 signal()$input_data$endpoint
               ),
               footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
@@ -411,7 +411,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
                 "Table 4: Comparison between Doses and Controls/Wild Type as to",
                 signal()$input_data$endpoint
               ),
-              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type,
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
               endpoint = signal()$input_data$endpoint
             )
           )
@@ -431,7 +431,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab2, title = paste(
-                "Table 2: Comparison between Doses as to",
+                "Table 2: Comparison among the Vehicle and Treatment Groups as to",
                 signal()$input_data$endpoint
               ),
               footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,

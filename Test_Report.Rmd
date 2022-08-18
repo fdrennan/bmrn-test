@@ -11,7 +11,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '8bcb82fc-7964-4bb1-8fc4-e813ea4a8333' 
+  uuid: 'ed81e43a-bf19-44e5-bf2e-763dc58becd1' 
 
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
@@ -53,6 +53,8 @@ trans_name <- transform_table() %>%
         select(transform_name) %>%
         unlist() %>%
         unname()
+
+transform = data$tables$power != 1
 
 groups_diff =  distinct(data$pre_modeling_input$transformed_data,Treatment,diff_group) %>% 
    filter(diff_group != 'Pooled') %>% 
@@ -147,13 +149,13 @@ Explanations of these key steps are described below, and the workflow of TEST 1 
 
 ## Basic Model
 
-We define the basic model as a model that only considers the vehicle and treatment groups. These groups will be used to determine if a transformation is needed and which transformation is most appropriate. If the normality and homogeneous variance assumptions are not met in the basic model then further assistance is required and the consulting statistician will be contacted. The treatment and vehicle groups are used to remove the risk of contamination from the controls or wild type groups.     
+We define the basic model as a model that only considers the vehicle and treatment groups. These groups will be used to determine if a transformation is needed and which transformation is most appropriate. If the normality and homogeneous variance assumptions are not met in the basic model then further assistance is required and the consulting statistician will be contacted.
 
 ## Mixed Effects Modeling
 
 TEST 1 uses mixed effects models to evaluate statistical differences between multiple experimental (treatment) groups across multiple times points. The model evaluates factors including treatment, time, and the interaction between treatment and time. In addition, TEST 1 determines the appropriate correlation structure to account for the correlation between different time points. Some common correlation structures in consideration include auto-regressive (AR1) correlation structure which assumes that the correlation between time points decays at an exponential rate, compound symmetry (CS) correlation structure assumes that the correlation between time points is constant between any given two time points, and unstructured is the most flexible and has no constraints. 
 
-In TEST 1, we also allow mixed effects models can  use different variance/covariance structure for each group separately as needed.
+In TEST 1, we also allow mixed effects models can  use different variance/covariance structure for each group separately as needed. The Akaike Information Criterion (AIC) is used to select the covariance structure that is most appropriate. The AIC strikes a balance between model complexity (number of parameters) and quality of the model fit (LRT). The candidate covariance structures are AR1 (ARH1), CS (CSH), Toeplitz (TOEP), and unstructured (UN) where the AR1 and CS are simplistic structures (only estimates one additional parameter) while UN correlation structure is the most complex (requires the estimation of $t*(t-1)/2$ additional parameters where $t$ is the number of time points). AR1H and CSH covariance structure allows for each time point to have a different variance.  
 
 ## Normality Assumption and Transformation
 
@@ -184,11 +186,7 @@ Once the variance for groups within basic model is determined to be similar, the
 If a group is determined to have a difference variance than the basic model then a estimation of the variance/covariance will be separate from the basic model. Otherwise, the application will move forward to fit the final mixed model with one single common variance component.
 
 
-## Selection of Correlation Sturcture
-
-The Akaike Information Criterion (AIC) is used to select the covariance structure that is most appropriate. The AIC strikes a balance between model complexity (number of parameters) and quality of the model fit (LRT). The candidate covariance structures are AR1 (ARH1), CS (CSH), Toeplitz (TOEP), and unstructured (UN) where the AR1 and CS are simplistic structures (only estimates one additional parameter) while UN correlation structure is the most complex (requires the estimation of $t*(t-1)/2$ additional parameters where $t$ is the number of time points). AR1H and CSH covariance structure allows for each time point to have a different variance.  
-
-## Comparison between Experimental Groups
+## Comparison between Experimental Groups and Multiple Comparisons
 
 In this type of studies, there could be nine group comparisons:
 
@@ -226,26 +224,26 @@ contrasts =  data.frame(
                     'Do doses differ from each other?',
                     'Rule out matrix effect.',
                     'If H is rejected, then show Negative Control is not as good as treatment.'),
+    `Multiple Testing Procedure` = c('None','None', 'Mvt',"Dunnett's or Mvt",'Mvt','Mvt','Mvt','None','Mvt'),
   check.names = FALSE) %>%
   mutate(Comparison = paste(Group_1, 'vs.', Group_2))
 
-contrasts_display = contrasts %>%  select(Label, Comparison,`Purpose of Comparison`)
+contrasts_display = contrasts %>%  select(Label, Comparison,`Purpose of Comparison`, `Multiple Testing Procedure`)
 
 contrasts_ft <- flextable(contrasts_display)
-contrasts_ft <- width(contrasts_ft, width = c(0.75,3, 3))
+contrasts_ft <- footnote(x = contrasts_ft, value = as_paragraph('Mvt refers to the simulation approach using values sampled from a multivariate t distriution.'), i = 1:4 , j = 1:4, ref_symbols = "")
+contrasts_ft <- width(contrasts_ft, width = c(0.75,3, 3, 1))
 contrasts_ft = fontsize(contrasts_ft, size = 9, part = 'header')
 contrasts_ft = fontsize(contrasts_ft, size = 8)
 contrasts_ft
     
 ```
 
-## Multiple Hypothesis Testing
-
-Multiple comparisons arise when a statistical analysis involves multiple simultaneous statistical tests, each of which has a potential to produce a discovery. A stated confidence level generally applies only to each test considered individually, but often it is desirable to have a confidence level for the whole family of simultaneous tests. Controlling the overall Type 1 error rate, as opposed to the Type 1 error rate of each individual test, allows us to avoid rejecting a comparison simply due to random error. For instance, if 100 comparisons were conducted each with 5\% Type I error rate, we would expect 5 results to be false positives. P-value adjustment allows us to control the probability of obtaining at least one false positive in a family of tests.
+Multiple comparisons arise when a statistical analysis involves multiple simultaneous statistical tests, each of which has a potential to produce a discovery. A stated confidence level generally applies only to each test considered individually, but often it is desirable to have a confidence level for the whole family of simultaneous tests. Controlling the overall Type 1 error rate, as opposed to the Type 1 error rate of each individual test, allows us to avoid rejecting a comparison simply due to random error. For instance, if 100 comparisons were conducted each with 5\% Type I error rate, we would expect 5 results to be false positives. 
 
 For each one the comparison groups described above, linear contrasts are constructed to allow for simultaneous testing of the groups, as wells as testing the groups at the pre-selected time point and over time course average. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] 
 
-For comparisons between doses, and doses and control there are multiple tests. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] There will be no p-value adjustments for the comparision between controls. 
+For comparisons between doses, and doses and control there are multiple tests. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] There will be no p-value adjustments for the comparison between controls. 
 
 ## Change from Baseline Analysis
 
@@ -259,14 +257,25 @@ TEST 1 was developed using the R statistical software [@Rbase]. The nlme::gls [@
 
 ## Assumptions and Correlation Structure Results
 
-`r paste(trans_name,'was applied to the data.')` of the data was determined by the algorithm. 
+```{r, include=F}
+if(transform == 'TRUE'){
+transform_result = paste('The residuals from a linear model were not normally distributed, thus', trans_name,' was applied to the data which was determined by a Box-Cox transformation.')
+}else{
+  transform_result = paste('The residuals from a linear model were normally distributed, thus no was applied to the data.')
+}
 
-`r paste(if_else(substr(data$pre_modeling_input$best_model,1,1) == 'A', 'An', 'A'), data$pre_modeling_input$best_model)` was determined by the algorithm.
+correlation_result = paste(if_else(substr(data$pre_modeling_input$best_model,1,1) == 'A', 'An', 'A'), data$pre_modeling_input$best_model, 'lead to a model with the lowest AIC and thus was selected to model the correlation over time.')
 
-`r ifelse(length(groups_diff) == 0, 
-'All groups have similar variance ',
-paste(paste(groups_diff, collapse = ''), 
-'had a different variance from the basic model.'))`
+variance_result = if_else(length(groups_diff) == 0, paste('All groups have similar variance, thus a common variance component is estimated for all groups'),
+paste(paste(groups_diff, collapse = ''), 'had a different variance from the basic model, thus the variance', if_else(length(groups_diff) > 1, 'components', 'component'), 'of', paste(groups_diff, collapse = ''), 'were estimated separately.'))
+
+```
+
+`r transform_result`
+
+`r correlation_result`
+
+`r variance_result`
 
 ## `r ifelse(trans_name != "No transformation", "Graphical Summary of Residuals Before and After Transformation", "Graphical Summary of Residuals (No tranformation was needed")`
 
@@ -355,8 +364,8 @@ line_caption = paste0("Group level trajectory across time where the line corresp
 
 trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
 
-prism_caption_box = paste0('Box plot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
-prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*", and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown form p-value less than 0.05.')
+prism_caption_box = paste0('Box plot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
+prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
 
 
 ```
@@ -481,7 +490,7 @@ transform = data$tables$power != 1
 show_text <- transform
 footer <- if_else(!show_text,
         "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
-        paste(trans_name, "transformation was applied to the data.  Difference and CI are estimated using model based LSmean")
+        paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
       )
 
 endpoint <- if_else(!show_text,
@@ -516,7 +525,7 @@ FitFlextableToPage(tab1_ft)
 ```
 \newpage
 
-### `r paste(ifelse(show_text, 'Table 3: Comparison between Doses as to', 'Table 2: Comparison between Doses as to'),data$plot$endpoint)`
+### `r paste(ifelse(show_text, 'Table 3: Comparison among the Vehicle and Treatment Groups as to', 'Table 2: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE}
 tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
@@ -532,7 +541,8 @@ FitFlextableToPage(tab2_ft)
 
 ```{r, echo = FALSE, error=F, warning=FALSE}
 tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
-tab3_ft = word_tables(tab3, include_summ_stat = F, summary_only = F, transform = transform,
+#debug(word_tables)
+tab3_ft = word_tables(tab3, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
 FitFlextableToPage(tab3_ft)

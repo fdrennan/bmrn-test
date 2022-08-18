@@ -146,7 +146,7 @@ table_2 <- function(final_contrast, os_together, toi) {
 
 #' table_3
 #' @export
-table_3 <- function(final_contrast, os_together, toi) {
+table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
   # Table 3
   # Needs to be generalized to more than 2 groups
   if (!all(!grepl("_st", rownames(final_contrast)))) {
@@ -197,6 +197,18 @@ table_3 <- function(final_contrast, os_together, toi) {
       gsub("Difference.", "", i)
     ))
   }
+  
+  
+  if(include_summ_stat){
+    tab3 <- inner_join(os_together, os_table_3) %>%
+      mutate(Endpoint = ifelse(grepl("Average", Endpoint),
+                               "Average Over Time",
+                               toi
+      )) %>%
+      rename("Time Points" = Endpoint) %>%
+      select(-Dose)
+    tab3[is.na(tab3)] <- ""
+  }else{
   tab3 <- os_table_3 %>%
     select(-Dose) %>%
     mutate(Endpoint = ifelse(grepl("Average", Endpoint),
@@ -205,5 +217,7 @@ table_3 <- function(final_contrast, os_together, toi) {
     )) %>%
     rename("Time Points" = Endpoint)
   tab3[is.na(tab3)] <- ""
+}
+  
   return(tab3)
 }

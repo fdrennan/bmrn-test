@@ -6,7 +6,7 @@ options("test_version" = "Version 1.17")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
-  Sys.setenv(BASE_DOMAIN = "/qsci/test")
+  Sys.setenvQ
   options(send = TRUE)
   options("devmode" = FALSE)
 } else {
