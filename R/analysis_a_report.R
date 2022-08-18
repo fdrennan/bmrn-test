@@ -28,12 +28,12 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           first() %>%
           collect()
       })
-      
+
       output$emailUI <- renderUI({
         req(server_input)
         data <- req(data())
         email <- data$email
-        selectizeInput(ns('repemail'), 'Email', selected = email, choices=email, options = list(create = TRUE), multiple=TRUE)
+        selectizeInput(ns("repemail"), "Email", selected = email, choices = email, options = list(create = TRUE), multiple = TRUE)
       })
 
       observeEvent(input$runReport, {

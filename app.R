@@ -27,7 +27,6 @@ router <- make_router(
   page_404 = page404(message404 = "...hmmm")
 )
 
-
 ui <- div(
   class = "bg-light",
   dashboardPage(
@@ -44,10 +43,11 @@ ui <- div(
       div(
         class = "d-flex justify-content-around",
         div(
-          getOption("test_version")
-        ),
-        div(
-          "© 2022 BioMarin"
+          class = "text-right",
+          actionButton("report", "Contact Us"),
+          tags$br(),
+          getOption("test_version"),
+          tags$br()
         )
       )
     )
@@ -64,6 +64,34 @@ server <- function(input, output, session,
   server_template()
   observeEvent(input$gohome, {
     change_page("home")
+  })
+  
+  
+  observeEvent(input$report, {
+    showModal(
+      ui = modalDialog(
+        div(
+          textAreaInput("emailMessage", label = "Message", width = "100%"),
+          actionButton("sendEmail", "Send Message")
+        )
+      )
+    )
+  })
+  
+  observeEvent(input$sendEmail, {
+    
+    tryCatch({
+      send_email(
+        all_files = FALSE,
+        files = NULL,
+        email_message = input$emailMessage, 
+        from = "fr904103@bmrn.com", to = "fr904103@bmrn.com"
+      )
+      showNotification('Email received!')
+    }, error= function(err) {
+      showNotification('Oops, the email failed to send. Please contact fr904103@bmrn.com')
+    })
+    
   })
 
   callModule(administration_server, "administration", user, is_admin)

@@ -30,7 +30,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     selectizeInput(
       ns("program"), "Program (select or type)",
       options = list(create = TRUE),
-      choices = c('Exploratory', unique(program_lists$Program)[-1])
+      choices = c("Exploratory", unique(program_lists$Program)[-1])
     ),
     uiOutput(ns("selectizeInput")),
     textInput(ns("studyId"), "Study ID", "TB21-02"),

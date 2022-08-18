@@ -203,7 +203,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(input$y_axis)
     req(pre_plot_input())
     data <- pre_plot_input()$data
-    ui_sel = pre_plot_input()$ui_selections
+    ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
 
@@ -319,7 +319,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       timePlotSelectors <- toi
     }
 
-    if(signal()$session$sessionMode=='Exploratory') {
+    if (signal()$session$sessionMode == "Exploratory") {
       box(
         width = 12,
         title = "Options",
@@ -340,7 +340,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     } else {
       div()
     }
-
   })
 
   output$analysisInputsData <- renderUI({
@@ -363,7 +362,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-    
+
 
 
 
@@ -466,27 +465,24 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   })
 
   output$analysisPlot_1 <- renderPlotly({
-    
     plots <- interactive_plots()
-    plot = plots$plots$box 
+    plot <- plots$plots$box
     plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    plot = bold_interactive(plot,panel = TRUE)
-    plot = label_fix(plot = plot)
+    plot <- bold_interactive(plot, panel = TRUE)
+    plot <- label_fix(plot = plot)
   })
 
   output$analysisPlot_2 <- renderPlotly({
-    
     plots <- interactive_plots()
-    plot = plots$plots$bar
-    plot = bold_interactive(plot,panel = FALSE)
+    plot <- plots$plots$bar
+    plot <- bold_interactive(plot, panel = FALSE)
     label_fix(plot = ggplotly(plot))
   })
 
 
   output$analysisPlot_3 <- renderPlotly({
-    
     req(pre_plot_input())
     plots <- interactive_plots()
     tmp <- ggplotly(plots$plots$group_line)
@@ -519,19 +515,18 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         }
       }
     }
-    tmp = bold_interactive(tmp,panel = FALSE)
+    tmp <- bold_interactive(tmp, panel = FALSE)
     label_fix(plot = ggplotly(tmp))
   })
 
 
   output$analysisPlot_4 <- renderPlotly({
-    
     plots <- interactive_plots()
     plot <- label_fix(ggplotly(plots$plots$sub_line))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
     plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
-    plot = bold_interactive(plot,panel = TRUE)
+    plot <- bold_interactive(plot, panel = TRUE)
     label_fix(plot = ggplotly(plot))
   })
 

@@ -1,10 +1,15 @@
 #' @export
-send_email <- function(all_files = FALSE, files, from = getOption("EMAIL_USER"), to = to, email_message) {
+send_email <- function(all_files = FALSE,
+                       files,
+                       from = getOption("EMAIL_USER"),
+                       to = getOption("EMAIL_USER"), email_message = div("No message attached")) {
   if (all_files) {
     files <- c("Test_Report.docx", files)
     zip_name <- "test1output.zip"
     zip(zip_name, files)
     file_name <- zip_name
+  } else if (is.null(files)) {
+    file_name <- NULL
   } else {
     file_name <- "Test_Report.docx"
   }

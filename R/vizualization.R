@@ -8,7 +8,7 @@ test_plot_theme <- function() {
       axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text = element_text(size = font_size, face = 'bold'),
+      axis.text = element_text(size = font_size, face = "bold"),
       axis.title = element_text(size = font_size),
       strip.text = element_text(size = font_size),
       plot.title = element_text(size = font_size),
@@ -31,30 +31,30 @@ ylab_move <- function(plot, x_parameter, y_parameter) {
 #' bold_interactive
 #' @export bold_interactive
 
-bold_interactive = function(plot_orig, panel){
+bold_interactive <- function(plot_orig, panel) {
   #
-  plot = plot_orig
-  if(any(class(plot) == 'plotly') == FALSE){
-    plot = ggplotly(plot)
+  plot <- plot_orig
+  if (any(class(plot) == "plotly") == FALSE) {
+    plot <- ggplotly(plot)
   }
-plot$x$layout$legend$title$text = '<b>Treatment'
-plot$x$layout$title$ticktext = paste('<b>', plot$x$layout$title$ticktext)
-plot$x$layout$title$text = paste('<b>',plot$x$layout$title$text)
-if(panel){
-  for(i in grep('xaxis',names(plot$x$layout), value = TRUE)){
-    plot$x$layout[[i]]$ticktext = paste('<b>', plot$x$layout[[i]]$ticktext)
+  plot$x$layout$legend$title$text <- "<b>Treatment"
+  plot$x$layout$title$ticktext <- paste("<b>", plot$x$layout$title$ticktext)
+  plot$x$layout$title$text <- paste("<b>", plot$x$layout$title$text)
+  if (panel) {
+    for (i in grep("xaxis", names(plot$x$layout), value = TRUE)) {
+      plot$x$layout[[i]]$ticktext <- paste("<b>", plot$x$layout[[i]]$ticktext)
+    }
+    for (i in 1:length(plot$x$layout$annotations)) {
+      plot$x$layout$annotations[[i]]$text <- paste("<b>", plot$x$layout$annotations[[i]]$text)
+    }
+  } else {
+    plot$x$layout$xaxis$title[1] <- "<b> Time"
+    plot$x$layout$yaxis$ticktext <- paste("<b>", plot$x$layout$yaxis$ticktext)
+    plot$x$layout$xaxis$ticktext <- paste("<b>", plot$x$layout$xaxis$ticktext)
+
+    plot$x$layout$yaxis$title$text <- paste("<b>", plot$x$layout$yaxis$title$text)
   }
-for(i in 1:length(plot$x$layout$annotations)){
-  plot$x$layout$annotations[[i]]$text = paste('<b>', plot$x$layout$annotations[[i]]$text)
-}
-}else{
-  plot$x$layout$xaxis$title[1] = '<b> Time'
-  plot$x$layout$yaxis$ticktext = paste('<b>', plot$x$layout$yaxis$ticktext)
-  plot$x$layout$xaxis$ticktext = paste('<b>', plot$x$layout$xaxis$ticktext)
-  
-  plot$x$layout$yaxis$title$text = paste('<b>', plot$x$layout$yaxis$title$text)
-}
-return(plot)
+  return(plot)
 }
 
 #' label_fix
@@ -66,8 +66,8 @@ label_fix <- function(plot) {
     # Extract the group identifier and assign it to the name and legendgroup arguments
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+\\)", "\\1", plot$x$data[[i]]$name)
     plot$x$data[[i]]$name <- gsub("^\\((.*?),\\d+,NA\\)", "\\1", plot$x$data[[i]]$name)
-    plot$x$data[[i]]$name =  paste('<b>',plot$x$data[[i]]$name)
-    plot$x$data[[i]]$legendgroup <-plot$x$data[[i]]$name
+    plot$x$data[[i]]$name <- paste("<b>", plot$x$data[[i]]$name)
+    plot$x$data[[i]]$legendgroup <- plot$x$data[[i]]$name
     # Show the legend only for the first layer of the group
     if (is_first) plot$x$data[[i]]$showlegend <- FALSE
   }
@@ -78,16 +78,17 @@ label_fix <- function(plot) {
 #' vizualization
 #' @export vizualization
 vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel) {
+  orig_groups <- levels(factor(transformed_data$Treatment))
+  colors <- c(
+    ggprism_data$colour_palettes$floral,
+    ggprism_data$colour_palettes$pastel
+  )[1:length(orig_groups)]
+  linetype <- (1:length(orig_groups) %% 6) + 1
 
-  orig_groups = levels(factor(transformed_data$Treatment))
-  colors = c(ggprism_data$colour_palettes$floral,
-             ggprism_data$colour_palettes$pastel)[1:length(orig_groups)]
-  linetype =  (1:length(orig_groups)  %% 6)+1
-
-  #colors = viridis(length(orig_groups))
+  # colors = viridis(length(orig_groups))
   transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
   transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
-  
+
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
     transform_name = c(
@@ -113,7 +114,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   }
 
-  if (!baseline && !(ui_sel %in% 'Baseline')) {
+  if (!baseline && !(ui_sel %in% "Baseline")) {
     # Treatment
     times <- unique(as.character(transformed_data$Time))
     transformed_data <- transformed_data %>%
@@ -218,24 +219,26 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
   )) +
     geom_point(size = 1.25, show.legend = F) +
     geom_line(aes(
-      x = Time, y = Mean_Response,linetype = Treatment, color = Treatment
+      x = Time, y = Mean_Response, linetype = Treatment, color = Treatment
     ),
     size = 1.25,
     show.legend = T
     ) +
-    geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
-                  color = Treatment),
-      width = .5, show.legend = F
+    geom_errorbar(aes(
+      ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
+      color = Treatment
+    ),
+    width = .5, show.legend = F
     ) +
     theme(legend.position = "bottom") +
     labs(color = "Treatment") +
     ylab(ylabel) +
     ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
-    #guides(colour = guide_legend(override.aes = list(size = 10))) +
+    # guides(colour = guide_legend(override.aes = list(size = 10))) +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups) +
     scale_linetype_manual(values = linetype, breaks = orig_groups)
-  
+
   # Has not been implemented yet
   return(list(
     box = box_plot_transformed,
