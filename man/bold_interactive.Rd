@@ -4,7 +4,7 @@
 \alias{bold_interactive}
 \title{bold_interactive}
 \usage{
-bold_interactive(plot, panel)
+bold_interactive(plot_orig, panel)
 }
 \description{
 bold_interactive
