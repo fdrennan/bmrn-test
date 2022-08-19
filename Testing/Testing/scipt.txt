@@ -17,6 +17,7 @@ data_long = data %>%
 #Change baseline = TRUE for Test case 5
 transformed_data = pre_modeling(data_long, baseline = TRUE)
 final_data <- final_modeling(transformed_data, toi = 'Time 6', analysis_type = 'confirm')
+
 model1<-gls(Response_Transformed~Time*TreatmentNew,
             data=transformed_data$transformed_data,
             correlation = corAR1(form=~1|SubjectID),
