@@ -354,7 +354,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults.xlsx"))
 
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
 
