@@ -71,5 +71,6 @@ Depends:
     shinyWidgets,
     plumber,
     gridExtra,
+    ragg,
     R (>= 4.00)
 LazyData: true
