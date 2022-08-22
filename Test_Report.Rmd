@@ -11,7 +11,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: 'ed81e43a-bf19-44e5-bf2e-763dc58becd1' 
+  uuid: '117c9672-ddb1-4da6-993b-3fcad6043408' 
 
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
@@ -447,7 +447,7 @@ prismInputs$border = TRUE
 prismInputs$fontsize = 30
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
+                   time_sel =  prismInputs$timePlotSelectors,
                    endpoint = data$plot$endpoint, format = 'word', 
                    cfb = data$input_data$changeFromBaseline, 
                    power = data$tables$power, 
@@ -457,7 +457,7 @@ prism = prism_plot(data = transformed_data, tables = data$tables$tables,
 
 prism_box = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
+                   time_sel =  prismInputs$timePlotSelectors,
                    endpoint = data$plot$endpoint, format = 'word', 
                    cfb = data$input_data$changeFromBaseline, 
                    power = data$tables$power, 
