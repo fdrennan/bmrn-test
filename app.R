@@ -41,10 +41,9 @@ ui <- div(
     sidebar = dashboardSidebar(disable = T),
     footer = dashboardFooter(
       div(
-        class = "text-right",
+        class = "d-flex justify-content-around",
         actionButton("report", "Contact Us"),
-        tags$br(),tags$br(),
-        getOption("test_version")
+        div(class='', getOption("test_version"))
       )
     )
   )
