@@ -47,6 +47,7 @@ bold_interactive <- function(plot_orig, panel) {
     for (i in 1:length(plot$x$layout$annotations)) {
       plot$x$layout$annotations[[i]]$text <- paste("<b>", plot$x$layout$annotations[[i]]$text)
     }
+    plot$x$layout$yaxis$ticktext <- paste("<b>", plot$x$layout$yaxis$ticktext)
   } else {
     plot$x$layout$xaxis$title[1] <- "<b> Time"
     plot$x$layout$yaxis$ticktext <- paste("<b>", plot$x$layout$yaxis$ticktext)
@@ -113,8 +114,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       "\n Transformed", endpoint
     )
   }
-
-  if (!baseline && !(ui_sel %in% "Baseline")) {
+  if (!baseline || ui_sel %in% "Baseline") {
     # Treatment
     times <- unique(as.character(transformed_data$Time))
     transformed_data <- transformed_data %>%
@@ -139,7 +139,12 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       summarize(Response_Transformed = mean(Response_Transformed)) %>%
       ungroup()
   }
-
+  
+  if(baseline){
+    transformed_data = transformed_data %>%
+      mutate(Response_Transformed = Response_Transformed_bc)
+  }
+  
   correct_level_order <- transformed_data %>%
     arrange(TreatmentNew) %>%
     distinct(Treatment, TreatmentNew) %>%
