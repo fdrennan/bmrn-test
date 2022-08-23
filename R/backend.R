@@ -2,7 +2,11 @@
 ui_backend <- function(id='backend') {
   ns <- NS(id)
   fluidRow(
-    box(width=12, dataTableOutput(ns('table'))),
+    box(width=12,dataTableOutput(ns('table')),
+        collapsible = TRUE,
+        collapsed = TRUE,
+        closable = TRUE,
+        maximizable = TRUE),
     box(sidth=12, uiOutput(ns('sessions'))),
     box(sidth=12, dataTableOutput(ns('files')))
   )
