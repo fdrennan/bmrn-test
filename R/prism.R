@@ -37,12 +37,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
-<<<<<<< HEAD
-=======
-        # %>%
-        #  filter(Treatment %in% input$treatmentPlotSelectors) %>%
-        #  mutate(Treatment = droplevels(Treatment))
->>>>>>> 7f8d0e0b6306d13ff2e8f4cd9533cf71598aa122
+
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
@@ -117,7 +112,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        list(full_path_file=full_path_file, tfd=tfd, pow=pow, cfb=cfb)
+        list(full_path_file=full_path_file, tfd=tfd, pow=pow, cfb=cfb)})
         
       observe({
         req(prismData())

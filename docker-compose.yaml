@@ -2,7 +2,7 @@ version: "2"
 services:
   nginx:
     image: nginx:latest
-    container_name: test-ngi
+    container_name: test-nginix
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
@@ -15,7 +15,7 @@ services:
     links:
       - 'app:shinyapp'
   app:
-    container_name: test-ap
+    container_name: test-app
     build: .
     restart: always
     user: 'root'

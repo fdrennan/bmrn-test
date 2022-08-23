@@ -1,5 +1,5 @@
 library(test)
-
+debug(send_email)
 devtools::load_all()
 plan(multiprocess)
 options("test_version" = "Version 1.18")
@@ -12,6 +12,7 @@ if (isTRUE(getOption("production"))) {
   options(require_validation = FALSE)
   options(send = FALSE)
   options("devmode" = FALSE)
+  options(shiny.port = 5000, shiny.host = "0.0.0.0")
 }
 
 
