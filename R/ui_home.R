@@ -49,18 +49,16 @@ server_home <- function(id = "home") {
   moduleServer(
     id,
     function(input, output, session) {
+      ns <- session$ns
       observe({
         showModal(modalDialog(
-          style = "height: 500px;",
+          style = "height: 580px;",
           ui_landing(),
           easyClose = TRUE,
           title = NULL,
           footer = div(
             class = "text-right",
-            "Contact: fr904103@bmrn.com",
-            tags$br(),
-            getOption("test_version"),
-            tags$br()
+            getOption("test_version")
           ),
           size = "xl"
         ))
@@ -78,8 +76,7 @@ server_home <- function(id = "home") {
         )
       })
       observeEvent(
-        input$analysisaGo,
-        {
+        input$analysisaGo, {
           change_page("analysisasetup")
         }
       )

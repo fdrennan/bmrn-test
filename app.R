@@ -2,11 +2,10 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.15")
+options("test_version" = "Version 1.18")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
-  Sys.setenv(BASE_DOMAIN = "/qsci/test")
   options(send = TRUE)
   options("devmode" = FALSE)
 } else {
@@ -27,7 +26,6 @@ router <- make_router(
   page_404 = page404(message404 = "...hmmm")
 )
 
-
 ui <- div(
   class = "bg-light",
   dashboardPage(
@@ -43,12 +41,8 @@ ui <- div(
     footer = dashboardFooter(
       div(
         class = "d-flex justify-content-around",
-        div(
-          getOption("test_version")
-        ),
-        div(
-          "© 2022 BioMarin"
-        )
+        actionButton("report", "Contact Us"),
+        div(class='', getOption("test_version"))
       )
     )
   )
@@ -64,6 +58,34 @@ server <- function(input, output, session,
   server_template()
   observeEvent(input$gohome, {
     change_page("home")
+  })
+  
+  
+  observeEvent(input$report, {
+    showModal(
+      ui = modalDialog(
+        div(
+          textAreaInput("emailMessage", label = "Message", width = "100%"),
+          actionButton("sendEmail", "Send Message")
+        )
+      )
+    )
+  })
+  
+  observeEvent(input$sendEmail, {
+    
+    tryCatch({
+      send_email(
+        all_files = FALSE,
+        files = NULL,
+        email_message = input$emailMessage, 
+        from = "fr904103@bmrn.com", to = "fr904103@bmrn.com"
+      )
+      showNotification('Email received!')
+    }, error= function(err) {
+      showNotification('Oops, the email failed to send. Please contact fr904103@bmrn.com')
+    })
+    
   })
 
   callModule(administration_server, "administration", user, is_admin)

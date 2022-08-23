@@ -203,7 +203,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(input$y_axis)
     req(pre_plot_input())
     data <- pre_plot_input()$data
-    ui_sel = pre_plot_input()$ui_selections
+    ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
 
@@ -286,8 +286,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
       footer <- if_else(
         trans_name == "No transformation",
-        "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
-        paste(trans_name, "transformation was applied to the data.  Difference and CI are estimated using model based LSmean")
+        "No transformation was applied to the data. Mean and SE are estimated using model based LSmean",
+        paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
       )
 
       tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
@@ -319,7 +319,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       timePlotSelectors <- toi
     }
 
-    if(signal()$session$sessionMode=='Exploratory') {
+    if (signal()$session$sessionMode == "Exploratory") {
       box(
         width = 12,
         title = "Options",
@@ -340,7 +340,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     } else {
       div()
     }
-
   })
 
   output$analysisInputsData <- renderUI({
@@ -355,7 +354,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    # browser()
     tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
 
@@ -363,7 +361,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-    
+
 
 
 
@@ -398,7 +396,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab2, title = paste(
-                "Table 3: Comparison between Doses as to",
+                "Table 3: Comparison among the Vehicle and Treatment Groups as to",
                 signal()$input_data$endpoint
               ),
               footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
@@ -411,7 +409,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
                 "Table 4: Comparison between Doses and Controls/Wild Type as to",
                 signal()$input_data$endpoint
               ),
-              footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type,
+              footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
               endpoint = signal()$input_data$endpoint
             )
           )
@@ -431,7 +429,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           list(
             table = html_table_gt(
               data = tables$tab2, title = paste(
-                "Table 2: Comparison between Doses as to",
+                "Table 2: Comparison among the Vehicle and Treatment Groups as to",
                 signal()$input_data$endpoint
               ),
               footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
@@ -467,22 +465,26 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   output$analysisPlot_1 <- renderPlotly({
     plots <- interactive_plots()
-    plot <- ylab_move(plot = ggplotly(plots$plots[[1]]), parameter = 0.02)
+    plot <- plots$plots$box
+    plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
-    label_fix(plot = ggplotly(plot))
+    plot <- bold_interactive(plot, panel = TRUE)
+    plot <- label_fix(plot = plot)
   })
 
   output$analysisPlot_2 <- renderPlotly({
     plots <- interactive_plots()
-    label_fix(plot = ggplotly(plots$plots[[2]]))
+    plot <- plots$plots$bar
+    plot <- bold_interactive(plot, panel = FALSE)
+    label_fix(plot = ggplotly(plot))
   })
 
 
   output$analysisPlot_3 <- renderPlotly({
     req(pre_plot_input())
     plots <- interactive_plots()
-    tmp <- ggplotly(plots$plots[[3]])
+    tmp <- ggplotly(plots$plots$group_line)
     for (i in 1:length(tmp$x$data)) {
       tmp2 <- tmp$x$data[[i]]
       if (tmp2$type == "scatter") {
@@ -512,15 +514,18 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         }
       }
     }
+    tmp <- bold_interactive(tmp, panel = FALSE)
     label_fix(plot = ggplotly(tmp))
   })
 
 
   output$analysisPlot_4 <- renderPlotly({
     plots <- interactive_plots()
-    plot <- label_fix(ggplotly(plots$plots[[4]]))
+    plot <- label_fix(ggplotly(plots$plots$sub_line))
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
+    plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
+    plot <- bold_interactive(plot, panel = TRUE)
     label_fix(plot = ggplotly(plot))
   })
 

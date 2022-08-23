@@ -10,5 +10,6 @@ yt
 app.db
 .Rprofile
 test_output
-storr
-
+storr/*
+*.zip
+^test_output

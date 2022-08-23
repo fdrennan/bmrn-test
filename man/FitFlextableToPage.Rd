@@ -4,7 +4,7 @@
 \alias{FitFlextableToPage}
 \title{FitFlextableToPage}
 \usage{
-FitFlextableToPage(ft, pgwidth = 6)
+FitFlextableToPage(ft, pgwidth = 8)
 }
 \description{
 FitFlextableToPage

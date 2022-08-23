@@ -146,10 +146,9 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
 #' FitFlextableToPage
 #' @export FitFlextableToPage
 #'
-FitFlextableToPage <- function(ft, pgwidth = 8){
-  
+FitFlextableToPage <- function(ft, pgwidth = 8) {
   ft_out <- ft %>% autofit()
-  
-  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+
+  ft_out <- width(ft_out, width = dim(ft_out)$widths * pgwidth / (flextable_dim(ft_out)$widths))
   return(ft_out)
 }

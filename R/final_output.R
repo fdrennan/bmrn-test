@@ -129,6 +129,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     data.frame() %>%
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
+  
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
@@ -136,6 +137,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   tab1 <- tab1[, which(empty_col < nrow(tab1))] %>%
     rename(
       Treatment = TreatmentNew,
+      #Remove this if the summary statistics are not included in the final table 3 
       "Original Scale Mean" = mean,
       "Original Scale Median" = median,
       "Original Scale SE" = se,
@@ -159,7 +161,14 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   colnames(tab2) <- gsub("\\.", " ", colnames(tab2))
   empty_col <- tab3 %>% apply(2, function(a) sum(is.na(a)))
   tab3 <- tab3[, which(empty_col < nrow(tab3))] %>%
-    rename(Treatment = TreatmentNew) %>%
+    rename(
+      Treatment = TreatmentNew,
+      "Original Scale Mean" = mean,
+      "Original Scale Median" = median,
+      "Original Scale SE" = se,
+      "Transformed Scale Mean" = emmean_lsmeans,
+      "Transformed Scale SE" = se_lsmeans
+    ) %>%
     select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
@@ -193,7 +202,6 @@ html_tables <- function(transformed_data, tab_list) {
     inner_join(., tab2) %>%
     dplyr::select(-Treatment) %>%
     rename("Treatment" = Treatment_orig)
-
   tab3 <- tab_list$tab3
   tab3 <- tab3[, which(apply(tab3, 2, function(a) !all(a == "")))]
   tab3 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
@@ -266,8 +274,8 @@ html_UI <- function(transformed_data, tables) {
 
   footer <- if_else(substr(x = transform, start = 1, stop = 1) %in% c("A", "E", "I", "O", "U"),
     if_else(substr(x = transform, start = 1, stop = 2) == "Id",
-      "No transformation was applied to the data. Difference and CI are estimated using model based LSmean.",
-      paste(transform, "was applied to these data. Difference and CI are estimated using model based LSmean.")
+      "No transformation was applied to the data. Mean and SE are estimated using model based LSmean.",
+      paste(transform, "was applied to these data. Mean and SE are estimated using model based LSmean.")
     ),
     paste("A", transform, "was applied to these data")
   )
@@ -452,6 +460,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           )
       }
     } else {
+      
       table_gt <- data %>%
         rowwise() %>%
         mutate_at(

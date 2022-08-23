@@ -37,6 +37,12 @@ server_prism <- function(id = "prism", test_1_output_data) {
         data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
+<<<<<<< HEAD
+=======
+        # %>%
+        #  filter(Treatment %in% input$treatmentPlotSelectors) %>%
+        #  mutate(Treatment = droplevels(Treatment))
+>>>>>>> 7f8d0e0b6306d13ff2e8f4cd9533cf71598aa122
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
@@ -112,6 +118,16 @@ server_prism <- function(id = "prism", test_1_output_data) {
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
         list(full_path_file=full_path_file, tfd=tfd, pow=pow, cfb=cfb)
+        
+      observe({
+        req(prismData())
+        tfd <- prismData()$tfd
+        pow <- prismData()$pow
+        cfb <- prismData()$cfb
+        full_path_file <- prismData()$full_path_file
+        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
+        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        showNotification('Storing prism data')
       })
 
       output$download <- downloadHandler(
@@ -148,51 +164,51 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$palette <- "black_and_white"
         data <- pre_prism_data()
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
-        plot <- prism_plot(
-          data = data$plot_data,
-          tables = data$tables,
-          trt_sel = input$treatmentPlotSelectors,
-          time_sel = input$timePlotSelectors,
-          endpoint = data$endpoint,
-          format = "html",
-          cfb = data$cfb,
-          power = data$power,
-          num_groups = data$num_groups,
-          inputs = input,
-          type = "box"
-        )
-        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
-        plot
-      }
-        })
+        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
+          plot <- prism_plot(
+            data = data$plot_data,
+            tables = data$tables,
+            trt_sel = input$treatmentPlotSelectors,
+            time_sel = input$timePlotSelectors,
+            endpoint = data$endpoint,
+            format = "html",
+            cfb = data$cfb,
+            power = data$power,
+            num_groups = data$num_groups,
+            inputs = input,
+            type = "box"
+          )
+          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
+          plot
+        }
+      })
 
       output$prismPlot_bar <- renderPlot({
         isolate(input)
         req(pre_prism_data())
         data <- pre_prism_data()
-        
+
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
-        
+
         print(path)
-        if(length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0){
-        plot <- prism_plot(
-          data = data$plot_data,
-          tables = data$tables,
-          trt_sel = input$treatmentPlotSelectors,
-          time_sel = input$timePlotSelectors,
-          endpoint = data$endpoint,
-          format = "html",
-          cfb = data$cfb,
-          power = data$power,
-          num_groups = data$num_groups,
-          inputs = reactiveValuesToList(input),
-          type = "bar"
-        )
-        ggsave(filename = path, plot = plot, device = "jpg", width = 9, height = 6, units = "in")
-        plot
-      }
-        })
+        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
+          plot <- prism_plot(
+            data = data$plot_data,
+            tables = data$tables,
+            trt_sel = input$treatmentPlotSelectors,
+            time_sel = input$timePlotSelectors,
+            endpoint = data$endpoint,
+            format = "html",
+            cfb = data$cfb,
+            power = data$power,
+            num_groups = data$num_groups,
+            inputs = reactiveValuesToList(input),
+            type = "bar"
+          )
+          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
+          plot
+        }
+      })
 
 
 

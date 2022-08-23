@@ -18,7 +18,6 @@ pre_modeling <- function(input_data, baseline) {
       TreatmentNew = droplevels(TreatmentNew)
     ) %>%
     arrange(TreatmentNew, SubjectID, Time)
-
   ready_final_model <- transform_diagnostics(analysis_data, baseline)
   transformed_data <-
     variance_test_basic(

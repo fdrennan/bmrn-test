@@ -4,7 +4,14 @@
 \alias{vizualization}
 \title{vizualization}
 \usage{
-vizualization(transformed_data, power = 1, endpoint, baseline, transformation)
+vizualization(
+  transformed_data,
+  power = 1,
+  endpoint,
+  baseline,
+  transformation,
+  ui_sel
+)
 }
 \description{
 vizualization
