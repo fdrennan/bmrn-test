@@ -44,6 +44,10 @@ ui <- div(
       div(
         class = "d-flex justify-content-around",
         actionButton("report", "Contact Us"),
+        actionButton(
+          inputId = "backend",
+          label = 'Backend'
+        ),
         div(class='', getOption("test_version"))
       )
     )
@@ -59,10 +63,14 @@ server <- function(input, output, session,
   server_navbar()
   server_template()
   server_backend()
+  
   observeEvent(input$gohome, {
     change_page("home")
   })
   
+  observeEvent(input$backend, {
+    change_page("backend")
+  })
   
   observeEvent(input$report, {
     showModal(

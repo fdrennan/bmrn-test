@@ -4,11 +4,11 @@ ui_backend <- function(id='backend') {
   fluidRow(
     box(width=12,dataTableOutput(ns('table')),
         collapsible = TRUE,
-        collapsed = TRUE,
+        collapsed = FALSE,
         closable = TRUE,
         maximizable = TRUE),
-    box(sidth=12, uiOutput(ns('sessions'))),
-    box(sidth=12, dataTableOutput(ns('files')))
+    box(width=12, uiOutput(ns('sessions'))),
+    box(width=12, dataTableOutput(ns('files')))
   )
 }
 
@@ -40,6 +40,7 @@ server_backend <- function(id='backend') {
       })
       
       output$files <- renderDataTable({
+        req(input$uuid)
         data <- data() |> 
           filter(uuid==input$uuid)
         dir_info(data$full_path_files)
