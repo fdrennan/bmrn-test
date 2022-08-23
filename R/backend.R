@@ -4,7 +4,7 @@ ui_backend <- function(id='backend') {
   fluidRow(
     box(width=12, dataTableOutput(ns('table'))),
     box(sidth=12, uiOutput(ns('sessions'))),
-    box(sidth=12, uiOutput(ns('files')))
+    box(sidth=12, dataTableOutput(ns('files')))
   )
 }
 
@@ -22,7 +22,8 @@ server_backend <- function(id='backend') {
           collect()
         
         data |> 
-          select(timestamp, description, email, statistician, sessionMode, studyId, uuid) |> 
+          select(timestamp, description, email, statistician, sessionMode, 
+                 full_path_files,studyId, uuid) |> 
           mutate(timestamp = as.POSIXct(timestamp, origin='1970-01-01'))
       })
       
@@ -35,7 +36,6 @@ server_backend <- function(id='backend') {
       })
       
       output$files <- renderDataTable({
-        req(input$uuid)
         data <- data() |> 
           filter(uuid==input$uuid)
         dir_info(data$full_path_files)
