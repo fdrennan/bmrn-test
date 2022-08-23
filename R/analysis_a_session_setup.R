@@ -131,9 +131,10 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
   output$template <- downloadHandler(
     filename = function() {
-      "test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"
+      "test_example.xlsx"
     },
     content = function(con) {
+      browser()
       writexl::write_xlsx(
         readxl::read_xlsx("test_example.xlsx"), con
       )
@@ -142,6 +143,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
 
   out <- eventReactive(input$submitForm, {
+    browser()
     showNotification("Building analysis...", id = "setupnotification")
     if (!iv$is_valid()) {
       showNotification("Please complete all required fields.")
@@ -165,6 +167,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
       full_path_files = full_path_files
     )
 
+    browser()
     if (length(input$upload$datapath)) {
       copy_files(df, input$upload)
     }
