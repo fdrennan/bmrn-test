@@ -107,6 +107,18 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
       })
 
+      observe({
+        req(test_1_output_data())
+        browser()
+        data <- test_1_output_data()
+        tfd <- data$pre_modeling_input$transformed_data
+        pow <- data$tables$power
+        cfb <- data$input_data$changeFromBaseline
+        full_path_file <- data$input_data$session_data$full_path_files
+        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
+        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        showNotification('Stopping prism data')
+      })
 
       output$download <- downloadHandler(
         filename = function() {

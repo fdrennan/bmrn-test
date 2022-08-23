@@ -16,7 +16,7 @@ send_email <- function(all_files = FALSE,
   }
 
 
-  send.mail(
+  mailR::send.mail(
     from = from,
     to = to,
     subject = "Report Generated",
