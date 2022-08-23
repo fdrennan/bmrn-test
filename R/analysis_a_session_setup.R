@@ -1,6 +1,9 @@
 #' analysis_a_session_setup
 #' @export
-analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_admin) {
+analysis_a_session_setup <- function(id = "analysis_a_session_setup", 
+                                     user, 
+                                     is_admin) {
+  
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -46,7 +49,6 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
           class = "d-flex justify-content-between",
           "Objective", icon("info-circle")
         ),
-        # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
       title =
@@ -182,8 +184,12 @@ analysis_a_session_setup_server <- function(input, output, session) {
       dbCreateTable(con, "sessions", df)
     }
     dbAppendTable(con, "sessions", df)
+    
     change_page("analysisa_run")
     removeNotification(id = "setupnotification")
+    
+    write_csv(input_data$data, fs::path_join(c(df$full_path_files, 'input_data.csv')))
+    
     list(
       session_data = df,
       input_data = input_data

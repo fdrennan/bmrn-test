@@ -61,6 +61,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   input_data <- reactive({
     req(signal())
+    browser()
     input_data <- signal()$input_data
     con <- connect_table()
     data <- tbl(con, "sessions") %>%
@@ -76,7 +77,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     type_inputs <- distinct(data, Type, type_snake)
     make_type_assignment_table(type_inputs, ns)
   })
-
 
 
   output$groupAssignmentTablePlots <- renderUI({
@@ -355,8 +355,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
-
+    # browser()
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
 
     footer <- pre_tables_input()$footer
