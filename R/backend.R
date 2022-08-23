@@ -3,7 +3,8 @@ ui_backend <- function(id='backend') {
   ns <- NS(id)
   fluidRow(
     box(width=12, dataTableOutput(ns('table'))),
-    box(sidth=12, textOutput(ns('uuid')))
+    box(sidth=12, uiOutput(ns('sessions'))),
+    box(sidth=12, uiOutput(ns('files')))
   )
 }
 
@@ -31,6 +32,13 @@ server_backend <- function(id='backend') {
       
       output$sessions <- renderUI({
         textInput(ns('uuid'), 'UUID')
+      })
+      
+      output$files <- renderDataTable({
+        req(input$uuid)
+        data <- data() |> 
+          filter(uuid==input$uuid)
+        dir_info(data$full_path_files)
       })
     }
   )

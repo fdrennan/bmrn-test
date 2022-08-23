@@ -12,6 +12,7 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
 
   input_data <- reactive({
     req(signal())
+    browser()
     input_data <- signal()$input_data
     con <- connect_table()
     data <- tbl(con, "sessions") %>%
@@ -52,6 +53,7 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
   })
 
   output$typeAssignmentTable <- renderUI({
+    req(input_data())
     data <- input_data()$data
     type_inputs <- distinct(data, Type, type_snake)
     make_type_assignment_table(type_inputs, ns)
@@ -60,6 +62,7 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
 
 
   output$groupAssignmentTable <- renderUI({
+    req(input_data())
     data <- input_data()$data
 
     treatment_input <-
@@ -80,6 +83,7 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
   })
 
   output$analysisInputUI <- renderUI({
+    req(input_data())
     id <- input_data()
     data <- id$data
     req(data)

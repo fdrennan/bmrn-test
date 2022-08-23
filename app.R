@@ -17,6 +17,7 @@ if (isTRUE(getOption("production"))) {
 
 
 router <- make_router(
+  route("backend", ui_backend()),
   route("home", ui_home()),
   route(
     "analysisasetup",
@@ -57,6 +58,7 @@ server <- function(input, output, session,
   server_home()
   server_navbar()
   server_template()
+  server_backend()
   observeEvent(input$gohome, {
     change_page("home")
   })
