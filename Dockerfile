@@ -12,6 +12,10 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 
 RUN R -e "install.packages(c('renv','rextendr', 'devtools', 'shiny', 'roxygen2', 'usethis', 'testthat', 'tidyverse'))"
+RUN R -e "install.packages('reticulate')"
+RUN R -e "reticulate::install_miniconda()"
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 
 WORKDIR /app/
 COPY DESCRIPTION .
@@ -23,7 +27,7 @@ COPY data data
 RUN R -e "devtools::install_deps('.')"
 RUN R -e "devtools::document('.')"
 RUN R -e "devtools::install('.')"
-RUN R -e "install.packages('mailR')"
+
 COPY word_style.docx .
 COPY bib.bib .
 COPY test_logo.svg test_logo.svg

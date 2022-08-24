@@ -4,7 +4,12 @@
 \alias{final_modeling}
 \title{final_modeling}
 \usage{
-final_modeling(ready_final_model, toi = NULL, analysis_type)
+final_modeling(
+  ready_final_model,
+  toi = NULL,
+  analysis_type,
+  overall_trend = FALSE
+)
 }
 \description{
 final_modeling

@@ -1,7 +1,10 @@
 #' contrast_padjust
 #' @export contrast_padjust
 #'
-contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory") {
+contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory", 
+                             overall_trend = FALSE) {
+  
+  analysis_type = ifelse(overall_trend, 'Confirmatory', 'Exploratory')
   data <- data %>% rename(tmp = variable)
   est <- emmeans(
     object = model, ~ TreatmentNew * Time,
@@ -15,12 +18,12 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
   )
 
   if (analysis_type == "Exploratory") {
-    final_contrast <- future_map_dfr(.x = LETTERS[1:9], .f = ~ {
+    final_contrast <- map_df(.x = LETTERS[1:9], .f = ~ {
       keep <- which(sapply(contrast_list[[.x]], function(i) {
         all(i == floor(i))
       }) == TRUE)
       contrast_list <- lapply(keep, function(i) contrast_list[[.x]][[i]])
-      out <- final_contrasts(model = model, cont_list = contrast_list, est = est)
+      out <- final_contrasts(model = model, cont_list = contrast_list, est = est, letter = .x)
       if (!is.null(out)) {
         if (nrow(out) == 1) {
           out$contrast <- .x
@@ -38,14 +41,16 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       }
     })
   } else {
-    final_contrast <- future_map_dfr(.x = LETTERS[1:9], .f = ~ {
-      print(.x)
-      # This needs to be removed if we include overall average.
+    final_contrast <- map_df(.x = LETTERS[1:9], .f = ~ {
+      if(!overall_trend){
       keep <- which(sapply(contrast_list[[.x]], function(i) {
         all(i == floor(i))
       }) == TRUE)
-      contrast_list <- lapply(keep, function(i) contrast_list[[.x]][[i]])
-      out <- final_contrasts(model = model, cont_list = contrast_list[[.x]], est = est)
+      cont_list <- lapply(keep, function(i) contrast_list[[.x]][[i]])
+      }else{
+        cont_list = contrast_list[[.x]]
+      }
+      out <- final_contrasts(model = model, cont_list = cont_list, est = est, letter = .x)
       if (!is.null(out)) {
         num_pairs <- nrow(out) / 2
         if (.x == "G") {

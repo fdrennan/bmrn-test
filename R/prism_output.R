@@ -1,5 +1,6 @@
 #' prism_output
 #' @export prism_output
+#'
 prism_output <- function(tranformed_data, variable) {
   tmp <- tranformed_data %>%
     pivot_wider(

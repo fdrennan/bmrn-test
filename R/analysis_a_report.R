@@ -39,7 +39,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
       observeEvent(input$runReport, {
         showNotification("Making Report")
         data <- req(data())
-        browser()
         # req(input$repemail)
         name <- data$name
         uuid <- data$uuid

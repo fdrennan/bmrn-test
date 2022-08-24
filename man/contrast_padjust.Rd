@@ -9,7 +9,8 @@ contrast_padjust(
   contrast_list,
   data,
   variable,
-  analysis_type = "Confirmatory"
+  analysis_type = "Confirmatory",
+  overall_trend = FALSE
 )
 }
 \description{

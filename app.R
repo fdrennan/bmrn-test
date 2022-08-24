@@ -1,23 +1,22 @@
 library(test)
-debug(send_email)
+
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.18")
+options("test_version" = "Version 1.17")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
+  Sys.setenvQ
   options(send = TRUE)
   options("devmode" = FALSE)
 } else {
   options(require_validation = FALSE)
   options(send = FALSE)
   options("devmode" = FALSE)
-  options(shiny.port = 5000, shiny.host = "0.0.0.0")
 }
 
 
 router <- make_router(
-  route("backend", ui_backend()),
   route("home", ui_home()),
   route(
     "analysisasetup",
@@ -44,10 +43,6 @@ ui <- div(
       div(
         class = "d-flex justify-content-around",
         actionButton("report", "Contact Us"),
-        actionButton(
-          inputId = "backend",
-          label = 'Backend'
-        ),
         div(class='', getOption("test_version"))
       )
     )
@@ -62,15 +57,10 @@ server <- function(input, output, session,
   server_home()
   server_navbar()
   server_template()
-  server_backend()
-  
   observeEvent(input$gohome, {
     change_page("home")
   })
   
-  observeEvent(input$backend, {
-    change_page("backend")
-  })
   
   observeEvent(input$report, {
     showModal(
