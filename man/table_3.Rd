@@ -4,7 +4,7 @@
 \alias{table_3}
 \title{table_3}
 \usage{
-table_3(final_contrast, os_together, toi)
+table_3(final_contrast, os_together, toi, include_summ_stat = T)
 }
 \description{
 table_3

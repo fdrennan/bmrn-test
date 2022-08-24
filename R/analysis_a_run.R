@@ -268,11 +268,12 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       req(FALSE)
     } else {
       if (analysis_type == "Exploratory") {
-        final_model <- final_modeling(data, analysis_type = analysis_type)
+        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
       } else {
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
-          analysis_type = analysis_type
+          analysis_type = analysis_type,
+          overall_trend = FALSE #Change this to TRUE to include the overall average
         )
       }
 
@@ -344,7 +345,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
-
     wb <- createWorkbook()
     addWorksheet(wb = wb, sheetName = "Table 1")
     addWorksheet(wb = wb, sheetName = "Table 2")
@@ -362,9 +362,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-
-
-
 
     if (analysis_type == "Exploratory") {
       times <- input$timeTreatmentSelectorsTable
