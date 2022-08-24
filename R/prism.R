@@ -19,6 +19,7 @@ ui_prism <- function(id = "prism") {
           numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
           numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
           numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
+          selectInput(ns("palette"), "Color Palette", c('floral', 'colorblind_safe'), "Floral")
         )
       )
     )))
@@ -34,15 +35,9 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       pre_prism_data <- reactive({
-        # input$update
-        # TODO add select y, change from baseline
-        #
         data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
-        # %>%
-        #  filter(Treatment %in% input$treatmentPlotSelectors) %>%
-        #  mutate(Treatment = droplevels(Treatment))
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
@@ -60,7 +55,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
         toi <- input_prism$input_data$timeSelectionInput
-
         fluidRow(
           box(
             title = "Inputs",
@@ -145,7 +139,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$update
         input <- reactiveValuesToList(input)
         input$border <- FALSE
-        input$palette <- "black_and_white"
         data <- pre_prism_data()
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {

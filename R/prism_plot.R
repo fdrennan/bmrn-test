@@ -12,10 +12,10 @@ prism_plot <- function(data, tables, trt_sel,
                        time_sel, endpoint, format, cfb, power,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
-                       inputs = NULL) {
+                       inputs = NULL, same_ylim = FALSE) {
   orig_groups <- levels(data$Treatment)
   colors <- c(
-    ggprism_data$colour_palettes$floral,
+    ggprism_data$colour_palettes[[inputs$palette]],
     ggprism_data$colour_palettes$pastel
   )[1:length(orig_groups)]
 
@@ -178,9 +178,15 @@ prism_plot <- function(data, tables, trt_sel,
       ylab(ylab) +
       xlab("Treatment")
 
+    if(same_ylim){
+      ylim =  c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed))
+    }else{
+      ylim = c(NA,NA)
+    }
+    
     bottom <- full_prism +
       scale_y_continuous(
-        limits = c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed)),
+        limits = ylim,
         expand = expansion(mult = c(0, 0))
       ) +
       theme(plot.margin = margin(
