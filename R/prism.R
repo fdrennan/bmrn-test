@@ -38,6 +38,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
+
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
@@ -101,20 +102,36 @@ server_prism <- function(id = "prism", test_1_output_data) {
         )
       })
 
+      
+      prismData <- reactive({
+        req(test_1_output_data())
+        data <- test_1_output_data()
+        tfd <- data$pre_modeling_input$transformed_data
+        pow <- data$tables$power
+        cfb <- data$input_data$changeFromBaseline %>% as.logical()
+        full_path_file <- data$input_data$session_data$full_path_files
+        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
+        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        list(full_path_file=full_path_file, tfd=tfd, pow=pow, cfb=cfb)})
+        
+      observe({
+        req(prismData())
+        tfd <- prismData()$tfd
+        pow <- prismData()$pow
+        cfb <- prismData()$cfb
+        full_path_file <- prismData()$full_path_file
+        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
+        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        showNotification('Storing prism data')
+      })
 
       output$download <- downloadHandler(
         filename = function() {
-          paste("prism-output-", Sys.Date(), ".xlsx", sep = "")
+          paste("prism_data.xlsx", sep = "")
         },
         content = function(file) {
-          data <- test_1_output_data()
-          tfd <- data$pre_modeling_input$transformed_data
-          pow <- data$tables$power
-          cfb <- data$input_data$changeFromBaseline
-          full_path_file <- data$input_data$session_data$full_path_files
-          full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
-          save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-          save_prism_output(file, tfd, pow, as.logical(cfb))
+          req(prismData())
+          save_prism_output(prismData()$full_path_file, prismData()$tfd, prismData()$pow, prismData()$cfb)
         }
       )
 
@@ -190,6 +207,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       observe({
+        prismData()
         uuid <- test_1_output_data()$input_data$session_data$uuid
         req(uuid)
         input

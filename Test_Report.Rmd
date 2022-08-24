@@ -1,3 +1,4 @@
+
 ---
 author: Treatment Evaluation Statistical Tool, TEST 1
 output: 
@@ -11,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: 'ed81e43a-bf19-44e5-bf2e-763dc58becd1' 
+  uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
 
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
@@ -442,7 +443,6 @@ knitr::include_graphics(pngfile)
 
 ```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar, include = F}
 transformed_data = data$plot$data$transformed_data
-prismInputs$palette = 'black_and_white'
 prismInputs$border = TRUE
 prismInputs$fontsize = 30
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 

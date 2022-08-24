@@ -32,13 +32,14 @@ prism_plot <- function(data, tables, trt_sel,
   trans_name <- gsub("An ", "", trans_name)
 
   if (power == 1 | y_axis == "no_transform") {
-    ylab <- endpoint
+    ylabel <- endpoint
     data <- data %>%
       mutate(Response_Transformed = Response)
+    ylabel <- endpoint
   }
 
   if (y_axis == "transform" & power != 1) {
-    ylab <- paste(trans_name, endpoint)
+    ylabel <- paste(trans_name, endpoint)
     var <- "Response_Transformed"
   }
 
@@ -46,13 +47,13 @@ prism_plot <- function(data, tables, trt_sel,
   if (y_axis == "change_from_baseline" & power == 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylab <- paste0("Change from Baseline \n", endpoint)
+    ylabel <- paste0("Change from Baseline \n", endpoint)
   }
 
   if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylab <- paste0(trans_name, "\n Change from Baseline ", endpoint)
+    ylabel <- paste0(trans_name, "\n Change from Baseline ", endpoint)
   }
 
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
@@ -175,7 +176,7 @@ prism_plot <- function(data, tables, trt_sel,
       theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
       # , palette = inputs$palette) +
       theme(legend.position = "none") +
-      ylab(ylab) +
+      ylab(ylabel) +
       xlab("Treatment")
 
     if(same_ylim){
@@ -235,7 +236,7 @@ prism_plot <- function(data, tables, trt_sel,
       theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
       # , palette = inputs$palette) +
       theme(legend.position = "none") +
-      ylab(ylab) +
+      ylab(ylabel) +
       xlab("Treatment")
     bottom <- full_prism +
       theme(plot.margin = margin(
