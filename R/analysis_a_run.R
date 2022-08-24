@@ -468,14 +468,14 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
     plot <- bold_interactive(plot, panel = TRUE)
-    plot <- label_fix(plot = plot)
+    plot <- label_fix(plot = plot) %>% layout(height = 525)
   })
 
   output$analysisPlot_2 <- renderPlotly({
     plots <- interactive_plots()
     plot <- plots$plots$bar
     plot <- bold_interactive(plot, panel = FALSE)
-    label_fix(plot = ggplotly(plot))
+    label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
   })
 
 
@@ -513,7 +513,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       }
     }
     tmp <- bold_interactive(tmp, panel = FALSE)
-    label_fix(plot = ggplotly(tmp))
+    label_fix(plot = ggplotly(tmp)) %>% layout(height = 600)
   })
 
 
@@ -524,7 +524,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot$x$layout$margin$l <- 75
     plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
     plot <- bold_interactive(plot, panel = TRUE)
-    label_fix(plot = ggplotly(plot))
+    label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
   })
 
 
@@ -597,7 +597,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           collapsible = TRUE,
           maximizable = TRUE,
           testSpinner(
-            plotlyOutput(ns(x))
+            plotlyOutput(ns(x), height = ifelse(x == 'analysisPlot_3', '600px', '525px'))
           )
         )
       }
