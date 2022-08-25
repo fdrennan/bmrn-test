@@ -116,29 +116,17 @@ server_prism <- function(id = "prism", test_1_output_data) {
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
-
-      observe({
-        browser()
-        req(prismData())
-        tfd <- prismData()$tfd
-        pow <- prismData()$pow
-        cfb <- prismData()$cfb
-        full_path_file <- prismData()$full_path_file
-        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
-        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        showNotification("Storing prism data")
-      })
-
+ 
       output$download <- downloadHandler(
         filename = function() {
           paste("prism_data.xlsx", sep = "")
         },
         content = function(file) {
           req(prismData())
-          browser()
-          save_prism_output(prismData()$full_path_file, prismData()$tfd, prismData()$pow, prismData()$cfb)
+          save_prism_output(file, prismData()$tfd, prismData()$pow, prismData()$cfb)
         }
       )
 

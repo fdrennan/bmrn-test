@@ -128,7 +128,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
   })
 
 
-  output$template <- downloadHandler(
+  output$template <- downloadHandler(contentType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     filename = function() {
       "test_example.xlsx"
     },
