@@ -4,10 +4,12 @@
 clean_excel_data <- function(file) {
   #
   data <- file$datapath %>%
-    read_excel(.,
-      skip = 1,
+    read_excel(., sheet='Data Entry',
       col_names = TRUE
-    ) %>%
+    ) 
+  
+  data <- 
+    data %>%
     mutate_if(is.numeric, as.character) %>%
     rename("Treatment" = `Treatment Group Name`)
 
