@@ -197,27 +197,27 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
       gsub("Difference.", "", i)
     ))
   }
-  
-  
-  if(include_summ_stat){
+
+
+  if (include_summ_stat) {
     tab3 <- inner_join(os_together, os_table_3) %>%
       mutate(Endpoint = ifelse(grepl("Average", Endpoint),
-                               "Average Over Time",
-                               toi
+        "Average Over Time",
+        toi
       )) %>%
       rename("Time Points" = Endpoint) %>%
       select(-Dose)
     tab3[is.na(tab3)] <- ""
-  }else{
-  tab3 <- os_table_3 %>%
-    select(-Dose) %>%
-    mutate(Endpoint = ifelse(grepl("Average", Endpoint),
-      "Average Over Time",
-      toi
-    )) %>%
-    rename("Time Points" = Endpoint)
-  tab3[is.na(tab3)] <- ""
-}
-  
+  } else {
+    tab3 <- os_table_3 %>%
+      select(-Dose) %>%
+      mutate(Endpoint = ifelse(grepl("Average", Endpoint),
+        "Average Over Time",
+        toi
+      )) %>%
+      rename("Time Points" = Endpoint)
+    tab3[is.na(tab3)] <- ""
+  }
+
   return(tab3)
 }
