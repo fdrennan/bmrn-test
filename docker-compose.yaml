@@ -33,7 +33,7 @@ services:
       - './test_output:/app/test_output'
       - './Test_Report.Rmd:/app/Test_Report.Rmd'
     network_mode: bridge
-  app:
+  prodapp:
     container_name: test-prod
     build: Dockerfile-prod
     restart: always
