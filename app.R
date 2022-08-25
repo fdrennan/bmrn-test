@@ -1,11 +1,8 @@
 library(test)
-<<<<<<< HEAD
-=======
 
->>>>>>> 74d46db0be0108170ed61b402a44219e0e17474a
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.17")
+options("test_version" = "Version 1.18")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
@@ -15,7 +12,7 @@ if (isTRUE(getOption("production"))) {
 } else {
   options(require_validation = FALSE)
   options(send = FALSE)
-  options("devmode" = FALSE)
+  options("devmode" = TRUE)
 }
 
 
@@ -38,7 +35,7 @@ ui <- div(
     header = dashboardHeader(
       div(
         headers(),
-        ui_navbar(),
+        ui_navbar()
       )
     ),
     body = dashboardBody(router$ui),
