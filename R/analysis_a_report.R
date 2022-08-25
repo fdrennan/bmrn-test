@@ -7,7 +7,6 @@ ui_analysis_a_report <- function(id = "analysis_a_report", session_id = "") {
     div(class = "col-xl-4 col-lg-4 col-md-4"),
     div(
       class = "col-xl-4 col-lg-4 col-md-4 d-flex justify-content-center",
-      # uiOutput(ns('emailUI')),
       actionButton(ns("runReport"), "Run Report", class = "btn btn-primary")
     )
   )

@@ -1,12 +1,6 @@
 #' analysis_a_session_setup
 #' @export
-<<<<<<< HEAD
-analysis_a_session_setup <- function(id = "analysis_a_session_setup",
-                                     user,
-                                     is_admin) {
-=======
 analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_admin) {
->>>>>>> 74d46db0be0108170ed61b402a44219e0e17474a
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -99,6 +93,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
       )
     )
   )
+  
 }
 
 
@@ -135,7 +130,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
   output$template <- downloadHandler(
     filename = function() {
-      "test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"
+      "test_example.xlsx"
     },
     content = function(con) {
       writexl::write_xlsx(
