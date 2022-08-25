@@ -353,7 +353,7 @@ test_plot_theme_word <- function(x) {
 data$plot$ui_selection$trt_sel = data$plot$data$transformed_data$Treatment
 data$plot$ui_selections$time_sel = data$plot$data$transformed_data$Time
 
-plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE, ui_sel = data$plot$ui_selections)
+plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE, ui_sel = data$plot$ui_selections, palette = prismInputs$palette)
 
 boxplot_caption = paste0("Box plot for each group and time.")
 

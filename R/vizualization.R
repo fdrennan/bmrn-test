@@ -78,10 +78,10 @@ label_fix <- function(plot) {
 
 #' vizualization
 #' @export vizualization
-vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel) {
+vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel, palette = 'floral') {
   orig_groups <- levels(factor(transformed_data$Treatment))
   colors <- c(
-    ggprism_data$colour_palettes$floral,
+    ggprism_data$colour_palettes[[palette]],
     ggprism_data$colour_palettes$pastel
   )[1:length(orig_groups)]
   linetype <- (1:length(orig_groups) %% 6) + 1
