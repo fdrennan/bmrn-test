@@ -163,7 +163,6 @@ analysis_a_session_setup_server <- function(input, output, session) {
       full_path_files = full_path_files
     )
     
-    browser()
     if (length(input$upload$datapath)) {
       copy_files(df, input$upload)
     }
