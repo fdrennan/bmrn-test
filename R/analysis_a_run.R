@@ -61,7 +61,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   input_data <- reactive({
     req(signal())
-    # browser()
     input_data <- signal()$input_data
     con <- connect_table()
     data <- tbl(con, "sessions") %>%
@@ -77,6 +76,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     type_inputs <- distinct(data, Type, type_snake)
     make_type_assignment_table(type_inputs, ns)
   })
+
 
 
   output$groupAssignmentTablePlots <- renderUI({
@@ -268,11 +268,12 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       req(FALSE)
     } else {
       if (analysis_type == "Exploratory") {
-        final_model <- final_modeling(data, analysis_type = analysis_type)
+        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
       } else {
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
-          analysis_type = analysis_type
+          analysis_type = analysis_type,
+          overall_trend = FALSE #Change this to TRUE to include the overall average
         )
       }
 
@@ -344,7 +345,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
 
   output$analysisInputsData <- renderUI({
     tables <- pre_tables_input()$tables
-
     wb <- createWorkbook()
     addWorksheet(wb = wb, sheetName = "Table 1")
     addWorksheet(wb = wb, sheetName = "Table 2")
@@ -354,16 +354,14 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
+
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
 
     footer <- pre_tables_input()$footer
     transformation <- pre_tables_input()$power != 1
     print_tables <- pre_tables_input()$print_tables
     analysis_type <- signal()$session$sessionMode
-
-
-
 
     if (analysis_type == "Exploratory") {
       times <- input$timeTreatmentSelectorsTable
@@ -470,14 +468,14 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot$x$layout$margin$t <- 75
     plot$x$layout$margin$l <- 75
     plot <- bold_interactive(plot, panel = TRUE)
-    plot <- label_fix(plot = plot)
+    plot <- label_fix(plot = plot) %>% layout(height = 525)
   })
 
   output$analysisPlot_2 <- renderPlotly({
     plots <- interactive_plots()
     plot <- plots$plots$bar
     plot <- bold_interactive(plot, panel = FALSE)
-    label_fix(plot = ggplotly(plot))
+    label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
   })
 
 
@@ -515,7 +513,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       }
     }
     tmp <- bold_interactive(tmp, panel = FALSE)
-    label_fix(plot = ggplotly(tmp))
+    label_fix(plot = ggplotly(tmp)) %>% layout(height = 600)
   })
 
 
@@ -526,7 +524,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     plot$x$layout$margin$l <- 75
     plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
     plot <- bold_interactive(plot, panel = TRUE)
-    label_fix(plot = ggplotly(plot))
+    label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
   })
 
 
@@ -599,7 +597,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           collapsible = TRUE,
           maximizable = TRUE,
           testSpinner(
-            plotlyOutput(ns(x))
+            plotlyOutput(ns(x), height = ifelse(x == 'analysisPlot_3', '600px', '525px'))
           )
         )
       }

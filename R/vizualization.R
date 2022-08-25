@@ -196,7 +196,8 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
 
   box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
     geom_boxplot(aes(color = Treatment), show.legend = FALSE) +
-    geom_point(position = position_dodge(width = 0.1), aes(color = Treatment), show.legend = FALSE, size = 0.7) +
+    geom_point(position = position_dodge(width = 0.1), aes(color = Treatment), 
+               show.legend = FALSE, size = 0.7) +
     labs(color = "Treatment") +
     facet_wrap(Treatment ~ ., nrow = 1) +
     ylab(ylabel) +

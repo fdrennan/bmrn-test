@@ -4,12 +4,20 @@
 # multivariate t-distribution with accounts for the correlation and the degrees
 # of freedom.
 
-final_contrasts <- function(model, cont_list, est) {
-  adjust <- "mvt"
+final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE) {
+
+  adj_table = data.frame(letter = LETTERS[1:9],
+                         p.adj = c('none', 'none', 'none', 'dunnett', 'none',
+                                   'none', 'mvt', 'none', 'none'))
+  
+  if(overall_trend){
+    adjust <- "mvt"
+  }else{
+    adjust = adj_table$p.adj[adj_table$letter == letter]
+  }
+  
   if (length(cont_list) > 0) {
-    if (length(cont_list) == 1) {
-      adjust <- "none"
-    }
+
     # Compute the simulated p-value
     adj_ht <- contrast(est, adjust = adjust, method = cont_list) %>% data.frame()
 

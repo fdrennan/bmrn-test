@@ -1,8 +1,12 @@
 #' analysis_a_session_setup
 #' @export
+<<<<<<< HEAD
 analysis_a_session_setup <- function(id = "analysis_a_session_setup",
                                      user,
                                      is_admin) {
+=======
+analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_admin) {
+>>>>>>> 74d46db0be0108170ed61b402a44219e0e17474a
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -48,6 +52,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup",
           class = "d-flex justify-content-between",
           "Objective", icon("info-circle")
         ),
+        # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
       title =
@@ -130,10 +135,9 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
   output$template <- downloadHandler(
     filename = function() {
-      "test_example.xlsx"
+      "test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"
     },
     content = function(con) {
-      browser()
       writexl::write_xlsx(
         readxl::read_xlsx("test_example.xlsx"), con
       )
@@ -142,7 +146,6 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
 
   out <- eventReactive(input$submitForm, {
-    browser()
     showNotification("Building analysis...", id = "setupnotification")
     if (!iv$is_valid()) {
       showNotification("Please complete all required fields.")
@@ -165,7 +168,6 @@ analysis_a_session_setup_server <- function(input, output, session) {
       full_path_home = full_path_home,
       full_path_files = full_path_files
     )
-    # debug(copy_files)
     if (length(input$upload$datapath)) {
       copy_files(df, input$upload)
     }

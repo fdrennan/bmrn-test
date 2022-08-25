@@ -38,6 +38,7 @@ Depends:
     writexl,
     rlist,
     plotly,
+    dotenv,
     ggpubr,
     styler,
     dbplyr,
@@ -69,8 +70,7 @@ Depends:
     shinyWidgets,
     plumber,
     gridExtra,
-    ragg,
     R (>= 4.00)
-Suggests: 
+Suggests:
     mailR
 LazyData: true

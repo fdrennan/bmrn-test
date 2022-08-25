@@ -129,7 +129,6 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     data.frame() %>%
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
-
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)

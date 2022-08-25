@@ -1,17 +1,21 @@
 library(test)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 74d46db0be0108170ed61b402a44219e0e17474a
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.18")
+options("test_version" = "Version 1.17")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
+  Sys.setenvQ
   options(send = TRUE)
   options("devmode" = FALSE)
 } else {
   options(require_validation = FALSE)
   options(send = FALSE)
   options("devmode" = FALSE)
-  options(shiny.port = 5000, shiny.host = "0.0.0.0")
 }
 
 
@@ -42,7 +46,7 @@ ui <- div(
     footer = dashboardFooter(
       div(
         class = "d-flex justify-content-around",
-        actionButton("report", "Contact Us"),
+        
         {
           if (getOption('devmode')) {
             actionButton(
@@ -51,6 +55,8 @@ ui <- div(
             )
           } else NULL
         },
+        actionButton("report", "Contact Us"),
+        div(class = "", getOption("test_version")),
         {
           if (getOption('devmode')) {
             actionButton(
@@ -58,8 +64,7 @@ ui <- div(
               label = "Analysis A Setup"
             )
           } else NULL
-        },
-        div(class = "", getOption("test_version"))
+        }
       )
     )
   )
