@@ -19,7 +19,11 @@ ui_prism <- function(id = "prism") {
           numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
           numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
           numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
-          selectInput(ns("palette"), "Color Palette", c('floral', 'colorblind_safe'), "Floral")
+          numericInput(ns("bottom_percent"), label = "Percent of Total plot for y-axis", value = 70, min = 0, max = 100, step = 5),
+          selectInput(ns("palette"), "Color Palette", 
+                      sort(c('floral', 'colorblind_safe', 'colors', 'floral2', 'muted_rainbow',
+                             'office', 'stained_glass')), 
+                      "floral")
         )
       )
     )))

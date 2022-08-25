@@ -309,20 +309,25 @@ prism_plot <- function(data, tables, trt_sel,
           l = 0
         ))
     }
-    layout <- rbind(1, 2, 2)
-    if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
-      layout <- rbind(1, 2)
-    }
-    if (nrow(p_vals) >= 12) {
-      layout <- rbind(1, 1, 2)
-    }
+    browser()
+    layout <- matrix(c(rep(1,100-inputs$bottom_percent), rep(2, inputs$bottom_percent)), ncol = 1)
+    #if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
+    #  layout <- rbind(1, 2)
+    #}
+    #if (nrow(p_vals) >= 12) {
+    #  layout <- rbind(1, 1, 2)
+    #}
 
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
+                               #ncol = 1,
+                               #heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight, c('in', 'in')))
     } else {
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
+                               #ncol = 1,
+      #heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight,c('in', 'in')))
     }
 
     return(combined)
