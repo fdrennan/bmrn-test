@@ -188,18 +188,17 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
     ) +
     labs(color = "Treatment") +
-    ylab(ylabel) +
+    ylab(ylabel) 
     ggtitle("Bar Chart for Each Group Over Time") +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups)
-
 
   box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
     geom_boxplot(aes(color = Treatment), show.legend = FALSE) +
     geom_point(position = position_dodge(width = 0.1), aes(color = Treatment), 
                show.legend = FALSE, size = 0.7) +
     labs(color = "Treatment") +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ylab(ylabel) +
     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
     ggtitle("Box Plot for Each Group Over Time") +
@@ -214,7 +213,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     geom_line(aes(color = Treatment), size = 0.2, show.legend = FALSE) +
     geom_point(aes(color = Treatment), show.legend = FALSE) +
     ylab(ylabel) +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ggtitle("Trajectory of Each Subject by Group") +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups)
