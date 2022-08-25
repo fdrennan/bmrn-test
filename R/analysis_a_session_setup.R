@@ -140,6 +140,10 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
 
   out <- eventReactive(input$submitForm, {
+    
+    browser()
+    
+    
     showNotification("Building analysis...", id = "setupnotification")
     if (!iv$is_valid()) {
       showNotification("Please complete all required fields.")
