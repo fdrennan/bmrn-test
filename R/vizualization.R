@@ -139,12 +139,12 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       summarize(Response_Transformed = mean(Response_Transformed)) %>%
       ungroup()
   }
-  
-  if(baseline){
-    transformed_data = transformed_data %>%
+
+  if (baseline) {
+    transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
   }
-  
+
   correct_level_order <- transformed_data %>%
     arrange(TreatmentNew) %>%
     distinct(Treatment, TreatmentNew) %>%

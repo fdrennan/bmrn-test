@@ -67,9 +67,11 @@ Depends:
     markdown,
     shinyvalidate,
     jsonlite,
-    mailR,
     shinyWidgets,
     plumber,
     gridExtra,
+    ragg,
     R (>= 4.00)
+Suggests:
+    mailR
 LazyData: true

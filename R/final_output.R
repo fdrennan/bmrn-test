@@ -136,7 +136,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   tab1 <- tab1[, which(empty_col < nrow(tab1))] %>%
     rename(
       Treatment = TreatmentNew,
-      #Remove this if the summary statistics are not included in the final table 3 
+      # Remove this if the summary statistics are not included in the final table 3
       "Original Scale Mean" = mean,
       "Original Scale Median" = median,
       "Original Scale SE" = se,
@@ -459,7 +459,6 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           )
       }
     } else {
-      
       table_gt <- data %>%
         rowwise() %>%
         mutate_at(
