@@ -128,14 +128,12 @@ analysis_a_session_setup_server <- function(input, output, session) {
   })
 
 
-  output$template <- downloadHandler(contentType='application/xlsx',
+  output$template <- downloadHandler(contentType='application/octet-stream',
     filename = function() {
       "test_example.xlsx"
     },
     content = function(con) {
-      writexl::write_xlsx(
-        readxl::read_xlsx("test_example.xlsx"), con
-      )
+      file_copy('test_example.xlsx', con)
     }
   )
 
