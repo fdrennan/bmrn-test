@@ -12,7 +12,7 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
 
   input_data <- reactive({
     req(signal())
-    browser()
+    # browser()
     input_data <- signal()$input_data
     con <- connect_table()
     data <- tbl(con, "sessions") %>%

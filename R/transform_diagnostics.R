@@ -2,7 +2,6 @@
 #' @export transform_diagnostics
 
 transform_diagnostics <- function(analysis_data, baseline) {
-  
   transformed <- transformation_check(analysis_data)
   transformed_data <- transformed$transformed
   power <- transformed$bc_transformation

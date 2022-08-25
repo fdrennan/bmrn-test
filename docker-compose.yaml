@@ -15,7 +15,7 @@ services:
     links:
       - 'app:shinyapp'
   app:
-    container_name: test-app
+    container_name: test-dev
     build: .
     restart: always
     user: 'root'
@@ -24,6 +24,25 @@ services:
     expose:
     - '5000'
     command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
+    volumes:
+      - './app.R:/app/app.R'
+      - './.env.container:/app/.env'
+      - './.Rprofile:/app/.Rprofile'
+      - './www:/app/www'
+      - './R:/app/R'
+      - './test_output:/app/test_output'
+      - './Test_Report.Rmd:/app/Test_Report.Rmd'
+    network_mode: bridge
+  app:
+    container_name: test-prod
+    build: Dockerfile-prod
+    restart: always
+    user: 'root'
+    ports:
+    - '5001:5001'
+    expose:
+    - '5001'
+    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5001, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
       - './app.R:/app/app.R'
       - './.env.container:/app/.env'

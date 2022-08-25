@@ -7,7 +7,7 @@ send_email <- function(all_files = FALSE,
   if (all_files) {
     files <- c("Test_Report.docx", files)
     zip_name <- "test1output.zip"
-    zip(zip_name, files, flags='-r9Xj')
+    zip(zip_name, files, flags = "-r9Xj")
     file_name <- zip_name
   } else if (is.null(files)) {
     file_name <- NULL

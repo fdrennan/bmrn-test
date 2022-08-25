@@ -76,7 +76,8 @@ server_home <- function(id = "home") {
         )
       })
       observeEvent(
-        input$analysisaGo, {
+        input$analysisaGo,
+        {
           change_page("analysisasetup")
         }
       )

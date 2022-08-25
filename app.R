@@ -1,5 +1,4 @@
 library(test)
-debug(send_email)
 devtools::load_all()
 plan(multiprocess)
 options("test_version" = "Version 1.18")
@@ -17,8 +16,8 @@ if (isTRUE(getOption("production"))) {
 
 
 router <- make_router(
-  route("backend", ui_backend()),
   route("home", ui_home()),
+  route("backend", ui_backend()),
   route(
     "analysisasetup",
     analysis_a_session_setup(user = "testuser", is_admin = TRUE)
@@ -44,11 +43,23 @@ ui <- div(
       div(
         class = "d-flex justify-content-around",
         actionButton("report", "Contact Us"),
-        actionButton(
-          inputId = "backend",
-          label = 'Backend'
-        ),
-        div(class='', getOption("test_version"))
+        {
+          if (getOption('devmode')) {
+            actionButton(
+              inputId = "backend",
+              label = "Backend"
+            )
+          } else NULL
+        },
+        {
+          if (getOption('devmode')) {
+            actionButton(
+              inputId = "analysisasetup",
+              label = "Analysis A Setup"
+            )
+          } else NULL
+        },
+        div(class = "", getOption("test_version"))
       )
     )
   )
@@ -63,15 +74,15 @@ server <- function(input, output, session,
   server_navbar()
   server_template()
   server_backend()
-  
+
   observeEvent(input$gohome, {
     change_page("home")
   })
-  
+
   observeEvent(input$backend, {
     change_page("backend")
   })
-  
+
   observeEvent(input$report, {
     showModal(
       ui = modalDialog(
@@ -82,21 +93,22 @@ server <- function(input, output, session,
       )
     )
   })
-  
+
   observeEvent(input$sendEmail, {
-    
-    tryCatch({
-      send_email(
-        all_files = FALSE,
-        files = NULL,
-        email_message = input$emailMessage, 
-        from = "fr904103@bmrn.com", to = "fr904103@bmrn.com"
-      )
-      showNotification('Email received!')
-    }, error= function(err) {
-      showNotification('Oops, the email failed to send. Please contact fr904103@bmrn.com')
-    })
-    
+    tryCatch(
+      {
+        send_email(
+          all_files = FALSE,
+          files = NULL,
+          email_message = input$emailMessage,
+          from = "fr904103@bmrn.com", to = "fr904103@bmrn.com"
+        )
+        showNotification("Email received!")
+      },
+      error = function(err) {
+        showNotification("Oops, the email failed to send. Please contact fr904103@bmrn.com")
+      }
+    )
   })
 
   callModule(administration_server, "administration", user, is_admin)
