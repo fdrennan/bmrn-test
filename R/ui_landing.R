@@ -5,9 +5,9 @@ ui_landing <- function(id = "landing") {
   base <- Sys.getenv("BASE_DOMAIN")
   fluidRow(
     column(5,
-      style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6); my-5",
+      # style = "my-5",
       class = "d-flex justify-content-center align-items-center flex-col",
-      imageOutput(ns("svgIcon"), width = "80%")
+      imageOutput(ns("svgIcon"), width = "60%")
     ),
     column(
       7,
@@ -48,8 +48,10 @@ server_landing <- function(id = "landing") {
       output$svgIcon <- renderImage(
         {
           list(
-            src = normalizePath("test_logo.svg"),
-            contentType = "image/svg+xml"
+            src = normalizePath("test_logo.png"),
+            contentType = "image/png",
+            height = 500,
+            width = 400
           )
         },
         deleteFile = FALSE
