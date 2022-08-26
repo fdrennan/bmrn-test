@@ -188,7 +188,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
     ) +
     labs(color = "Treatment") +
-    ylab(ylabel) 
+    ylab(ylabel) +
     ggtitle("Bar Chart for Each Group Over Time") +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups)

@@ -135,9 +135,8 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
   }
   data_ft <- align(data_ft, align = "center", part = "all")
   data_ft <- fontsize(data_ft, size = 8, part = "header")
-  data_ft <- fontsize(data_ft, size = 8)
-  #  if(include_summ_stat){
-  data_ft <- footnote(x = data_ft, i = footer_i, j = footer_j, value = as_paragraph(footer), ref_symbols = "")
+  data_ft <- fontsize(data_ft, size = 8) %>%
+    add_footer_lines(footer)
   data_ft <- fontsize(data_ft, size = 8, part = "footer")
   # }
   data_ft

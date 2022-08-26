@@ -12,7 +12,7 @@ link-citations: yes
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
-  uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
+  uuid: '05213a67-7f7c-4dfc-a18d-db9d887365ef' 
 
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
@@ -242,7 +242,7 @@ contrasts_ft
 
 Multiple comparisons arise when a statistical analysis involves multiple simultaneous statistical tests, each of which has a potential to produce a discovery. A stated confidence level generally applies only to each test considered individually, but often it is desirable to have a confidence level for the whole family of simultaneous tests. Controlling the overall Type 1 error rate, as opposed to the Type 1 error rate of each individual test, allows us to avoid rejecting a comparison simply due to random error. 
 
-For comparisons between doses, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] For comparisons between vehicle and doses, Dunnett's test will be employed which adjust p-values for comparisons between each treatment to a single control [@dunnett]. The comparison between wild type and doses, and positive control and doses are non-inferiority tests and thus the desired result is to fail to reject and these tests do not require multiple adjustment.  
+For comparisons between doses, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] For comparisons between vehicle/Negative Control and doses, Dunnett's test will be employed which adjust p-values for comparisons between each treatment to a single control [@dunnett]. The comparison between wild type and doses, and positive control and doses are non-inferiority tests and thus the desired result is to fail to reject and these tests do not require multiple adjustment.  
 
 <!-- For each one the comparison groups described above, linear contrasts are constructed to allow for simultaneous testing of the groups, as wells as testing the groups at the pre-selected time point and over time course average. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry]  -->
 
