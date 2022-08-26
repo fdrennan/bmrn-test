@@ -165,7 +165,12 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       email_message <- as.character(fluidRow(
         tableHTML(as.data.frame(purrr::keep(signal(), ~ length(.) == 1)))
       ))
-      send_email(all_files = TRUE, to = getOption("ERROR_EMAIL"), files = files, email_message = email_message)
+      send_email(
+        all_files = TRUE,
+        to = getOption("ERROR_EMAIL"),
+        files = files, email_message = email_message
+      )
+
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
       FALSE
@@ -274,7 +279,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
           analysis_type = analysis_type,
-          overall_trend = FALSE #Change this to TRUE to include the overall average
+          overall_trend = FALSE # Change this to TRUE to include the overall average
         )
       }
 
@@ -598,7 +603,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           collapsible = TRUE,
           maximizable = TRUE,
           testSpinner(
-            plotlyOutput(ns(x), height = ifelse(x == 'analysisPlot_3', '600px', '525px'))
+            plotlyOutput(ns(x), height = ifelse(x == "analysisPlot_3", "600px", "525px"))
           )
         )
       }
