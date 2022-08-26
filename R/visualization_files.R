@@ -8,13 +8,13 @@ pre_modeling <- function(input_data, baseline) {
   analysis_data <- analysis_data %>%
     mutate(
       Time = factor(Time, levels = times),
-      TreatmentNew = factor(TreatmentNew,
-        levels = c(
-          "Wild Type", "Negative Control", "Positive Control",
-          "Other Comparator", "Vehicle",
-          grep("Dose", levels(TreatmentNew), value = TRUE)
-        )
-      ),
+      # TreatmentNew = factor(TreatmentNew,
+      #   levels = c(
+      #     "Wild Type", "Negative Control", "Positive Control",
+      #     "Other Comparator", "Vehicle",
+      #     grep("Dose", levels(TreatmentNew), value = TRUE)
+      #   )
+      #),
       TreatmentNew = droplevels(TreatmentNew)
     ) %>%
     arrange(TreatmentNew, SubjectID, Time)

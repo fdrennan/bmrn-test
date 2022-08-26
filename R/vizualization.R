@@ -79,7 +79,10 @@ label_fix <- function(plot) {
 #' vizualization
 #' @export vizualization
 vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel, palette = "floral") {
-  orig_groups <- levels(factor(transformed_data$Treatment))
+  order_groups = match(c('Wild Type', 'Negative Control', 'Vehicle', 
+                  grep(pattern = 'Dose', x = levels(transformed_data$TreatmentNew), value = T)), 
+                levels(transformed_data$TreatmentNew))
+  orig_groups <- levels(factor(transformed_data$Treatment))[order_groups]
   colors <- c(
     ggprism_data$colour_palettes[[palette]],
     ggprism_data$colour_palettes$pastel
@@ -145,15 +148,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       mutate(Response_Transformed = Response_Transformed_bc)
   }
 
-  correct_level_order <- transformed_data %>%
-    arrange(TreatmentNew) %>%
-    distinct(Treatment, TreatmentNew) %>%
-    dplyr::select(Treatment) %>%
-    unlist()
-
-  transformed_data <- transformed_data %>%
-    mutate(Treatment = factor(Treatment, levels = correct_level_order))
-
+  
+  
+  transformed_data$Treatment = factor(transformed_data$Treatment, levels = orig_groups)
   transformed_data_sum <- transformed_data %>%
     group_by(Treatment, TreatmentNew, Time) %>%
     summarize(
@@ -166,7 +163,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       ymax = if_else(Mean_Response < 0, Mean_Response, error)
     )
 
-
+    
   bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
     scale_x_discrete() +
     scale_y_continuous(

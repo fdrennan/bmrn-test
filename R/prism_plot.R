@@ -13,12 +13,17 @@ prism_plot <- function(data, tables, trt_sel,
                        box_width = 2, axis_title_size = 30, axis_text_size = 24,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL, same_ylim = FALSE) {
-  orig_groups <- levels(data$Treatment)
+
+  order_groups = match(c('Wild Type', 'Negative Control', 'Vehicle', 
+                         grep(pattern = 'Dose', x = levels(data$TreatmentNew), value = T)), 
+                       levels(data$TreatmentNew))
+  orig_groups <- levels(factor(data$Treatment))[order_groups]
   colors <- c(
     ggprism_data$colour_palettes[[inputs$palette]],
     ggprism_data$colour_palettes$pastel
   )[1:length(orig_groups)]
-
+  
+  data$Treatment = factor(data$Treatment, levels = orig_groups)
   y_axis <- inputs$y_axisPrism
   tab1 <- tables$tab1
   tab2 <- tables$tab2
@@ -49,7 +54,7 @@ prism_plot <- function(data, tables, trt_sel,
       mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste0("Change from Baseline \n", endpoint)
   }
-
+  
   if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
@@ -105,13 +110,6 @@ prism_plot <- function(data, tables, trt_sel,
 
 
 
-  correct_level_order <- data %>%
-    arrange(TreatmentNew) %>%
-    distinct(Treatment, TreatmentNew) %>%
-    dplyr::select(Treatment) %>%
-    unlist()
-
-
   data <- data %>%
     filter(
       Time == time_sel,
@@ -119,8 +117,8 @@ prism_plot <- function(data, tables, trt_sel,
     ) %>%
     group_by(Treatment) %>%
     mutate(
-      outlier = is.outlier(Response_Transformed),
-      Treatment = factor(Treatment, levels = correct_level_order)
+      outlier = is.outlier(Response_Transformed)
+    #  Treatment = factor(Treatment, levels = correct_level_order)
     ) %>%
     ungroup()
 
@@ -312,7 +310,6 @@ prism_plot <- function(data, tables, trt_sel,
           l = 0
         ))
     }
-    # browser()
     layout <- matrix(c(rep(1, 100 - inputs$bottom_percent), rep(2, inputs$bottom_percent)), ncol = 1)
     # if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
     #  layout <- rbind(1, 2)

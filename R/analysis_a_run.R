@@ -162,6 +162,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         Treatment = as_factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
         paste(Treatment, Dose)))
       ) 
+    
     data <- tryCatch(expr = {
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
