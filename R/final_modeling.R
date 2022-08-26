@@ -17,7 +17,6 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   } else {
     mapping_fn <- map
   }
-  browser()
 
   if (analysis_type == "Exploratory") {
     output_tables <- mapping_fn(
