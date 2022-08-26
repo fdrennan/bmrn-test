@@ -20,7 +20,8 @@ prism_plot(
   bottom_height = 3,
   num_groups,
   type = "box",
-  inputs = NULL
+  inputs = NULL,
+  same_ylim = FALSE
 )
 }
 \description{

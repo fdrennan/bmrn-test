@@ -10,7 +10,8 @@ vizualization(
   endpoint,
   baseline,
   transformation,
-  ui_sel
+  ui_sel,
+  palette = "floral"
 )
 }
 \description{

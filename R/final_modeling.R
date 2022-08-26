@@ -17,9 +17,9 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   } else {
     mapping_fn <- map
   }
-  browser()
 
   if (analysis_type == "Exploratory") {
+    browser()
     output_tables <- mapping_fn(
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = ~ {
