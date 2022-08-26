@@ -162,9 +162,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       err <- as.character(err)
       full_path_files <- signal()$session_data$full_path_files
       browser()
-      email_message <- as.character(HTML(fluidRow(
+      email_message <- as.character(fluidRow(
         tableHTML(as.data.frame(purrr::keep(signal(), ~ length(.) == 1)))
-      )))
+      ))
       send_email(all_files = TRUE, to = getOption("ERROR_EMAIL"), files = files, email_message = email_message)
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
