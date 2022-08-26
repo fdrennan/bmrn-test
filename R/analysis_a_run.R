@@ -106,7 +106,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       session_message <- glue("Your session ID is {signal()$session_data$uuid}")
       showNotification(session_message, closeButton = TRUE, duration = NULL)
     }
-
     id <- signal()$input_data
     input_data <- signal()
     names_input <- names(input_data)
@@ -120,7 +119,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     filtered_1 <- left_join(filtered_1, treatment_table)
     filtered_1 <-
       filtered_1 %>%
-      mutate(TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew))
+      mutate(TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
+             Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment))
 
     filtered_1
   })
@@ -133,7 +133,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       data %>%
       mutate(
         trt = TreatmentNew,
-        TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
+        #TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
 
@@ -156,7 +156,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
         paste(Treatment, Dose)
       )))
-    browser()
+    
     data <- tryCatch(expr = {
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
