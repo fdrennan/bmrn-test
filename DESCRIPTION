@@ -39,6 +39,7 @@ Depends:
     rlist,
     plotly,
     ggpubr,
+    forcats,
     styler,
     dbplyr,
     RSQLite,

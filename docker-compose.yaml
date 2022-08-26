@@ -27,7 +27,7 @@ services:
     volumes:
       - './app.R:/app/app.R'
       - './.env.container:/app/.env'
-      - './.Rprofile:/app/.Rprofile'
+      - './.Rprofile.server:/app/.Rprofile'
       - './www:/app/www'
       - './R:/app/R'
       - './test_output:/app/test_output'
