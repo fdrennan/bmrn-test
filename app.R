@@ -2,7 +2,7 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.18")
+options("test_version" = "Version 1.19")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   # options(shiny.port = 5000, shiny.host = "0.0.0.0")
@@ -43,24 +43,27 @@ ui <- div(
     footer = dashboardFooter(
       div(
         class = "d-flex justify-content-around",
-        
         {
-          if (getOption('devmode')) {
+          if (getOption("devmode")) {
             actionButton(
               inputId = "backend",
               label = "Backend"
             )
-          } else NULL
+          } else {
+            NULL
+          }
         },
         actionButton("report", "Contact Us"),
         div(class = "", getOption("test_version")),
         {
-          if (getOption('devmode')) {
+          if (getOption("devmode")) {
             actionButton(
               inputId = "analysisasetup",
               label = "Analysis A Setup"
             )
-          } else NULL
+          } else {
+            NULL
+          }
         }
       )
     )

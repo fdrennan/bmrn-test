@@ -93,7 +93,6 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
       )
     )
   )
-  
 }
 
 
@@ -129,21 +128,21 @@ analysis_a_session_setup_server <- function(input, output, session) {
 
 
   output$template <- downloadHandler(
-    contentType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     filename = function() {
       "test_example.xlsx"
     },
     content = function(con) {
-      file_copy('test_example.xlsx', con)
+      file_copy("test_example.xlsx", con)
     }
   )
 
 
   out <- eventReactive(input$submitForm, {
-    
+
     # browser()
-    
-    
+
+
     showNotification("Building analysis...", id = "setupnotification")
     if (!iv$is_valid()) {
       showNotification("Please complete all required fields.")
@@ -166,7 +165,7 @@ analysis_a_session_setup_server <- function(input, output, session) {
       full_path_home = full_path_home,
       full_path_files = full_path_files
     )
-    
+
     if (length(input$upload$datapath)) {
       copy_files(df, input$upload)
     }

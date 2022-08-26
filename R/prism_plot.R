@@ -179,12 +179,12 @@ prism_plot <- function(data, tables, trt_sel,
       ylab(ylabel) +
       xlab("Treatment")
 
-    if(same_ylim){
-      ylim =  c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed))
-    }else{
-      ylim = c(NA,NA)
+    if (same_ylim) {
+      ylim <- c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed))
+    } else {
+      ylim <- c(NA, NA)
     }
-    
+
     bottom <- full_prism +
       scale_y_continuous(
         limits = ylim,
@@ -313,24 +313,24 @@ prism_plot <- function(data, tables, trt_sel,
         ))
     }
     browser()
-    layout <- matrix(c(rep(1,100-inputs$bottom_percent), rep(2, inputs$bottom_percent)), ncol = 1)
-    #if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
+    layout <- matrix(c(rep(1, 100 - inputs$bottom_percent), rep(2, inputs$bottom_percent)), ncol = 1)
+    # if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
     #  layout <- rbind(1, 2)
-    #}
-    #if (nrow(p_vals) >= 12) {
+    # }
+    # if (nrow(p_vals) >= 12) {
     #  layout <- rbind(1, 1, 2)
-    #}
+    # }
 
     if (type == "box") {
       top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
-                               #ncol = 1,
-                               #heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight, c('in', 'in')))
+      # ncol = 1,
+      # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight, c('in', 'in')))
     } else {
       top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
-                               #ncol = 1,
-      #heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight,c('in', 'in')))
+      # ncol = 1,
+      # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight,c('in', 'in')))
     }
 
     return(combined)
