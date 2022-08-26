@@ -40,7 +40,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       pre_prism_data <- reactive({
-        browser()
         data <- req(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
