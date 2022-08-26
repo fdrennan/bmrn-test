@@ -22,10 +22,7 @@ ui_prism <- function(id = "prism") {
           numericInput(ns("bottom_percent"), label = "Percent of Total plot for y-axis", value = 70, min = 0, max = 100, step = 5),
           selectInput(
             ns("palette"), "Color Palette",
-            sort(c(
-              "floral", "colorblind_safe", "colors", "floral2", "muted_rainbow",
-              "office", "stained_glass"
-            )),
+            sort(c('floral', 'colorblind_safe', 'prism_light', 'black_and_white')),
             "floral"
           )
         )
