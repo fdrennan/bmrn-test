@@ -109,6 +109,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       prismData <- reactive({
         req(test_1_output_data())
+        
         data <- test_1_output_data()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
@@ -116,7 +117,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        showNotification("Storing prism data")
+        # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
  

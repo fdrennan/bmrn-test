@@ -156,7 +156,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
         paste(Treatment, Dose)
       )))
-    browser()
     data <- tryCatch(expr = {
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
