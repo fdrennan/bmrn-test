@@ -24,6 +24,6 @@ RUN R -e "devtools::install('.')"
 RUN R -e "install.packages('mailR')"
 COPY word_style.docx .
 COPY bib.bib .
-COPY test_logo.svg test_logo.svg
+COPY test_logo.png .
 COPY test_example.xlsx .
 COPY dslogo.png .

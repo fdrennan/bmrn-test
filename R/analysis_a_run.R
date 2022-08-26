@@ -119,8 +119,10 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     filtered_1 <- left_join(filtered_1, treatment_table)
     filtered_1 <-
       filtered_1 %>%
-      mutate(TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
-             Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment))
+      mutate(
+        TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
+        Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
+      )
 
     filtered_1
   })
@@ -133,7 +135,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       data %>%
       mutate(
         trt = TreatmentNew,
-        #TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
+        # TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
 
@@ -165,9 +167,11 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       email_message <- as.character(fluidRow(
         tableHTML(as.data.frame(purrr::keep(signal(), ~ length(.) == 1)))
       ))
-      send_email(all_files = TRUE, 
-                 to = getOption("EMAIL_ERROR"), 
-                 files = files, email_message = email_message)
+      send_email(
+        all_files = TRUE,
+        to = getOption("EMAIL_ERROR"),
+        files = files, email_message = email_message
+      )
       showNotification(err, duration = NULL)
       showNotification("An error occurred, please check your configuration.")
       FALSE
@@ -277,7 +281,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
           analysis_type = analysis_type,
-          overall_trend = FALSE #Change this to TRUE to include the overall average
+          overall_trend = FALSE # Change this to TRUE to include the overall average
         )
       }
 
@@ -600,7 +604,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           collapsible = TRUE,
           maximizable = TRUE,
           testSpinner(
-            plotlyOutput(ns(x), height = ifelse(x == 'analysisPlot_3', '600px', '525px'))
+            plotlyOutput(ns(x), height = ifelse(x == "analysisPlot_3", "600px", "525px"))
           )
         )
       }

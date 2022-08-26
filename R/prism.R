@@ -20,10 +20,14 @@ ui_prism <- function(id = "prism") {
           numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
           numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
           numericInput(ns("bottom_percent"), label = "Percent of Total plot for y-axis", value = 70, min = 0, max = 100, step = 5),
-          selectInput(ns("palette"), "Color Palette", 
-                      sort(c('floral', 'colorblind_safe', 'colors', 'floral2', 'muted_rainbow',
-                             'office', 'stained_glass')), 
-                      "floral")
+          selectInput(
+            ns("palette"), "Color Palette",
+            sort(c(
+              "floral", "colorblind_safe", "colors", "floral2", "muted_rainbow",
+              "office", "stained_glass"
+            )),
+            "floral"
+          )
         )
       )
     )))
@@ -109,7 +113,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       prismData <- reactive({
         req(test_1_output_data())
-        
+
         data <- test_1_output_data()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
@@ -120,7 +124,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
- 
+
       output$download <- downloadHandler(
         filename = function() {
           paste("prism_data.xlsx", sep = "")

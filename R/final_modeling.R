@@ -12,13 +12,13 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
     best = best_model, variable = var
   )
 
-  if (getOption('run_parallel')) {
-    mapping_fn = future_map
+  if (getOption("run_parallel")) {
+    mapping_fn <- future_map
   } else {
-    mapping_fn = map
+    mapping_fn <- map
   }
   browser()
-  
+
   if (analysis_type == "Exploratory") {
     output_tables <- mapping_fn(
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
@@ -89,20 +89,20 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
       variable = var
     )
   }
-  if(!overall_trend){
-   # Remove when we include the overall average time
-  tab1 <- output_tables$tab1 %>%
-    mutate_all(~ as.character(.)) %>%
-    dplyr::filter(!grepl("Average", `Time Points`))
-  tab2 <- output_tables$tab2 %>%
-    mutate_all(~ as.character(.)) %>%
-    dplyr::filter(!grepl("Average", `Time Points`))
-  tab3 <- output_tables$tab3 %>%
-    mutate_all(~ as.character(.)) %>%
-    dplyr::filter(!grepl("Average", `Time Points`))
-  output_tables$tab1 <- tab1
-  output_tables$tab2 <- tab2
-  output_tables$tab3 <- tab3
-}
+  if (!overall_trend) {
+    # Remove when we include the overall average time
+    tab1 <- output_tables$tab1 %>%
+      mutate_all(~ as.character(.)) %>%
+      dplyr::filter(!grepl("Average", `Time Points`))
+    tab2 <- output_tables$tab2 %>%
+      mutate_all(~ as.character(.)) %>%
+      dplyr::filter(!grepl("Average", `Time Points`))
+    tab3 <- output_tables$tab3 %>%
+      mutate_all(~ as.character(.)) %>%
+      dplyr::filter(!grepl("Average", `Time Points`))
+    output_tables$tab1 <- tab1
+    output_tables$tab2 <- tab2
+    output_tables$tab3 <- tab3
+  }
   return(output_tables)
 }
