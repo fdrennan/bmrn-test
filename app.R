@@ -2,6 +2,7 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
+options(run_parallel=TRUE)
 options("test_version" = "Version 1.18")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)

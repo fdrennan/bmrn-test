@@ -12,8 +12,13 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
     best = best_model, variable = var
   )
 
+  if (getOption('run_parallel')) {
+    mapping_fn = future_map
+  } else {
+    mapping_fn = map
+  }
   if (analysis_type == "Exploratory") {
-    output_tables <- map(
+    output_tables <- mapping_fn(
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = ~ {
         .x <- unname(.x)
