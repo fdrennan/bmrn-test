@@ -2,8 +2,8 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options(run_parallel = FALSE)
-options("test_version" = "Version 1.18")
+options(run_parallel = TRUE)
+options("test_version" = "Version 1.19")
 if (isTRUE(getOption("production"))) {
   options(shiny.port = 5000, shiny.host = "0.0.0.0")
   options(require_validation = TRUE)
