@@ -2,7 +2,8 @@
 send_email <- function(all_files = FALSE,
                        files,
                        from = getOption("EMAIL_USER"),
-                       to = getOption("EMAIL_USER"), email_message = div("No message attached")) {
+                       to = getOption("EMAIL_USER"), 
+                       email_message = div("No message attached")) {
   if (all_files) {
     files <- c("Test_Report.docx", files)
     zip_name <- "test1output.zip"
@@ -15,7 +16,7 @@ send_email <- function(all_files = FALSE,
   }
 
 
-  send.mail(
+  mailR::send.mail(
     from = from,
     to = to,
     subject = "Report Generated",
