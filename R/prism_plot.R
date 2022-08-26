@@ -312,7 +312,7 @@ prism_plot <- function(data, tables, trt_sel,
           l = 0
         ))
     }
-    browser()
+    # browser()
     layout <- matrix(c(rep(1, 100 - inputs$bottom_percent), rep(2, inputs$bottom_percent)), ncol = 1)
     # if (nrow(p_vals) > 6 & nrow(p_vals) < 12) {
     #  layout <- rbind(1, 2)

@@ -36,10 +36,6 @@ run_analysis <- function(analysis_data) {
       Treatment = name
     )
 
-
-
-  # Running my functions
-
   transformed <- transformation_check(analysis_data)
   transformed_data <- transformed$transformed
   power <- transformed$bc_transformation
