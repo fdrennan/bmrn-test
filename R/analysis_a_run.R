@@ -260,6 +260,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   pre_tables_input <- reactive({
     req(signal())
     req(pre_modeling_output())
+    browser()
     input <- signal()$input_data
     data <- pre_modeling_output()
     analysis_type <- signal()$session_data$sessionMode
@@ -367,7 +368,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
     writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
     writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysisresults"))
+    tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
 
     saveWorkbook(wb, file = tables_path, overwrite = TRUE)
 

@@ -56,7 +56,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       output$plotsInputs <- renderUI({
-        input_prism <- isolate(test_1_output_data())
+        input_prism <- req(test_1_output_data())
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -204,7 +204,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       observe({
-        prismData()
+        req(prismData())
         uuid <- test_1_output_data()$input_data$session_data$uuid
         req(uuid)
         input

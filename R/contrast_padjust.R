@@ -16,14 +16,9 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
     mode = "auto"
   )
 
-  if (getOption("run_parallel")) {
-    mapping_fn <- future_map_dfr
-  } else {
-    mapping_fn <- map_dfr
-  }
 
   if (analysis_type == "Exploratory") {
-    final_contrast <- mapping_fn(.x = LETTERS[1:9], .f = ~ {
+    final_contrast <- map_dfr(.x = LETTERS[1:9], .f = ~ {
       keep <- which(sapply(contrast_list[[.x]], function(i) {
         all(i == floor(i))
       }) == TRUE)
@@ -46,7 +41,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       }
     })
   } else {
-    final_contrast <- mapping_fn(.x = LETTERS[1:9], .f = ~ {
+    final_contrast <- map_dfr(.x = LETTERS[1:9], .f = ~ {
       if (!overall_trend) {
         keep <- which(sapply(contrast_list[[.x]], function(i) {
           all(i == floor(i))
