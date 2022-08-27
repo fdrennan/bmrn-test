@@ -511,26 +511,38 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         x = grep("Difference", colnames(data), value = TRUE)
       )
       
-      print(groups)
-
+      j <- 0
       for (i in groups) {
+        print(paste('j is ', j))
+        j <- j + 1
+        print(i)
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
-        print(table_gt)
         print(col1)
         print(col2)
         table_gt <- table_gt %>%
           tab_spanner(
-            label = paste("Difference from", i),
+            label = paste("Difference from", i), id = UUIDgenerate(),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
-          ) %>%
-          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
-          fmt_markdown(columns = everything()) %>%
-          column_labels(., col2, "p value") %>%
+          ) 
+        
+        print('a')
+        table_gt <- table_gt %>%
+          column_labels(., col1, "LSMEAN Diff (95% CI)") 
+        print('b')
+        table_gt <- table_gt %>%
+          fmt_markdown(columns = everything()) 
+        print('c')
+        table_gt <- table_gt %>%
+          column_labels(., col2, "p value") 
+        print('d')
+        table_gt <- table_gt %>%
           cols_align(
             align = "center",
             columns = everything()
           )
+        
+        table_gt
       }
     }
   }
