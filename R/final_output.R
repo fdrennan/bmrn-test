@@ -1,7 +1,5 @@
 #' final_output
 #' @export final_output
-
-
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
   final_contrast <- final_contrast %>%
@@ -383,8 +381,12 @@ html_UI <- function(transformed_data, tables) {
 #' column_labels
 #' @export
 column_labels <- function(df_gt, column, label) {
+  cli_alert('column_labels')
+  print(df_gt)
+  print(column)
+  print(label)
   cols_list <- as.list(label) %>% purrr::set_names(column)
-
+  print(cols_list)
   df_gt %>%
     cols_label(.list = cols_list)
 }
@@ -508,10 +510,15 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         pattern = "Difference from ", replacement = "",
         x = grep("Difference", colnames(data), value = TRUE)
       )
+      
+      print(groups)
 
       for (i in groups) {
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
+        print(table_gt)
+        print(col1)
+        print(col2)
         table_gt <- table_gt %>%
           tab_spanner(
             label = paste("Difference from", i),
