@@ -131,6 +131,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(analysis_input())
 
     data <- analysis_input()
+    #identify which columns sandwich the time points
+    base_col = which(colnames(data) == 'Baseline')
+    type_snake_col = which(colnames(data) == 'type_snake')
     data <-
       data %>%
       mutate(
@@ -139,12 +142,14 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
 
-    data <- pivot_longer(data, cols = c(
-      contains("Week"), contains("Day"),
-      contains("Year"), contains("Month"),
-      contains("Second"), contains("Minute"),
-      contains("Time"),
-    ), names_to = "Time", values_to = "Response")
+    data <- pivot_longer(data, cols = (base_col + 1):type_snake_col,
+      #                      c(
+      # contains("Week"), contains("Day"),
+      # contains("Year"), contains("Month"),
+      # contains("Second"), contains("Minute"),
+      # contains("Time"),
+    #), 
+    names_to = "Time", values_to = "Response")
 
     data
   })
