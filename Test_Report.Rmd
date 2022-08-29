@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: 'f84fc27e-aacd-42dd-8e03-94906425cf0a'
+  uuid: 'af2bc08f-e751-42e5-9616-7abf90e9e617'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -155,8 +155,9 @@ We define the basic model as a model that only considers the vehicle and treatme
 ## Mixed Effects Modeling
 
 Mixed effects models are employed to evaluate statistical differences between multiple experimental (treatment) groups across multiple times points. The model evaluates factors including treatment, time, and the interaction between treatment and time. In addition, the algorithm determines an appropriate correlation structure to account for the correlation between different time points. Some common correlation structures include auto-regressive (AR1) correlation structure which assumes that the correlation between time points decays at an exponential rate, compound symmetry (CS) correlation structure assumes that the correlation between time points is constant between any given two time points, and unstructured is the most flexible and has no constraints. 
+The Akaike Information Criterion (AIC) is used to select the covariance structure that is most appropriate. The AR1 and CS correlations structures can allow for each time point to have different variance estiamtes and these structures are denoted ARH1 and CSH. The AIC strikes a balance between model complexity (number of parameters) and quality of the model fit (LRT). The candidate covariance structures are AR1 (ARH1), CS (CSH), Toeplitz (TOEP), and unstructured (UN) where the AR1 and CS are simplistic structures (only estimates one additional parameter) while UN correlation structure is the most complex (requires the estimation of $t*(t-1)/2$ additional parameters where $t$ is the number of time points).
 
-Mixed effects models allow for the flexibility of computing variance/covariance structure for each group separately as needed. In other words, if a group has an extremely large or small variance than it can be computed independently from other groups avoiding, thus allowing for heteroskedasticity between the groups. The Akaike Information Criterion (AIC) is used to select the covariance structure that is most appropriate. The AR1 and CS correlations structures can allow for each time point to have different variance estiamtes and these structures are denoted ARH1 and CSH. The AIC strikes a balance between model complexity (number of parameters) and quality of the model fit (LRT). The candidate covariance structures are AR1 (ARH1), CS (CSH), Toeplitz (TOEP), and unstructured (UN) where the AR1 and CS are simplistic structures (only estimates one additional parameter) while UN correlation structure is the most complex (requires the estimation of $t*(t-1)/2$ additional parameters where $t$ is the number of time points). 
+Mixed effects models allow for the flexibility of computing variance/covariance structure for each group separately as needed. In other words, if a group has an extremely large or small variance than it can be computed independently from other groups avoiding, thus allowing for heteroskedasticity between the groups. 
 
 ## Normality Assumption and Transformation
 
@@ -556,7 +557,7 @@ FitFlextableToPage(tab3_ft)
 
 # Appendix A: Workflow Illustration
 
-![](TEST_workflow.PNG)
+![](Flowcharts.PNG)
 
 # Appendix B: Statistical Methods for Scientific Publication
 
