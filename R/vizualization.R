@@ -91,7 +91,14 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
 
   # colors = viridis(length(orig_groups))
   transformed_data <- filter(transformed_data, Treatment %in% ui_sel$trt_sel)
-  transformed_data <- filter(transformed_data, Time %in% ui_sel$time_sel)
+  
+  # keep levels of transformed data time, when input updates
+  input_time <- ui_sel$time_sel
+  original_time <- levels(transformed_data$Time)
+  
+  input_time <- original_time[original_time %in% input_time]
+  
+  transformed_data <- filter(transformed_data, Time %in% input_time)
 
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
@@ -117,10 +124,10 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       "\n Transformed", endpoint
     )
   }
-  if (!baseline || ui_sel$time_sel %in% "Baseline") {
+  if (!baseline || input_time %in% "Baseline") {
     # Treatment
-    browser()
-    times <- setdiff(ui_sel$time_sel, 'Baseline')
+    # browser()
+    times <- setdiff(input_time, 'Baseline')
     transformed_data <- transformed_data %>%
       mutate(
         Baseline_Transformed = as.numeric(Baseline_Transformed),

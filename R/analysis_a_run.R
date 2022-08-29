@@ -206,13 +206,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       time_sel = input$timePlotSelectors
     )
 
-    # times <- unique(data$transformed_data$Time)[
-    #   order(as.numeric(gsub("[A-z]| ", "", unique(data$transformed_data$Time))))
-    # ]
-    # data$transformed_data$Time <- factor(data$transformed_data$Time,
-    #   levels = times
-    # )
-
     list(
       data = data, endpoint = endpoint, ui_selections = ui_selections
     )
