@@ -117,9 +117,10 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       "\n Transformed", endpoint
     )
   }
-  if (!baseline || ui_sel %in% "Baseline") {
+  if (!baseline || ui_sel$time_sel %in% "Baseline") {
     # Treatment
-    times <- unique(as.character(transformed_data$Time))
+    browser()
+    times <- setdiff(ui_sel$time_sel, 'Baseline')
     transformed_data <- transformed_data %>%
       mutate(
         Baseline_Transformed = as.numeric(Baseline_Transformed),
