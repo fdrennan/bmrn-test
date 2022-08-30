@@ -140,7 +140,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         TreatmentNew = if_else(TypeNew == 'Wild Type', "Wild Type", TreatmentNew),
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
-    browser()
     data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
       #                      c(
       # contains("Week"), contains("Day"),

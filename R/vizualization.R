@@ -110,7 +110,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   )
 
-  if (!transformation | (transformation & power == 1)) {
+  if ((ui_sel$y_axis == 'transform' & power == 1) | ui_sel$y_axis == 'no_transform') {
     transformed_data <- transformed_data %>%
       select(-c(Response_Transformed, Baseline_Transformed)) %>%
       rename(
@@ -118,13 +118,17 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
         Response_Transformed = Response
       )
     ylabel <- endpoint
-  } else {
+  } 
+
+if(ui_sel$y_axis == 'transform' & power != 1){
     ylabel <- paste(
       transform_table$transform_name[power == transform_table$power],
       "\n Transformed", endpoint
     )
-  }
-  if (!baseline || input_time %in% "Baseline") {
+}
+
+
+  if (ui_sel$y_axis != 'change_from_baseline' || any(input_time %in% "Baseline")) {
     # Treatment
     # browser()
     times <- setdiff(input_time, 'Baseline')
@@ -151,16 +155,16 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       ungroup()
   }
 
-  if (baseline & power == 1) {
+  if (ui_sel$y_axis == 'change_from_baseline' & power == 1) {
     transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste("Change from Baseline", endpoint)
   }
 
-  if (baseline & power != 1) {
+  if (ui_sel$y_axis == 'change_from_baseline' & power != 1) {
     transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylabel <- paste("Change from Baseline", transform_table$transform_name[power == transform_table$power],
+    ylabel <- paste("Change from Baseline\n", transform_table$transform_name[power == transform_table$power],
                     endpoint)
   }
   
