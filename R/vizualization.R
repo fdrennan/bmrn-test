@@ -110,7 +110,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   )
 
-  if (!transformation | power == 1) {
+  if (!transformation | (transformation & power == 1)) {
     transformed_data <- transformed_data %>%
       select(-c(Response_Transformed, Baseline_Transformed)) %>%
       rename(
@@ -151,12 +151,18 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       ungroup()
   }
 
-  if (baseline) {
+  if (baseline & power == 1) {
     transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
+    ylabel <- paste("Change from Baseline", endpoint)
   }
 
-  
+  if (baseline & power != 1) {
+    transformed_data <- transformed_data %>%
+      mutate(Response_Transformed = Response_Transformed_bc)
+    ylabel <- paste("Change from Baseline", transform_table$transform_name[power == transform_table$power],
+                    endpoint)
+  }
   
   transformed_data$Treatment = factor(transformed_data$Treatment, levels = orig_groups)
   transformed_data_sum <- transformed_data %>%
