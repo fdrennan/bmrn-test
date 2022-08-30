@@ -10,7 +10,7 @@
 #' @export
 transformation_check <- function(analysis_data) {
   error_transform <- FALSE
-
+  parameter <- 0 # how much to shift the data
   analysis_data <- analysis_data %>%
     mutate(
       Response = as.numeric(Response),
@@ -37,7 +37,6 @@ transformation_check <- function(analysis_data) {
     bc_data <- analysis_data %>%
       select(-Time) %>%
       pivot_longer(cols = c(Response, Baseline), names_to = "Time", values_to = "Response")
-    parameter <- 0 # how much to shift the data
     if (min(bc_data$Response) <= 0) {
       # analysis_data$Response!=0 ensures that the data will be shifted
       # even if the minimum value is 0, and the 1.1 aims to make the shift relatively
@@ -137,7 +136,6 @@ transformation_check <- function(analysis_data) {
       summarise(across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean)) %>%
       ungroup()
   }
-
 
   return(list(transformed = analysis_data, bc_transformation = power, error_transform = error_transform,
               offset = parameter))
