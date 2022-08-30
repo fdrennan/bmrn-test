@@ -40,7 +40,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       pre_prism_data <- reactive({
-        data <- req(test_1_output_data())
+        data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
 
@@ -56,7 +56,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       output$plotsInputs <- renderUI({
-        input_prism <- req(test_1_output_data())
+        input_prism <- isolate(test_1_output_data())
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
