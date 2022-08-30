@@ -5,7 +5,7 @@ transform_diagnostics <- function(analysis_data, baseline) {
   transformed <- transformation_check(analysis_data)
   transformed_data <- transformed$transformed
   power <- transformed$bc_transformation
-
+  offset = transformed$offset
   if (all(is.na(transformed_data$Baseline)) | baseline == FALSE) {
     var <- "Response_Transformed"
   } else {
@@ -16,6 +16,7 @@ transform_diagnostics <- function(analysis_data, baseline) {
     transformed_data = transformed_data,
     box_cox = power,
     variable = var,
-    error_transform = transformed$error_transform
+    error_transform = transformed$error_transform,
+    offset = offset
   ))
 }

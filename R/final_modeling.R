@@ -1,6 +1,6 @@
 #' final_modeling
 #' @export
-final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall_trend = FALSE) {
+final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall_trend = FALSE, offset) {
   var <- ready_final_model$var
   power <- ready_final_model$box_cox
   transformed_data <- ready_final_model$transformed_data %>%
@@ -47,11 +47,12 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
           emmeans_obj = contrasts_stats$emmeans_obj,
           final_contrast = contrasts_stats$final_contrast,
           power = power,
-          variable = var
+          variable = var,
+          offset = offset
         )
       }
     )
-
+    
     tab1 <- data.frame()
     tab2 <- data.frame()
     tab3 <- data.frame()
@@ -80,13 +81,15 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
       analysis_type = "Confirmatory",
       overall_trend = overall_trend
     )
+
     output_tables <- final_output(
       transformed_data = transformed_data,
       toi = toi,
       emmeans_obj = contrasts_stats$emmeans_obj,
       final_contrast = contrasts_stats$final_contrast,
       power = power,
-      variable = var
+      variable = var,
+      offset = offset
     )
   }
   if (!overall_trend) {

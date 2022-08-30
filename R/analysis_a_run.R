@@ -260,7 +260,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   pre_tables_input <- reactive({
     req(signal())
     req(pre_modeling_output())
-    browser()
     input <- signal()$input_data
     data <- pre_modeling_output()
     analysis_type <- signal()$session_data$sessionMode
@@ -282,13 +281,14 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       req(FALSE)
     } else {
       if (analysis_type == "Exploratory") {
-        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
+        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE, offset)
       } else {
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
           analysis_type = analysis_type,
-          overall_trend = FALSE # Change this to TRUE to include the overall average
-        )
+          overall_trend = FALSE, # Change this to TRUE to include the overall average
+          offset = data$offset
+          )
       }
 
       tables <- html_tables(data$transformed_data, final_model)

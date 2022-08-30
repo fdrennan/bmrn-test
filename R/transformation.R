@@ -139,5 +139,6 @@ transformation_check <- function(analysis_data) {
   }
 
 
-  return(list(transformed = analysis_data, bc_transformation = power, error_transform = error_transform))
+  return(list(transformed = analysis_data, bc_transformation = power, error_transform = error_transform,
+              offset = parameter))
 }

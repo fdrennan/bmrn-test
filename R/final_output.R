@@ -1,7 +1,7 @@
 #' final_output
 #' @export final_output
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
-                         variable, save = "No") {
+                         variable, save = "No", offset) {
   final_contrast <- final_contrast %>%
     mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
@@ -20,8 +20,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
         mean = mean(Response),
         median = median(Response)
       ), .)
-  # Specific Time pointQ
-
+  # Specific Time point
   # Need to make sure that toi matches above
   ST_os <- transformed_data %>%
     filter(Time == toi) %>%
@@ -43,13 +42,14 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     select(TreatmentNew, Endpoint, mean, median, se) %>%
     arrange(TreatmentNew)
   # Back Transformation
+  
   ST_bt <- emmeans_obj$ST %>%
     data.frame() %>%
     filter(Time == toi) %>%
     mutate(
       emmean_bt = case_when(
-        power == 0 ~ exp(emmean),
-        !(power %in% c(0, 1)) ~ emmean^(1 / power),
+        power == 0 ~ exp(emmean)-offset,
+        !(power %in% c(0, 1)) ~ emmean^(1 / power)-offset,
         power == 1 ~ NaN
       ),
       se_bt = case_when(
@@ -69,7 +69,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       se_bt = case_when(
         power == 1 ~ NaN,
         power == 0 ~ exp(emmean) * SE,
-        !(power %in% c(0, 1)) ~ (1 / power) * emmean^(1 / power - 1) * SE
+        !(power %in% c(0, 1)) ~ ((1 / power) * emmean^(1 / power - 1))^2 * SE
       ),
     )
 
