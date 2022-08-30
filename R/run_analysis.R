@@ -9,7 +9,7 @@ run_analysis <- function(analysis_data) {
         "Yes", "No"
       ),
       Response_diff = as.numeric(Response) - as.numeric(Int_Time),
-      Time = as.factor(Time)
+      Time = as_factor(Time)
     )
 
 

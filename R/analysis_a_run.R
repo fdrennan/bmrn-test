@@ -131,6 +131,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     req(analysis_input())
 
     data <- analysis_input()
+    #identify which columns sandwich the time points
+    base_col = which(colnames(data) == 'Baseline')
+    type_snake_col = which(colnames(data) == 'type_snake')
     data <-
       data %>%
       mutate(
@@ -139,13 +142,16 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
 
-    data <- pivot_longer(data, cols = c(
-      contains("Week"), contains("Day"),
-      contains("Year"), contains("Month"),
-      contains("Second"), contains("Minute"),
-      contains("Time"),
-    ), names_to = "Time", values_to = "Response")
-
+    data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
+      #                      c(
+      # contains("Week"), contains("Day"),
+      # contains("Year"), contains("Month"),
+      # contains("Second"), contains("Minute"),
+      # contains("Time"),
+    #), 
+    names_to = "Time", values_to = "Response") %>%
+      mutate(Time = as_factor(Time))
+    
     data
   })
 
@@ -200,13 +206,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       time_sel = input$timePlotSelectors
     )
 
-    times <- unique(data$transformed_data$Time)[
-      order(as.numeric(gsub("[A-z]| ", "", unique(data$transformed_data$Time))))
-    ]
-    data$transformed_data$Time <- factor(data$transformed_data$Time,
-      levels = times
-    )
-
     list(
       data = data, endpoint = endpoint, ui_selections = ui_selections
     )
@@ -219,7 +218,7 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-
+  
     if (input$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = data$transformed_data,
@@ -260,7 +259,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
   pre_tables_input <- reactive({
     req(signal())
     req(pre_modeling_output())
-    browser()
     input <- signal()$input_data
     data <- pre_modeling_output()
     analysis_type <- signal()$session_data$sessionMode

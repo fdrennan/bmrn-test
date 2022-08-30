@@ -7,7 +7,7 @@ pre_modeling <- function(input_data, baseline) {
   ]
   analysis_data <- analysis_data %>%
     mutate(
-      Time = factor(Time, levels = times),
+      Time = as_factor(Time),
       # TreatmentNew = factor(TreatmentNew,
       #   levels = c(
       #     "Wild Type", "Negative Control", "Positive Control",
