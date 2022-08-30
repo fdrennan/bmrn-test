@@ -347,6 +347,8 @@ test_plot_theme_word <- function(x) {
         panel.grid.minor = element_blank())
 }
 
+baseline_selected = 'Baseline' %in% data$plot$ui_selections$time_sel
+
 
 if ( data$plot$ui_selections$y_axis == "transform") {
       plots <- vizualization(
@@ -361,7 +363,7 @@ if ( data$plot$ui_selections$y_axis == "transform") {
     if ( data$plot$ui_selections$y_axis == "no_transform") {
       plots <- vizualization(
         transformed_data = pdata$transformed_data,
-        power = data$plot$endpoint,
+        power = pdata$box_cox,
         endpoint = data$plot$endpoint,
         transformation = FALSE,
         baseline = FALSE || !baseline_selected,
