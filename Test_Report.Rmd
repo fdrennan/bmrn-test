@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: 'bb8872c9-fcd8-4931-8f17-d3b8c75fd2de'
+  uuid: '5fd32f5a-454e-43df-9d5f-bf4fb5f02ba2'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -362,7 +362,7 @@ if ( data$plot$ui_selections$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = pdata$transformed_data,
         power = data$plot$endpoint,
-        endpoint = endpoint,
+        endpoint = data$plot$endpoint,
         transformation = FALSE,
         baseline = FALSE || !baseline_selected,
         ui_sel = data$plot$ui_selections
