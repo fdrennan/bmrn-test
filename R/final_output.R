@@ -55,7 +55,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       se_bt = case_when(
         power == 1 ~ NaN,
         power == 0 ~ exp(emmean) * SE,
-        !(power %in% c(0, 1)) ~ (1 / power) * emmean^(1 / power - 1) * SE
+        !(power %in% c(0, 1)) ~ (1 / power) * emmean^((1 / power) - 1) * SE
       ),
     )
   AT_bt <- emmeans_obj$AT %>%
@@ -69,7 +69,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       se_bt = case_when(
         power == 1 ~ NaN,
         power == 0 ~ exp(emmean) * SE,
-        !(power %in% c(0, 1)) ~ ((1 / power) * emmean^(1 / power - 1))^2 * SE
+        !(power %in% c(0, 1)) ~ (1 / power) * emmean^((1 / power) - 1) * SE
       ),
     )
 
