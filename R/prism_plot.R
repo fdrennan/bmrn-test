@@ -58,7 +58,7 @@ prism_plot <- function(data, tables, trt_sel,
   if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylabel <- paste0(trans_name, "\n Change from Baseline ", endpoint)
+    ylabel <- paste0("Change from Baseline \n",trans_name, endpoint)
   }
 
   p_vals <- bind_rows(tab1, tab2, tab3) %>%

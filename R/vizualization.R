@@ -117,7 +117,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
-    ylabel <- paste(endpoint)
+    ylabel <- endpoint
   } else {
     ylabel <- paste(
       transform_table$transform_name[power == transform_table$power],
