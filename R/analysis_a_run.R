@@ -281,7 +281,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       req(FALSE)
     } else {
       if (analysis_type == "Exploratory") {
-        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE, offset)
+        final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE,
+                                      offset= data$offset)
       } else {
         final_model <- final_modeling(data,
           toi = signal()$timeSelectionInput,
