@@ -555,7 +555,7 @@ FitFlextableToPage(tab3_ft)
 
 # Appendix A: Workflow Illustration
 
-![](Flowcharts.PNG)
+![](Flowcharts.png)
 
 # Appendix B: Statistical Methods for Scientific Publication
 
