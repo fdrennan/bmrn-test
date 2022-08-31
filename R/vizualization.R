@@ -78,11 +78,13 @@ label_fix <- function(plot) {
 
 #' vizualization
 #' @export vizualization
-vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel, palette = "floral") {
-  order_groups = match(c('Wild Type', 'Negative Control', 'Postive Control', 'Vehicle', 
+vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette = "floral") {
+  order_groups = match(c('Wild Type', 'Negative Control', 'Other Comparator'  ,'Positive Control', 'Vehicle', 
                   grep(pattern = 'Dose', x = levels(transformed_data$TreatmentNew), value = T)), 
                 levels(transformed_data$TreatmentNew))
-  orig_groups <- levels(factor(transformed_data$Treatment))[order_groups]
+  
+  orig_groups <- transformed_data %>% distinct(Treatment, TreatmentNew)
+  orig_groups = orig_groups[order_groups,] %>% mutate(Treatment = as.character(Treatment)) %>% select(Treatment) %>% unlist()
   colors <- c(
     ggprism_data$colour_palettes[[palette]],
     ggprism_data$colour_palettes$pastel
@@ -110,23 +112,25 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     )
   )
 
-  if (!transformation | power == 1) {
+  if ((ui_sel$y_axis == 'transform' & power == 1) | ui_sel$y_axis == 'no_transform') {
     transformed_data <- transformed_data %>%
       select(-c(Response_Transformed, Baseline_Transformed)) %>%
       rename(
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
-    ylabel <- paste(endpoint)
-  } else {
+    ylabel <- endpoint
+  } 
+
+if(ui_sel$y_axis == 'transform' & power != 1){
     ylabel <- paste(
       transform_table$transform_name[power == transform_table$power],
       "\n Transformed", endpoint
     )
-  }
-  if (!baseline || input_time %in% "Baseline") {
-    # Treatment
-    # browser()
+}
+
+  if (ui_sel$y_axis != 'change_from_baseline' && any(ui_sel$time_sel %in% "Baseline")) {
+
     times <- setdiff(input_time, 'Baseline')
     transformed_data <- transformed_data %>%
       mutate(
@@ -151,12 +155,18 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       ungroup()
   }
 
-  if (baseline) {
+  if (ui_sel$y_axis == 'change_from_baseline' & power == 1) {
     transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
+    ylabel <- paste("Change from Baseline\n", endpoint)
   }
 
-  
+  if (ui_sel$y_axis == 'change_from_baseline' & power != 1) {
+    transformed_data <- transformed_data %>%
+      mutate(Response_Transformed = Response_Transformed_bc)
+    ylabel <- paste("Change from Baseline\n", transform_table$transform_name[power == transform_table$power],
+                    endpoint)
+  }
   
   transformed_data$Treatment = factor(transformed_data$Treatment, levels = orig_groups)
   transformed_data_sum <- transformed_data %>%
@@ -206,7 +216,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       show.legend = FALSE, size = 0.7
     ) +
     labs(color = "Treatment") +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ylab(ylabel) +
     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
     ggtitle("Box Plot for Each Group Over Time") +
@@ -221,7 +231,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     geom_line(aes(color = Treatment), size = 0.2, show.legend = FALSE) +
     geom_point(aes(color = Treatment), show.legend = FALSE) +
     ylab(ylabel) +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ggtitle("Trajectory of Each Subject by Group") +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups)

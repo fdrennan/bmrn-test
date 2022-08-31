@@ -55,7 +55,8 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 
 #' analysis_a_run_server
 #' @export
-analysis_a_run_server <- function(input, output, session, user, is_admin, signal, cache = TRUE) {
+analysis_a_run_server <- function(input, output, session, user, 
+                                  is_admin, signal, cache = TRUE) {
   ns <- session$ns
 
 
@@ -123,7 +124,6 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
         TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
         Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
       )
-
     filtered_1
   })
 
@@ -138,10 +138,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
       data %>%
       mutate(
         trt = TreatmentNew,
-        # TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
+        TreatmentNew = if_else(TypeNew == 'Wild Type', "Wild Type", TreatmentNew),
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
-
     data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
       #                      c(
       # contains("Week"), contains("Day"),
@@ -203,7 +202,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     ui_selections <- list(
       y_axis = input$y_axis,
       trt_sel = input$treatmentPlotSelectors,
-      time_sel = input$timePlotSelectors
+      time_sel = input$timePlotSelectors,
+      num_rows = input$num_rows
     )
 
     list(
@@ -218,41 +218,13 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-  
-    if (input$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = data$transformed_data,
         power = data$box_cox,
         endpoint = endpoint,
-        baseline = FALSE || !baseline_selected, # logic is backwards in the functions
-        transformation = TRUE,
         ui_sel = ui_sel
       )
-    }
-    if (input$y_axis == "no_transform") {
-      plots <- vizualization(
-        transformed_data = data$transformed_data,
-        power = data$box_cox,
-        endpoint = endpoint,
-        transformation = FALSE,
-        baseline = FALSE || !baseline_selected,
-        ui_sel = ui_sel
-      )
-    }
 
-    if (input$y_axis == "change_from_baseline") {
-      transformed_data <- data$transformed_data %>%
-        mutate(Response_Transformed = as.numeric(Response_Transformed) - as.numeric(Baseline))
-
-      plots <- vizualization(
-        transformed_data = data$transformed_data,
-        power = data$box_cox,
-        endpoint = endpoint,
-        transformation = FALSE,
-        baseline = TRUE,
-        ui_sel = ui_sel
-      )
-    }
     return(list(plots = plots, data = data, baseline_selected = baseline_selected))
   })
 
@@ -594,7 +566,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           choiceValues = list(
             "transform", "no_transform", "change_from_baseline"
           )
-        )
+        ),
+        numericInput(ns("num_rows"), label = "Number of Rows for Panel Plots", 
+                     value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1)
       )
     )
   })

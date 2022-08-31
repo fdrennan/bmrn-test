@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: 'af2bc08f-e751-42e5-9616-7abf90e9e617'
+  uuid: 'd683673c-f75f-4b37-9bd3-54da99ddd2e3'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -197,11 +197,11 @@ contrasts =  data.frame(
     Label = LETTERS[1:9],
     Group_1 = c(
       "Wild Type",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Wild Type",
       "Vehicle",
       "Wild Type",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Each Dose",
       "Negative Control",
       "Negative Control"
@@ -211,7 +211,7 @@ contrasts =  data.frame(
       "Vehicle",
       "Each Dose",
       "Each Dose",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Each Dose",
       "Every Other Dose",
       "Vehicle",
@@ -226,7 +226,7 @@ contrasts =  data.frame(
                     'Do doses differ from each other?',
                     'Rule out matrix effect.',
                     'If H is rejected, then show Negative Control is not as good as treatment.'),
-    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','None'),
+    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','Dunnet'),
   check.names = FALSE) %>%
   mutate(Comparison = paste(Group_1, 'vs.', Group_2))
 
@@ -347,14 +347,12 @@ test_plot_theme_word <- function(x) {
         panel.grid.minor = element_blank())
 }
 
-# transformed_data = data$plot$data$transformed_data %>%
-#   filter(Time %in% data$plot$ui_selections$time_sel,
-#          Treatment %in% data$plot$ui_selections$trt_sel)
-
-data$plot$ui_selection$trt_sel = data$plot$data$transformed_data$Treatment
-data$plot$ui_selections$time_sel = data$plot$data$transformed_data$Time
-
-plots = vizualization(transformed_data = pdata$transformed_data, power = data$plot$data$box_cox, endpoint = data$plot$endpoint, baseline = TRUE, transformation = TRUE, ui_sel = data$plot$ui_selections, palette = prismInputs$palette)
+      plots <- vizualization(
+        transformed_data = pdata$transformed_data,
+        power = pdata$box_cox,
+        endpoint = data$plot$endpoint,
+        ui_sel = data$plot$ui_selections
+      )
 
 boxplot_caption = paste0("Box plot for each group and time.")
 

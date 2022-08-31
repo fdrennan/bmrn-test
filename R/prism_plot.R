@@ -14,10 +14,11 @@ prism_plot <- function(data, tables, trt_sel,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL, same_ylim = FALSE) {
 
-  order_groups = match(c('Wild Type','Negative Control', 'Postive Control', 'Vehicle', 
+  order_groups = match(c('Wild Type','Negative Control', "Other Comparator" , 'Positive Control', 'Vehicle', 
                          grep(pattern = 'Dose', x = levels(data$TreatmentNew), value = T)), 
                        levels(data$TreatmentNew))
-  orig_groups <- levels(factor(data$Treatment))[order_groups]
+  orig_groups <- data %>% distinct(Treatment, TreatmentNew)
+  orig_groups = orig_groups[order_groups,] %>% mutate(Treatment = as.character(Treatment)) %>% select(Treatment) %>% unlist()
   colors <- c(
     ggprism_data$colour_palettes[[inputs$palette]],
     ggprism_data$colour_palettes$pastel
@@ -58,7 +59,7 @@ prism_plot <- function(data, tables, trt_sel,
   if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylabel <- paste0(trans_name, "\n Change from Baseline ", endpoint)
+    ylabel <- paste0("Change from Baseline \n",trans_name, endpoint)
   }
 
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
