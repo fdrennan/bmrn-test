@@ -15,7 +15,6 @@ send_email <- function(all_files = FALSE,
     file_name <- "Test_Report.docx"
   }
 
-
   mailR::send.mail(
     from = from,
     to = to,

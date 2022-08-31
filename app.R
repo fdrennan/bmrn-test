@@ -2,6 +2,7 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
+
 options(run_parallel = TRUE)
 options("test_version" = "Version 1.21")
 if (isTRUE(getOption("production"))) {
@@ -14,7 +15,6 @@ if (isTRUE(getOption("production"))) {
   options(send = FALSE)
   options("devmode" = TRUE)
 }
-
 
 router <- make_router(
   route("home", ui_home()),

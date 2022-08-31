@@ -59,7 +59,6 @@ analysis_a_run_server <- function(input, output, session, user,
                                   is_admin, signal, cache = TRUE) {
   ns <- session$ns
 
-
   input_data <- reactive({
     req(signal())
     input_data <- signal()$input_data
@@ -129,9 +128,7 @@ analysis_a_run_server <- function(input, output, session, user,
 
   analysis_input_data <- reactive({
     req(analysis_input())
-
     data <- analysis_input()
-    #identify which columns sandwich the time points
     base_col = which(colnames(data) == 'Baseline')
     type_snake_col = which(colnames(data) == 'type_snake')
     data <-
@@ -142,12 +139,6 @@ analysis_a_run_server <- function(input, output, session, user,
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
     data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
-      #                      c(
-      # contains("Week"), contains("Day"),
-      # contains("Year"), contains("Month"),
-      # contains("Second"), contains("Minute"),
-      # contains("Time"),
-    #), 
     names_to = "Time", values_to = "Response") %>%
       mutate(Time = as_factor(Time))
     
