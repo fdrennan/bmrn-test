@@ -414,7 +414,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       tab_header(
         title = title
       ) %>%
-      tab_spanner(
+      tab_spanner(id = UUIDgenerate(),
         label = endpoint,
         columns = grep("Original", colnames(data), value = TRUE)
       ) %>%
@@ -448,7 +448,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
         table_gt <- table_gt %>%
-          tab_spanner(
+          tab_spanner(id = UUIDgenerate(),
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) %>%
@@ -477,7 +477,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
 
       if (transformation) {
         table_gt <- table_gt %>%
-          tab_spanner(
+          tab_spanner(id = UUIDgenerate(),
             label = "Transformed Scale",
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
           ) %>%
@@ -485,7 +485,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             `Transformed Scale Mean` = "Mean",
             `Transformed Scale SE` = "SE"
           ) %>%
-          tab_spanner(
+          tab_spanner(id = UUIDgenerate(),
             label = "Back Transformed",
             columns = grep("Back Transformed", colnames(data), value = TRUE)
           ) %>%
@@ -495,7 +495,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           )
       } else {
         table_gt <- table_gt %>%
-          tab_spanner(
+          tab_spanner(id = UUIDgenerate(),
             label = endpoint,
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
           ) %>%
@@ -521,7 +521,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         print(col1)
         print(col2)
         table_gt <- table_gt %>%
-          tab_spanner(
+          tab_spanner(id = UUIDgenerate(),
             label = paste("Difference from", i), id = UUIDgenerate(),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) 
