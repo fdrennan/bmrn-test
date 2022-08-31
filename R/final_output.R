@@ -401,12 +401,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       "Overall Average",
       `Time Points`
     ))
-  if (analysis_type == "Exploratory") {
-    data <- data %>%
-      mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
-      arrange(Treatment, num) %>%
-      select(-num)
-  }
+  # if (analysis_type == "Exploratory") {
+  #   data <- data %>%
+  #     mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
+  #     arrange(Treatment, num) %>%
+  #     select(-num)
+  # }
 
   if (summary_only & transformation) {
     table_gt <- data %>%
