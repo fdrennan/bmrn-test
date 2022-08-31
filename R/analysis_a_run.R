@@ -216,41 +216,13 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-  
-    if (input$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = data$transformed_data,
         power = data$box_cox,
         endpoint = endpoint,
-        baseline = FALSE || !baseline_selected, # logic is backwards in the functions
-        transformation = TRUE,
         ui_sel = ui_sel
       )
-    }
-    if (input$y_axis == "no_transform") {
-      plots <- vizualization(
-        transformed_data = data$transformed_data,
-        power = data$box_cox,
-        endpoint = endpoint,
-        transformation = FALSE,
-        baseline = FALSE || !baseline_selected,
-        ui_sel = ui_sel
-      )
-    }
 
-    if (input$y_axis == "change_from_baseline") {
-      transformed_data <- data$transformed_data %>%
-        mutate(Response_Transformed = as.numeric(Response_Transformed) - as.numeric(Baseline))
-
-      plots <- vizualization(
-        transformed_data = data$transformed_data,
-        power = data$box_cox,
-        endpoint = endpoint,
-        transformation = FALSE,
-        baseline = TRUE,
-        ui_sel = ui_sel
-      )
-    }
     return(list(plots = plots, data = data, baseline_selected = baseline_selected))
   })
 

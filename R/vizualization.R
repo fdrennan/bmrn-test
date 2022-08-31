@@ -78,8 +78,8 @@ label_fix <- function(plot) {
 
 #' vizualization
 #' @export vizualization
-vizualization <- function(transformed_data, power = 1, endpoint, baseline, transformation, ui_sel, palette = "floral") {
-  order_groups = match(c('Wild Type', 'Negative Control', 'Postive Control', 'Vehicle', 
+vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette = "floral") {
+  order_groups = match(c('Wild Type', 'Negative Control', 'Positive Control', 'Vehicle', 
                   grep(pattern = 'Dose', x = levels(transformed_data$TreatmentNew), value = T)), 
                 levels(transformed_data$TreatmentNew))
   orig_groups <- levels(factor(transformed_data$Treatment))[order_groups]
@@ -127,10 +127,8 @@ if(ui_sel$y_axis == 'transform' & power != 1){
     )
 }
 
+  if (ui_sel$y_axis != 'change_from_baseline' && any(ui_sel$time_sel %in% "Baseline")) {
 
-  if (ui_sel$y_axis != 'change_from_baseline' || any(input_time %in% "Baseline")) {
-    # Treatment
-    # browser()
     times <- setdiff(input_time, 'Baseline')
     transformed_data <- transformed_data %>%
       mutate(
@@ -158,7 +156,7 @@ if(ui_sel$y_axis == 'transform' & power != 1){
   if (ui_sel$y_axis == 'change_from_baseline' & power == 1) {
     transformed_data <- transformed_data %>%
       mutate(Response_Transformed = Response_Transformed_bc)
-    ylabel <- paste("Change from Baseline", endpoint)
+    ylabel <- paste("Change from Baseline\n", endpoint)
   }
 
   if (ui_sel$y_axis == 'change_from_baseline' & power != 1) {

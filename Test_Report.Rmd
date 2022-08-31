@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: '5fd32f5a-454e-43df-9d5f-bf4fb5f02ba2'
+  uuid: 'd683673c-f75f-4b37-9bd3-54da99ddd2e3'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -347,42 +347,12 @@ test_plot_theme_word <- function(x) {
         panel.grid.minor = element_blank())
 }
 
-baseline_selected = 'Baseline' %in% data$plot$ui_selections$time_sel
-
-
-if ( data$plot$ui_selections$y_axis == "transform") {
       plots <- vizualization(
         transformed_data = pdata$transformed_data,
         power = pdata$box_cox,
         endpoint = data$plot$endpoint,
-        baseline = FALSE, # logic is backwards in the functions
-        transformation = TRUE,
         ui_sel = data$plot$ui_selections
       )
-    }
-    if ( data$plot$ui_selections$y_axis == "no_transform") {
-      plots <- vizualization(
-        transformed_data = pdata$transformed_data,
-        power = pdata$box_cox,
-        endpoint = data$plot$endpoint,
-        transformation = FALSE,
-        baseline = FALSE || !baseline_selected,
-        ui_sel = data$plot$ui_selections
-      )
-    }
-    if ( data$plot$ui_selections$y_axis == "change_from_baseline") {
-      transformed_data <- pdata$transformed_data %>%
-        mutate(Response_Transformed = as.numeric(Response_Transformed) - as.numeric(Baseline))
-      plots <- vizualization(
-        transformed_data = transformed_data,
-        power = pdata$box_cox,
-        endpoint = data$plot$endpoint,
-        transformation = FALSE,
-        baseline = TRUE,
-        ui_sel = data$plot$ui_selections
-      )
-    }
-
 
 boxplot_caption = paste0("Box plot for each group and time.")
 
