@@ -27,3 +27,4 @@ COPY bib.bib .
 COPY test_logo.png .
 COPY test_example.xlsx .
 COPY dslogo.png .
+COPY Flowcharts.png .
