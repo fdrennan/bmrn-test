@@ -216,7 +216,7 @@ if(ui_sel$y_axis == 'transform' & power != 1){
       show.legend = FALSE, size = 0.7
     ) +
     labs(color = "Treatment") +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ylab(ylabel) +
     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
     ggtitle("Box Plot for Each Group Over Time") +
@@ -231,7 +231,7 @@ if(ui_sel$y_axis == 'transform' & power != 1){
     geom_line(aes(color = Treatment), size = 0.2, show.legend = FALSE) +
     geom_point(aes(color = Treatment), show.legend = FALSE) +
     ylab(ylabel) +
-    facet_wrap(Treatment ~ ., nrow = 1) +
+    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
     ggtitle("Trajectory of Each Subject by Group") +
     test_plot_theme() +
     scale_color_manual(values = colors, breaks = orig_groups)

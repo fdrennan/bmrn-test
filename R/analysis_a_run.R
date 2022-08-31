@@ -55,7 +55,8 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 
 #' analysis_a_run_server
 #' @export
-analysis_a_run_server <- function(input, output, session, user, is_admin, signal, cache = TRUE) {
+analysis_a_run_server <- function(input, output, session, user, 
+                                  is_admin, signal, cache = TRUE) {
   ns <- session$ns
 
 
