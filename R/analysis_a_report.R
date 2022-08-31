@@ -88,11 +88,13 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
             } else {
-              showNotification("Report Sent")
+              showNotification("Report Sent",
+                               duration = 10, closeButton = TRUE)
             }
           },
           error = function(err) {
-            showNotification(as.character(err), duration = NULL, closeButton = TRUE)
+            showNotification(as.character(err), 
+                             duration = 10, closeButton = TRUE)
             showNotification("Report failed to email")
           }
         )
