@@ -14,7 +14,7 @@ prism_plot <- function(data, tables, trt_sel,
                        top_height = 2, bottom_height = 3, num_groups, type = "box",
                        inputs = NULL, same_ylim = FALSE) {
 
-  order_groups = match(c('Wild Type','Negative Control', 'Positive Control', 'Vehicle', 
+  order_groups = match(c('Wild Type','Negative Control', "Other Comparator" , 'Positive Control', 'Vehicle', 
                          grep(pattern = 'Dose', x = levels(data$TreatmentNew), value = T)), 
                        levels(data$TreatmentNew))
   orig_groups <- levels(factor(data$Treatment))[order_groups]

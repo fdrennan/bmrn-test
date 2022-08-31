@@ -197,11 +197,11 @@ contrasts =  data.frame(
     Label = LETTERS[1:9],
     Group_1 = c(
       "Wild Type",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Wild Type",
       "Vehicle",
       "Wild Type",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Each Dose",
       "Negative Control",
       "Negative Control"
@@ -211,7 +211,7 @@ contrasts =  data.frame(
       "Vehicle",
       "Each Dose",
       "Each Dose",
-      "Positive Control",
+      "Positive Control/Other Comparator",
       "Each Dose",
       "Every Other Dose",
       "Vehicle",
@@ -226,7 +226,7 @@ contrasts =  data.frame(
                     'Do doses differ from each other?',
                     'Rule out matrix effect.',
                     'If H is rejected, then show Negative Control is not as good as treatment.'),
-    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','None'),
+    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','Dunnet'),
   check.names = FALSE) %>%
   mutate(Comparison = paste(Group_1, 'vs.', Group_2))
 

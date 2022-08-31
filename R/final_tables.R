@@ -4,7 +4,9 @@ table_1 <- function(final_contrast, os_together, toi) {
   if (!all(!grepl("_st", rownames(final_contrast)))) {
     table_1 <- data.frame(
       TreatmentNew = c(
-        rep("Wild Type", 2), rep("Positive Control", 2),
+        rep("Wild Type", 2), 
+        rep("Other Comparator", 2),
+        rep("Positive Control", 2),
         rep("Negative Control", 2)
       ),
       Endpoint = c(
@@ -14,19 +16,24 @@ table_1 <- function(final_contrast, os_together, toi) {
       ),
       `Difference from Vehicle` = c(
         "A", "A_st", "B", "B_st",
-        "H", "H_st"
+        "H", "H_st", "I", "I_st"
       ),
       `Difference from Positive Control` = c(
         "E", "E_st", NA, NA,
-        NA, NA
+        NA, NA, NA, NA
+      ),
+      `Difference from Other Comparator` = c(
+        "K", "K_st", NA, NA,
+        NA, NA, NA, NA
       )
     )
   } else {
     table_1 <- data.frame(
-      TreatmentNew = c("Wild Type", "Positive Control", "Negative Control"),
-      Endpoint = rep("Specific Time", 3),
-      `Difference from Vehicle` = c("A", "B", "H"),
-      `Difference from Positive Control` = c("E", NA, NA)
+      TreatmentNew = c("Wild Type", "Other Comparator", "Positive Control", "Negative Control"),
+      Endpoint = rep("Specific Time", 4),
+      `Difference from Vehicle` = c("A", "B", "H", "I"),
+      `Difference from Positive Control` = c("E", NA, NA, NA),
+      `Difference from Other Comparator` = c("K", NA, NA, NA)
     )
   }
   tmp <- final_contrast %>%
@@ -34,7 +41,7 @@ table_1 <- function(final_contrast, os_together, toi) {
     select(Difference, p.value) %>%
     mutate(contrast = row.names(.))
 
-  #
+
   for (i in grep("Difference", colnames(table_1), value = TRUE)) {
     table_1 <- table_1 %>%
       rename("contrast" = i) %>%
@@ -165,6 +172,10 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
         `Difference from Negative Control` = ifelse(Endpoint == "Average", paste0("I", Dose),
           paste0("I", Dose, "_st")
         )
+        ,
+        `Difference from Other Comparator` = ifelse(Endpoint == "Average", paste0("L", Dose),
+                                                    paste0("L", Dose, "_st")
+        )
       ) %>%
       arrange(TreatmentNew)
   } else {
@@ -176,7 +187,8 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
         Dose = as.numeric(gsub(pattern = "[A-z]| ", "", TreatmentNew)),
         `Difference from Wild Type` = paste0("C", Dose),
         `Difference from Positive Control` = paste0("F", Dose),
-        `Difference from Negative Control` = paste0("I", Dose)
+        `Difference from Negative Control` = paste0("I", Dose),
+        `Difference from Other Comparator` = paste0("L", Dose)
       ) %>%
       arrange(TreatmentNew)
   }
@@ -218,6 +230,5 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
       rename("Time Points" = Endpoint)
     tab3[is.na(tab3)] <- ""
   }
-
   return(tab3)
 }

@@ -6,10 +6,10 @@
 
 final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE) {
   adj_table <- data.frame(
-    letter = LETTERS[1:9],
+    letter = LETTERS[1:12],
     p.adj = c(
       "none", "none", "none", "dunnett", "none",
-      "none", "mvt", "none", "none"
+      "none", "mvt", "none", "dunnett", "none", "none", "none"
     )
   )
 

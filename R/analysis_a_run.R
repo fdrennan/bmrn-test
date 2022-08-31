@@ -201,7 +201,8 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
     ui_selections <- list(
       y_axis = input$y_axis,
       trt_sel = input$treatmentPlotSelectors,
-      time_sel = input$timePlotSelectors
+      time_sel = input$timePlotSelectors,
+      num_rows = input$num_rows
     )
 
     list(
@@ -564,7 +565,9 @@ analysis_a_run_server <- function(input, output, session, user, is_admin, signal
           choiceValues = list(
             "transform", "no_transform", "change_from_baseline"
           )
-        )
+        ),
+        numericInput(ns("num_rows"), label = "Number of Rows for Panel Plots", 
+                     value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1)
       )
     )
   })
