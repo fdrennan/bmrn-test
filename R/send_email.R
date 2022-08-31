@@ -19,7 +19,7 @@ send_email <- function(all_files = FALSE,
   mailR::send.mail(
     from = from,
     to = to,
-    subject = "Report Generated",
+    subject = "TEST Report Generated",
     body = email_message,
     html = TRUE,
     smtp = list(
