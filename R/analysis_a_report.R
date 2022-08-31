@@ -82,6 +82,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
         tryCatch(
           {
+            showNotification("Generating Email", duration=NULL, closeButton=TRUE)
             send_email(all_files = TRUE, to = email, files = files, email_message = email_message)
             # send_email(all_files = FALSE, to = email, files = files, email_message = email_message)
 
