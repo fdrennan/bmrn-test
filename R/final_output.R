@@ -522,7 +522,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         print(col2)
         table_gt <- table_gt %>%
           tab_spanner(id = UUIDgenerate(),
-            label = paste("Difference from", i), id = UUIDgenerate(),
+            label = paste("Difference from", i),  
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) 
         
