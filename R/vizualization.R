@@ -79,10 +79,12 @@ label_fix <- function(plot) {
 #' vizualization
 #' @export vizualization
 vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette = "floral") {
-  order_groups = match(c('Wild Type', 'Negative Control', 'Positive Control', 'Vehicle', 
+  order_groups = match(c('Wild Type', 'Negative Control', 'Other Comparator'  ,'Positive Control', 'Vehicle', 
                   grep(pattern = 'Dose', x = levels(transformed_data$TreatmentNew), value = T)), 
                 levels(transformed_data$TreatmentNew))
-  orig_groups <- levels(factor(transformed_data$Treatment))[order_groups]
+  
+  orig_groups <- transformed_data %>% distinct(Treatment, TreatmentNew)
+  orig_groups = orig_groups[order_groups,] %>% mutate(Treatment = as.character(Treatment)) %>% select(Treatment) %>% unlist()
   colors <- c(
     ggprism_data$colour_palettes[[palette]],
     ggprism_data$colour_palettes$pastel

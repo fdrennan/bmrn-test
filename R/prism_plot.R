@@ -17,7 +17,8 @@ prism_plot <- function(data, tables, trt_sel,
   order_groups = match(c('Wild Type','Negative Control', "Other Comparator" , 'Positive Control', 'Vehicle', 
                          grep(pattern = 'Dose', x = levels(data$TreatmentNew), value = T)), 
                        levels(data$TreatmentNew))
-  orig_groups <- levels(factor(data$Treatment))[order_groups]
+  orig_groups <- transformed_data %>% distinct(Treatment, TreatmentNew)
+  orig_groups = orig_groups[order_groups,] %>% mutate(Treatment = as.character(Treatment)) %>% select(Treatment) %>% unlist()
   colors <- c(
     ggprism_data$colour_palettes[[inputs$palette]],
     ggprism_data$colour_palettes$pastel
