@@ -28,8 +28,9 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
   for (i in 2:num_times) {
     final_AE <- cbind(final_AE, AE)
   }
+  
   contrast_map <- data.frame(
-    Label = LETTERS[1:9],
+    Label = LETTERS[1:12],
     Group_1 = c(
       "Wild Type",
       "Positive Control",
@@ -39,7 +40,10 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       "Positive Control",
       "Dose",
       "Negative Control",
-      "Negative Control"
+      "Negative Control",
+      "Other Comparator",
+      "Wild Type",
+      "Other Comparator"
     ),
     Group_2 = c(
       "Vehicle",
@@ -50,7 +54,10 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       "Dose",
       "Dose",
       "Vehicle",
-      "Dose"
+      "Dose",
+      'Vehicle',
+      "Other Comparator",
+      'Dose'
     )
   )
 
@@ -120,8 +127,9 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
     names(final_list)[i] <- contrast_map$Label[i]
   }
 
+  
   if (analysis_type == "exp") {
-    for (letter in LETTERS[1:9]) {
+    for (letter in LETTERS[1:12]) {
       if (length(final_list[[letter]]) > 0) {
         keep <- which(unlist(lapply(final_list[[letter]], function(i) {
           all(i %in% c(-1, 0, 1))
@@ -133,5 +141,6 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       }
     }
   }
+  
   return(final_list)
 }
