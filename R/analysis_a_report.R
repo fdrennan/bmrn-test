@@ -79,20 +79,23 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
           }
         )
-
+        browser()
         tryCatch(
           {
+            showNotification("Generating Email", duration=NULL, closeButton=TRUE)
             send_email(all_files = TRUE, to = email, files = files, email_message = email_message)
-            send_email(all_files = FALSE, to = email, files = files, email_message = email_message)
+            # send_email(all_files = FALSE, to = email, files = files, email_message = email_message)
 
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
             } else {
-              showNotification("Report Sent")
+              showNotification("Report Sent",
+                               duration = NULL, closeButton = TRUE)
             }
           },
           error = function(err) {
-            showNotification(as.character(err), duration = NULL, closeButton = TRUE)
+            showNotification(as.character(err), 
+                             duration = 10, closeButton = TRUE)
             showNotification("Report failed to email")
           }
         )
