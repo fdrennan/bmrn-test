@@ -121,9 +121,14 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     if (include_summ_stat & !transform) {
       data_ft <- add_header_row(data_ft,
         colwidths = c(2, 3, rep(2, length(groups))),
-        values = c("", endpoint, paste("vs.", groups))
-      )
+        values = c("", endpoint, paste("vs.", groups)))
+        
+        for(i in 1:length(data_ft$col_keys)){
+          data_ft = data_ft %>%
+          width(j = i, width = 0.5)
+        }
     }
+    
     if (!include_summ_stat) {
       data_ft <- add_header_row(data_ft,
         colwidths = c(2, rep(2, length(groups))),
@@ -133,12 +138,20 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
 
     data_ft <- set_header_labels(data_ft, values = new_names)
   }
-  data_ft <- align(data_ft, align = "center", part = "all")
-  data_ft <- fontsize(data_ft, size = 8, part = "header")
-  data_ft <- fontsize(data_ft, size = 8) %>%
+  
+  
+  if(!(include_summ_stat == F && summary_only == T && transform == T)){
+  data_ft = data_ft %>% 
+    set_table_properties(layout = 'fixed') %>%
+    fontsize(size = 8, part = 'body') %>%
+    fontsize(size = 8, part = 'header') %>%
+    width(width = 0.75, unit = 'in', j = grep('p value',data_ft$col_keys)) %>%
+    width(width = 0.95, unit = 'in', j = grep('Difference',data_ft$col_keys)) %>%
+    width(width = 0.7, unit = 'in', j = 1:2) %>%
+    width(width = 0.65, unit = 'in', j = 3:5) %>%
+    align(align = 'center', part = 'all') %>%
     add_footer_lines(footer)
-  data_ft <- fontsize(data_ft, size = 8, part = "footer")
-  # }
+}
   data_ft
 }
 

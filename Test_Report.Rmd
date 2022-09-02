@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: 'd683673c-f75f-4b37-9bd3-54da99ddd2e3'
+  uuid: 'd482dcc3-0519-46c1-a172-bdbc4410676a'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -279,7 +279,7 @@ paste(paste(groups_diff, collapse = ''), 'had a different variance from the basi
 
 `r variance_result`
 
-## `r ifelse(trans_name != "No transformation", "Graphical Summary of Residuals Before and After Transformation", "Graphical Summary of Residuals (No tranformation was needed")`
+## `r ifelse(trans_name != "No transformation", "Graphical Summary of Residuals Before and After Transformation", "Graphical Summary of Residuals (No tranformation was needed)")`
 
 ```{r, fig.cap=assumption.cap}
 
@@ -444,6 +444,7 @@ knitr::include_graphics(pngfile)
 transformed_data = data$plot$data$transformed_data
 prismInputs$border = TRUE
 prismInputs$fontsize = 30
+prismInputs$bottom_percent = 65
 prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
                    trt_sel = levels(transformed_data$Treatment), 
                    time_sel =  time,
@@ -468,7 +469,7 @@ prism_box = prism_plot(data = transformed_data, tables = data$tables$tables,
 
 ```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar}
 pngfile <- fs::path(knitr::fig_path(),  "bar.png")
-ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2)
 plot(prism)
 invisible(dev.off())
 knitr::include_graphics(pngfile)
@@ -476,7 +477,7 @@ knitr::include_graphics(pngfile)
 
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.cap=prism_caption_box}
 pngfile <- fs::path(knitr::fig_path(),  "box.png")
-ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
+ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2)
 plot(prism_box)
 invisible(dev.off())
 knitr::include_graphics(pngfile)
@@ -507,7 +508,8 @@ tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
 tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
-FitFlextableToPage(tab0_ft)
+#FitFlextableToPage(tab0_ft)
+tab0_ft
 ```
 `r if(!show_text) {"\\end{comment}"}`
 \newpage
@@ -519,8 +521,8 @@ tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
 tab1_ft = word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint)  %>%
   width(x = ., width = 1) 
-FitFlextableToPage(tab1_ft)
-
+#FitFlextableToPage(tab1_ft)
+tab1_ft
 ```
 \newpage
 
@@ -528,23 +530,21 @@ FitFlextableToPage(tab1_ft)
 
 ```{r, echo = F, error=F, warning=FALSE}
 tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
-
 tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
-            footer = footer, endpoint = data$plot$endpoint)%>%
-  width(x = ., width = 0.75) 
-
-FitFlextableToPage(tab2_ft)
+            footer = footer, endpoint = data$plot$endpoint)
+tab2_ft
+#FitFlextableToPage(tab2_ft)
 ```
 \newpage
 ### `r paste(ifelse(show_text, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = FALSE, error=F, warning=FALSE}
 tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
-#debug(word_tables)
 tab3_ft = word_tables(tab3, include_summ_stat = T, summary_only = F, transform = transform,
             footer = footer, endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
-FitFlextableToPage(tab3_ft)
+tab3_ft
+#FitFlextableToPage(tab3_ft)
 ```
 \newpage
 # References
@@ -555,7 +555,10 @@ FitFlextableToPage(tab3_ft)
 
 # Appendix A: Workflow Illustration
 
-![](Flowcharts.png)
+
+```{r, echo = FALSE, error=F, warning=FALSE,out.height = 575, out.width=800}
+knitr::include_graphics("Flowcharts_smaller.png")
+```
 
 # Appendix B: Statistical Methods for Scientific Publication
 
