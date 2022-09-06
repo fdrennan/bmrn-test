@@ -1,1 +1,1 @@
-Error for variance in the basic model. Dose 2 has a variance that is too large.
+Error for variance in the basic model. Dose 5 and Vehicle has a variance that is too small.
