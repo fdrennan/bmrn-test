@@ -51,7 +51,6 @@ pre_modeling <- function(input_data, baseline) {
   ready_final_model$transformed_data <- transformed_data_vc
   ready_final_model$best_model <- best_model
 
-  browser()
   return(ready_final_model)
 }
 
