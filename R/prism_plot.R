@@ -181,13 +181,12 @@ prism_plot <- function(data, tables, trt_sel,
     if (same_ylim) {
       ylim <- c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed))
     } else {
-      ylim <- c(NA, NA)
+      ylim <- c(layer_scales(full_prism)$y$range$range[1], 1.1 * max(data$Response_Transformed))
     }
 
     bottom <- full_prism +
       scale_y_continuous(
-        limits = ylim,
-        expand = expansion(mult = c(0, 0))
+        limits = ylim
       ) +
       theme(
         plot.margin = margin(
