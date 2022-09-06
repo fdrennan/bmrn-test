@@ -226,7 +226,7 @@ contrasts =  data.frame(
                     'Do doses differ from each other?',
                     'Rule out matrix effect.',
                     'If H is rejected, then show Negative Control is not as good as treatment.'),
-    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','Dunnet'),
+    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','Dunnett'),
   check.names = FALSE) %>%
   mutate(Comparison = paste(Group_1, 'vs.', Group_2))
 
