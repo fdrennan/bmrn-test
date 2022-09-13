@@ -37,6 +37,10 @@ pre_modeling <- function(input_data, baseline) {
       variable = ready_final_model$variable
     ) %>%
     arrange(TreatmentNew, SubjectID, Time)
+  
+  ready_final_model$transformed_data <- transformed_data_vc
+  
+  if(all(ready_final_model$error == FALSE)){
   best_model <- future_map_dfr(.x = c("AR1", "ARH1", "CS", "CSH", "TOEP", "UN"), .f = ~ {
     print(.x)
     tmp <- try(final_model(
@@ -48,9 +52,10 @@ pre_modeling <- function(input_data, baseline) {
     }
   })
   best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
-  ready_final_model$transformed_data <- transformed_data_vc
   ready_final_model$best_model <- best_model
-
+  }else{
+    ready_final_model$best_model <- NULL
+}
   return(ready_final_model)
 }
 

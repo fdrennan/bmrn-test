@@ -158,9 +158,9 @@ prism_plot <- function(data, tables, trt_sel,
       geom_jitter(
         # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
         # plot outliers only
-        # aes(shape = group1),
+        aes(shape = group1),
         size = ifelse(format == "word", 1.5, 3),
-        position = position_dodge(width = 0.2)
+        position = position_jitter(width = 0.2)
       ) +
       stat_summary(
         fun = "mean",
@@ -213,9 +213,9 @@ prism_plot <- function(data, tables, trt_sel,
       ) +
       geom_jitter(
         data = data %>% rename(group1 = Treatment),
-        aes(y = Response_Transformed),
+        aes(y = Response_Transformed, shape = group1),
         size = ifelse(format == "word", 1.5, 3),
-        position = position_dodge(width = 0.2)
+        position = position_jitter(width = 0.2)
       ) +
       # stat_summary(
       #   data = data %>% rename(group1 = Treatment),
