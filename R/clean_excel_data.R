@@ -34,8 +34,11 @@ clean_excel_data <- function(file) {
     mutate(
       type_snake = paste0("type_", snakecase::to_snake_case(Type)),
       treatment_snake = paste0("treatment_", snakecase::to_snake_case(Treatment))
-    ) %>%
+    )
+  
+  if(any(data[,7:ncol(data)] == 'BLQ')){
+  data <- data %>%
     mutate_all(.funs = ~ gsub("BLQ", BLQ_value, .))
-
+  }
   list(data = data, endpoint = endpoint, BLQ_value = BLQ_value)
 }

@@ -1,10 +1,9 @@
 library(test)
-
-file = list(datapath = 'Testing/Testing/Test Case 5/test_data5.xlsx')
+file = list(datapath = 'Testing/Testing/Test Case 2/test_data2_09062022.xlsx')
 
 data = clean_excel_data(file)$data %>%
   mutate(
-    TypeNew = Type,
+    TypeNew = Type, 
     TreatmentNew = Treatment,
     trt = TreatmentNew,
     TreatmentNew = replace_na(TreatmentNew, "Wild Type"),
@@ -16,9 +15,10 @@ data_long = data %>%
 
 #Change baseline = TRUE for Test case 5
 transformed_data = pre_modeling(data_long, baseline = TRUE)
-final_data <- final_modeling(transformed_data, toi = 'Time 6', analysis_type = 'confirm')
+debug(final_modeling)
+final_data <- final_modeling(transformed_data, toi = 'Time5', analysis_type = 'confirm')
 
-model1<-gls(Response_Transformed~Time*TreatmentNew,
+model1<-gls(Response_Transformed_bc~Time*TreatmentNew,
             data=transformed_data$transformed_data,
             correlation = corAR1(form=~1|SubjectID),
             weights = varIdent(form = ~1|Treatment))
@@ -84,6 +84,7 @@ com3_dunnett = contrast(est,adjust="dunnett",method=list(#"veh-d1"=rep(c(0,0,1,-
   #"veh-d5"=rep(c(0,0,1,0,0,0,0,-1)/5,5),
   "veh-d5_time2"=c(0,0,0,1,0,0,0,0,-1,rep(c(0,0,0,0,0,0,0,0,0),4))
 ))
+
 
 ###################################################################################
 file = list(datapath = 'test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx')
