@@ -15,7 +15,7 @@ data_long = data %>%
 
 #Change baseline = TRUE for Test case 5
 transformed_data = pre_modeling(data_long, baseline = TRUE)
-debug(final_modeling)
+
 final_data <- final_modeling(transformed_data, toi = 'Time5', analysis_type = 'confirm')
 
 model1<-gls(Response_Transformed_bc~Time*TreatmentNew,
