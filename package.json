@@ -1,0 +1,11 @@
+{
+  "name": "rpul",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Freddy <drennanfreddy@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.2.1",
+    "bootswatch": "^5.2.1"
+  }
+}
