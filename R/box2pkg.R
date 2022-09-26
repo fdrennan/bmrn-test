@@ -1,6 +1,6 @@
 #' @export
-box2pkg  <- function() {
-  homeDir <- getOption('box.path', 'box')
+box2pkg <- function() {
+  homeDir <- getOption("box.path", "box")
   dir_exists <- dir.exists(homeDir)
   if (dir_exists) {
     files <- lapply(
@@ -10,7 +10,6 @@ box2pkg  <- function() {
       }
     )
   } else {
-    stop(paste('Directory', homeDir, 'does not exist.'))
+    stop(paste("Directory", homeDir, "does not exist."))
   }
-
 }

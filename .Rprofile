@@ -1,2 +1,2 @@
 source("renv/activate.R")
-options(box.path='functions')
+options(box.path = "functions")
