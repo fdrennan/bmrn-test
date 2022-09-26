@@ -1,22 +1,9 @@
 
 #' @export
-collapser <- function(target = NULL, ..., class = "btn btn-primary") {
-  box::use(shiny)
-  shiny::tag("button", varArgs = list(
-    class = class,
-    type = "button",
-    `data-bs-toggle` = "collapse",
-    `data-bs-target` = target,
-    `aria-expanded` = "true",
-    `aria-controls` = "collapseExample", ...
-  ))
-}
-
-#' @export
 ui <- function() {
   box::use(shiny, shinyjs, shinycssloaders)
   box::use(shiny[tags])
-  box::use(. / app)
+  box::use(./app)
   shiny$addResourcePath("loaders", "./www/images/loaders")
   shiny$fluidPage(
     shinyjs$useShinyjs(),
@@ -27,17 +14,17 @@ ui <- function() {
       shiny$div(
         id = "sidebar", class = "col-3",
         class = "bg-dark",
-        app$collapser(
-          target = "#collapseExample",
-          "Collapse",
+        shiny::tag("button", varArgs = list(
+          class = 'btn btn-primary btn-block',
           type = "button",
-          class = "btn btn-primary btn-block text-light",
           `data-bs-toggle` = "collapse",
-          `data-bs-target` = target,
+          `data-bs-target` = '#collapseExample',
           `aria-expanded` = "true",
-          `aria-controls` = "collapseExample"
-        ),
-        tags$p(id = "collapseExample", "Ok, so here is some text", class = "bg-light")
+          `aria-controls` = "collapseExample",
+          tags$h4('Submit')
+        )),
+        shiny$actionButton("closeSidebar", "Close Sidebar"),
+        tags$p(id = "collapseExample", "Ok, so here is some text", class='bg-light')
       ),
       shiny$div(
         id = "body", class = "col-9",
@@ -56,7 +43,7 @@ server <- function(input, output, session) {
 #' @export
 start <- function() {
   box::use(shiny)
-  box::use(. / app)
+  box::use(./app)
   shiny$runApp(
     shiny$shinyApp(app$ui, app$server)
   )
