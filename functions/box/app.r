@@ -12,23 +12,22 @@ ui <- function() {
     shiny$fluidRow(
       class = "vh-100",
       shiny$div(
-        id = "sidebar", class = "col-3",
+        id = "sidebar", class = "col-3 p-3",
         class = "bg-dark",
         shiny::tag("button", varArgs = list(
           class = 'btn btn-primary btn-block',
           type = "button",
           `data-bs-toggle` = "collapse",
           `data-bs-target` = '#collapseExample',
-          `aria-expanded` = "true",
+          `aria-expanded` = "false",
           `aria-controls` = "collapseExample",
           tags$h4('Submit')
         )),
-        shiny$actionButton("closeSidebar", "Close Sidebar"),
-        tags$p(id = "collapseExample", "Ok, so here is some text", class='bg-light')
+        shiny$div(class='collapse', tags$p(id = "collapseExample", "Ok, so here is some text", class='bg-light'))
       ),
       shiny$div(
         id = "body", class = "col-9",
-        tags$h1("Hello", id = "hello")
+        tags$h1("Hello", id = "hello", class='text-center text-dark')
       )
     )
   )
