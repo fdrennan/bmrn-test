@@ -1,28 +1,31 @@
 #' @export
 ui_subreddit <- function(id = "subreddit") {
   box::use(shiny, shinycssloaders[withSpinner], bs4Dash)
-  box::use(shiny[actionButton, tableOutput, uiOutput,  textInput, numericInput, row = fluidRow, div, col = column])
+  box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, row = fluidRow, div, col = column])
   ns <- shiny$NS(id)
-  row(class='vh-100',
-      col(3, class='bg-dark text-light p-2',
-          numericInput(ns("limit"), "Limit", min = 1, max = 50, step = 1, value = 1),
-          textInput(ns("subreddit"), "Subreddit", "ukraine"),
-          actionButton(ns("go"), "Go", class='btn btn-primary btn-block text-dark'),
-          uiOutput(ns("ui"))
-      ),
-      col(9, class= 'bg-light',
-          row(
-            col(12, withSpinner(tableOutput(ns('infoTable')), image = "./loaders/stats.gif"))
-          )
+  row(
+    class = "vh-100",
+    col(3,
+      class = "bg-dark text-light p-2",
+      numericInput(ns("limit"), "Limit", min = 1, max = 50, step = 1, value = 1),
+      textInput(ns("subreddit"), "Subreddit", "ukraine"),
+      actionButton(ns("go"), "Go", class = "btn btn-primary btn-block text-dark"),
+      uiOutput(ns("ui"))
+    ),
+    col(9,
+      class = "bg-light",
+      row(
+        col(12, withSpinner(tableOutput(ns("infoTable")), image = "./loaders/stats.gif"))
       )
+    )
   )
 }
 
 #' @export
 server_subreddit <- function(id = "subreddit") {
-  box::use(shiny[row = fluidRow,moduleServer,  div, col = column, tags, renderUI, req ,renderTable, reactive, eventReactive, isolate])
+  box::use(shiny[row = fluidRow, moduleServer, div, col = column, tags, renderUI, req, renderTable, reactive, eventReactive, isolate])
   box::use(purrr[map, map_dfr], shinycssloaders, shinyWidgets[pickerInput], tidytext, jsonlite)
-  box::use(. / subreddit[praw_subreddit])
+  box::use(. / reddit_pull[praw_subreddit])
   box::use(dplyr[select, filter, mutate])
   moduleServer(
     id,
@@ -88,7 +91,7 @@ praw_subreddit <- function(name = getOption("subreddit", "all"),
   subreddit <- reddit$subreddit(name)
   type <- match.arg(type)
   new_posts <- switch(type,
-                      new = subreddit$new(limit = limit)
+    new = subreddit$new(limit = limit)
   )
   new_posts <- iterate(new_posts)
 }
