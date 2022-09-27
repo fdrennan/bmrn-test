@@ -22,7 +22,7 @@ collapser <- function(id = NULL,
 }
 
 #' @export
-offcanvas <- function(id = "offcanvasScrolling",
+offcanvas <- function(id,
                       header = "offcanvas header",
                       body = "offcanvas body",
                       location = c("start", "end", "top", "bottom")) {
@@ -31,7 +31,6 @@ offcanvas <- function(id = "offcanvasScrolling",
   location <- match.arg(location)
   shiny$fluidRow(
     class = "p-1",
-    app$collapser(label = shiny$icon("arrow-up"), id = id, data_bs_toggle = "offcanvas"),
     tags$div(
       class = paste(
         paste("offcanvas", paste0(c("offcanvas", location), collapse = "-")), "bg-dark"
@@ -53,20 +52,16 @@ offcanvas <- function(id = "offcanvasScrolling",
 
 #' @export
 button_toolbar <- function() {
-  box::use(shiny, shinyjs)
-  box::use(shiny[tag, tags, HTML])
+  box::use(shiny)
+  box::use(shiny[tags])
   box::use(. / app)
   tags$div(
-    class = "btn-toolbar",
+    class = "btn-toolbar d-flex justify-content-end",
     role = "toolbar",
     `aria-label` = "Toolbar with button groups",
     shiny$div(
       class = "btn-group me-2", role = "group", `aria-label` = "First group",
-      app$offcanvas(
-        location = "bottom",
-        header = tags$h1("Console"),
-        body = tags$h1("Development Information")
-      ),
+      app$collapser(label = shiny$icon("arrow-up"), id = "offcanvasScrolling", data_bs_toggle = "offcanvas"),
       shiny$actionButton('full', shiny$icon("expand"))
     )
   )
@@ -75,7 +70,7 @@ button_toolbar <- function() {
 #' @export
 ui <- function() {
   box::use(shiny, shinyjs)
-  box::use(shiny[tag, tags, HTML])
+  box::use(shiny[tags])
   box::use(. / app)
   shiny$addResourcePath("loaders", "./www/images/loaders")
   shiny$fluidPage(
@@ -84,7 +79,15 @@ ui <- function() {
     shinyjs$extendShinyjs(text=paste0(readLines('www/scripts/fullscreen.js'), collapse = '\n'), functions = 'fullScreen'),
     shiny$includeCSS("./www/styles.css"),
     shiny$includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    shiny$fluidRow(class = "bg-light", app$button_toolbar())
+    shiny$fluidRow(class = "bg-light", app$button_toolbar()),
+    shiny$fluidRow(
+      app$offcanvas(
+        id = "offcanvasScrolling",
+        location = "bottom",
+        header = tags$h1("Console"),
+        body = tags$h1("Development Information")
+      )
+    )
   )
 }
 
