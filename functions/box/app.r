@@ -4,6 +4,7 @@
 button <- function(id = NULL,
                    data_bs_toggle = c("collapse", "offcanvas"),
                    class = "btn", label = shiny::icon("arrow-up"), open = FALSE) {
+
   data_bs_toggle <- match.arg(data_bs_toggle)
   box::use(shiny[tags, tag])
   if (open) {
@@ -17,19 +18,19 @@ button <- function(id = NULL,
       label
     )
   } else {
+    # class = paste(c(class, "btn-close"))
     params <- list(
       class = class,
       type = "button",
       `data-bs-target` = paste0("#", id),
-      `aria-expanded` = "false",
+      # `aria-expanded` = "false",
       `aria-controls` = id,
       `data-bs-toggle` = data_bs_toggle,
       label
     )
 
   }
-  do.call(
-    'tag',
+  do.call('tag',
     args = list("button",
       varArgs = params
     )
@@ -38,10 +39,12 @@ button <- function(id = NULL,
 
 
 #' @export
-offcanvas <- function(id,
-                      header = "offcanvas header",
-                      body = "offcanvas body",
-                      location = c("start", "end", "top", "bottom")) {
+offcanvas <- function(
+  id,
+  header = "offcanvas header",
+  body = "offcanvas body",
+  location = c("start", "end", "top", "bottom")
+) {
   box::use(shiny, shiny[tags])
   box::use(. / app)
   location <- match.arg(location)
@@ -59,7 +62,7 @@ offcanvas <- function(id,
       tags$div(
         class = "offcanvas-header",
         tags$h5(class = "offcanvas-title", id = paste0(id, "Label"), header),
-        tags$button(class = "btn-close text-reset", `aria-label` = "Close")
+        app$button(id=id, open=FALSE, label = shiny::icon('x', class='text-light'))
       ),
       tags$div(class = "offcanvas-body", body)
     )
@@ -84,18 +87,21 @@ button_toolbar <- function(id = "button_toolbar") {
 
 #' @export
 ui <- function() {
-  box::use(shiny, shinyjs)
+  box::use(shiny[addResourcePath, tags, fluidPage, fluidRow, includeCSS, includeScript],
+           shinyjs[useShinyjs, extendShinyjs])
   box::use(shiny[tags])
   box::use(. / app)
-  shiny$addResourcePath("loaders", "./www/images/loaders")
-  shiny$fluidPage(
+  addResourcePath("loaders", "./www/images/loaders")
+  fluidPage(
     id = "homepage",
-    shinyjs$useShinyjs(),
-    shinyjs$extendShinyjs(text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"),
-    shiny$includeCSS("./www/styles.css"),
-    shiny$includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    shiny$fluidRow(class = "bg-light", app$button_toolbar()),
-    shiny$fluidRow(
+    useShinyjs(),
+    extendShinyjs(
+      text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
+    ),
+    includeCSS("./www/styles.css"),
+    includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
+    fluidRow(app$button_toolbar()),
+    fluidRow(
       app$offcanvas(
         id = "offcanvasScrolling",
         location = "bottom",
@@ -108,17 +114,17 @@ ui <- function() {
 
 #' @export
 server <- function(input, output, session) {
-  box::use(shiny, shinyjs[js])
-  shiny$observeEvent(input$full, {
+  box::use(shiny[observeEvent], shinyjs[js])
+  observeEvent(input$full, {
     js$fullScreen("homepage")
   })
 }
 
 #' @export
 start <- function() {
-  box::use(shiny)
-  box::use(. / app)
-  shiny$runApp(
-    shiny$shinyApp(app$ui, app$server)
+  box::use(shiny[runApp, shinyApp])
+  box::use(. / app[ui,server])
+  runApp(
+    shinyApp(ui,server)
   )
 }
