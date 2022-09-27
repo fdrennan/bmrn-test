@@ -25,7 +25,7 @@ ui <- function() {
         tags$div(class='collapse', tags$p("Ok, so here is some text", class = "bg-light"))
       ),
       shiny$div(
-        id = "body", class = "collapse col-9",
+        id = "body", class = "collapse show col-9",
         tags$div("Hello", class = "card card-body")
       )
     )
