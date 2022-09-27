@@ -86,9 +86,9 @@ button_toolbar <- function(id = "button_toolbar") {
 #' @export
 ui <- function() {
   box::use(
-    shiny[addResourcePath, tags, fluidPage, fluidRow, includeCSS, includeScript],
+    shiny[addResourcePath, tags, fluidPage, column, fluidRow, includeCSS, includeScript],
     shinyjs[useShinyjs, extendShinyjs],
-    ../reddit/reddit_pull
+    . / reddit
   )
   box::use(shiny[tags])
   box::use(. / app)
@@ -101,14 +101,17 @@ ui <- function() {
     ),
     includeCSS("./www/styles.css"),
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    fluidRow(app$button_toolbar()),
-    reddit_pull$ui_subreddit(),
-    fluidRow(
-      app$offcanvas(
-        id = "offcanvasScrolling",
-        location = "bottom",
-        header = tags$h1("Console"),
-        body = tags$h1("Development Information")
+    column(
+      12,
+      fluidRow(app$button_toolbar()),
+      reddit$ui_subreddit(),
+      fluidRow(
+        app$offcanvas(
+          id = "offcanvasScrolling",
+          location = "bottom",
+          header = tags$h1("Console"),
+          body = tags$h1("Development Information")
+        )
       )
     )
   )
@@ -117,12 +120,14 @@ ui <- function() {
 #' @export
 server <- function(input, output, session) {
   box::use(shiny[observeEvent], shinyjs[js])
-  box::use(.. / utilities / clock[server_clock],
-           .. / reddit /reddit_pull)
+  box::use(
+    .. / utilities / clock[server_clock],
+    . / reddit
+  )
   observeEvent(input$full, {
     js$fullScreen("homepage")
   })
-  reddit_pull$server_subreddit()
+  reddit$server_subreddit()
 }
 
 #' @export
