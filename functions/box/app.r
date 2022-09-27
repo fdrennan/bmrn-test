@@ -11,24 +11,22 @@ ui <- function() {
     shiny$includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     shiny$fluidRow(
       class = "vh-100",
-      shiny$div(
-        id = "sidebar", class = "col-3 p-3",
-        class = "bg-dark",
+      shiny$div(id = "sidebar",
+        class = "col-3 p-3 bg-dark",
         shiny::tag("button", varArgs = list(
           class = "btn btn-primary btn-block",
           type = "button",
           `data-bs-toggle` = "collapse",
-          `data-bs-target` = "#collapseExample",
+          `data-bs-target` = "#body",
           `aria-expanded` = "false",
-          `aria-controls` = "collapseExample",
+          `aria-controls` = "body",
           tags$h4("Submit")
         )),
-        shiny$div(class = "collapse",id = "collapseExample",
-                  tags$p("Ok, so here is some text", class = "bg-light"))
+        tags$div(class='collapse', tags$p("Ok, so here is some text", class = "bg-light"))
       ),
       shiny$div(
-        id = "body", class = "col-9",
-        tags$h1("Hello", id = "hello", class = "text-center text-dark")
+        id = "body", class = "collapse col-9",
+        tags$div("Hello", class = "card card-body")
       )
     )
   )
