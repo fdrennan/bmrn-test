@@ -4,7 +4,6 @@
 button <- function(id = NULL,
                    data_bs_toggle = c("collapse", "offcanvas"),
                    class = "btn", label = shiny::icon("arrow-up"), open = FALSE) {
-
   data_bs_toggle <- match.arg(data_bs_toggle)
   box::use(shiny[tags, tag])
   if (open) {
@@ -28,9 +27,8 @@ button <- function(id = NULL,
       `data-bs-toggle` = data_bs_toggle,
       label
     )
-
   }
-  do.call('tag',
+  do.call("tag",
     args = list("button",
       varArgs = params
     )
@@ -39,12 +37,10 @@ button <- function(id = NULL,
 
 
 #' @export
-offcanvas <- function(
-  id,
-  header = "offcanvas header",
-  body = "offcanvas body",
-  location = c("start", "end", "top", "bottom")
-) {
+offcanvas <- function(id,
+                      header = "offcanvas header",
+                      body = "offcanvas body",
+                      location = c("start", "end", "top", "bottom")) {
   box::use(shiny, shiny[tags])
   box::use(. / app)
   location <- match.arg(location)
@@ -62,24 +58,26 @@ offcanvas <- function(
       tags$div(
         class = "offcanvas-header",
         tags$h5(class = "offcanvas-title", id = paste0(id, "Label"), header),
-        app$button(id=id, open=FALSE, label = shiny::icon('x', class='text-light'))
+        app$button(id = id, open = FALSE, label = shiny::icon("x", class = "text-light"))
       ),
       tags$div(class = "offcanvas-body", body)
     )
   )
 }
 
+
 #' @export
 button_toolbar <- function(id = "button_toolbar") {
   box::use(shiny[div, icon, actionButton])
   box::use(. / app)
+  box::use(.. / utilities / clock[ui_clock])
   div(
     class = "btn-toolbar d-flex justify-content-end",
     role = "toolbar",
-    `aria-label` = "Toolbar with button groups",
+    `aria-label` = "Top application toolbar",
     div(
       class = "btn-group me-2", role = "group", `aria-label` = "First group",
-      app$button(label = icon("arrow-up"), id = "offcanvasScrolling", data_bs_toggle = "offcanvas"),
+      app$button(label = icon("arrow-up"), class = "btn", id = "offcanvasScrolling", data_bs_toggle = "offcanvas"),
       actionButton("full", icon("expand"))
     )
   )
@@ -87,8 +85,10 @@ button_toolbar <- function(id = "button_toolbar") {
 
 #' @export
 ui <- function() {
-  box::use(shiny[addResourcePath, tags, fluidPage, fluidRow, includeCSS, includeScript],
-           shinyjs[useShinyjs, extendShinyjs])
+  box::use(
+    shiny[addResourcePath, tags, fluidPage, fluidRow, includeCSS, includeScript],
+    shinyjs[useShinyjs, extendShinyjs]
+  )
   box::use(shiny[tags])
   box::use(. / app)
   addResourcePath("loaders", "./www/images/loaders")
@@ -115,6 +115,7 @@ ui <- function() {
 #' @export
 server <- function(input, output, session) {
   box::use(shiny[observeEvent], shinyjs[js])
+  box::use(.. / utilities / clock[server_clock])
   observeEvent(input$full, {
     js$fullScreen("homepage")
   })
@@ -123,8 +124,8 @@ server <- function(input, output, session) {
 #' @export
 start <- function() {
   box::use(shiny[runApp, shinyApp])
-  box::use(. / app[ui,server])
+  box::use(. / app[ui, server])
   runApp(
-    shinyApp(ui,server)
+    shinyApp(ui, server)
   )
 }
