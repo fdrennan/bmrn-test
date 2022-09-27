@@ -7,7 +7,7 @@
 #' @export
 collapser <- function(id = NULL,
                       data_bs_toggle = c("collapse", "offcanvas"),
-                      class = "btn btn-primary", ...) {
+                      class = "btn", label = shiny::icon('arrow-up')) {
   data_bs_toggle <- match.arg(data_bs_toggle)
   box::use(shiny[tags, tag])
   tag("button", varArgs = list(
@@ -17,29 +17,35 @@ collapser <- function(id = NULL,
     `data-bs-target` = paste0("#", id),
     `aria-expanded` = "false",
     `aria-controls` = id,
-    tags$h4("Submit"),
-    ...
+    label
   ))
 }
 
 #' @export
-offcanvas <- function() {
+offcanvas <- function(id = "offcanvasScrolling",
+                      header = "offcanvas header",
+                      body = "offcanvas body",
+                      location = c("start", "end", "top", "bottom")) {
   box::use(shiny, shiny[tags])
-  shiny$fluidRow(
-    shiny$column(12, collapser(id = "offcanvasScrolling", data_bs_toggle = "offcanvas")),
+  box::use(. / app)
+  location <- match.arg(location)
+  shiny$fluidRow(class='p-1',
+    app$collapser(label=shiny$icon('arrow-up'), id = id, data_bs_toggle = "offcanvas"),
     tags$div(
-      class = "offcanvas offcanvas-start",
+      class = paste(
+        paste("offcanvas", paste0(c("offcanvas", location), collapse = "-")), 'bg-dark'
+      ),
       `data-bs-scroll` = "true",
       `data-bs-backdrop` = "false",
       tabindex = "-1",
-      id = "offcanvasScrolling",
-      `aria-labelledby` = "offcanvasScrollingLabel",
+      id = id,
+      `aria-labelledby` = paste0(id, "Label"),
       tags$div(
         class = "offcanvas-header",
-        tags$h5(class = "offcanvas-title", id = "offcanvasScrollingLabel", "Colored with scrolling"),
+        tags$h5(class = "offcanvas-title", id = paste0(id, "Label"), header),
         tags$button(class = "btn-close text-reset", `data-bs-dismiss` = "offcanvas", `aria-label` = "Close")
       ),
-      tags$div(class = "offcanvas-body", tags$p("Try scrolling the rest of the page to see this option in action."))
+      tags$div(class = "offcanvas-body", body)
     )
   )
 }
@@ -47,23 +53,42 @@ offcanvas <- function() {
 #' @export
 ui <- function() {
   box::use(shiny, shinyjs, shinycssloaders)
-  box::use(shiny[tags, HTML])
+  box::use(shiny[tag, tags, HTML])
   box::use(. / app)
   shiny$addResourcePath("loaders", "./www/images/loaders")
-  shiny$fluidPage(
+  shiny$fluidPage(id='homepage',
     shinyjs$useShinyjs(),
+    tags$head(HTML(
+      '<script>
+        function openFullscreen() {
+          var elem = document.getElementById("homepage");
+          if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+          }
+        }
+        </script>')
+    ),
     shiny$includeCSS("./www/styles.css"),
     shiny$includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    shiny$fluidRow(app$offcanvas()),
-    shiny$fluidRow(
+    shiny$fluidRow(class='bg-light',
+      tags$div(
+        class = "btn-toolbar",
+        role = "toolbar",
+        `aria-label` = "Toolbar with button groups",
+        shiny$div(
+          class = "btn-group me-2", role = "group", `aria-label` = "First group",
+          app$offcanvas(
+            location = "bottom",
+            header = tags$h1("Console"),
+            body = tags$h1("Development Information")
+          ),
+          tag('button', varArgs = list(onclick="openFullscreen();", class='btn', shiny$icon('expand')))
+        )
+      ),
       # class = "vh-100",
       shiny$div(
         id = "body", class = "col-9 p-3",
         shiny$fluidRow(
-          lapply(
-            1:9,
-            function(x) tags$div(tags$h3("Body", class = "display-3"), class = "col-3 card card-body")
-          )
         )
       )
     )
