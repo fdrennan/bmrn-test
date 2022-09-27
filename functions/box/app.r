@@ -1,25 +1,41 @@
-#' @example
-#' collapser(id ='asdf'),
-#' shiny$div(
-#'  id = "asdf", class = "collapse show",
-#'  tags$div("Hello", class = "card card-body")
-#' )
+#' @description Button for interacting with bootstrap 5.
+#' https://getbootstrap.com/docs/5.0/components/collapse/
 #' @export
-collapser <- function(id = NULL,
-                      data_bs_toggle = c("collapse", "offcanvas"),
-                      class = "btn", label = shiny::icon("arrow-up")) {
+button <- function(id = NULL,
+                   data_bs_toggle = c("collapse", "offcanvas"),
+                   class = "btn", label = shiny::icon("arrow-up"), open = FALSE) {
   data_bs_toggle <- match.arg(data_bs_toggle)
   box::use(shiny[tags, tag])
-  tag("button", varArgs = list(
-    class = class,
-    type = "button",
-    `data-bs-toggle` = data_bs_toggle,
-    `data-bs-target` = paste0("#", id),
-    `aria-expanded` = "false",
-    `aria-controls` = id,
-    label
-  ))
+  if (open) {
+    params <- list(
+      class = class,
+      type = "button",
+      `data-bs-target` = paste0("#", id),
+      `aria-expanded` = "false",
+      `aria-controls` = id,
+      `data-bs-dismiss` = data_bs_toggle,
+      label
+    )
+  } else {
+    params <- list(
+      class = class,
+      type = "button",
+      `data-bs-target` = paste0("#", id),
+      `aria-expanded` = "false",
+      `aria-controls` = id,
+      `data-bs-toggle` = data_bs_toggle,
+      label
+    )
+
+  }
+  do.call(
+    'tag',
+    args = list("button",
+      varArgs = params
+    )
+  )
 }
+
 
 #' @export
 offcanvas <- function(id,
@@ -43,7 +59,7 @@ offcanvas <- function(id,
       tags$div(
         class = "offcanvas-header",
         tags$h5(class = "offcanvas-title", id = paste0(id, "Label"), header),
-        tags$button(class = "btn-close text-reset", `data-bs-dismiss` = "offcanvas", `aria-label` = "Close")
+        tags$button(class = "btn-close text-reset", `aria-label` = "Close")
       ),
       tags$div(class = "offcanvas-body", body)
     )
@@ -51,18 +67,17 @@ offcanvas <- function(id,
 }
 
 #' @export
-button_toolbar <- function() {
-  box::use(shiny)
-  box::use(shiny[tags])
+button_toolbar <- function(id = "button_toolbar") {
+  box::use(shiny[div, icon, actionButton])
   box::use(. / app)
-  tags$div(
+  div(
     class = "btn-toolbar d-flex justify-content-end",
     role = "toolbar",
     `aria-label` = "Toolbar with button groups",
-    shiny$div(
+    div(
       class = "btn-group me-2", role = "group", `aria-label` = "First group",
-      app$collapser(label = shiny$icon("arrow-up"), id = "offcanvasScrolling", data_bs_toggle = "offcanvas"),
-      shiny$actionButton('full', shiny$icon("expand"))
+      app$button(label = icon("arrow-up"), id = "offcanvasScrolling", data_bs_toggle = "offcanvas"),
+      actionButton("full", icon("expand"))
     )
   )
 }
@@ -76,7 +91,7 @@ ui <- function() {
   shiny$fluidPage(
     id = "homepage",
     shinyjs$useShinyjs(),
-    shinyjs$extendShinyjs(text=paste0(readLines('www/scripts/fullscreen.js'), collapse = '\n'), functions = 'fullScreen'),
+    shinyjs$extendShinyjs(text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"),
     shiny$includeCSS("./www/styles.css"),
     shiny$includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     shiny$fluidRow(class = "bg-light", app$button_toolbar()),
@@ -95,9 +110,8 @@ ui <- function() {
 server <- function(input, output, session) {
   box::use(shiny, shinyjs[js])
   shiny$observeEvent(input$full, {
-    js$fullScreen('homepage')
+    js$fullScreen("homepage")
   })
-
 }
 
 #' @export
