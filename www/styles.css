@@ -9442,15 +9442,7 @@ textarea.form-control-lg {
 .badge.bg-secondary, .badge.bg-light {
   color: #343a40; }
 
-/* The animation code */
-@keyframes example {
-  from {
-    width: 10px; }
-  to {
-    background-color: green; } }
-/* The element to apply the animation to */
-.sidebar-closed {
-  animation-name: example;
-  animation-duration: 1s; }
+sw-content-esquisse-controls-controls-filters {
+  width: 3rem; }
 
 /*# sourceMappingURL=styles.css.map */

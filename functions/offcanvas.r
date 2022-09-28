@@ -4,7 +4,7 @@ offcanvas <- function(id,
                       header = "offcanvas header",
                       body = "offcanvas body",
                       location = c("start", "end", "top", "bottom"),
-                      close_icon = 'x') {
+                      close_icon = "x") {
   box::use(shiny, shiny[tags])
   box::use(. / button)
 

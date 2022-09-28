@@ -30,8 +30,8 @@ button <- function(id = NULL,
     )
   }
   do.call("tag",
-          args = list("button",
-                      varArgs = params
-          )
+    args = list("button",
+      varArgs = params
+    )
   )
 }

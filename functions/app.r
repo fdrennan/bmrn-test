@@ -6,12 +6,14 @@
 ui <- function() {
   {
     box::use(
-      shiny[addResourcePath, tags, fluidPage, column, fluidRow, includeCSS, includeScript],
+      shiny[addResourcePath, tags, div, fluidPage, column, fluidRow, includeCSS, includeScript],
       shinyjs[useShinyjs, extendShinyjs],
       . / reddit,
-      ./offcanvas,
-      ./button,
-      ./button_toolbar[button_toolbar]
+      . / offcanvas,
+      . / button,
+      . / button_toolbar[button_toolbar],
+      esquisse,
+      . / utilities / datatable
     )
     box::use(shiny[tags, actionButton, icon])
   }
@@ -26,7 +28,8 @@ ui <- function() {
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     column(
       12,
-      fluidRow(button_toolbar(id='button_toolbar',
+      fluidRow(button_toolbar(
+        id = "button_toolbar",
         button$button(
           label = icon("table"), class = "btn",
           id = "console", data_bs_toggle = "offcanvas"
@@ -37,21 +40,22 @@ ui <- function() {
         ),
         actionButton("full", icon("expand"))
       )),
-      reddit$ui_subreddit(),
-      fluidRow(
+      esquisse$esquisse_ui("esquisse"),
+      datatable$ui_dt("submissionsTable"),
+      div(
         offcanvas$offcanvas(
           id = "console",
           location = "bottom",
-          header = tags$h1("Console"),
-          body = tags$h1("Development Information"),
-          close_icon = 'arrow-down'
+          header = NULL,
+          body = reddit$ui_subreddit(),
+          close_icon = "arrow-down"
         ),
         offcanvas$offcanvas(
           id = "settings",
           location = "end",
           header = tags$h1("Settings and Options"),
           body = tags$h1("More here"),
-          close_icon = 'arrow-right'
+          close_icon = "arrow-right"
         )
       )
     )
@@ -60,14 +64,25 @@ ui <- function() {
 
 #' @export
 server <- function(input, output, session) {
-  box::use(shiny[observeEvent], shinyjs[js])
+  box::use(shiny[observeEvent, reactive, reactiveValues], shinyjs[js])
   box::use(
+    . / utilities / datatable,
+    esquisse,
     . / reddit
   )
   observeEvent(input$full, {
     js$fullScreen("homepage")
   })
-  reddit$server_subreddit()
+
+  subreddit_data <- reddit$server_subreddit()
+
+  observeEvent(subreddit_data(), {
+    esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = subreddit_data(), name = "subdata"))
+  })
+
+  observeEvent(subreddit_data(), {
+    datatable$server_dt("submissionsTable", subreddit_data())
+  })
 }
 
 #' @export
