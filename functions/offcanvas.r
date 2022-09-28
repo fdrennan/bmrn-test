@@ -13,7 +13,7 @@ offcanvas <- function(id,
     class = "p-1",
     tags$div(
       class = paste(
-        paste("offcanvas", paste0(c("offcanvas", location), collapse = "-")), "bg-dark"
+        paste("offcanvas", paste0(c("offcanvas", location), collapse = "-"))
       ),
       `data-bs-scroll` = "true",
       `data-bs-backdrop` = "false",

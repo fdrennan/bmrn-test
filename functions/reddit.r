@@ -9,7 +9,6 @@ ui_subreddit <- function(id = "subreddit") {
   ns <- NS(id)
   fluidRow(
     column(3,
-      class = "bg-dark",
       class = "text-light p-2",
       textInput(ns("subreddit"), "Subreddit", "ukraine"),
       actionButton(ns("go"), "Go", class = "btn btn-primary btn-block text-dark")
@@ -21,7 +20,7 @@ ui_subreddit <- function(id = "subreddit") {
 #' @export
 server_subreddit <- function(id = "subreddit") {
   {
-    box::use(shiny[moduleServer, observe, req])
+    box::use(shiny[moduleServer,showNotification, isolate, observe, req])
     box::use(. / utilities / datatable)
   }
   moduleServer(
@@ -35,8 +34,13 @@ server_subreddit <- function(id = "subreddit") {
 
       incoming <- reactive({
         input$go
-        req(input$subreddit)
-        out <- redpul_subreddit(name = input$subreddit)
+        isolate(input$subreddit)
+        tryCatch({
+          out <- redpul_subreddit(name = input$subreddit)
+        }, error = function(err) {
+          showNotification(paste(c()))
+          data.frame()
+        })
       })
 
       incoming

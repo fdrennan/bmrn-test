@@ -11,7 +11,7 @@ ui_navbar <- function() {
 #' @export
 nav <- function(...) {
   box::use(shiny[tag])
-  tag("nav", varArgs = list(..., class = "navbar navbar-light bg-light"))
+  tag("nav", varArgs = list(..., class = "navbar navbar-light"))
 }
 
 #' @export

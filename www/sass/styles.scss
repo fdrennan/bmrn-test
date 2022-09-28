@@ -1,9 +1,5 @@
 // $h1-font-size: 3rem;
 
-@import "../../node_modules/bootswatch/dist/cerulean/variables";
+@import "../../node_modules/bootswatch/dist/darkly/variables";
 @import "../../node_modules/bootstrap/scss/bootstrap";
-@import "../../node_modules/bootswatch/dist/cerulean/bootswatch";
-
-sw-content-esquisse-controls-controls-filters {
-  width: 3rem;
-}
+@import "../../node_modules/bootswatch/dist/darkly/bootswatch";

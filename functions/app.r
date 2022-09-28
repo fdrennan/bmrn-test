@@ -40,6 +40,7 @@ ui <- function() {
         ),
         actionButton("full", icon("expand"))
       )),
+      reddit$ui_subreddit(),
       esquisse$esquisse_ui("esquisse"),
       datatable$ui_dt("submissionsTable"),
       div(
@@ -47,14 +48,14 @@ ui <- function() {
           id = "console",
           location = "bottom",
           header = NULL,
-          body = reddit$ui_subreddit(),
+          body = NULL,
           close_icon = "arrow-down"
         ),
         offcanvas$offcanvas(
           id = "settings",
           location = "end",
-          header = tags$h1("Settings and Options"),
-          body = tags$h1("More here"),
+          header = NULL,
+          body = NULL,
           close_icon = "arrow-right"
         )
       )
