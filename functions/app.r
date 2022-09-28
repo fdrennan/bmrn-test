@@ -10,9 +10,10 @@ ui <- function() {
       shinyjs[useShinyjs, extendShinyjs],
       . / reddit,
       ./offcanvas,
+      ./button,
       ./button_toolbar[button_toolbar]
     )
-    box::use(shiny[tags])
+    box::use(shiny[tags, actionButton, icon])
   }
   addResourcePath("loaders", "./www/images/loaders")
   fluidPage(
@@ -25,7 +26,13 @@ ui <- function() {
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     column(
       12,
-      fluidRow(button_toolbar()),
+      fluidRow(button_toolbar(
+        button$button(
+          label = icon("arrow-up"), class = "btn",
+          id = "offcanvasScrolling", data_bs_toggle = "offcanvas"
+        ),
+        actionButton("full", icon("expand"))
+      )),
       reddit$ui_subreddit(),
       fluidRow(
         offcanvas$offcanvas(

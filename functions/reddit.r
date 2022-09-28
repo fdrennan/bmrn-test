@@ -17,10 +17,8 @@ ui_subreddit <- function(id = "subreddit") {
     column(9,
       class = "bg-light",
       fluidRow(
-        uiOutput(ns("typePicker"), container = function(...) column(12, ...)),
-        uiOutput(ns("colPicker"), container = function(...) column(12, ...)),
-        datatable$ui_dt(ns("submissionsTable")),
-        esquisse$esquisse_ui(id=ns('esquisse'))
+        esquisse$esquisse_ui(id=ns('esquisse')),
+        datatable$ui_dt(ns("submissionsTable"))
       )
     )
   )
