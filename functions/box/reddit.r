@@ -1,6 +1,6 @@
 #' @export
 ui_subreddit <- function(id = "subreddit") {
-  box::use(shiny[tags, NS], shinycssloaders[withSpinner], bs4Dash)
+  box::use(shiny[tags, NS], shinycssloaders[withSpinner])
   box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
   box::use(.. / utilities / datatable)
   ns <- NS(id)
@@ -30,8 +30,9 @@ server_subreddit <- function(id = "subreddit") {
                    moduleServer, div, selectizeInput, fluidRow, observeEvent, observe, column, tags, renderUI,
                    req, renderTable, reactive, eventReactive, isolate
     ])
-    box::use(purrr[map, map_dfr, map_dfc], shinycssloaders, tidytext, jsonlite)
+    box::use(purrr[map, map_dfr, map_dfc], jsonlite)
     box::use(.. / reddit /reddit_pull[praw_subreddit])
+    box::use(.. / reddit /reddit_pull[redpul_subreddit])
     box::use(dplyr[select, filter, mutate])
     box::use(.. / utilities / datatable)
   }

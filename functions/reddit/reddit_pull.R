@@ -1,5 +1,14 @@
 
 #' @export
+redpul_subreddit <- function(name = getOption("subreddit", "all")) {
+  {
+    box::use(redpul)
+  }
+  redpul$redpul_find(name)
+}
+
+
+#' @export
 praw_subreddit <- function(name = getOption("subreddit", "all"),
                            limit = 10, type = c("new"),
                            client_id = Sys.getenv("REDDIT_CLIENT"),
@@ -17,7 +26,7 @@ praw_subreddit <- function(name = getOption("subreddit", "all"),
   subreddit <- reddit$subreddit(name)
   type <- match.arg(type)
   new_posts <- switch(type,
-    new = subreddit$new(limit = limit)
+                      new = subreddit$new(limit = limit)
   )
   new_posts <- iterate(new_posts)
 }

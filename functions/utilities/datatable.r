@@ -1,7 +1,7 @@
 #' @export
 ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   width = 12) {
-  box::use(shiny, DT, bs4Dash, esquisse)
+  box::use(shiny, DT)
   ns <- shiny$NS(id)
   shiny$fluidRow(
     shiny$column(12, class = "py-3", shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download"))),
@@ -11,7 +11,7 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
 
 #' @export
 server_dt <- function(id = "dt", data, title, pageLength = 3) {
-  box::use(shiny, DT, esquisse, bs4Dash, utils, dplyr, shinyWidgets, readr, writexl)
+  box::use(shiny, DT, esquisse, utils, dplyr, shinyWidgets, readr, writexl)
   shiny$moduleServer(
     id,
     function(input, output, session) {
