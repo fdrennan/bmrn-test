@@ -26,7 +26,7 @@ praw_subreddit <- function(name = getOption("subreddit", "all"),
   subreddit <- reddit$subreddit(name)
   type <- match.arg(type)
   new_posts <- switch(type,
-                      new = subreddit$new(limit = limit)
+    new = subreddit$new(limit = limit)
   )
   new_posts <- iterate(new_posts)
 }
