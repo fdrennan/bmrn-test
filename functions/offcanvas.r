@@ -3,7 +3,8 @@
 offcanvas <- function(id,
                       header = "offcanvas header",
                       body = "offcanvas body",
-                      location = c("start", "end", "top", "bottom")) {
+                      location = c("start", "end", "top", "bottom"),
+                      close_icon = 'x') {
   box::use(shiny, shiny[tags])
   box::use(. / button)
 
@@ -22,7 +23,10 @@ offcanvas <- function(id,
       tags$div(
         class = "offcanvas-header",
         tags$h5(class = "offcanvas-title", id = paste0(id, "Label"), header),
-        button$button(id = id, open = FALSE, label = shiny::icon("x", class = "text-light"))
+        button$button(
+          id = id, open = FALSE,
+          label = shiny::icon(close_icon, class = "text-light")
+        )
       ),
       tags$div(class = "offcanvas-body", body)
     )

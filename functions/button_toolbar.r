@@ -2,7 +2,7 @@
 button_toolbar <- function(id = "button_toolbar", ...) {
   box::use(shiny[div])
   div(
-    class = "btn-toolbar d-flex justify-content-end",
+    class = "btn-toolbar d-flex justify-content-center",
     role = "toolbar",
     `aria-label` = "Top application toolbar",
     div(

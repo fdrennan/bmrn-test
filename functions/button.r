@@ -4,6 +4,7 @@
 button <- function(id = NULL,
                    data_bs_toggle = c("collapse", "offcanvas"),
                    class = "btn", label = shiny::icon("arrow-up"), open = FALSE) {
+  print(id)
   data_bs_toggle <- match.arg(data_bs_toggle)
   box::use(shiny[tags, tag])
   if (open) {
@@ -11,7 +12,7 @@ button <- function(id = NULL,
       class = class,
       type = "button",
       `data-bs-target` = paste0("#", id),
-      `aria-expanded` = "false",
+      # `aria-expanded` = "false",
       `aria-controls` = id,
       `data-bs-dismiss` = data_bs_toggle,
       label

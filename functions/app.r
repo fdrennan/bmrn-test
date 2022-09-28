@@ -26,20 +26,32 @@ ui <- function() {
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     column(
       12,
-      fluidRow(button_toolbar(
+      fluidRow(button_toolbar(id='button_toolbar',
         button$button(
-          label = icon("arrow-up"), class = "btn",
-          id = "offcanvasScrolling", data_bs_toggle = "offcanvas"
+          label = icon("table"), class = "btn",
+          id = "console", data_bs_toggle = "offcanvas"
+        ),
+        button$button(
+          label = icon("cog"), class = "btn",
+          id = "settings", data_bs_toggle = "offcanvas"
         ),
         actionButton("full", icon("expand"))
       )),
       reddit$ui_subreddit(),
       fluidRow(
         offcanvas$offcanvas(
-          id = "offcanvasScrolling",
+          id = "console",
           location = "bottom",
           header = tags$h1("Console"),
-          body = tags$h1("Development Information")
+          body = tags$h1("Development Information"),
+          close_icon = 'arrow-down'
+        ),
+        offcanvas$offcanvas(
+          id = "settings",
+          location = "end",
+          header = tags$h1("Settings and Options"),
+          body = tags$h1("More here"),
+          close_icon = 'arrow-right'
         )
       )
     )
