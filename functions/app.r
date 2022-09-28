@@ -70,7 +70,6 @@ offcanvas <- function(id,
 button_toolbar <- function(id = "button_toolbar") {
   box::use(shiny[div, icon, actionButton])
   box::use(. / app)
-  box::use(.. / utilities / clock[ui_clock])
   div(
     class = "btn-toolbar d-flex justify-content-end",
     role = "toolbar",
@@ -121,7 +120,6 @@ ui <- function() {
 server <- function(input, output, session) {
   box::use(shiny[observeEvent], shinyjs[js])
   box::use(
-    .. / utilities / clock[server_clock],
     . / reddit
   )
   observeEvent(input$full, {

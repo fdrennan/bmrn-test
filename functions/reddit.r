@@ -1,8 +1,11 @@
 #' @export
 ui_subreddit <- function(id = "subreddit") {
-  box::use(shiny[tags, NS], shinycssloaders[withSpinner])
-  box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
-  box::use(.. / utilities / datatable)
+  {
+    box::use(shiny[tags, NS], shinycssloaders[withSpinner])
+    box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
+    box::use(esquisse)
+    box::use(. / utilities / datatable)
+  }
   ns <- NS(id)
   fluidRow(
     class = "vh-100",
@@ -16,7 +19,8 @@ ui_subreddit <- function(id = "subreddit") {
       fluidRow(
         uiOutput(ns("typePicker"), container = function(...) column(12, ...)),
         uiOutput(ns("colPicker"), container = function(...) column(12, ...)),
-        datatable$ui_dt(ns("submissionsTable"))
+        datatable$ui_dt(ns("submissionsTable")),
+        esquisse$esquisse_ui(id=ns('esquisse'))
       )
     )
   )
@@ -25,20 +29,17 @@ ui_subreddit <- function(id = "subreddit") {
 #' @export
 server_subreddit <- function(id = "subreddit") {
   {
-    box::use(shiny[
-      showNotification, actionButton, icon,
-      moduleServer, div, selectizeInput, fluidRow, observeEvent, observe, column, tags, renderUI,
-      req, renderTable, reactive, eventReactive, isolate
-    ])
-    box::use(purrr[map, map_dfr, map_dfc], jsonlite)
-    box::use(.. / reddit / reddit_pull[praw_subreddit])
-    box::use(.. / reddit / reddit_pull[redpul_subreddit])
-    box::use(dplyr[select, filter, mutate])
-    box::use(.. / utilities / datatable)
+    box::use(shiny[moduleServer])
+    box::use(. / utilities / datatable)
   }
   moduleServer(
     id,
     function(input, output, session) {
+      {
+        box::use(esquisse)
+        box::use(shiny[eventReactive, observeEvent, reactiveValues])
+        box::use(. / reddit / reddit_pull[redpul_subreddit])
+      }
       ns <- session$ns
 
       incoming <- eventReactive(input$go, {
@@ -47,6 +48,7 @@ server_subreddit <- function(id = "subreddit") {
 
       observeEvent(input$go, {
         datatable$server_dt("submissionsTable", incoming())
+        esquisse$esquisse_server('esquisse', data_rv = reactiveValues(data=incoming(), name = 'subdata'))
       })
     }
   )
