@@ -1,9 +1,10 @@
 #' @export
 ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   width = 12) {
-  box::use(shiny, DT)
+  box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
-  shiny$fluidRow(
+  shiny$fluidRow(id=ns(id),
+    actionButton(ns("full"), icon("expand")),
     shiny$column(12, class = "py-3", shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download"))),
     DT$DTOutput(ns("ui"), width = "100%")
   )
@@ -12,11 +13,16 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
 #' @export
 server_dt <- function(id = "dt", data, title, pageLength = 3) {
   box::use(shiny, DT, esquisse, utils, dplyr, shinyWidgets, readr, writexl)
+  box::use(shiny[observeEvent])
+  box::use(shinyjs[js])
   shiny$moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
-
+      observeEvent(input$full, {
+        # browser()
+        js$fullScreen(ns(id))
+      })
       output$downloadData <-
         shiny$downloadHandler(
           contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
