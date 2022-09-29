@@ -94,10 +94,9 @@ app_server <- function(id = "app") {
 
       subreddit_data <- reddit$server_subreddit()
 
-      observeEvent(subreddit_data(), {
-        esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = subreddit_data(), name = "subdata"))
-      })
-
+      esquisse$esquisse_server("esquisse",
+                               data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
+      )
       observeEvent(subreddit_data(), {
         box::use(dplyr[select])
         out <- subreddit_data() |> select()
