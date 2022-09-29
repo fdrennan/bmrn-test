@@ -1,7 +1,4 @@
 
-
-
-
 #' @export
 app_ui <- function(id = "app") {
   {
@@ -22,27 +19,25 @@ app_ui <- function(id = "app") {
   row_class <- c("border border-5 border-dark p-2 my-2")
   fluidRow(
     column(12,
-      class = row_class,
-      button_toolbar(
-        id = ns("button_toolbar"),
-        button$button(
-          label = icon("table"), class = "btn",
-          id = ns("console"), data_bs_toggle = "offcanvas"
-        ),
-        button$button(
-          label = icon("cog"), class = "btn",
-          id = "settings", data_bs_toggle = "offcanvas"
-        ),
-        actionButton(ns("full"), icon("expand"))
-      )
+           class = row_class,
+           button_toolbar(
+             id = ns("button_toolbar"),
+             button$button(
+               label = icon("table"), class = "btn",
+               id = ns("console"), data_bs_toggle = "offcanvas"
+             ),
+             button$button(
+               label = icon("cog"), class = "btn",
+               id = "settings", data_bs_toggle = "offcanvas"
+             ),
+             actionButton(ns("full"), icon("expand"))
+           )
     ),
-    column(
-      4, reddit$ui_subreddit(ns("subreddit"), container = function(...) {
-        column(4, ...)
-      })
-    ),
+    reddit$ui_subreddit(ns("subreddit"), container = function(...) {
+      column(6, ..., offset = 3)
+    }),
     esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-      column(12, ..., style='width: 100%; height:700px;')
+      column(12, ..., style='width: 100%; height:1700px;')
     }),
     datatable$ui_dt(ns("submissionsTable")),
     # Offcanvas
@@ -89,7 +84,7 @@ app_server <- function(id = "app") {
       subreddit_data <- reddit$server_subreddit()
 
       esquisse$esquisse_server("esquisse",
-        data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
+                               data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
       )
       observeEvent(subreddit_data(), {
         box::use(dplyr[select])
@@ -100,47 +95,4 @@ app_server <- function(id = "app") {
   )
 }
 
-#' @export
-ui <- function() {
-  box::use(. / app)
-  {
-    box::use(
-      shiny[addResourcePath, tags, div, fluidPage, column, fluidRow, includeCSS, includeScript],
-      shinyjs[useShinyjs, extendShinyjs],
-      . / reddit,
-      . / offcanvas,
-      . / button,
-      . / button_toolbar[button_toolbar],
-      esquisse,
-      . / utilities / datatable
-    )
-    box::use(shiny[tags, actionButton, icon])
-  }
-  addResourcePath("loaders", "./www/images/loaders")
 
-  fluidPage(style = "max-height: 100vh; overflow-y: auto;",
-    useShinyjs(),
-    extendShinyjs(
-      text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
-    ),
-    includeCSS("./www/styles.css"),
-    includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    includeScript("./www/scripts/enter.js"),
-    app$app_ui(id = "app")
-  )
-}
-
-#' @export
-server <- function(input, output, session) {
-  box::use(. / app)
-  app$app_server(id = "app")
-}
-
-#' @export
-start <- function() {
-  box::use(shiny[runApp, shinyApp])
-  box::use(. / app[ui, server])
-  runApp(
-    shinyApp(ui, server)
-  )
-}

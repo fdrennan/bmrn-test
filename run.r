@@ -1,1 +1,1 @@
-rstudioapi::restartSession("box::use(. / functions / app);app$start()")
+rstudioapi::restartSession("box::use(. / functions / start);start$start()")
