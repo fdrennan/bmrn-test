@@ -6,6 +6,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     box::use(. / utilities / datatable)
   }
   ns <- NS(id)
+  print(ns('subreddit'))
   container(
     fluidRow(
       column(12,

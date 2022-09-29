@@ -42,8 +42,8 @@ app_ui <- function(id = "app") {
           column(4, ...)
         })
       ),
-      esquisse$esquisse_ui(ns("esquisse"), container = function(...) {
-        column(8, ...)
+      esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+        column(12, ..., style='width: 100%; height:700px;')
       }),
       class = row_class
     ),
@@ -95,7 +95,7 @@ app_server <- function(id = "app") {
       subreddit_data <- reddit$server_subreddit()
 
       esquisse$esquisse_server("esquisse",
-                               data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
+        data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
       )
       observeEvent(subreddit_data(), {
         box::use(dplyr[select])
@@ -132,6 +132,7 @@ ui <- function() {
     ),
     includeCSS("./www/styles.css"),
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
+    includeScript("./www/scripts/enter.js"),
     column(
       id = "homepage",
       12,
