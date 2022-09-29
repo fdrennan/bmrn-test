@@ -3,9 +3,10 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   width = 12) {
   box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
-  shiny$fluidRow(id=ns(id),
+  shiny$column(width,
+    id = ns(id),
     actionButton(ns("full"), icon("expand")),
-    shiny$column(12, class = "py-3", shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download"))),
+    shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download")),
     DT$DTOutput(ns("ui"), width = "100%")
   )
 }
@@ -20,7 +21,6 @@ server_dt <- function(id = "dt", data, title, pageLength = 3) {
     function(input, output, session) {
       ns <- session$ns
       observeEvent(input$full, {
-        # browser()
         js$fullScreen(ns(id))
       })
       output$downloadData <-
