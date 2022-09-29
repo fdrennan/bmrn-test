@@ -38,7 +38,7 @@ app_ui <- function(id = "app") {
     ),
     fluidRow(
       column(
-        4, reddit$ui_subreddit()
+        4, reddit$ui_subreddit(ns('subreddit'))
       ),
       esquisse$esquisse_ui(ns("esquisse"), container = function(...) {
         column(8, ...)
@@ -132,7 +132,9 @@ ui <- function() {
     includeCSS("./www/styles.css"),
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     column(
-      id = "homepage", 12, app$app_ui()
+      id = "homepage",
+      12,
+      app$app_ui(id='app')
     )
   )
 }
@@ -140,7 +142,7 @@ ui <- function() {
 #' @export
 server <- function(input, output, session) {
   box::use(. / app)
-  app$app_server()
+  app$app_server(id='app')
 }
 
 #' @export

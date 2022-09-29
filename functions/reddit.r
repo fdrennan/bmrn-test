@@ -36,20 +36,14 @@ server_subreddit <- function(id = "subreddit") {
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
       ns <- session$ns
-      print(ns("go"))
-      # browser()
-      incoming <- reactive({
-        req(input$go)
-        browser()
+      print(ns('go'))
+      incoming <- eventReactive(input$go, {
+
         tryCatch(
           {
-            browser()
-            print(input)
             out <- isolate(redpul_subreddit(name = input$subreddit))
           },
           error = function(err) {
-            browser()
-            # showNotification(err$message)
             data.frame()
           }
         )
