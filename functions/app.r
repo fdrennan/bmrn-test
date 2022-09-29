@@ -21,7 +21,7 @@ app_ui <- function(id = "app") {
 
   row_class <- c("border border-5 border-dark p-2 my-2")
   fluidRow(
-    fluidRow(
+    column(12,
       class = row_class,
       button_toolbar(
         id = ns("button_toolbar"),
@@ -36,21 +36,15 @@ app_ui <- function(id = "app") {
         actionButton(ns("full"), icon("expand"))
       )
     ),
-    fluidRow(
-      column(
-        4, reddit$ui_subreddit(ns("subreddit"), container = function(...) {
-          column(4, ...)
-        })
-      ),
-      esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-        column(12, ..., style='width: 100%; height:700px;')
-      }),
-      class = row_class
+    column(
+      4, reddit$ui_subreddit(ns("subreddit"), container = function(...) {
+        column(4, ...)
+      })
     ),
-    fluidRow(
-      class = row_class,
-      datatable$ui_dt(ns("submissionsTable"))
-    ),
+    esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+      column(12, ..., style='width: 100%; height:700px;')
+    }),
+    datatable$ui_dt(ns("submissionsTable")),
     # Offcanvas
     {
       div(
@@ -124,8 +118,7 @@ ui <- function() {
   }
   addResourcePath("loaders", "./www/images/loaders")
 
-  fluidPage(
-    class = "bg-light",
+  fluidPage(style = "max-height: 100vh; overflow-y: auto;",
     useShinyjs(),
     extendShinyjs(
       text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
@@ -133,11 +126,7 @@ ui <- function() {
     includeCSS("./www/styles.css"),
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     includeScript("./www/scripts/enter.js"),
-    column(
-      id = "homepage",
-      12,
-      app$app_ui(id = "app")
-    )
+    app$app_ui(id = "app")
   )
 }
 
