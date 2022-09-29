@@ -38,7 +38,9 @@ app_ui <- function(id = "app") {
     ),
     fluidRow(
       column(
-        4, reddit$ui_subreddit(ns('subreddit'))
+        4, reddit$ui_subreddit(ns("subreddit"), container = function(...) {
+          column(4, ...)
+        })
       ),
       esquisse$esquisse_ui(ns("esquisse"), container = function(...) {
         column(8, ...)
@@ -72,7 +74,7 @@ app_ui <- function(id = "app") {
 }
 
 #' @export
-app_server <- function(id='app') {
+app_server <- function(id = "app") {
   box::use(shiny[moduleServer])
 
   moduleServer(
@@ -134,7 +136,7 @@ ui <- function() {
     column(
       id = "homepage",
       12,
-      app$app_ui(id='app')
+      app$app_ui(id = "app")
     )
   )
 }
@@ -142,7 +144,7 @@ ui <- function() {
 #' @export
 server <- function(input, output, session) {
   box::use(. / app)
-  app$app_server(id='app')
+  app$app_server(id = "app")
 }
 
 #' @export

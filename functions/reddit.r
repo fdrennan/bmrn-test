@@ -1,22 +1,17 @@
 #' @export
-ui_subreddit <- function(id = "subreddit") {
+ui_subreddit <- function(id = "subreddit", container = function(...) shiny::column(12, ...)) {
   {
     box::use(shiny[tags, NS], shinycssloaders[withSpinner])
     box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
     box::use(. / utilities / datatable)
   }
   ns <- NS(id)
-  fluidRow(
-    column(12,
-      class = "p-2",
-      textInput(ns("subreddit"), "Subreddit", "ukraine"),
-      actionButton(
-        {
-          print(ns("go"))
-          ns("go")
-        },
-        "Go",
-        class = "btn btn-primary btn-block text-dark"
+  container(
+    fluidRow(
+      column(12,
+        class = "p-2",
+        textInput(ns("subreddit"), "Subreddit", "ukraine"),
+        actionButton(ns('go'), "Go", class = "btn btn-primary")
       )
     )
   )
@@ -36,9 +31,8 @@ server_subreddit <- function(id = "subreddit") {
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
       ns <- session$ns
-      print(ns('go'))
-      incoming <- eventReactive(input$go, {
-
+      incoming <- reactive({
+        input$go
         tryCatch(
           {
             out <- isolate(redpul_subreddit(name = input$subreddit))
