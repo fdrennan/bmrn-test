@@ -5,3 +5,8 @@
 //@import "../../node_modules/bootswatch/dist/darkly/bootswatch";
 @import "../font-awesome-4.7.0/scss/font-awesome";
 @import "spin";
+
+::backdrop
+{
+    background-color: white;
+}

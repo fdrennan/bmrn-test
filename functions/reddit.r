@@ -16,10 +16,10 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     checkboxInput(ns("readdb"), "Read from Database", TRUE),
     div(
       class = "d-flex justify-content-around",
-      actionButton(ns("dropDB"), icon("dumpster-fire", class='fa-2x'), class = "btn btn-warning p-2"),
-      actionButton(ns("go"), tags$h1(icon("hand-spock", class='fa-2x'), class = "btn btn-secondary p-2")
+      actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-2"),
+      actionButton(ns("go"), tags$h1(icon("hand-spock", class = "fa-2x"), class = "btn btn-secondary p-2"))
     )
-  ))
+  )
 }
 
 #' @export

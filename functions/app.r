@@ -62,10 +62,10 @@ app_server <- function(id = "app") {
       output$appBody <- renderUI({
         row_class <- c("border border-2 p-2 my-2")
         fluidRow(
+          id = ns("maximize"),
           column(12,
             class = row_class,
-            button_toolbar(
-              ns,
+            button_toolbar(ns,
               id = ns("button_toolbar")
             )
           ),
@@ -81,14 +81,14 @@ app_server <- function(id = "app") {
 
       observe({
         input$full
-        js$fullScreen("homepage")
+        js$fullScreen(ns("maximize"))
       })
 
       subreddit_data <- reddit$server_subreddit()
 
       output$plots <- renderUI({
-        esquisse$esquisse_ui(ns('esquisse'),header=FALSE, container = function(...) {
-          fluidRow(..., style='height: 700px;')
+        esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+          fluidRow(..., style = "height: 700px;")
         })
       })
 

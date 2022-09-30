@@ -11648,5 +11648,7 @@ textarea.form-control-lg {
     transform: rotate(0deg); }
   to {
     transform: rotate(360deg); } }
+::backdrop {
+  background-color: white; }
 
 /*# sourceMappingURL=styles.css.map */
