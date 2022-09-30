@@ -1,9 +1,13 @@
 #' @export
 ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
-                  width = 12) {
+                  width = 12, class = "",container = function(...) {
+                    box::use(shiny[column])
+                    column(width = 12, ...)
+                  }) {
   box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
-  shiny$column(width,
+  container(
+    class = class,
     id = ns(id),
     actionButton(ns("full"), icon("expand")),
     shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download")),
