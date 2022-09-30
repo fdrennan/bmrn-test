@@ -17,6 +17,7 @@ HASH := $(shell git rev-parse HEAD)
 push:
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
+	echo "Pushing to $(BRANCH)"
 	git push origin $(BRANCH)
 
 	#git push origin $$(git rev-parse --abbrev-ref HEAD)
