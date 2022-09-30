@@ -41,10 +41,6 @@ server_subreddit <- function(id = "subreddit") {
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
 
-      # observeEvent(input$go, {
-      #
-      #   shinyjs$addClass(id=ns("go"), class = 'spinit') # TODO
-      # })
       ns <- session$ns
       incoming <- reactive({
         req(input$go)

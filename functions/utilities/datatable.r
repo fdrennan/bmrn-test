@@ -6,6 +6,7 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   }) {
   box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
+  print(ns(id))
   container(
     class = class,
     id = ns(id),
@@ -18,14 +19,14 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
 #' @export
 server_dt <- function(id = "dt", data, title, pageLength = 3) {
   box::use(shiny, DT, esquisse, utils, dplyr, shinyWidgets, readr, writexl)
-  box::use(shiny[observeEvent])
+  box::use(shiny[observeEvent, observe])
   box::use(shinyjs[js])
   shiny$moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
       observeEvent(input$full, {
-        js$fullScreen(ns(id))
+        js$fullScreen("app-submissionsTable-app-submissionsTable")
       })
       output$downloadData <-
         shiny$downloadHandler(
