@@ -8,6 +8,9 @@
 image: rocker/ml  
 
 build:
+   only:
+      refs:
+         - main
    script:
     - curl https://sh.rustup.rs -sSf | sh -y
     - source $HOME/.cargo/env
