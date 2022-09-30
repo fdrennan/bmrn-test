@@ -86,6 +86,11 @@ app_server <- function(id = "app") {
 
       subreddit_data <- reddit$server_subreddit()
 
+      output$plots <- renderUI({
+        esquisse$esquisse_ui(ns('esquisse'),header=FALSE, container = function(...) {
+          fluidRow(..., style='height: 700px;')
+        })
+      })
 
       observeEvent(subreddit_data(), {
         box::use(dplyr[select])
