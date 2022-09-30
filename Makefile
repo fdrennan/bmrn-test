@@ -8,5 +8,6 @@ style:
 
 redpul:
 	R -e "devtools::install_deps('./redpul')"
+	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
 

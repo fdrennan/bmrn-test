@@ -1,3 +1,4 @@
 source("renv/activate.R")
 options(box.path = "functions")
-options(ignored.packages='redpul')
+renv::settings$ignored.packages("redpul", persist = FALSE)
+
