@@ -8,7 +8,7 @@
 image: rocker/ml  
 rust:
    script:
-    - curl https://sh.rustup.rs -sSfy | sh
+    - curl https://sh.rustup.rs -sSf | sh
     - source $HOME/.cargo/env
     - rustc --version
 
