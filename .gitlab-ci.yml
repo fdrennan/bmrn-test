@@ -10,3 +10,5 @@ install:
    script:
     - R -e 'install.packages("box")'
     - R -e 'renv::restore()'
+    - R -e 'devtools::document("./redpul")'
+    - R -e 'devtools::install()'
