@@ -13,5 +13,5 @@ redpul:
 
 push:
 	git add --all
-	git commit -m $$(echo date)
+	git commit -m  " *      Author: $$(whoami)"
 	git push origin $$(git rev-parse --abbrev-ref HEAD)
