@@ -7,7 +7,6 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: rocker/ml
 
-
 rust:
    script:
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -17,16 +16,10 @@ rust:
 install:
     only:
       refs:
-        - branches
+        - main
    script:
     - R -e 'install.packages("box")'
     - R -e 'install.packages("devtools")'
     - R -e 'renv::restore()'
-
-redpul:
-    only:
-      refs:
-        - branches
-   script:
     - R -e 'devtools::document("./redpul")'
     - R -e 'devtools::install()'
