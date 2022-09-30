@@ -1,6 +1,6 @@
 #' @export
 ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
-                  width = 12, class = "",container = function(...) {
+                  width = 12, class = "", container = function(...) {
                     box::use(shiny[column])
                     column(width = 12, ...)
                   }) {

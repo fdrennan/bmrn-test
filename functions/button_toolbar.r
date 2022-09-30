@@ -22,7 +22,7 @@ button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar 
         id = ns("settings"), data_bs_toggle = "offcanvas"
       ),
       actionButton(
-          ns("full"),
+        ns("full"),
         icon("expand", class = "fa-2x")
       )
     ),

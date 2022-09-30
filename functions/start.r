@@ -18,14 +18,18 @@ ui <- function() {
   addResourcePath("loaders", "./www/images/loaders")
 
   fluidPage(
+    {
+      div(
+        useShinyjs(),
+        extendShinyjs(
+          text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
+        ),
+        includeCSS("./www/styles.css"),
+        includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
+        includeScript("./www/scripts/enter.js"),
+      )
+    },
     style = "max-height: 100vh; overflow-y: auto;",
-    useShinyjs(),
-    extendShinyjs(
-      text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
-    ),
-    includeCSS("./www/styles.css"),
-    includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    includeScript("./www/scripts/enter.js"),
     app$app_ui(id = "app")
   )
 }
