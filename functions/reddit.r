@@ -4,13 +4,16 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     box::use(shiny[tags, checkboxInput, NS, div, icon], shinycssloaders[withSpinner])
     box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
     box::use(. / utilities / datatable)
+    box::use(. / state / setDefault[setDefault])
+    box::use(storr)
   }
+  username <- "fdrennan"
+
   ns <- NS(id)
   container(
     class = "p-2",
     div(
       class = "d-flex justify-content-around",
-      textInput(ns("dbname"), "DB Name", "redditdb.sqlite"),
       textInput(ns("subreddit"), "Subreddit", "ukraine")
     ),
     checkboxInput(ns("readdb"), "Read from Database", TRUE),
@@ -37,9 +40,18 @@ server_subreddit <- function(id = "subreddit") {
     id,
     function(input, output, session) {
       {
-        box::use(shiny[eventReactive, reactive, observeEvent, reactiveValues])
+        box::use(shiny[eventReactive, reactiveValuesToList, reactive, observeEvent, reactiveValues])
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
+
+      observe({
+        browser()
+        box::use(. / connections / sqlite, storr)
+        con <- sqlite$connection_sqlite(getOption("ndexr_sqlite_path"))
+        st <- storr$storr_dbi("tblData", "tblKeys", con)
+        input_list <- reactiveValuesToList(input)
+        input_list
+      })
 
       ns <- session$ns
       incoming <- reactive({
@@ -80,12 +92,13 @@ server_subreddit <- function(id = "subreddit") {
         box::use(DBI, RSQLite)
         # req(input$dbname)
         # browser()
-        mydb <- DBI$dbConnect(RSQLite$SQLite(), input$dbname)
-        if (!DBI$dbExistsTable(mydb, "submissions")) {
-          DBI$dbCreateTable(mydb, "submissions", filtered())
+        box::use(. / connections / sqlite)
+        con <- sqlite$connection_sqlite(getOption("ndexr_sqlite_path"))
+        if (!DBI$dbExistsTable(con, "submissions")) {
+          DBI$dbCreateTable(con, "submissions", filtered())
         }
-        DBI$dbAppendTable(mydb, "submissions", filtered())
-        DBI$dbDisconnect(mydb)
+        DBI$dbAppendTable(con, "submissions", filtered())
+        DBI$dbDisconnect(con)
         showNotification("Data Stored")
       })
 
@@ -96,12 +109,12 @@ server_subreddit <- function(id = "subreddit") {
         if (input$readdb) {
           showNotification("Reading from db")
           box::use(DBI, RSQLite, dplyr)
-          mydb <- isolate(DBI$dbConnect(RSQLite$SQLite(), input$dbname))
-          if (!DBI$dbExistsTable(mydb, "submissions")) {
+          con <- isolate(DBI$dbConnect(RSQLite$SQLite(), getOption("ndexr_sqlite_path")))
+          if (!DBI$dbExistsTable(con, "submissions")) {
             showNotification("Using data from prior pull, db does not exist.")
             return(filtered())
           }
-          out <- dplyr$tbl(mydb, "submissions") |> dplyr$collect()
+          out <- dplyr$tbl(con, "submissions") |> dplyr$collect()
           out
         } else {
           showNotification("Returning recently acquired data.")

@@ -1,6 +1,7 @@
 #' @export
 button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar d-flex justify-content-between") {
   box::use(shiny[div, icon, actionButton], . / button)
+
   div(
     class = class,
     role = "toolbar",

@@ -49,6 +49,7 @@ app_server <- function(id = "app") {
   box::use(shiny[observe, uiOutput, observeEvent, reactive, reactiveValues], shinyjs[js])
   box::use(shiny[fluidRow, column, renderUI])
   box::use(. / button_toolbar[button_toolbar])
+
   box::use(
     . / utilities / datatable,
     esquisse,
@@ -61,6 +62,7 @@ app_server <- function(id = "app") {
 
       output$appBody <- renderUI({
         row_class <- c("border border-2 p-2 my-2")
+
         fluidRow(
           id = ns("maximize"),
           column(12,
