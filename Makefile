@@ -11,7 +11,12 @@ redpul:
 	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
 
+BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
+HASH := $(shell git rev-parse HEAD)
+
 push:
 	git add --all
-	git commit -m  " *  Author: $$(whoami)\n *  Created on: $$(date +%D)"
-	git push origin $$(git rev-parse --abbrev-ref HEAD)
+	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
+	git push origin $(BRANCH)
+
+	#git push origin $$(git rev-parse --abbrev-ref HEAD)
