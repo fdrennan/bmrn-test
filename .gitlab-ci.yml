@@ -15,6 +15,7 @@ rust:
 install:  
    script:
     - R -e 'install.packages("box")'
+    - R -e 'install.packages("devtools")'
     - R -e 'renv::restore()'
     - R -e 'devtools::document("./redpul")'
     - R -e 'devtools::install()'
