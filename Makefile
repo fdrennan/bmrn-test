@@ -1,4 +1,4 @@
-sass:
+sass: style
 	scss www/sass/styles.scss www/styles.css
 
 style:

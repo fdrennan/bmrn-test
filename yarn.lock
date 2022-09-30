@@ -11,3 +11,8 @@ bootswatch@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/bootswatch/-/bootswatch-5.2.1.tgz#80c49ac3ad394e58be630978c95e3bce1d1679ac"
   integrity sha512-tbuZb0nJ1XUvRO8KYoEULsbAlAqazcFS6S5dTeJOkw2RxQgg0RJqKkngRTfNSFfqfI4mTdFPpC4mKkaw0YoDFA==
+
+fontawesome@^5.6.3:
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/fontawesome/-/fontawesome-5.6.3.tgz#73f0b865fa2b0b384e69d531c05a02c643b72f95"
+  integrity sha512-FCc+CawwsJWWprVEg9X14yI7zI+l9YVAyhzgu70qwGeDn0tLLDH/dVfqgij72g4BBGgLGfK2qnvFGAmYUkhaWg==

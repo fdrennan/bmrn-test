@@ -6,7 +6,6 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     box::use(. / utilities / datatable)
   }
   ns <- NS(id)
-  print(ns("subreddit"))
   container(
     class = "p-2",
     div(
@@ -16,20 +15,23 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     ),
     checkboxInput(ns("readdb"), "Read from Database", TRUE),
     div(
-      class = "d-flex justify-content-between",
-      actionButton(ns("dropDB"), "Drop DB", class = "btn btn-primary"),
-      actionButton(ns("go"), "Go", class = "btn btn-primary")
+      class = "d-flex justify-content-around",
+      actionButton(ns("dropDB"), icon("dumpster-fire", class='fa-2x'), class = "btn btn-warning p-2"),
+      actionButton(ns("go"), tags$h1(icon("hand-spock", class='fa-2x'), class = "btn btn-secondary p-2")
     )
-  )
+  ))
 }
 
 #' @export
 server_subreddit <- function(id = "subreddit") {
   {
-    box::use(shiny[moduleServer, showNotification,
-                   isolate, observe, req])
+    box::use(shiny[
+      moduleServer, showNotification,
+      isolate, observe, req
+    ])
     box::use(dplyr)
     box::use(. / utilities / datatable)
+    box::use(shinyjs)
   }
   moduleServer(
     id,
@@ -38,18 +40,15 @@ server_subreddit <- function(id = "subreddit") {
         box::use(shiny[eventReactive, reactive, observeEvent, reactiveValues])
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
+
+      # observeEvent(input$go, {
+      #
+      #   shinyjs$addClass(id=ns("go"), class = 'spinit') # TODO
+      # })
       ns <- session$ns
-      print(ns('subreddit-server'))
-
       incoming <- reactive({
-        input$go
-        req(input$subreddit)
-        if (is.null(isolate(input$subreddit))) {
-          subreddit <- 'all'
-        } else {
-          subreddit <- 'subreddit'
-        }
-
+        req(input$go)
+        subreddit <- isolate(input$subreddit)
         tryCatch(
           {
             out <- isolate(redpul_subreddit(name = subreddit))
@@ -68,9 +67,10 @@ server_subreddit <- function(id = "subreddit") {
         out <-
           incoming_data |>
           dplyr$glimpse() |>
-          dplyr$select(
-            title, thumbnail, subreddit, author, score,
-            num_comments, ups, downs, created_utc
+          dplyr$transmute(
+            title, thumbnail,
+            subreddit = as.factor(subreddit), author = as.factor(author), score,
+            num_comments, ups, downs, created_utc = as.POSIXct(created_utc, origin = "1970-01-01")
           )
         out
       })
@@ -81,7 +81,6 @@ server_subreddit <- function(id = "subreddit") {
       })
 
       stored <- eventReactive(filtered(), {
-
         box::use(DBI, RSQLite)
         # req(input$dbname)
         # browser()
@@ -96,7 +95,6 @@ server_subreddit <- function(id = "subreddit") {
 
 
       dataset <- reactive({
-
         req(stored())
         input$readdb
         if (input$readdb) {

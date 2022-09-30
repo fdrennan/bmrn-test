@@ -46,7 +46,7 @@ app_ui <- function(id = "app") {
 #' @export
 app_server <- function(id = "app") {
   box::use(shiny[moduleServer])
-  box::use(shiny[observe, observeEvent, reactive, reactiveValues], shinyjs[js])
+  box::use(shiny[observe, uiOutput, observeEvent, reactive, reactiveValues], shinyjs[js])
   box::use(shiny[fluidRow, column, renderUI])
   box::use(. / button_toolbar[button_toolbar])
   box::use(
@@ -72,10 +72,10 @@ app_server <- function(id = "app") {
           reddit$ui_subreddit(ns("subreddit"), container = function(...) {
             column(6, ..., offset = 3)
           }),
-          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            column(12, ..., style = "width: 100%; height:1700px;")
-          }),
-          datatable$ui_dt(ns("submissionsTable"))
+          datatable$ui_dt(ns("submissionsTable")),
+          uiOutput(ns("plots"), container = function(...) {
+            column(12, ...)
+          })
         )
       })
 
@@ -86,13 +86,15 @@ app_server <- function(id = "app") {
 
       subreddit_data <- reddit$server_subreddit()
 
-      # esquisse$esquisse_server("esquisse",
-      #   data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
-      # )
+
       observeEvent(subreddit_data(), {
         box::use(dplyr[select])
         out <- subreddit_data() |> select()
         datatable$server_dt("submissionsTable", subreddit_data())
+        esquisse$esquisse_server(
+          "esquisse",
+          data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
+        )
       })
     }
   )
