@@ -72,9 +72,6 @@ app_server <- function(id = "app") {
             )
           ),
           reddit$ui_subreddit(ns("subreddit"), container = function(...) {
-            column(6, ..., offset = 3)
-          }),
-          uiOutput(ns("mainpanel"), container = function(...) {
             column(12, ...)
           })
         )
@@ -87,27 +84,9 @@ app_server <- function(id = "app") {
 
       subreddit_data <- reddit$server_subreddit()
 
-      observeEvent(input$plots, {
-        output$mainpanel <- renderUI({
-          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            fluidRow(..., style = "height: 700px;")
-          })
-        })
-      })
-
-      observeEvent(input$data, {
-        output$mainpanel <- renderUI({
-          datatable$ui_dt(ns("submissionsTable"))
-        })
-      })
-
       observe({
         req(subreddit_data())
-        datatable$server_dt("submissionsTable", subreddit_data())
-        esquisse$esquisse_server(
-          "esquisse",
-          data_rv = reactiveValues(data = subreddit_data(), name = "subdata")
-        )
+        print(subreddit_data())
       })
     }
   )

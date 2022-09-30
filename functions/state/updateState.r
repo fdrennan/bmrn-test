@@ -16,14 +16,14 @@ updateState <- function(input, id) {
   if(!length(input)) return()
 
   con <- storr$connection_storr()
-  state <- con$get(id)
+  state <- tryCatch(con$get(id), error = function(err) list())
   state <- update.list(state, input)
   con$set(id, state)
   if (getOption('state.verbose')) {
     box::use(jsonlite)
     # print(state)
-    showNotification(
-      tags$pre(tags$code(
+    showNotification(closeButton = TRUE,duration = 10,
+      tags$pre(style = "max-height: 25vh; overflow-y: auto;", tags$code(
         jsonlite$toJSON(state, pretty=TRUE)
       ))
     )
