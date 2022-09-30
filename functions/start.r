@@ -10,7 +10,6 @@ ui <- function() {
       . / reddit,
       . / offcanvas,
       . / button,
-      . / button_toolbar[button_toolbar],
       esquisse,
       . / utilities / datatable
     )
@@ -18,7 +17,8 @@ ui <- function() {
   }
   addResourcePath("loaders", "./www/images/loaders")
 
-  fluidPage(style = "max-height: 100vh; overflow-y: auto;",
+  fluidPage(
+    style = "max-height: 100vh; overflow-y: auto;",
     useShinyjs(),
     extendShinyjs(
       text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
@@ -44,5 +44,3 @@ start <- function() {
     shinyApp(ui, server)
   )
 }
-
-
