@@ -1123,6 +1123,17 @@
       "Hash": "947e4e02a79effa5d512473e10f41797",
       "Requirements": []
     },
+    "storr": {
+      "Package": "storr",
+      "Version": "1.2.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "96034207276a46a44dc81b8d43397602",
+      "Requirements": [
+        "R6",
+        "digest"
+      ]
+    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.7.8",

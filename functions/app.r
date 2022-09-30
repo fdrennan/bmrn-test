@@ -46,7 +46,7 @@ app_ui <- function(id = "app") {
 #' @export
 app_server <- function(id = "app") {
   box::use(shiny[moduleServer])
-  box::use(shiny[observe, uiOutput, observeEvent, reactive, reactiveValues], shinyjs[js])
+  box::use(shiny[observe, uiOutput, req, observeEvent, reactive, reactiveValues], shinyjs[js])
   box::use(shiny[fluidRow, column, renderUI])
   box::use(. / button_toolbar[button_toolbar])
 
@@ -101,9 +101,8 @@ app_server <- function(id = "app") {
         })
       })
 
-      observeEvent(subreddit_data(), {
-        box::use(dplyr[select])
-        out <- subreddit_data() |> select()
+      observe({
+        req(subreddit_data())
         datatable$server_dt("submissionsTable", subreddit_data())
         esquisse$esquisse_server(
           "esquisse",

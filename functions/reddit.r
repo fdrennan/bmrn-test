@@ -5,18 +5,22 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
     box::use(. / utilities / datatable)
     box::use(. / state / setDefault[setDefault])
-    box::use(storr)
+    box::use(./connections/storr)
   }
   username <- "fdrennan"
-
+  con <- storr$connection_storr()
   ns <- NS(id)
+  input <- con$get(ns('state'))
+  readdb <- setDefault(input$readdb, TRUE)
+  subreddit <- setDefault(input$subreddit, 'all')
+
   container(
     class = "p-2",
     div(
       class = "d-flex justify-content-around",
-      textInput(ns("subreddit"), "Subreddit", "ukraine")
+      textInput(ns("subreddit"), "Subreddit", subreddit)
     ),
-    checkboxInput(ns("readdb"), "Read from Database", TRUE),
+    checkboxInput(ns("readdb"), "Read from Database", readdb),
     div(
       class = "d-flex justify-content-around",
       actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-2"),
@@ -45,12 +49,9 @@ server_subreddit <- function(id = "subreddit") {
       }
 
       observe({
-        browser()
         box::use(. / connections / sqlite, storr)
-        con <- sqlite$connection_sqlite(getOption("ndexr_sqlite_path"))
-        st <- storr$storr_dbi("tblData", "tblKeys", con)
-        input_list <- reactiveValuesToList(input)
-        input_list
+        box::use(. / state / updateState)
+        updateState$updateState(input, ns('state'))
       })
 
       ns <- session$ns
