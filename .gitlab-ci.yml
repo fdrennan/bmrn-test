@@ -6,14 +6,12 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: rocker/ml  
-rust:
+
+build:
    script:
     - curl https://sh.rustup.rs -sSf | sh -y
     - source $HOME/.cargo/env
     - rustc --version
-
-install:  
-   script:
     - R -e 'install.packages("box")'
     - R -e 'renv::restore()'
     - R -e 'devtools::document("./redpul")'
