@@ -6,7 +6,6 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: rocker/ml
-
 build:
    script:
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
