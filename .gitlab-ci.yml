@@ -7,6 +7,9 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: rocker/ml
 build:
+   only:
+      refs:
+         - main
    script:
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
     - source $HOME/.cargo/env
