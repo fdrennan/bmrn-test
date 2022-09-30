@@ -14,9 +14,9 @@ rust:
     - rustc --version
 
 install:
-    only:
-      refs:
-        - main
+   only:
+         refs:
+             - main
    script:
     - R -e 'install.packages("box")'
     - R -e 'install.packages("devtools")'
