@@ -13,5 +13,5 @@ redpul:
 
 push:
 	git add --all
-	git commit -m date
+	git commit -m $$(echo date)
 	git push origin $$(git rev-parse --abbrev-ref HEAD)
