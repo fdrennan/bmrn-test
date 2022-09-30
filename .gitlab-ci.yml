@@ -18,4 +18,4 @@ build:
     - R -e 'install.packages("devtools")'
     - R -e 'renv::restore()'
     - R -e 'devtools::document("./redpul")'
-    - R -e 'devtools::install()'
+    - R -e 'devtools::install("./redpul")'
