@@ -1,21 +1,3 @@
-#' @export
-sidebar_ui <- function() {
-  box::use(shiny[tags, div, actionButton, icon])
-  box::use(. / button)
-  tags$nav(
-    class = "d-none d-md-block sidebar bg-primary", style = "width: 4.5rem;",
-    div(
-      class = "sidebar-sticky",
-      tags$ul(
-        class = "nav flex-column",
-        actionButton("home", icon("home", class = "py-2 fa-2x")),
-        actionButton("aws", icon("aws", class = "py-2 fa-2x")),
-        actionButton("settings", icon("cog", class = "py-2 fa-2x")),
-        actionButton("full", icon("expand", class = "py-2  fa-2x"))
-      )
-    )
-  )
-}
 
 #' @export
 app_ui <- function(id = "app") {
@@ -39,7 +21,20 @@ app_ui <- function(id = "app") {
 
   fluidPage(
     fluidRow(
-      app$sidebar_ui(),
+      id = ns("maximize"),
+      tags$nav(
+        class = "d-none d-md-block sidebar", style = "width: 4.5rem;",
+        div(
+          class = "sidebar-sticky p-1",
+          tags$ul(
+            class = "nav flex-column",
+            actionButton(ns("home"), icon("home", class = "py-2 fa-2x")),
+            actionButton(ns("aws"), icon("aws", class = "py-2 fa-2x")),
+            actionButton(ns("settings"), icon("cog", class = "py-2 fa-2x")),
+            actionButton(ns("full"), icon("expand", class = "py-2  fa-2x"))
+          )
+        )
+      ),
       tags$main(
         class = "mx-auto col-11 pt-3 px-4",
         uiOutput(ns("appBody"), container = function(...) {
@@ -69,7 +64,6 @@ app_server <- function(id = "app") {
 
       output$appBody <- renderUI({
         fluidRow(
-          id = ns("maximize"),
           reddit$ui_subreddit(ns("subreddit"), container = function(...) {
             column(12, ...)
           })
