@@ -36,7 +36,7 @@ app_ui <- function(id = "app") {
         )
       ),
       tags$main(
-        class = "mx-auto col-11 pt-3 px-4",
+        class = "mx-auto col-10 p-4",
         uiOutput(ns("appBody"), container = function(...) {
           div(class = "col-12", ...)
         })
