@@ -17,30 +17,31 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   readdb <- setDefault(input$readdb, TRUE)
   subreddit <- setDefault(input$subreddit, "all")
   poll <- setDefault(input$poll, FALSE)
-  row_class <- "border border-1 rounded my-3 p-2"
+  # row_class <- "border border-top border-light my-3"
   container(
     class = "p-2  vh-100",
     fluidRow(
-      class = paste(row_class, "d-flex justify-content-center"),
       div(
-        class = "col-12",
-        textInput(ns("subreddit"), "Subreddit", subreddit),
-        checkboxInput(ns("readdb"), icon("database"), readdb),
-        checkboxInput(ns("poll"), icon("repeat"), poll)
-      )
-    ),
-    fluidRow(
-      class = row_class,
+        class = "col-3 mx-auto",
+        tags$h3('Find a Subreddit'),
+        textInput(ns("subreddit"), "Subreddit", subreddit)
+      ),
       div(
-        class = "col-12 d-flex justify-content-between",
+        class = "col-3 mx-auto",
+        tags$h3('Settings'),
+        div(class='d-flex justify-content-start',
+            checkboxInput(ns("readdb"), icon("database", class = "fa-2x"), readdb),
+            checkboxInput(ns("poll"), icon("repeat", class = "fa-2x"), poll))
+      ),
+      div(
+        class = "col-3 mx-auto",
+        tags$h3('Actions'),
         actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-2"),
         actionButton(ns("go"), tags$h1(icon("hand-spock", class = "fa-2x"), class = "btn btn-secondary p-2"))
-      )
-    ),
-    fluidRow(
-      class = row_class,
+      ),
       div(
-        class = "col-12 d-flex justify-content-between",
+        class = "col-3 mx-auto",
+        tags$h3('Views'),
         actionButton(ns("plots"), icon("chart-simple", class = "fa-2x")),
         actionButton(ns("data"), icon("table-cells", class = "fa-2x"))
       )
