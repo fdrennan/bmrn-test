@@ -158,6 +158,12 @@ server_subreddit <- function(id = "subreddit") {
       })
 
 
+      output$mainpanel <- renderUI({
+        esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+          fluidRow(..., style = "height: 700px;")
+        })
+      })
+
       observeEvent(input$plots, {
         output$mainpanel <- renderUI({
           esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {

@@ -28,7 +28,7 @@ app_ui <- function(id = "app") {
       . / reddit,
       . / offcanvas,
       . / button,
-      . / button_toolbar[button_toolbar],
+      # . / button_toolbar[button_toolbar],
       esquisse,
       . / utilities / datatable
     )
@@ -71,9 +71,9 @@ app_ui <- function(id = "app") {
 #' @export
 app_server <- function(id = "app") {
   box::use(shiny[moduleServer])
-  box::use(shiny[observe, uiOutput, req, observeEvent, reactive, reactiveValues], shinyjs[js])
+  box::use(shiny[observe, uiOutput, icon, actionButton, req, observeEvent,div, reactive, reactiveValues], shinyjs[js])
   box::use(shiny[fluidRow, column, renderUI])
-  box::use(. / button_toolbar[button_toolbar])
+  box::use(. / button)
 
   box::use(
     . / utilities / datatable,
@@ -88,9 +88,24 @@ app_server <- function(id = "app") {
       output$appBody <- renderUI({
         fluidRow(
           id = ns("maximize"),
-          column(12,
-            button_toolbar(ns,
-              id = ns("button_toolbar")
+          div(
+            class = "btn-toolbar d-flex justify-content-start bg-light",
+            role = "toolbar",
+            `aria-label` = "Top application toolbar",
+            div(
+              class = "btn-group", role = "group", `aria-label` = "First group",
+              button$button(
+                label = icon("aws", class = "fa-2x"), class = "btn",
+                id = ns("console"), data_bs_toggle = "offcanvas"
+              ),
+              button$button(
+                label = icon("cog", class = "fa-2x"), class = "btn",
+                id = ns("settings"), data_bs_toggle = "offcanvas"
+              ),
+              actionButton(
+                ns("full"),
+                icon("expand", class = "fa-2x")
+              )
             )
           ),
           reddit$ui_subreddit(ns("subreddit"), container = function(...) {
