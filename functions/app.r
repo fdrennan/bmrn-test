@@ -1,9 +1,29 @@
+#' @export
+sidebar_ui <- function() {
+  box::use(shiny[tags, div])
+  tags$nav(
+    class = "col-md-2 d-none d-md-block bg-light sidebar",
+    div(
+      class = "sidebar-sticky",
+      tags$ul(
+        class = "nav flex-column",
+        tags$li(
+          class = "nav-item",
+          tags$a(
+            class = "nav-link active",
+            "Home"
+          )
+        )
+      )
+    )
+  )
+}
 
 #' @export
 app_ui <- function(id = "app") {
   {
     box::use(
-      shiny[addResourcePath, uiOutput, tags, div, fluidPage, column, NS, fluidRow, includeCSS, includeScript],
+      shiny[addResourcePath, HTML, uiOutput, tags, div, fluidPage, column, NS, fluidRow, includeCSS, includeScript],
       shinyjs[useShinyjs, extendShinyjs],
       . / reddit,
       . / offcanvas,
@@ -13,33 +33,38 @@ app_ui <- function(id = "app") {
       . / utilities / datatable
     )
     box::use(shiny[tags, actionButton, icon])
+    box::use(. / app)
   }
   ns <- NS(id)
 
+  # https://getbootstrap.com/docs/4.0/examples/dashboard/
 
-  fluidRow(
-    column(
-      12, uiOutput(ns("appBody"))
-    ),
-    # Offcanvas
-    {
-      div(
-        offcanvas$offcanvas(
-          id = ns("console"),
-          location = "bottom",
-          header = NULL,
-          body = NULL,
-          close_icon = "arrow-down"
-        ),
-        offcanvas$offcanvas(
-          id = ns("settings"),
-          location = "end",
-          header = NULL,
-          body = NULL,
-          close_icon = "arrow-right"
-        )
+  fluidPage(
+    fluidRow(
+      app$sidebar_ui(),
+      tags$main(
+        class = "col-md-9 ml-sm-auto col-lg-10 pt-3 px-4",
+        uiOutput(ns("appBody"), container = function(...) {
+          div(class = "col-12", ...)
+        })
       )
-    }
+    ),
+    div(
+      offcanvas$offcanvas(
+        id = ns("console"),
+        location = "bottom",
+        header = NULL,
+        body = NULL,
+        close_icon = "arrow-down"
+      ),
+      offcanvas$offcanvas(
+        id = ns("settings"),
+        location = "end",
+        header = NULL,
+        body = NULL,
+        close_icon = "arrow-right"
+      )
+    )
   )
 }
 
@@ -61,12 +86,10 @@ app_server <- function(id = "app") {
       ns <- session$ns
 
       output$appBody <- renderUI({
-        row_class <- c("border border-2 p-2 my-2")
-
         fluidRow(
           id = ns("maximize"),
-          column(12,
-            class = row_class,
+          column(
+            12,
             button_toolbar(ns,
               id = ns("button_toolbar")
             )

@@ -1,5 +1,5 @@
 #' @export
-button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar d-flex justify-content-between") {
+button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar d-flex justify-content-start bg-light") {
   box::use(shiny[div, icon, actionButton], . / button)
 
   div(
@@ -7,11 +7,7 @@ button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar 
     role = "toolbar",
     `aria-label` = "Top application toolbar",
     div(
-      class = "button-group me-2",
-      actionButton(ns("display"), icon("display", class = "fa-2x"))
-    ),
-    div(
-      class = "btn-group me-2", role = "group", `aria-label` = "First group",
+      class = "btn-group", role = "group", `aria-label` = "First group",
       button$button(
         label = icon("table", class = "fa-2x"), class = "btn",
         id = ns("console"), data_bs_toggle = "offcanvas"
