@@ -23,7 +23,7 @@ app_ui <- function(id = "app") {
     fluidRow(
       id = ns("maximize"),
       tags$nav(
-        class = "d-none d-md-block sidebar", style = "width: 4.5rem;",
+        class = "d-block sidebar", style = "width: 4.5rem;",
         div(
           class = "sidebar-sticky p-1",
           tags$ul(

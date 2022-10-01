@@ -17,17 +17,17 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   readdb <- setDefault(input$readdb, TRUE)
   subreddit <- setDefault(input$subreddit, "all")
   poll <- setDefault(input$poll, FALSE)
-  # row_class <- "border border-top border-light my-3"
+  row_class <- "col-xl-3 col-sm-6 col-xs-12 mx-auto card m-1 p-1"
   container(
     class = "p-2  vh-100",
     fluidRow(
       div(
-        class = "col-3 mx-auto",
+        class = row_class,
         tags$h3("Find a Subreddit"),
         textInput(ns("subreddit"), NULL, subreddit)
       ),
       div(
-        class = "col-3 mx-auto",
+        class = row_class,
         tags$h3("Settings"),
         div(
           class = "d-flex justify-content-start",
@@ -36,16 +36,22 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
         )
       ),
       div(
-        class = "col-3 mx-auto",
+        class = row_class,
         tags$h3("Actions"),
-        actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-2"),
-        actionButton(ns("go"), tags$h1(icon("hand-spock", class = "fa-2x"), class = "btn btn-secondary p-2"))
+        div(
+          class = "d-flex justify-content-around align-items-center",
+          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-2"),
+          actionButton(ns("go"), tags$h1(icon("hand-spock", class = "fa-2x"), class = "btn btn-secondary p-2"))
+        )
       ),
       div(
-        class = "col-3 mx-auto",
+        class = row_class,
         tags$h3("Views"),
-        actionButton(ns("plots"), icon("chart-simple", class = "fa-2x"), class = "btn btn-link p-2"),
-        actionButton(ns("data"), icon("table-cells", class = "fa-2x"), class = "btn btn-link p-2")
+        div(
+          class = "d-flex justify-content-around align-items-center",
+          actionButton(ns("plots"), icon("chart-simple", class = "fa-2x"), class = "btn btn-link p-2"),
+          actionButton(ns("data"), icon("table-cells", class = "fa-2x"), class = "btn btn-link p-2")
+        )
       )
     ),
     fluidRow(
@@ -72,7 +78,8 @@ server_subreddit <- function(id = "subreddit") {
     id,
     function(input, output, session) {
       {
-        box::use(shiny[eventReactive, renderUI, reactiveValuesToList, fluidRow, reactive, observeEvent, reactiveValues])
+        box::use(shiny[eventReactive, renderUI, reactiveValuesToList, fluidRow,
+                       tags, reactive, observeEvent, reactiveValues])
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
 
@@ -161,9 +168,13 @@ server_subreddit <- function(id = "subreddit") {
       })
 
 
-      output$mainpanel <- renderUI({
-        esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-          fluidRow(..., style = "height: 700px;")
+      observe({
+        req(input$plots)
+        input$plots
+        output$mainpanel <- renderUI({
+          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+            fluidRow(tags$h3('Visualization'),..., style = "height: 700px;")
+          })
         })
       })
 
@@ -176,13 +187,7 @@ server_subreddit <- function(id = "subreddit") {
         }
       })
 
-      observeEvent(input$plots, {
-        output$mainpanel <- renderUI({
-          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            fluidRow(..., style = "height: 700px;")
-          })
-        })
-      })
+
 
       observeEvent(input$data, {
         output$mainpanel <- renderUI({
@@ -193,10 +198,7 @@ server_subreddit <- function(id = "subreddit") {
       observe({
         req(dataset())
         datatable$server_dt("submissionsTable", dataset())
-        esquisse$esquisse_server(
-          "esquisse",
-          data_rv = reactiveValues(data = dataset(), name = "subdata")
-        )
+        esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
       })
 
       dataset
