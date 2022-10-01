@@ -20,9 +20,9 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   row_class <- 'p-4 m-4 border border-light'
   container(
     class = "p-2",
-    fluidRow(class = row_class,
+    fluidRow(class = paste(row_class, 'd-flex justify-content-center'),
       div(
-        class = "col-12 d-flex justify-content-around align-items-center",
+        class = "col-12",
         textInput(ns("subreddit"), "Subreddit", subreddit),
         checkboxInput(ns("readdb"), icon('database'), readdb),
         checkboxInput(ns("poll"), icon('repeat'), poll)
