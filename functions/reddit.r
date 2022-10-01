@@ -17,7 +17,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   readdb <- setDefault(input$readdb, TRUE)
   subreddit <- setDefault(input$subreddit, "all")
   poll <- setDefault(input$poll, FALSE)
-  row_class <- "p-4 m-4 border border-2"
+  row_class <- "border border-1 rounded my-3 p-2"
   container(
     class = "p-2  vh-100",
     fluidRow(
@@ -46,7 +46,6 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
       )
     ),
     fluidRow(
-      class = row_class,
       uiOutput(ns("mainpanel"), container = function(...) {
         column(12, ...)
       })

@@ -4,7 +4,7 @@ sass: style
 style:
 	R -e "styler::style_dir()"
 
-.PHONY: redpul
+.PHONY: redpul aws
 
 redpul:
 	R -e "devtools::install_deps('./redpul')"
@@ -19,3 +19,6 @@ push:
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
 	git push origin $(BRANCH)
+
+aws:
+	docker run --rm -ti -v ~/.aws:/root/.aws amazon/aws-cli s3 ls

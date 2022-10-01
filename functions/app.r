@@ -88,8 +88,7 @@ app_server <- function(id = "app") {
       output$appBody <- renderUI({
         fluidRow(
           id = ns("maximize"),
-          column(
-            12,
+          column(12,
             button_toolbar(ns,
               id = ns("button_toolbar")
             )
