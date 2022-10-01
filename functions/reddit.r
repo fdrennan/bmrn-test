@@ -78,8 +78,10 @@ server_subreddit <- function(id = "subreddit") {
     id,
     function(input, output, session) {
       {
-        box::use(shiny[eventReactive, renderUI, reactiveValuesToList, fluidRow,
-                       tags, reactive, observeEvent, reactiveValues])
+        box::use(shiny[
+          eventReactive, renderUI, reactiveValuesToList, fluidRow,
+          tags, reactive, observeEvent, reactiveValues
+        ])
         box::use(. / reddit / reddit_pull[redpul_subreddit])
       }
 
@@ -173,7 +175,7 @@ server_subreddit <- function(id = "subreddit") {
         input$plots
         output$mainpanel <- renderUI({
           esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            fluidRow(tags$h3('Visualization'),..., style = "height: 700px;")
+            fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
           })
         })
       })
