@@ -38,7 +38,7 @@ app_ui <- function(id = "app") {
       tags$main(
         class = "mx-auto col-10 p-4",
         uiOutput(ns("appBody"), container = function(...) {
-          div(class = "col-12", ...)
+          div(class = "row", ...)
         })
       )
     )
@@ -63,11 +63,9 @@ app_server <- function(id = "app") {
       ns <- session$ns
 
       output$appBody <- renderUI({
-        fluidRow(
-          reddit$ui_subreddit(ns("subreddit"), container = function(...) {
-            column(12, ...)
-          })
-        )
+        reddit$ui_subreddit(ns("subreddit"), container = function(...) {
+          column(12, ...)
+        })
       })
 
       observe({
