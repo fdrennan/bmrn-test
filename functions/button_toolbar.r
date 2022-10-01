@@ -9,7 +9,7 @@ button_toolbar <- function(ns, id = "button_toolbar", ..., class = "btn-toolbar 
     div(
       class = "btn-group", role = "group", `aria-label` = "First group",
       button$button(
-        label = icon("table", class = "fa-2x"), class = "btn",
+        label = icon("aws", class = "fa-2x"), class = "btn",
         id = ns("console"), data_bs_toggle = "offcanvas"
       ),
       button$button(
