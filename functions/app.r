@@ -53,11 +53,7 @@ app_server <- function(id = "app") {
   box::use(shiny[fluidRow, column, renderUI])
   box::use(. / button)
 
-  box::use(
-    . / utilities / datatable,
-    esquisse,
-    . / reddit
-  )
+  box::use(. / utilities / datatable, esquisse, . / reddit)
   moduleServer(
     id,
     function(input, output, session) {
