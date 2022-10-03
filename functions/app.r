@@ -17,15 +17,16 @@ app_ui <- function(id = "app") {
   ns <- NS(id)
 
 
-  div(class='container-fluid',
+  div(
+    class = "container-fluid",
     shiny::includeHTML("www/html/navbar.html"),
     shiny::includeHTML("www/html/dashboard.html"),
     shiny::includeScript("www/scripts/dashboard.js"),
-    div(class='container-fluid', div(
-      class='row',
+    div(class = "container-fluid", div(
+      class = "row",
       shiny::includeHTML("www/html/sidebar.html"),
       tags$main(
-        class="col-md-9 ms-sm-auto col-lg-10 px-md-4",
+        class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         shiny::includeHTML("www/html/dashboardMenu.html"),
         uiOutput(ns("subredditApp"), container = function(...) {
           div(class = "row", ...)
@@ -59,7 +60,7 @@ app_ui <- function(id = "app") {
 app_server <- function(id = "app") {
   {
     box::use(shiny[moduleServer, observeEvent, div, reactive, reactiveValues])
-    box::use(shiny[observe, uiOutput, renderPlot,  icon, actionButton, req])
+    box::use(shiny[observe, uiOutput, renderPlot, icon, actionButton, req])
     box::use(shiny[fluidRow, column, renderUI])
     box::use(shinyjs[js])
     box::use(. / button)
@@ -81,15 +82,13 @@ app_server <- function(id = "app") {
         })
       })
 
-      subreddit_data <- reddit$server_subreddit()
+      reddit$server_subreddit()
 
-      observe({subreddit_data()})
 
       observe({
         input$full
         js$fullScreen(ns("maximize"))
       })
-
     }
   )
 }

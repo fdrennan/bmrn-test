@@ -22,9 +22,11 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   container(
     class = "p-1  vh-100",
     fluidRow(
-      div(class = "d-flex justify-content-end align-items-center px-3",
-        div(class = "d-flex justify-content-end align-items-center px-2 border-end",
-            actionButton(ns("readdb"), icon("database", class = "fa-1x")),
+      div(
+        class = "d-flex justify-content-end align-items-center px-3",
+        div(
+          class = "d-flex justify-content-end align-items-center px-2 border-end",
+          actionButton(ns("readdb"), icon("database", class = "fa-1x")),
           actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-1x"), class = "btn btn-warning p-1")
         ),
         div(
@@ -70,7 +72,6 @@ server_subreddit <- function(id = "subreddit") {
   moduleServer(
     id,
     function(input, output, session) {
-
       observe({
         updateState$updateState(input, ns("state"))
       })
@@ -79,7 +80,7 @@ server_subreddit <- function(id = "subreddit") {
       incoming <- reactive({
         req(is.numeric(input$poll))
         input$go
-        if (input$poll %% 2==1) {
+        if (input$poll %% 2 == 1) {
           invalidateLater(5000)
         }
         subreddit <- isolate(input$subreddit)
@@ -159,11 +160,13 @@ server_subreddit <- function(id = "subreddit") {
 
       observe({
         req(!is.null(input$poll))
+        input$plot
         if (input$poll %% 2) {
           output$mainpanel <- renderUI({
             nrow(dataset())
           })
         } else {
+
           output$mainpanel <- renderUI({
             esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
               fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
@@ -173,8 +176,19 @@ server_subreddit <- function(id = "subreddit") {
         }
       })
 
-      dataset
+      observeEvent(input$data, {
+        output$mainpanel <- renderUI({
+          datatable$ui_dt(ns("submissionsTable"))
+        })
 
+        datatable$server_dt("submissionsTable", dataset())
+
+      })
+
+
+      observe({
+        dataset()
+      })
     }
   )
 }
