@@ -8,7 +8,6 @@ app_ui <- function(id = "app") {
       . / reddit,
       . / offcanvas,
       . / button,
-      # . / button_toolbar[button_toolbar],
       esquisse,
       . / utilities / datatable
     )
