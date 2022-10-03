@@ -154,9 +154,6 @@ server_subreddit <- function(id = "subreddit") {
         out
       })
 
-
-
-
       # observe({
       #   # browser()
       #   req(!is.null(input$poll))
@@ -184,7 +181,6 @@ server_subreddit <- function(id = "subreddit") {
 
         datatable$server_dt("submissionsTable", dataset())
       })
-
 
       observe({
         dataset()
