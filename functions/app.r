@@ -17,9 +17,15 @@ app_ui <- function(id = "app") {
   ns <- NS(id)
 
 
-  fluidPage(
+  div(class='container-fluid',
+    shiny::includeHTML("www/html/navbar.html"),
     shiny::includeHTML("www/html/dashboard.html"),
-    shiny::includeScript("www/scripts/dashboard.js")
+    shiny::includeScript("www/scripts/dashboard.js"),
+    div(class='container-fluid', div(
+      class='row',
+      shiny::includeHTML("www/html/sidebar.html"),
+      shiny::includeHTML("www/html/dashboard.html")
+    ))
     # fluidRow(
     # id = ns("maximize"),
 
