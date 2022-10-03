@@ -20,12 +20,12 @@ app_ui <- function(id = "app") {
   fluidPage(
     fluidRow(
       id = ns("maximize"),
-      tags$div(class='col-1',
+      tags$div(class='col-1 bg-dark',
                fluidRow(
-                 actionButton(ns("home"), icon("home")),
-                 actionButton(ns("aws"), icon("aws")),
-                 actionButton(ns("settings"), icon("cog")),
-                 actionButton(ns("full"), icon("expand"))
+                 actionButton(ns("home"), icon("home", class='text-secondary')),
+                 actionButton(ns("aws"), icon("aws", class='text-secondary')),
+                 actionButton(ns("settings"), icon("cog", class='text-secondary')),
+                 actionButton(ns("full"), icon("expand", class='text-secondary'))
                )
       ),
       tags$main(

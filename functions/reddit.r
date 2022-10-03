@@ -17,37 +17,28 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   readdb <- setDefault(input$readdb, TRUE)
   subreddit <- setDefault(input$subreddit, "all")
   poll <- setDefault(input$poll, FALSE)
-  row_class <- "col-xl-3 col-sm-6 col-xs-12 mx-auto card m-1 p-1 text-center"
+  # col_class <- "col-xl-3 col-sm-6 col-xs-12 mx-auto  m-1 p-1 text-center"
   container(
     class = "p-1  vh-100",
     fluidRow(
       div(
-        class = row_class,
-        tags$h3("Find a Subreddit"),
-        div(class = "d-flex justify-content-center align-items-center",
-            textInput(ns("subreddit"), NULL, subreddit)
-        )
-      ),
-      div(
-        class = row_class,
-        tags$h3("Settings"),
+        class = 'col-7   p-1 text-center', tags$h3("Inputs"),
         div(
           class = "d-flex justify-content-around align-items-center",
+          textInput(ns("subreddit"), NULL, subreddit),
           checkboxInput(ns("readdb"), icon("database", class = "fa-2x"), readdb),
           checkboxInput(ns("poll"), icon("play", class = "fa-2x"), poll)
         )
       ),
       div(
-        class = row_class,
-        tags$h3("Actions"),
+        class = "col-4 mx-auto  p-1 text-center", tags$h3("Actions"),
         div(
           class = "d-flex justify-content-around align-items-center",
           actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-1")
         )
       ),
       div(
-        class = row_class,
-        tags$h3("Views"),
+        class = "col-12 mx-auto  p-1 text-center",
         div(
           class = "d-flex justify-content-around align-items-center",
           actionButton(ns("plots"), icon("chart-simple", class = "fa-2x"), class = "btn btn-link p-1"),
