@@ -24,11 +24,12 @@ app_ui <- function(id = "app") {
     div(class='container-fluid', div(
       class='row',
       shiny::includeHTML("www/html/sidebar.html"),
-
       tags$main(
         class="col-md-9 ms-sm-auto col-lg-10 px-md-4",
         shiny::includeHTML("www/html/dashboardMenu.html"),
-        div(id="app-myChart", class="shiny-plot-output", style="width:100%;height:400px;")
+        uiOutput(ns("subredditApp"), container = function(...) {
+          div(class = "row", ...)
+        })
         # tags$canvas(class="my-4 w-100 shiny-plot-output", id='myChart', width="900", height="380")
       )
     ))
@@ -73,23 +74,22 @@ app_server <- function(id = "app") {
       output$myChart <- renderPlot({
         graphics$plot(1:10, 1:10)
       })
-      output$appBody <- renderUI({
+
+      output$subredditApp <- renderUI({
         reddit$ui_subreddit(ns("subreddit"), container = function(...) {
           column(12, ...)
         })
       })
+
+      subreddit_data <- reddit$server_subreddit()
+
+      observe({subreddit_data()})
 
       observe({
         input$full
         js$fullScreen(ns("maximize"))
       })
 
-      subreddit_data <- reddit$server_subreddit()
-
-      observe({
-        req(subreddit_data())
-        print(subreddit_data())
-      })
     }
   )
 }
