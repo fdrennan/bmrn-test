@@ -22,23 +22,23 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   container(
     class = "p-1  vh-100",
     fluidRow(
+      div(class = "d-flex justify-content-end align-items-center px-3",
+        div(class = "d-flex justify-content-end align-items-center px-2 border-end",
+            actionButton(ns("readdb"), icon("database", class = "fa-1x")),
+          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-1x"), class = "btn btn-warning p-1")
+        ),
+        div(
+          class = "d-flex justify-content-end align-items-center px-2 border-end",
+          actionButton(ns("plots"), icon("chart-simple", class = "fa-1x"), class = "btn btn-link p-1"),
+          actionButton(ns("data"), icon("table-cells", class = "fa-1x"), class = "btn btn-link p-1")
+        )
+      ),
       div(
         class = "col-7 p-1",
         textInput(ns("subreddit"), NULL, subreddit),
         actionButton(ns("poll"), icon("play", class = "fa-1x")),
         actionButton(ns("go"), icon("plus", class = "fa-1x"))
       ),
-      div(class = "d-flex justify-content-end align-items-center px-3",
-        div(class = "d-flex justify-content-end align-items-center px-3",
-            actionButton(ns("readdb"), icon("database", class = "fa-1x")),
-          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-1x"), class = "btn btn-warning p-1")
-        ),
-        div(
-          class = "d-flex justify-content-end align-items-center",
-          actionButton(ns("plots"), icon("chart-simple", class = "fa-1x"), class = "btn btn-link p-1"),
-          actionButton(ns("data"), icon("table-cells", class = "fa-1x"), class = "btn btn-link p-1")
-        )
-      )
     ),
     fluidRow(
       uiOutput(ns("mainpanel"), container = function(...) {
@@ -59,29 +59,27 @@ server_subreddit <- function(id = "subreddit") {
     box::use(dplyr)
     box::use(. / utilities / datatable)
     box::use(shinyjs, esquisse)
+    box::use(shiny[
+      eventReactive, renderUI, reactiveValuesToList, fluidRow,
+      tags, reactive, observeEvent, reactiveValues
+    ])
+    box::use(. / reddit / reddit_pull[redpul_subreddit])
+    box::use(. / connections / sqlite, storr)
+    box::use(. / state / updateState)
   }
   moduleServer(
     id,
     function(input, output, session) {
-      {
-        box::use(shiny[
-          eventReactive, renderUI, reactiveValuesToList, fluidRow,
-          tags, reactive, observeEvent, reactiveValues
-        ])
-        box::use(. / reddit / reddit_pull[redpul_subreddit])
-      }
 
       observe({
-        box::use(. / connections / sqlite, storr)
-        box::use(. / state / updateState)
         updateState$updateState(input, ns("state"))
       })
 
       ns <- session$ns
       incoming <- reactive({
-        req(input$poll)
+        req(is.numeric(input$poll))
         input$go
-        if (input$poll %% 2) {
+        if (input$poll %% 2==1) {
           invalidateLater(5000)
         }
         subreddit <- isolate(input$subreddit)
