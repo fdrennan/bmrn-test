@@ -17,23 +17,16 @@ app_ui <- function(id = "app") {
   ns <- NS(id)
 
 
-  # https://getbootstrap.com/docs/4.0/examples/dashboard/
-
   fluidPage(
     fluidRow(
       id = ns("maximize"),
-      tags$nav(
-        class = "d-block sidebar", style = "width: 4.5rem;",
-        div(
-          class = "sidebar-sticky p-1",
-          tags$ul(
-            class = "nav flex-column",
-            actionButton(ns("home"), icon("home", class = "py-2 fa-2x")),
-            actionButton(ns("aws"), icon("aws", class = "py-2 fa-2x")),
-            actionButton(ns("settings"), icon("cog", class = "py-2 fa-2x")),
-            actionButton(ns("full"), icon("expand", class = "py-2  fa-2x"))
-          )
-        )
+      tags$div(class='col-1',
+               fluidRow(
+                 actionButton(ns("home"), icon("home")),
+                 actionButton(ns("aws"), icon("aws")),
+                 actionButton(ns("settings"), icon("cog")),
+                 actionButton(ns("full"), icon("expand"))
+               )
       ),
       tags$main(
         class = "mx-auto col-10 p-4",

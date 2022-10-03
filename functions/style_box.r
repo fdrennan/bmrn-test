@@ -3,7 +3,6 @@
 # print(a)
 #' @export
 style_box <- function(dir = "functions", collapse = TRUE) {
-
   box::use(styler, dplyr, stringr, purrr, tidytext)
   r_file_paths <- list.files(dir, full.names = T, recursive = T, pattern = ".r$")
   out <- purrr$imap_dfr(r_file_paths, function(pth, nm) {
@@ -36,7 +35,7 @@ style_box <- function(dir = "functions", collapse = TRUE) {
       out, box_section > 0,
       !word %in% c("box", "use", ":", "(", ")")
     ) |>
-      dplyr$mutate(is_package = dplyr$lead(word=='['))
+      dplyr$mutate(is_package = dplyr$lead(word == "["))
 
     # out
   })
