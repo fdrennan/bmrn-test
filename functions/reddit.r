@@ -42,8 +42,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
         tags$h3("Actions"),
         div(
           class = "d-flex justify-content-around align-items-center",
-          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-1"),
-          actionButton(ns("go"), tags$h1(icon("reddit", class = "fa-2x"), class = "btn btn-primary p-1"))
+          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-2x"), class = "btn btn-warning p-1")
         )
       ),
       div(
@@ -100,16 +99,19 @@ server_subreddit <- function(id = "subreddit") {
         input$go
         if (input$poll) {
           invalidateLater(5000)
+          subreddit <- isolate(input$subreddit)
+          tryCatch(
+            {
+              out <- isolate(redpul_subreddit(name = subreddit))
+            },
+            error = function(err) {
+              data.frame()
+            }
+          )
+        } else {
+          req(FALSE)
         }
-        subreddit <- isolate(input$subreddit)
-        tryCatch(
-          {
-            out <- isolate(redpul_subreddit(name = subreddit))
-          },
-          error = function(err) {
-            data.frame()
-          }
-        )
+
       })
 
 
@@ -174,29 +176,22 @@ server_subreddit <- function(id = "subreddit") {
       })
 
 
+
+
       observe({
-        req(input$poll)
         req(dataset())
-        browser()
         if (input$poll) {
           output$mainpanel <- renderUI({
             nrow(dataset())
           })
-        }
-      })
-
-
-      observe({
-        req(dataset())
-        # req(input$plots)
-
-        output$mainpanel <- renderUI({
-          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
+        } else {
+          output$mainpanel <- renderUI({
+            esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+              fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
+            })
           })
-        })
-        esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
-
+          esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
+        }
       })
 
       observeEvent(input$data, {
