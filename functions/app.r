@@ -18,23 +18,27 @@ app_ui <- function(id = "app") {
 
 
   fluidPage(
-    fluidRow(
-      id = ns("maximize"),
-      tags$div(class='col-1 bg-dark',
-               fluidRow(
-                 actionButton(ns("home"), icon("home", class='text-secondary')),
-                 actionButton(ns("aws"), icon("aws", class='text-secondary')),
-                 actionButton(ns("settings"), icon("cog", class='text-secondary')),
-                 actionButton(ns("full"), icon("expand", class='text-secondary'))
-               )
-      ),
-      tags$main(
-        class = "mx-auto col-10 p-4",
-        uiOutput(ns("appBody"), container = function(...) {
-          div(class = "row", ...)
-        })
-      )
-    )
+    shiny::includeHTML("www/html/dashboard.html"),
+    shiny::includeScript("www/scripts/dashboard.js")
+    # fluidRow(
+    # id = ns("maximize"),
+
+    # tags$div(
+    #   class = "col-1 bg-dark",
+    #   fluidRow(
+    #     actionButton(ns("home"), icon("home", class = "text-secondary")),
+    #     actionButton(ns("aws"), icon("aws", class = "text-secondary")),
+    #     actionButton(ns("settings"), icon("cog", class = "text-secondary")),
+    #     actionButton(ns("full"), icon("expand", class = "text-secondary"))
+    #   )
+    # ),
+    # tags$main(
+    #   class = "mx-auto col-10 p-4",
+    #   uiOutput(ns("appBody"), container = function(...) {
+    #     div(class = "row", ...)
+    #   })
+    # )
+    # )
   )
 }
 

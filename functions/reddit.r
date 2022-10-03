@@ -22,7 +22,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     class = "p-1  vh-100",
     fluidRow(
       div(
-        class = 'col-7   p-1 text-center', tags$h3("Inputs"),
+        class = "col-7   p-1 text-center", tags$h3("Inputs"),
         div(
           class = "d-flex justify-content-around align-items-center",
           textInput(ns("subreddit"), NULL, subreddit),
@@ -102,7 +102,6 @@ server_subreddit <- function(id = "subreddit") {
         } else {
           req(FALSE)
         }
-
       })
 
 
