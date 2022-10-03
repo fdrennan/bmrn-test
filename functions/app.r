@@ -18,6 +18,7 @@ app_ui <- function(id = "app") {
 
 
   div(
+    # http://jsfiddle.net/RichardHoultz/cxjje33y/
     class = "container-fluid",
     shiny::includeHTML("www/html/navbar.html"),
     shiny::includeHTML("www/html/dashboard.html"),
