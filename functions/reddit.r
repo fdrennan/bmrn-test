@@ -166,7 +166,6 @@ server_subreddit <- function(id = "subreddit") {
             nrow(dataset())
           })
         } else {
-
           output$mainpanel <- renderUI({
             esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
               fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
@@ -182,7 +181,6 @@ server_subreddit <- function(id = "subreddit") {
         })
 
         datatable$server_dt("submissionsTable", dataset())
-
       })
 
 
