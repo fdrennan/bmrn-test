@@ -28,9 +28,11 @@ app_ui <- function(id = "app") {
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         shiny::includeHTML("www/html/dashboardMenu.html"),
-        uiOutput(ns("subredditApp"), container = function(...) {
-          div(class = "row", ...)
-        })
+        shinycssloaders::withSpinner(
+          uiOutput(ns("subredditApp"), container = function(...) {
+            div(class = "row", ...)
+          })
+        )
         # tags$canvas(class="my-4 w-100 shiny-plot-output", id='myChart', width="900", height="380")
       )
     ))

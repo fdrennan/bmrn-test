@@ -160,7 +160,7 @@ server_subreddit <- function(id = "subreddit") {
 
       observe({
         req(!is.null(input$poll))
-        input$plot
+        input$plots
         if (input$poll %% 2) {
           output$mainpanel <- renderUI({
             nrow(dataset())
