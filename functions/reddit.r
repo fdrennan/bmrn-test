@@ -6,6 +6,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
     box::use(. / utilities / datatable)
     box::use(. / state / setDefault[setDefault])
     box::use(. / connections / storr)
+    box::use(shinycssloaders[withSpinner])
   }
   username <- "fdrennan"
   con <- storr$connection_storr()
@@ -20,29 +21,27 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   go <- setDefault(input$go, FALSE)
   # col_class <- "col-xl-3 col-sm-6 col-xs-12 mx-auto  m-1 p-1 text-center"
   container(
-    class = "p-1  vh-100",
-    fluidRow(
+    # class = "p-1  vh-100",
+    div(
+      class = "col-12 d-flex justify-content-end align-items-center px-2 border-end",
       div(
-        class = "d-flex justify-content-end align-items-center px-3",
-        div(
-          class = "d-flex justify-content-end align-items-center px-2 border-end",
-          actionButton(ns("readdb"), icon("database", class = "fa-1x")),
-          actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-1x"), class = "btn btn-warning p-1")
-        ),
-        div(
-          class = "d-flex justify-content-end align-items-center px-2 border-end",
-          actionButton(ns("plots"), icon("chart-simple", class = "fa-1x"), class = "btn btn-link p-1"),
-          actionButton(ns("data"), icon("table-cells", class = "fa-1x"), class = "btn btn-link p-1")
-        )
+        class = "d-flex justify-content-end align-items-center px-2 border-end",
+        actionButton(ns("readdb"), icon("database", class = "fa-1x")),
+        actionButton(ns("dropDB"), icon("dumpster-fire", class = "fa-1x"), class = "btn btn-warning p-1")
       ),
       div(
-        class = "col-7 p-1",
-        textInput(ns("subreddit"), NULL, subreddit),
-        actionButton(ns("poll"), icon("play", class = "fa-1x")),
-        actionButton(ns("go"), icon("plus", class = "fa-1x"))
+        class = "d-flex justify-content-end align-items-center px-2 border-end",
+        actionButton(ns("plots"), icon("chart-simple", class = "fa-1x"), class = "btn btn-link p-1"),
+        actionButton(ns("data"), icon("table-cells", class = "fa-1x"), class = "btn btn-link p-1")
       )
     ),
-    fluidRow(
+    div(
+      class = "col-12 border-bottom d-flex justify-content-end align-items-center",
+      textInput(ns("subreddit"), NULL, subreddit), class = "p-1",
+      actionButton(ns("go"), icon("reddit-alien", class = "fa-1x"), class = "p-1"),
+      actionButton(ns("poll"), icon("play", class = "fa-1x"), class = "p-1")
+    ),
+    withSpinner(
       uiOutput(ns("mainpanel"), container = function(...) {
         column(12, ...)
       })
@@ -178,6 +177,7 @@ server_subreddit <- function(id = "subreddit") {
 
       observe({
         input$data
+        req(dataset())
         output$mainpanel <- renderUI({
           datatable$ui_dt(ns("submissionsTable"))
         })

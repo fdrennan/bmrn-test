@@ -3,7 +3,11 @@
 app_ui <- function(id = "app") {
   {
     box::use(
-      shiny[addResourcePath, HTML, uiOutput, plotOutput, tags, div, fluidPage, column, NS, fluidRow, includeCSS, includeScript],
+      shiny[
+        addResourcePath, HTML, uiOutput, plotOutput, tags, div, fluidPage,
+        column, NS, fluidRow
+      ],
+      shiny[includeCSS, includeScript, includeHTML],
       shinyjs[useShinyjs, extendShinyjs],
       . / reddit,
       . / offcanvas,
@@ -20,23 +24,21 @@ app_ui <- function(id = "app") {
   div(
     # http://jsfiddle.net/RichardHoultz/cxjje33y/
     class = "container-fluid",
-    shiny::includeHTML("www/html/navbar.html"),
-    shiny::includeHTML("www/html/dashboard.html"),
-    shiny::includeScript("www/scripts/dashboard.js"),
+    includeHTML("www/html/navbar.html"),
+    includeHTML("www/html/dashboard.html"),
+    includeScript("www/scripts/dashboard.js"),
     div(class = "container-fluid", div(
       class = "row",
       tags$nav(
         id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
-        shiny::includeHTML("www/html/sidebar.html")
+        includeHTML("www/html/sidebar.html")
       ),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
-        shiny::includeHTML("www/html/dashboardMenu.html"),
-        shinycssloaders::withSpinner(
-          uiOutput(ns("subredditApp"), container = function(...) {
-            div(class = "row", ...)
-          })
-        )
+        includeHTML("www/html/dashboardMenu.html"),
+        uiOutput(ns("subredditApp"), container = function(...) {
+          div(class = "row", ...)
+        })
         # tags$canvas(class="my-4 w-100 shiny-plot-output", id='myChart', width="900", height="380")
       )
     ))
