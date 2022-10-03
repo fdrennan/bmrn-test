@@ -95,7 +95,9 @@ server_subreddit <- function(id = "subreddit") {
 
       ns <- session$ns
       incoming <- reactive({
-        req(input$go)
+        # req(input$go)
+        req(is.logical(input$poll))
+        input$go
         if (input$poll) {
           invalidateLater(5000)
         }
@@ -173,17 +175,9 @@ server_subreddit <- function(id = "subreddit") {
 
 
       observe({
-        req(input$plots)
-        input$plots
-        output$mainpanel <- renderUI({
-          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-            fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
-          })
-        })
-      })
-
-      observe({
         req(input$poll)
+        req(dataset())
+        browser()
         if (input$poll) {
           output$mainpanel <- renderUI({
             nrow(dataset())
@@ -192,17 +186,26 @@ server_subreddit <- function(id = "subreddit") {
       })
 
 
+      observe({
+        req(dataset())
+        # req(input$plots)
+
+        output$mainpanel <- renderUI({
+          esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+            fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
+          })
+        })
+        esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
+
+      })
 
       observeEvent(input$data, {
+        browser()
+        req(dataset())
         output$mainpanel <- renderUI({
           datatable$ui_dt(ns("submissionsTable"))
         })
-      })
-
-      observe({
-        req(dataset())
         datatable$server_dt("submissionsTable", dataset())
-        esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
       })
 
       dataset
