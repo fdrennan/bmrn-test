@@ -26,7 +26,7 @@ app_ui <- function(id = "app") {
     div(class = "container-fluid", div(
       class = "row",
       tags$nav(
-        id="sidebarMenu", class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
+        id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
         shiny::includeHTML("www/html/sidebar.html")
       ),
       tags$main(

@@ -14,7 +14,7 @@ redpul:
 BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
 HASH := $(shell git rev-parse HEAD)
 
-push:
+push: sass
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
