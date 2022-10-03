@@ -24,7 +24,10 @@ app_ui <- function(id = "app") {
   div(
     # http://jsfiddle.net/RichardHoultz/cxjje33y/
     class = "container-fluid",
-    includeHTML("www/html/navbar.html"),
+    tags$header(
+      class = "navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow",
+      includeHTML("www/html/navbar.html")
+    ),
     includeHTML("www/html/dashboard.html"),
     includeScript("www/scripts/dashboard.js"),
     div(class = "container-fluid", div(
