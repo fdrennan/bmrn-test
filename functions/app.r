@@ -25,7 +25,10 @@ app_ui <- function(id = "app") {
     shiny::includeScript("www/scripts/dashboard.js"),
     div(class = "container-fluid", div(
       class = "row",
-      shiny::includeHTML("www/html/sidebar.html"),
+      tags$nav(
+        id="sidebarMenu", class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
+        shiny::includeHTML("www/html/sidebar.html")
+      ),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         shiny::includeHTML("www/html/dashboardMenu.html"),

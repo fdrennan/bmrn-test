@@ -40,7 +40,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
         textInput(ns("subreddit"), NULL, subreddit),
         actionButton(ns("poll"), icon("play", class = "fa-1x")),
         actionButton(ns("go"), icon("plus", class = "fa-1x"))
-      ),
+      )
     ),
     fluidRow(
       uiOutput(ns("mainpanel"), container = function(...) {
@@ -158,24 +158,26 @@ server_subreddit <- function(id = "subreddit") {
 
 
 
-      observe({
-        req(!is.null(input$poll))
-        input$plots
-        if (input$poll %% 2) {
-          output$mainpanel <- renderUI({
-            nrow(dataset())
-          })
-        } else {
-          output$mainpanel <- renderUI({
-            esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
-              fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
-            })
-          })
-          esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
-        }
-      })
+      # observe({
+      #   # browser()
+      #   req(!is.null(input$poll))
+      #   input$plots
+      #   if (input$poll %% 2) {
+      #     output$mainpanel <- renderUI({
+      #       nrow(dataset())
+      #     })
+      #   } else {
+      #     output$mainpanel <- renderUI({
+      #       esquisse$esquisse_ui(ns("esquisse"), header = FALSE, container = function(...) {
+      #         fluidRow(tags$h3("Visualization"), ..., style = "height: 700px;")
+      #       })
+      #     })
+      #     esquisse$esquisse_server("esquisse", data_rv = reactiveValues(data = dataset(), name = "subdata"))
+      #   }
+      # })
 
-      observeEvent(input$data, {
+      observe({
+        input$data
         output$mainpanel <- renderUI({
           datatable$ui_dt(ns("submissionsTable"))
         })
