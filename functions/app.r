@@ -3,7 +3,7 @@
 app_ui <- function(id = "app") {
   {
     box::use(
-      shiny[addResourcePath, HTML, uiOutput, tags, div, fluidPage, column, NS, fluidRow, includeCSS, includeScript],
+      shiny[addResourcePath, HTML, uiOutput, plotOutput, tags, div, fluidPage, column, NS, fluidRow, includeCSS, includeScript],
       shinyjs[useShinyjs, extendShinyjs],
       . / reddit,
       . / offcanvas,
@@ -24,7 +24,13 @@ app_ui <- function(id = "app") {
     div(class='container-fluid', div(
       class='row',
       shiny::includeHTML("www/html/sidebar.html"),
-      shiny::includeHTML("www/html/dashboard.html")
+
+      tags$main(
+        class="col-md-9 ms-sm-auto col-lg-10 px-md-4",
+        shiny::includeHTML("www/html/dashboardMenu.html"),
+        div(id="app-myChart", class="shiny-plot-output", style="width:100%;height:400px;")
+        # tags$canvas(class="my-4 w-100 shiny-plot-output", id='myChart', width="900", height="380")
+      )
     ))
     # fluidRow(
     # id = ns("maximize"),
@@ -50,17 +56,23 @@ app_ui <- function(id = "app") {
 
 #' @export
 app_server <- function(id = "app") {
-  box::use(shiny[moduleServer])
-  box::use(shiny[observe, uiOutput, icon, actionButton, req, observeEvent, div, reactive, reactiveValues], shinyjs[js])
-  box::use(shiny[fluidRow, column, renderUI])
-  box::use(. / button)
-
-  box::use(. / utilities / datatable, esquisse, . / reddit)
+  {
+    box::use(shiny[moduleServer, observeEvent, div, reactive, reactiveValues])
+    box::use(shiny[observe, uiOutput, renderPlot,  icon, actionButton, req])
+    box::use(shiny[fluidRow, column, renderUI])
+    box::use(shinyjs[js])
+    box::use(. / button)
+    box::use(. / utilities / datatable, esquisse, . / reddit)
+    box::use(graphics)
+  }
   moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
 
+      output$myChart <- renderPlot({
+        graphics$plot(1:10, 1:10)
+      })
       output$appBody <- renderUI({
         reddit$ui_subreddit(ns("subreddit"), container = function(...) {
           column(12, ...)
