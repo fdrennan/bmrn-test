@@ -10,21 +10,25 @@ RUN apt install -y software-properties-common dirmngr libcurl4-openssl-dev libss
     libxml2-dev libpq-dev cmake r-base r-base-dev libsodium-dev libsasl2-dev \
     libharfbuzz-dev libfribidi-dev
 
-RUN R -e "install.packages(c('renv', 'rextendr', 'devtools', 'shiny', 'box'))"
-RUN R -e "install.packages(c('roxygen2', 'usethis', 'testthat', 'tidyverse'))"
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
+WORKDIR /app
+COPY .Rprofile .Rprofile
+COPY renv/activate.R renv/activate.R
+RUN R -e "renv::restore()"
+RUN R -e "install.packages('devtools')"
 
 WORKDIR /app/redpul
 COPY redpul/DESCRIPTION .
 COPY redpul/NAMESPACE .
 COPY redpul/R R
 COPY redpul/src src
+COPY redpul/src/Makevars.docker redpul/src/Makevars
 
-#WORKDIR /app
-#RUN R -e "devtools::install_deps('./redpul')"
-#RUN R -e "rextendr::document('./redpul')"
+
+WORKDIR /app
+RUN R -e "devtools::install_deps('./redpul')"
 #RUN R -e "devtools::document('./redpul')"
 #RUN R -e "devtools::install('./redpul')"
