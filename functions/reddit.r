@@ -36,8 +36,8 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
       )
     ),
     div(
-      class = "col-12 border-bottom d-flex justify-content-end align-items-center",
-      textInput(ns("subreddit"), NULL, subreddit), class = "p-1",
+      class = "col-12 border-bottom d-flex justify-content-end align-items-center p-2",
+      textInput(ns("subreddit"), NULL, subreddit),
       actionButton(ns("go"), icon("reddit-alien", class = "fa-1x"), class = "p-1"),
       actionButton(ns("poll"), icon("play", class = "fa-1x"), class = "p-1")
     ),

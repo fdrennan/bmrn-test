@@ -26,7 +26,19 @@ app_ui <- function(id = "app") {
     class = "container-fluid",
     tags$header(
       class = "navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow",
-      includeHTML("www/html/navbar.html")
+      tags$a(class = "navbar-brand col-md-3 col-lg-2 me-0 px-3", href = "#", "ndexr"),
+      tags$button(
+        class = "navbar-toggler position-absolute d-md-none collapsed",
+        type = "button", `data-bs-toggle` = "collapse",
+        `data-bs-target` = "#sidebarMenu", `aria-controls` = "sidebarMenu",
+        `aria-expanded` = "false", `aria-label` = "Toggle navigation",
+        tags$span(class = "navbar-toggler-icon")
+      ),
+      div(class = "navbar-nav", div(
+        class = "nav-item text-nowrap",
+        tags$a(class = "nav-link p-3", href = "#", "Sign Out")
+      ))
+      # includeHTML("www/html/navbar.html")
     ),
     includeHTML("www/html/dashboard.html"),
     includeScript("www/scripts/dashboard.js"),
