@@ -102,7 +102,7 @@ server_subreddit <- function(id = "subreddit") {
           incoming_data |>
           dplyr$glimpse() |>
           dplyr$transmute(
-            title, thumbnail,
+            title,
             subreddit = as.factor(subreddit), author = as.factor(author), score,
             num_comments, ups, downs, created_utc = as.POSIXct(created_utc, origin = "1970-01-01"),
             date_char = as.character(created_utc),
@@ -111,7 +111,8 @@ server_subreddit <- function(id = "subreddit") {
             date_10_minute = lubridate$floor_date(created_utc, "10 minute"),
             date_30_minute = lubridate$floor_date(created_utc, "30 minute"),
             date_10_second = lubridate$floor_date(created_utc, "10 second"),
-            date_30_second = lubridate$floor_date(created_utc, "30 second")
+            date_30_second = lubridate$floor_date(created_utc, "30 second"),
+            thumbnail
           )
         out
       })
