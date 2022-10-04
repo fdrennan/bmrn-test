@@ -13,6 +13,7 @@ app_ui <- function(id = "app") {
       . / offcanvas,
       . / header,
       . / button,
+      . / sidebar,
       esquisse,
       . / utilities / datatable
     )
@@ -26,14 +27,10 @@ app_ui <- function(id = "app") {
     # http://jsfiddle.net/RichardHoultz/cxjje33y/
     class = "container-fluid",
     header$header_ui(),
-    includeHTML("www/html/dashboard.html"),
     includeScript("www/scripts/dashboard.js"),
     div(class = "container-fluid", div(
       class = "row",
-      tags$nav(
-        id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
-        includeHTML("www/html/sidebar.html")
-      ),
+      sidebar$sidebar_ui(),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         includeHTML("www/html/dashboardMenu.html"),
