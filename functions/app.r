@@ -30,35 +30,54 @@ app_ui <- function(id = "app") {
     includeScript("www/scripts/dashboard.js"),
     div(class = "container-fluid", div(
       class = "row",
-      sidebar$sidebar_ui(),
+      tags$nav(
+        id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
+        div(
+          class = "position-sticky pt-3",
+          tags$h6("Reddit Search", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$ul(
+            class = "nav flex-column",
+            tags$li(
+              class = "nav-item",
+              div(
+                id = ns("goToSubreddit"),
+                tags$span(`data-feather` = "home", "Subreddit"),
+                class = "nav-link active action-button"
+              )
+            ),
+            tags$li(
+              class = "nav-item",
+              div(
+                id = ns("goToAuthor"),
+                tags$span(`data-feather` = "home", "Author"),
+                class = "nav-link action-button"
+              )
+            )
+          )
+        ),
+        div(
+          class = "position-sticky pt-3",
+          tags$h6("Administration", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$ul(
+            class = "nav flex-column",
+            tags$li(
+              class = "nav-item",
+              tags$a(
+                class = "nav-link", href = "#",
+                tags$span(`data-feather` = "home", "Connections")
+              )
+            )
+          )
+        )
+      ),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         includeHTML("www/html/dashboardMenu.html"),
-        uiOutput(ns("subredditApp"), container = function(...) {
+        uiOutput(ns("currentApp"), container = function(...) {
           div(class = "row", ...)
         })
-        # tags$canvas(class="my-4 w-100 shiny-plot-output", id='myChart', width="900", height="380")
       )
     ))
-    # fluidRow(
-    # id = ns("maximize"),
-
-    # tags$div(
-    #   class = "col-1 bg-dark",
-    #   fluidRow(
-    #     actionButton(ns("home"), icon("home", class = "text-secondary")),
-    #     actionButton(ns("aws"), icon("aws", class = "text-secondary")),
-    #     actionButton(ns("settings"), icon("cog", class = "text-secondary")),
-    #     actionButton(ns("full"), icon("expand", class = "text-secondary"))
-    #   )
-    # ),
-    # tags$main(
-    #   class = "mx-auto col-10 p-4",
-    #   uiOutput(ns("appBody"), container = function(...) {
-    #     div(class = "row", ...)
-    #   })
-    # )
-    # )
   )
 }
 
@@ -79,21 +98,26 @@ app_server <- function(id = "app") {
     function(input, output, session) {
       ns <- session$ns
 
-      app <- sidebar$sidebar_server()
-      observe({
-        req(app())
-      })
       output$myChart <- renderPlot({
         graphics$plot(1:10, 1:10)
       })
 
-      output$subredditApp <- renderUI({
-        reddit$ui_subreddit(ns("subreddit"), container = function(...) {
-          column(12, ...)
+      observe({
+        input$goToSubreddit
+        output$currentApp <- renderUI({
+          reddit$ui_subreddit(ns("subreddit"), container = function(...) {
+            column(12, ...)
+          })
         })
+
+        reddit$server_subreddit()
       })
 
-      reddit$server_subreddit()
+      observeEvent(input$goToAuthor, {
+        output$currentApp <- renderUI({
+          "Ok"
+        })
+      })
 
 
       observe({
