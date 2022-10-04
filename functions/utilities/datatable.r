@@ -51,7 +51,7 @@ server_dt <- function(id = "dt", data, title, pageLength = 3) {
             caption = NULL,
             filter = c("top"),
             escape = TRUE,
-            style = "bootstrap4",
+            style = "auto",
             width = NULL,
             height = NULL,
             elementId = NULL,

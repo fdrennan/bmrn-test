@@ -42,6 +42,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
       actionButton(ns("poll"), icon("play", class = "fa-1x"), class = "p-1")
     ),
     withSpinner(
+      type = 2, color.background = "white", size = 3,
       uiOutput(ns("mainpanel"), container = function(...) {
         column(12, ...)
       })
