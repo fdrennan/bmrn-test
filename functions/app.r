@@ -2,22 +2,20 @@
 #' @export
 app_ui <- function(id = "app") {
   {
-    box::use(
-      shiny[
-        addResourcePath, HTML, uiOutput, plotOutput, tags, div, fluidPage,
-        column, NS, fluidRow
-      ],
-      shiny[includeCSS, includeScript, includeHTML],
-      shinyjs[useShinyjs, extendShinyjs],
-      . / reddit,
-      . / offcanvas,
-      . / header,
-      . / button,
-      . / sidebar,
-      esquisse,
-      . / utilities / datatable
-    )
-    box::use(shiny[tags, actionButton, icon])
+    box::use(shiny[addResourcePath, NS])
+    box::use(shiny[HTML, fluidPage, div, tags])
+    box::use(shiny[fluidRow, column])
+    box::use(shiny[plotOutput, uiOutput])
+    box::use(shiny[actionButton, icon])
+    box::use(shiny[includeCSS, includeScript, includeHTML])
+    box::use(shinyjs[useShinyjs, extendShinyjs])
+    box::use(esquisse)
+    box::use(. / reddit)
+    box::use(. / offcanvas)
+    box::use(. / header)
+    box::use(. / button)
+    box::use(. / sidebar)
+    box::use(. / utilities / datatable)
     box::use(. / app)
   }
   ns <- NS(id)
