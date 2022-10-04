@@ -1,24 +1,40 @@
+.PHONY: redpul aws build
+
+### DEVELOPMENT
+BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
+HASH := $(shell git rev-parse HEAD)
+
 sass: style
 	scss www/sass/styles.scss www/styles.css
 
 style:
 	R -e "styler::style_dir()"
 
-.PHONY: redpul aws
-
 redpul:
 	R -e "devtools::install_deps('./redpul')"
 	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
-
-BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
-HASH := $(shell git rev-parse HEAD)
 
 push: sass
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
 	git push origin $(BRANCH)
+### END DEVELOPMENT
 
+### SERVICES
 aws:
 	docker run --rm -ti -v ~/.aws:/root/.aws amazon/aws-cli s3 ls
+### END SERVICES
+
+### DOCKER
+build:
+	docker images ls
+	sleep 10
+	docker volume ls
+	sleep 10
+	docker-compose build --parallel
+
+prune:
+	docker system prune -a
+### END DOCKER
