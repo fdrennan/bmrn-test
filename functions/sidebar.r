@@ -1,6 +1,7 @@
 #' @export
 sidebar_ui <- function(id = "sidebar") {
-  box::use(shiny[tags, div, includeHTML])
+  box::use(shiny[tags, div, includeHTML, NS])
+  ns <- NS(id)
   tags$nav(
     id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
     div(
@@ -11,7 +12,8 @@ sidebar_ui <- function(id = "sidebar") {
         tags$li(
           class = "nav-item",
           tags$a(
-            class = "nav-link active", `aria-current` = "page", href = "#",
+            id = "goToSubreddit",
+            class = "nav-link active action-button", `aria-current` = "page",
             tags$span(`data-feather` = "home", "Subreddit")
           )
         ),
@@ -38,5 +40,21 @@ sidebar_ui <- function(id = "sidebar") {
         )
       )
     )
+  )
+}
+
+#' @export
+sidebar_server <- function(id = "sidebar") {
+  box::use(shiny[moduleServer, reactive])
+  moduleServer(
+    id = id,
+    function(input, output, session) {
+      out <- reactive({
+        print("In Sidebar server")
+        print(input)
+        TRUE
+      })
+      out
+    }
   )
 }

@@ -70,6 +70,7 @@ app_server <- function(id = "app") {
     box::use(shiny[fluidRow, column, renderUI])
     box::use(shinyjs[js])
     box::use(. / button)
+    box::use(. / sidebar)
     box::use(. / utilities / datatable, esquisse, . / reddit)
     box::use(graphics)
   }
@@ -78,6 +79,10 @@ app_server <- function(id = "app") {
     function(input, output, session) {
       ns <- session$ns
 
+      app <- sidebar$sidebar_server()
+      observe({
+        req(app())
+      })
       output$myChart <- renderPlot({
         graphics$plot(1:10, 1:10)
       })
