@@ -34,11 +34,11 @@ app_ui <- function(id = "app") {
         `aria-expanded` = "false", `aria-label` = "Toggle navigation",
         tags$span(class = "navbar-toggler-icon")
       ),
+      includeHTML("www/html/navbar.html"),
       div(class = "navbar-nav", div(
         class = "nav-item text-nowrap",
         tags$a(class = "nav-link px-3", href = "#", "Sign Out")
       ))
-      # includeHTML("www/html/navbar.html")
     ),
     includeHTML("www/html/dashboard.html"),
     includeScript("www/scripts/dashboard.js"),
