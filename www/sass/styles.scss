@@ -1,5 +1,7 @@
 // $h1-font-size: 3rem;
-
+@use "styles/index";
+@import "../../node_modules/bootstrap/scss/functions";
+$font-family-base: 'Fira Code', monospace;
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import "../font-awesome-4.7.0/scss/font-awesome";
 @import "spin";
@@ -11,9 +13,9 @@
 }
 
 
-//body {
-//  font-size: .875rem;
-//}
+body {
+  font-size: .8rem;
+}
 
 .feather {
   width: 16px;

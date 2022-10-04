@@ -23,7 +23,7 @@ ui_subreddit <- function(id = "subreddit", container = function(...) shiny::colu
   container(
     # class = "p-1  vh-100",
     div(
-      class = "col-12 d-flex justify-content-end align-items-center px-2 border-end",
+      class = "col-12 d-flex justify-content-end align-items-center px-2",
       div(
         class = "d-flex justify-content-end align-items-center px-2 border-end",
         actionButton(ns("readdb"), icon("database", class = "fa-1x")),

@@ -42,6 +42,7 @@ server_dt <- function(id = "dt", data, title, pageLength = 3) {
         {
           DT::datatable(data,
             options = list(
+              scrollXInner = "10%",
               scrollX = TRUE,
               pageLength = pageLength,
               filter = "top"
