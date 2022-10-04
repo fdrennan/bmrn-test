@@ -86,7 +86,8 @@ app_server <- function(id = "app") {
   {
     box::use(shiny[moduleServer, observeEvent, div, reactive, reactiveValues])
     box::use(shiny[observe, uiOutput, renderPlot, icon, actionButton, req])
-    box::use(shiny[fluidRow, column, renderUI])
+    box::use(shiny[fluidRow, tags, column, renderUI])
+    box::use(jsonlite)
     box::use(shinyjs[js])
     box::use(. / button)
     box::use(. / sidebar)
@@ -115,7 +116,7 @@ app_server <- function(id = "app") {
 
       observeEvent(input$goToAuthor, {
         output$currentApp <- renderUI({
-          "Ok"
+          tags$pre(jsonlite$toJSON(as.list(Sys.getenv()), pretty = TRUE))
         })
       })
 
