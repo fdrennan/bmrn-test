@@ -1,0 +1,200 @@
+asdf
+{
+  "CURRENT_TIME": ["2022-10-04 20:23:18"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": [0]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:24:34"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": [0]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:24:35"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": [0]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:25:09"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": []
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:25:16"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "", "2022-02-21 18:22:10 ndexr", "", "2020-02-17 21:51:47 ndexr-files", "", "2020-06-26 22:49:39 ndexr-images", "", "2020-10-11 03:59:07 qsstash", "", "2022-01-28 01:27:24 redpul", "", "2020-10-15 04:13:58 scratchfdrennan", "", "2020-06-18 03:01:08 shellscriptsfdrennan", "", "[1] 0"]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:25:51"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "", "2022-02-21 18:22:10 ndexr", "", "2020-02-17 21:51:47 ndexr-files", "", "2020-06-26 22:49:39 ndexr-images", "", "2020-10-11 03:59:07 qsstash", "", "2022-01-28 01:27:24 redpul", "", "2020-10-15 04:13:58 scratchfdrennan", "", "2020-06-18 03:01:08 shellscriptsfdrennan", "", "[1] 0"]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:26:28"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": [null, null, null, null, null, null, null, null, "2020-02-17 21:51:47 ndexr-files"]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:26:40"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "CURRENT_TIME": "2022-10-04 20:27:19",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "CURRENT_TIME": ["2022-10-04 20:27:23"],
+  "user_info": {
+    "name": ["freddy"],
+    "passwd": ["x"],
+    "uid": [1000],
+    "gid": [1000],
+    "gecos": ["Freddy Drennan,,,"],
+    "dir": ["/home/freddy"],
+    "shell": ["/usr/bin/zsh"]
+  },
+  "iam_users": [252],
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "CURRENT_TIME": "2022-10-04 20:27:31",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "67527f15-daab-4037-b29f-66154e664485",
+  "CURRENT_TIME": "2022-10-04 20:28:26",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "a16c902e-245a-4501-945e-19157b440c6a",
+  "CURRENT_TIME": "2022-10-04 20:28:41",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "f34abc1b-e717-4a3f-a239-6a9e59303099",
+  "CURRENT_TIME": "2022-10-04 20:28:43",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}

@@ -8,7 +8,7 @@ RUN apt update -qq -y
 RUN apt install -y software-properties-common dirmngr libcurl4-openssl-dev libssl-dev libssh2-1-dev \
     libxml2-dev zlib1g-dev make git-core libcurl4-openssl-dev \
     libxml2-dev libpq-dev cmake r-base r-base-dev libsodium-dev libsasl2-dev \
-    libharfbuzz-dev
+    libharfbuzz-dev libfribidi-dev
 
 RUN R -e "install.packages(c('renv', 'rextendr', 'devtools', 'shiny', 'box'))"
 RUN R -e "install.packages(c('roxygen2', 'usethis', 'testthat', 'tidyverse'))"
@@ -23,8 +23,8 @@ COPY redpul/NAMESPACE .
 COPY redpul/R R
 COPY redpul/src src
 
-WORKDIR /app
-RUN R -e "devtools::install_deps('./redpul')"
-RUN R -e "rextendr::document('./redpul')"
-RUN R -e "devtools::document('./redpul')"
-RUN R -e "devtools::install('./redpul')"
+#WORKDIR /app
+#RUN R -e "devtools::install_deps('./redpul')"
+#RUN R -e "rextendr::document('./redpul')"
+#RUN R -e "devtools::document('./redpul')"
+#RUN R -e "devtools::install('./redpul')"

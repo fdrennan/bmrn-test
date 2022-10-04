@@ -28,13 +28,19 @@ aws:
 ### END SERVICES
 
 ### DOCKER
-build:
+describe:
 	docker images ls
 	sleep 10
 	docker volume ls
 	sleep 10
+
+build: describe
 	docker-compose build --parallel
 
 prune:
 	docker system prune -a
+	docker volumn prune
+
+bash:
+	docker run -it ndexr_app bash
 ### END DOCKER
