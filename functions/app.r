@@ -42,14 +42,6 @@ app_ui <- function(id = "app") {
               div(
                 id = ns("goToSubreddit"),
                 tags$span(`data-feather` = "home", "Subreddit"),
-                class = "nav-link active action-button"
-              )
-            ),
-            tags$li(
-              class = "nav-item",
-              div(
-                id = ns("goToAuthor"),
-                tags$span(`data-feather` = "home", "Author"),
                 class = "nav-link action-button"
               )
             )
@@ -62,9 +54,10 @@ app_ui <- function(id = "app") {
             class = "nav flex-column",
             tags$li(
               class = "nav-item",
-              tags$a(
-                class = "nav-link", href = "#",
-                tags$span(`data-feather` = "home", "Connections")
+              div(
+                id = ns("environment"),
+                tags$span(`data-feather` = "home", "Environment"),
+                class = "nav-link action-button"
               )
             )
           )
@@ -114,7 +107,7 @@ app_server <- function(id = "app") {
         reddit$server_subreddit()
       })
 
-      observeEvent(input$goToAuthor, {
+      observeEvent(input$environment, {
         output$currentApp <- renderUI({
           tags$pre(jsonlite$toJSON(as.list(Sys.getenv()), pretty = TRUE))
         })
