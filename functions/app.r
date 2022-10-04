@@ -23,6 +23,7 @@ app_ui <- function(id = "app") {
   ns <- NS(id)
 
 
+
   div(
     # http://jsfiddle.net/RichardHoultz/cxjje33y/
     class = "container-fluid",
@@ -49,14 +50,25 @@ app_ui <- function(id = "app") {
         ),
         div(
           class = "position-sticky pt-3",
-          tags$h6("Administration", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$h6("Infrastructure", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
           tags$ul(
             class = "nav flex-column",
             tags$li(
               class = "nav-item",
               div(
-                id = ns("environment"),
+                id = ns("goToEnvironment"),
                 tags$span(`data-feather` = "home", "Environment"),
+                class = "nav-link action-button"
+              )
+            )
+          ),
+          tags$ul(
+            class = "nav flex-column",
+            tags$li(
+              class = "nav-item",
+              div(
+                id = ns("goToAdministration"),
+                tags$span(`data-feather` = "home", "Administration"),
                 class = "nav-link action-button"
               )
             )
@@ -86,14 +98,15 @@ app_server <- function(id = "app") {
     box::use(. / sidebar)
     box::use(. / utilities / datatable, esquisse, . / reddit)
     box::use(graphics)
+    box::use(. / administration)
   }
   moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
 
-      output$myChart <- renderPlot({
-        graphics$plot(1:10, 1:10)
+      observeEvent(input$full, {
+        js$fullScreen(ns("maximize"))
       })
 
       observe({
@@ -103,20 +116,22 @@ app_server <- function(id = "app") {
             column(12, ...)
           })
         })
-
         reddit$server_subreddit()
       })
 
-      observeEvent(input$environment, {
+      observeEvent(input$goToAdministration, {
+        output$currentApp <- renderUI({
+          administration$ui_administration(ns("administration"), container = function(...) {
+            column(12, ...)
+          })
+        })
+        administration$server_administration()
+      })
+
+      observeEvent(input$goToEnvironment, {
         output$currentApp <- renderUI({
           tags$pre(jsonlite$toJSON(as.list(Sys.getenv()), pretty = TRUE))
         })
-      })
-
-
-      observe({
-        input$full
-        js$fullScreen(ns("maximize"))
       })
     }
   )
