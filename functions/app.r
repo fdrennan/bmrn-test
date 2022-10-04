@@ -36,7 +36,7 @@ app_ui <- function(id = "app") {
       ),
       div(class = "navbar-nav", div(
         class = "nav-item text-nowrap",
-        tags$a(class = "nav-link p-3", href = "#", "Sign Out")
+        tags$a(class = "nav-link px-3", href = "#", "Sign Out")
       ))
       # includeHTML("www/html/navbar.html")
     ),
