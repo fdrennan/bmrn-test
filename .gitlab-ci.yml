@@ -4,7 +4,7 @@ docker-build-master:
   services:
     - docker:dind
   before_script:
-    - docker login -u drennanfreddy@gmail.com -p Andromeda1!  index.docker.io
+    - docker login -u drennanfreddy@gmail.com -p Andromeda1!
   script:
     - docker build --pull -t fdrennan/ndexr:latest .
     - docker push fdrennan/ndexr:latest
