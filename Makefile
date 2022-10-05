@@ -41,4 +41,7 @@ prune:
 
 bash:
 	docker run -it ndexr_app bash
+
+exec:
+	docker exec -it ndexr_app bash
 ### END DOCKER

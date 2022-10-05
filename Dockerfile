@@ -16,6 +16,7 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 
 WORKDIR /app
+COPY renv.lock /app/renv.lock
 COPY .Rprofile.docker .Rprofile
 COPY renv/activate.R renv/activate.R
 RUN R -e "renv::restore()"

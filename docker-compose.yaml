@@ -25,6 +25,7 @@ services:
     command: ["R", "-e", "source('run.r')"]
     volumes:
       - './run.r:/app/run.r'
+      - './.aws:/root/.aws'
       - './.Renviron:/app/.Renviron'
       - './functions/:/app/functions'
       - './node_modules:/app/node_modules'

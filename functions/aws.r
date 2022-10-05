@@ -24,11 +24,17 @@ list_buckets <- function() {
     s3_ls = s3_ls
   )
   out <- toJSON(out, pretty = TRUE, auto_unbox = T)
-  n_lines <- peek_count_lines("logs/aws/dashboard.txt")
-  if (n_lines > 3000) {
-    file.remove("logs/aws/dashboard.txt")
+  if (!dir.exists("logs/aws")) {
+    dir.create("logs/aws", recursive = TRUE)
+  }
+  if (file.exists("logs/aws/dashboard.txt")) {
+    n_lines <- peek_count_lines("logs/aws/dashboard.txt")
+    if (n_lines > 3000) {
+      file.remove("logs/aws/dashboard.txt")
+    }
   }
   write(out, file = "logs/aws/dashboard.txt", append = TRUE)
   cat(out)
   out
 }
+d

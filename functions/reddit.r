@@ -1,7 +1,7 @@
 #' @export
 ui_subreddit <- function(id = "subreddit", container = function(...) shiny::column(12, ...)) {
   {
-    box::use(shiny[tags, checkboxInput, NS, div, icon], shinycssloaders[withSpinner])
+    box::use(shiny[tags, checkboxInput, showNotification, NS, div, icon], shinycssloaders[withSpinner])
     box::use(shiny[actionButton, tableOutput, uiOutput, textInput, numericInput, fluidRow, div, column])
     box::use(. / utilities / datatable)
     box::use(. / state / setDefault[setDefault])
