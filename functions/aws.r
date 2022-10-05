@@ -39,7 +39,7 @@ list_buckets <- function() {
 }
 
 #' @export
-ec2_instance_create <- function(ImageId = "ami-0996d3051b72b5b2c",
+ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
                                 InstanceType = "t2.nano",
                                 min = 1,
                                 max = 1,
