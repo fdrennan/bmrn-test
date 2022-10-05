@@ -7,7 +7,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - '8014:80'
+      - '9000:80'
       - '443:443'
     links:
       - app
@@ -18,8 +18,8 @@ services:
       - .env
     restart: always
     user: 'root'
-    ports:
-      - '9000:9000'
     expose:
       - '9000'
     command: ["R", "-e", "source('run.r')"]
+    volumes:
+      - './functions:/app/functions'

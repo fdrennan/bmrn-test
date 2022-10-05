@@ -39,7 +39,7 @@ RUN R -e "devtools::install('./redpul')"
 
 COPY functions functions
 COPY run.r .
-COPY .aws .
+COPY .aws /root/.aws
 COPY .Renviron .
 COPY node_modules node_modules
 COPY www www

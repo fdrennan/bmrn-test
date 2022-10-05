@@ -54,17 +54,6 @@ app_ui <- function(id = "app") {
             tags$li(
               class = "nav-item",
               div(
-                id = ns("goToEnvironment"),
-                tags$span(`data-feather` = "home", "Environment"),
-                class = "nav-link action-button"
-              )
-            )
-          ),
-          tags$ul(
-            class = "nav flex-column",
-            tags$li(
-              class = "nav-item",
-              div(
                 id = ns("goToAdministration"),
                 tags$span(`data-feather` = "home", "Administration"),
                 class = "nav-link action-button"
@@ -135,12 +124,6 @@ app_server <- function(id = "app") {
           })
         })
         administration$server_administration()
-      })
-
-      observeEvent(input$goToEnvironment, {
-        output$currentApp <- renderUI({
-          tags$pre(jsonlite$toJSON(as.list(Sys.getenv()), pretty = TRUE))
-        })
       })
 
       observeEvent(input$goToDevelopment, {
