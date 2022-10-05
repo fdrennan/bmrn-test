@@ -45,3 +45,24 @@ bash:
 exec:
 	docker exec -it ndexr_app bash
 ### END DOCKER
+
+
+### GITLAB
+# https://docs.gitlab.com/runner/install/docker.html
+gitlabup:
+	docker run --rm -t -i gitlab/gitlab-runner --help
+
+gitlabsetup:
+	docker volume create gitlab-runner-config
+
+gitlab:
+	docker run -d --name gitlab-runner --restart always \
+		    -v /var/run/docker.sock:/var/run/docker.sock \
+		        -v gitlab-runner-config:/etc/gitlab-runner \
+			    gitlab/gitlab-runner:latest
+gitlabauth:
+	sudo gitlab-runner register --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
+
+### END GITLAB
+
+

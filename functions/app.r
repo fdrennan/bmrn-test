@@ -70,6 +70,17 @@ app_ui <- function(id = "app") {
                 class = "nav-link action-button"
               )
             )
+          ),
+          tags$ul(
+            class = "nav flex-column",
+            tags$li(
+              class = "nav-item",
+              div(
+                id = ns("goToDevelopment"),
+                tags$span(`data-feather` = "home", "Development"),
+                class = "nav-link action-button"
+              )
+            )
           )
         )
       ),
@@ -89,7 +100,7 @@ app_server <- function(id = "app") {
   {
     box::use(shiny[moduleServer, observeEvent, div, reactive, reactiveValues])
     box::use(shiny[observe, uiOutput, renderPlot, icon, actionButton, req])
-    box::use(shiny[fluidRow, tags, column, renderUI])
+    box::use(shiny[fluidRow, HTML, tags, column, renderUI])
     box::use(jsonlite)
     box::use(shinyjs[js])
     box::use(. / button)
@@ -129,6 +140,15 @@ app_server <- function(id = "app") {
       observeEvent(input$goToEnvironment, {
         output$currentApp <- renderUI({
           tags$pre(jsonlite$toJSON(as.list(Sys.getenv()), pretty = TRUE))
+        })
+      })
+
+      observeEvent(input$goToDevelopment, {
+        output$currentApp <- renderUI({
+          fluidRow(
+            HTML('<a href="https://gitlab.com/fdrennan/ndexr/-/releases"><img alt="Latest Release" src="https://gitlab.com/fdrennan/ndexr/-/badges/release.svg" /></a>'),
+            HTML('<a href="https://gitlab.com/fdrennan/ndexr/-/commits/main"><img alt="pipeline status" src="https://gitlab.com/fdrennan/ndexr/badges/main/pipeline.svg" /></a>')
+          )
         })
       })
     }

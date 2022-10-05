@@ -198,3 +198,63 @@ asdf
   "iam_users": 252,
   "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
 }
+{
+  "id": "edc2ef18-2bff-4b14-b316-e9eb3c719f45",
+  "CURRENT_TIME": "2022-10-05 02:09:29",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "19cb876a-14b8-441e-a247-aded59a382b7",
+  "CURRENT_TIME": "2022-10-05 02:12:09",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "cdb1c619-8881-4e68-aedc-584b034f850a",
+  "CURRENT_TIME": "2022-10-05 02:13:58",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
+{
+  "id": "e782fa36-4482-4891-b8b2-39b66608800c",
+  "CURRENT_TIME": "2022-10-05 02:14:00",
+  "user_info": {
+    "name": "freddy",
+    "passwd": "x",
+    "uid": 1000,
+    "gid": 1000,
+    "gecos": "Freddy Drennan,,,",
+    "dir": "/home/freddy",
+    "shell": "/usr/bin/zsh"
+  },
+  "iam_users": 252,
+  "s3_ls": ["2020-12-31 05:36:12 drennan", "2022-02-21 18:22:10 ndexr", "2020-02-17 21:51:47 ndexr-files", "2020-06-26 22:49:39 ndexr-images", "2020-10-11 03:59:07 qsstash", "2022-01-28 01:27:24 redpul", "2020-10-15 04:13:58 scratchfdrennan", "2020-06-18 03:01:08 shellscriptsfdrennan", "[1] 0"]
+}
