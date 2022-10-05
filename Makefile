@@ -35,6 +35,9 @@ describe:
 build: describe
 	docker-compose build --parallel
 
+latest:
+	docker-compose --file docker-compose-gitlab.yaml up
+
 prune:
 	docker system prune -a
 	docker volumn prune
@@ -44,6 +47,9 @@ bash:
 
 exec:
 	docker exec -it ndexr_app bash
+
+login:
+	docker login -u drennanfreddy@gmail.com -p AeliaJames2022! registry.gitlab.com
 ### END DOCKER
 
 
