@@ -14,7 +14,6 @@ docker-build-master:
     - master
 
 docker-build:
-  # Official docker image.
   image: docker:latest
   stage: build
   services:
