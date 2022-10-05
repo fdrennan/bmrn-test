@@ -50,6 +50,10 @@ exec:
 
 login:
 	docker login -u drennanfreddy@gmail.com -p AeliaJames2022! registry.gitlab.com
+
+up:
+	docker-compose up -d
+	docker-compose logs -f --tail=100
 ### END DOCKER
 
 
