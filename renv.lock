@@ -170,6 +170,16 @@
         "Rcpp"
       ]
     },
+    "askpass": {
+      "Package": "askpass",
+      "Version": "1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e8a22846fff485f0be3770c2da758713",
+      "Requirements": [
+        "sys"
+      ]
+    },
     "assertthat": {
       "Package": "assertthat",
       "Version": "0.2.1",
@@ -223,6 +233,14 @@
       "Hash": "ce26ca183b64788ca4c2ae30ec5876d6",
       "Requirements": []
     },
+    "brio": {
+      "Package": "brio",
+      "Version": "1.1.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "976cf154dfb043c012d87cddd8bca363",
+      "Requirements": []
+    },
     "bslib": {
       "Package": "bslib",
       "Version": "0.4.0",
@@ -248,6 +266,17 @@
       "Requirements": [
         "fastmap",
         "rlang"
+      ]
+    },
+    "callr": {
+      "Package": "callr",
+      "Version": "3.7.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "358689cac9fe93b1bb3a19088d2dbed8",
+      "Requirements": [
+        "R6",
+        "processx"
       ]
     },
     "cellranger": {
@@ -381,6 +410,28 @@
         "tidyselect",
         "vctrs",
         "withr"
+      ]
+    },
+    "desc": {
+      "Package": "desc",
+      "Version": "1.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6b9602c7ebbe87101a9c8edb6e8b6d21",
+      "Requirements": [
+        "R6",
+        "cli",
+        "rprojroot"
+      ]
+    },
+    "diffobj": {
+      "Package": "diffobj",
+      "Version": "0.3.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bcaa8b95f8d7d01a5dedfd959ce88ab8",
+      "Requirements": [
+        "crayon"
       ]
     },
     "digest": {
@@ -659,6 +710,20 @@
         "promises"
       ]
     },
+    "httr": {
+      "Package": "httr",
+      "Version": "1.4.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "57557fac46471f0dbbf44705cc6a5c8c",
+      "Requirements": [
+        "R6",
+        "curl",
+        "jsonlite",
+        "mime",
+        "openssl"
+      ]
+    },
     "hunspell": {
       "Package": "hunspell",
       "Version": "3.0.2",
@@ -833,6 +898,16 @@
         "lattice"
       ]
     },
+    "openssl": {
+      "Package": "openssl",
+      "Version": "2.0.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b9621e75c0652041002a19609fb23c5a",
+      "Requirements": [
+        "askpass"
+      ]
+    },
     "openxlsx": {
       "Package": "openxlsx",
       "Version": "4.2.5",
@@ -843,6 +918,174 @@
         "Rcpp",
         "stringi",
         "zip"
+      ]
+    },
+    "paws": {
+      "Package": "paws",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ebefb0931dd88cb25ea4ddb3b4f116ac",
+      "Requirements": [
+        "paws.analytics",
+        "paws.application.integration",
+        "paws.compute",
+        "paws.cost.management",
+        "paws.customer.engagement",
+        "paws.database",
+        "paws.developer.tools",
+        "paws.end.user.computing",
+        "paws.machine.learning",
+        "paws.management",
+        "paws.networking",
+        "paws.security.identity",
+        "paws.storage"
+      ]
+    },
+    "paws.analytics": {
+      "Package": "paws.analytics",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "cb8bfd9ff536e7c45a68cdaa8a16785d",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.application.integration": {
+      "Package": "paws.application.integration",
+      "Version": "0.1.13",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "59c31bec4bf93502a7de2b0027519b1c",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.common": {
+      "Package": "paws.common",
+      "Version": "0.5.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7b6666d6167f94a1f560c37807edcbfb",
+      "Requirements": [
+        "Rcpp",
+        "base64enc",
+        "curl",
+        "digest",
+        "httr",
+        "jsonlite",
+        "xml2"
+      ]
+    },
+    "paws.compute": {
+      "Package": "paws.compute",
+      "Version": "0.1.13",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6c066919c1a6ae9706831eb9e970f9e7",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.cost.management": {
+      "Package": "paws.cost.management",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "43f79668a95339920a2662c153984d4b",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.customer.engagement": {
+      "Package": "paws.customer.engagement",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "239ad7681de6284d0afc8f07bdf824e5",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.database": {
+      "Package": "paws.database",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "2f861a7af3ba272f4ed892c9c2734ac2",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.developer.tools": {
+      "Package": "paws.developer.tools",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1378a14ce5711dcdc385aa5be56968a4",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.end.user.computing": {
+      "Package": "paws.end.user.computing",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e051ba94a19e5a530aed100bbcb19537",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.machine.learning": {
+      "Package": "paws.machine.learning",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bca1b3dedc8842d230119420ed370bc9",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.management": {
+      "Package": "paws.management",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5235cb3d225a6e83a101e2327f1a69c4",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.networking": {
+      "Package": "paws.networking",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4a7f1431dabf35192c9fcbe8a0e9265c",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.security.identity": {
+      "Package": "paws.security.identity",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4daa4381ae249e3bd995f1bad49aa836",
+      "Requirements": [
+        "paws.common"
+      ]
+    },
+    "paws.storage": {
+      "Package": "paws.storage",
+      "Version": "0.1.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "533b13818105b2cff51ae444070e62f6",
+      "Requirements": [
+        "paws.common"
       ]
     },
     "phosphoricons": {
@@ -879,6 +1122,23 @@
       "Hash": "01f28d4278f15c76cddbea05899c5d6f",
       "Requirements": []
     },
+    "pkgload": {
+      "Package": "pkgload",
+      "Version": "1.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4b20f937a363c78a5730265c1925f54a",
+      "Requirements": [
+        "cli",
+        "crayon",
+        "desc",
+        "fs",
+        "glue",
+        "rlang",
+        "rprojroot",
+        "withr"
+      ]
+    },
     "plogr": {
       "Package": "plogr",
       "Version": "0.2.0",
@@ -895,6 +1155,14 @@
       "Hash": "03b7076c234cb3331288919983326c55",
       "Requirements": []
     },
+    "praise": {
+      "Package": "praise",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a555924add98c99d2f411e37e7d25e9f",
+      "Requirements": []
+    },
     "prettyunits": {
       "Package": "prettyunits",
       "Version": "1.1.1",
@@ -902,6 +1170,17 @@
       "Repository": "CRAN",
       "Hash": "95ef9167b75dde9d2ccc3c7528393e7e",
       "Requirements": []
+    },
+    "processx": {
+      "Package": "processx",
+      "Version": "3.7.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f91df0f5f31ffdf88bc0b624f5ebab0f",
+      "Requirements": [
+        "R6",
+        "ps"
+      ]
     },
     "progress": {
       "Package": "progress",
@@ -929,6 +1208,14 @@
         "magrittr",
         "rlang"
       ]
+    },
+    "ps": {
+      "Package": "ps",
+      "Version": "1.7.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "8b93531308c01ad0e56d9eadcc0c4fcd",
+      "Requirements": []
     },
     "purrr": {
       "Package": "purrr",
@@ -1273,6 +1560,34 @@
       "Hash": "b227d13e29222b4574486cfcbde077fa",
       "Requirements": []
     },
+    "testthat": {
+      "Package": "testthat",
+      "Version": "3.1.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f76c2a02d0fdc24aa7a47ea34261a6e3",
+      "Requirements": [
+        "R6",
+        "brio",
+        "callr",
+        "cli",
+        "crayon",
+        "desc",
+        "digest",
+        "ellipsis",
+        "evaluate",
+        "jsonlite",
+        "lifecycle",
+        "magrittr",
+        "pkgload",
+        "praise",
+        "processx",
+        "ps",
+        "rlang",
+        "waldo",
+        "withr"
+      ]
+    },
     "tibble": {
       "Package": "tibble",
       "Version": "3.1.8",
@@ -1424,6 +1739,22 @@
         "withr"
       ]
     },
+    "waldo": {
+      "Package": "waldo",
+      "Version": "0.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "035fba89d0c86e2113120f93301b98ad",
+      "Requirements": [
+        "cli",
+        "diffobj",
+        "fansi",
+        "glue",
+        "rematch2",
+        "rlang",
+        "tibble"
+      ]
+    },
     "withr": {
       "Package": "withr",
       "Version": "2.5.0",
@@ -1446,6 +1777,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "1a666f915cd65072f4ccf5b2888d5d39",
+      "Requirements": []
+    },
+    "xml2": {
+      "Package": "xml2",
+      "Version": "1.3.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "40682ed6a969ea5abfd351eb67833adc",
       "Requirements": []
     },
     "xtable": {

@@ -38,4 +38,53 @@ list_buckets <- function() {
   out
 }
 
-# https://docs.gitlab.com/ee/ci/variables/#predefined-cicd-variables
+#' @export
+ec2_instance_create <- function(ImageId = "ami-0996d3051b72b5b2c",
+                                InstanceType = "t2.nano",
+                                min = 1,
+                                max = 1,
+                                KeyName = Sys.getenv("AWS_PEM"),
+                                SecurityGroupId = Sys.getenv("AWS_SECURITY_GROUP"),
+                                InstanceStorage = 10,
+                                DeviceName = "/dev/sda1",
+                                user_data = NA) {
+  box::use(paws[ec2])
+  box::use(. / state / updateState[updateState])
+  ec2 <- ec2()
+  response <-
+    ec2$run_instances(
+      ImageId = ImageId,
+      InstanceType = InstanceType,
+      MinCount = as.integer(min),
+      MaxCount = as.integer(max),
+      UserData = base_64_user_data,
+      KeyName = KeyName,
+      SecurityGroupIds = list(SecurityGroupId),
+      BlockDeviceMappings = list(
+        list(
+          Ebs = list(
+            VolumeSize = as.integer(InstanceStorage)
+          ),
+          DeviceName = DeviceName
+        )
+      )
+    )
+  instanceData <- list(response$Instances[[1]])
+  names(instanceData) <- response$Instances[[1]]$InstanceId
+  updateState(instanceData, "aws-ec2")
+  # a$terminate_instances(response$Instances[[1]]$InstanceId)
+  response
+}
+
+#' @export
+ec2_instance_destroy <- function() {
+  box::use(. / connections / storr)
+  box::use(paws[ec2])
+  ec2 <- ec2()
+  con <- storr$connection_storr()
+  ids <- con$get("aws-ec2")
+  lapply(ids, function(x) {
+    ec2$terminate_instance(x$InstanceId)
+  })
+  con$del("aws-ec2")
+}

@@ -10,9 +10,9 @@ server_administration <- function(id = "administration") {
   box::use(shiny[moduleServer])
   box::use(shiny[renderUI, renderPlot, plotOutput])
   box::use(shiny[fluidRow, column, h1, icon, tags])
-  box::use(shiny[tabPanel, tabsetPanel])
+  box::use(shiny[tabPanel, actionButton, tabsetPanel])
   box::use(graphics[plot])
-  box::use(. / aws[list_buckets])
+  box::use(. / aws[list_buckets, ec2_instance_create])
   moduleServer(
     id,
     function(input, output, session) {
@@ -20,7 +20,10 @@ server_administration <- function(id = "administration") {
       output$ui <- renderUI({
         column(
           12,
-          fluidRow(h1("AWS"), tags$p(tags$pre(list_buckets()))),
+          fluidRow(
+            h1("AWS"),
+            tags$p(tags$pre(list_buckets())),
+          ),
           fluidRow(h1("sqlite"))
         )
       })

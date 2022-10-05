@@ -20,5 +20,7 @@ aws_secret_access_key = FRCWwrwbNV+5/HZ+UWJ758cVuJpaE22nwciLV9OS
 USERNAME=el_bahri_umaira
 REDDIT_CLIENT=qaGiFdXLaLhvSQ
 REDDIT_AUTH=d8KlNRjht3TUx6YWkqJjwxZj28cEVw
+AWS_PEM=ndexr
+AWS_SECURITY_GROUP=sg-09c52e10a49af9ddb
 
 
