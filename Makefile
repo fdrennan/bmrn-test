@@ -25,6 +25,10 @@ push: sass
 ### SERVICES
 aws:
 	docker run --rm -ti -v ~/.aws:/root/.aws amazon/aws-cli s3 ls
+
+sendmessage:
+	aws sns publish --phone-number +12549318313 --message "Hello"
+
 ### END SERVICES
 
 ### DOCKER
