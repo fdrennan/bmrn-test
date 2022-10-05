@@ -49,7 +49,11 @@ ec2_instance_create <- function(ImageId = "ami-0996d3051b72b5b2c",
                                 DeviceName = "/dev/sda1",
                                 user_data = NA) {
   box::use(paws[ec2])
+  box::use(readr[read_file])
   box::use(. / state / updateState[updateState])
+  box::use(base64[encode])
+  # browser()
+  base_64_user_data <- read_file(encode("./shell/install_docker_ec2.sh"))
   ec2 <- ec2()
   response <-
     ec2$run_instances(
