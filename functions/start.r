@@ -40,7 +40,5 @@ server <- function(input, output, session) {
 start <- function() {
   box::use(shiny[runApp, shinyApp])
   box::use(. / start[ui, server])
-  runApp(
-    shinyApp(ui, server)
-  )
+  shinyApp(ui, server)
 }

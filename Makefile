@@ -30,9 +30,7 @@ aws:
 ### DOCKER
 describe:
 	docker images ls
-	sleep 10
 	docker volume ls
-	sleep 10
 
 build: describe
 	docker-compose build --parallel

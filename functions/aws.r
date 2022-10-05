@@ -32,7 +32,3 @@ list_buckets <- function() {
   cat(out)
   out
 }
-
-
-out <- list_buckets()
-out

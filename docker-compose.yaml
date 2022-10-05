@@ -7,7 +7,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - '80:80'
+      - '8014:80'
       - '443:443'
     links:
       - app
@@ -22,9 +22,9 @@ services:
       - '9000:9000'
     expose:
       - '9000'
-    command: ["R", "-e", "box::use(./functions/start);start$start()"]
+    command: ["R", "-e", "source('run.r')"]
     volumes:
-      - './.Rprofile/:/app/.Rprofile'
+      - './run.r:/app/run.r'
       - './.Renviron:/app/.Renviron'
       - './functions/:/app/functions'
       - './node_modules:/app/node_modules'

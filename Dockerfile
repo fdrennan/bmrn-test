@@ -14,21 +14,25 @@ RUN apt install -y software-properties-common dirmngr libcurl4-openssl-dev libss
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
+
 WORKDIR /app
-COPY .Rprofile .Rprofile
+COPY .Rprofile.docker .Rprofile
 COPY renv/activate.R renv/activate.R
 RUN R -e "renv::restore()"
 RUN R -e "install.packages('devtools')"
+RUN R -e "install.packages('box')"
 
 WORKDIR /app/redpul
 COPY redpul/DESCRIPTION .
 COPY redpul/NAMESPACE .
 COPY redpul/R R
 COPY redpul/src src
-COPY redpul/src/Makevars.docker redpul/src/Makevars
+RUN mv /app/redpul/src/Makevars.docker /app/redpul/src/Makevars
 
 
 WORKDIR /app
 RUN R -e "devtools::install_deps('./redpul')"
-#RUN R -e "devtools::document('./redpul')"
-#RUN R -e "devtools::install('./redpul')"
+RUN R -e "devtools::document('./redpul')"
+RUN R -e "devtools::install('./redpul')"
+
+COPY functions functions
