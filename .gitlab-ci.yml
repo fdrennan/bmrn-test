@@ -1,16 +1,26 @@
-docker-build-master:
-  image: docker:latest
+#docker-build-master:
+#  image: docker:latest
+#  stage: build
+#  services:
+#    - docker:dind
+#  before_script:
+#    - docker login -u drennanfreddy@gmail.com -p Andromeda1!  index.docker.io
+#  script:
+#    - docker build --pull -t fdrennan/ndexr:latest .
+#    - docker push fdrennan/ndexr:latest
+#  only:
+#    - main
+#  tags:
+#    - latest
+build:
+  image: docker:20.10.16
   stage: build
   services:
-    - docker:dind
-  before_script:
-    - docker login -u drennanfreddy@gmail.com -p Andromeda1!
+    - docker:20.10.16-dind
   script:
-    - docker build --pull -t fdrennan/ndexr:latest .
-    - docker push fdrennan/ndexr:latest
-  only:
-    - main
-
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/fdrennan/ndexr/image:latest .
+    - docker push $CI_REGISTRY/fdrennan/ndexr/image:latest
 # stages:
 #   - builddocker
 #
