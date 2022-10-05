@@ -62,7 +62,6 @@ gitlab:
 			    gitlab/gitlab-runner:latest
 gitlabauth:
 	sudo gitlab-runner register --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
-
 ### END GITLAB
 
 
