@@ -61,7 +61,7 @@ gitlab:
 		        -v gitlab-runner-config:/etc/gitlab-runner \
 			    gitlab/gitlab-runner:latest
 gitlabauth:
-	sudo gitlab-runner register --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
+	sudo gitlab-runner register --non-interactive --executor docker+machine --docker-image docker:latest --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
 ### END GITLAB
 
 

@@ -13,7 +13,7 @@ docker-build-master:
   only:
     - main
   tags:
-    - latest
+    - main
 
 docker-build:
   image: docker:latest
