@@ -6,7 +6,7 @@ docker-build-master:
   services:
     - docker:dind
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"  docker.io
+    - docker login -u drennanfreddy@gmail.com -p Andromeda1!  docker.io
   script:
     - docker build --pull -t https://index.docker.io/fdrennan/ndexr .
     - docker push https://index.docker.io/fdrennan/ndexr
