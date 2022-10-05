@@ -37,4 +37,5 @@ list_buckets <- function() {
   cat(out)
   out
 }
-d
+
+# https://docs.gitlab.com/ee/ci/variables/#predefined-cicd-variables
