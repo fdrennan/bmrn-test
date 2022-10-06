@@ -15,8 +15,6 @@ services:
     container_name: ndexr_app
     build: .
     command: ["R", "-e", "source('run.r')"]
-    env_file:
-      - .env
     restart: always
     user: 'root'
     expose:

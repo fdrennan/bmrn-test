@@ -3,6 +3,7 @@
 LOGFILE='/ndexrinstall.log'
 savelog "$LOGFILE"
 exec &> >(tee "$LOGFILE")
+echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
 
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release unzip \
@@ -22,7 +23,15 @@ usermod -aG docker ubuntu
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 ./aws/install
+mkdir /home/ubuntu/.aws
+echo "[default]
+region = us-east-2
+output = json" >> /home/ubuntu/.aws/config
+echo "[default]
+aws_access_key_id = AKIAWEUHS5MEZ24ZVER6
+aws_secret_access_key = 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" >> /home/ubuntu/.aws/credentials
+echo "#!/bin/bash" >> /home/ubuntu/.start
+echo "aws s3 cp s3://ndexrapp ./ --recursive" >> /home/ubuntu/.start
+echo "make login" >> /home/ubuntu/.start
+echo "docker compose up -d" >> /home/ubuntu/.start
 
-echo "[default]\nregion = us-east-2\noutput = json" >> /home/ubuntu/.aws/config
-echo "[default]\naws_access_key_id = AKIAWEUHS5MEZ24ZVER6\naws_secret_access_key = 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" >> /home/ubuntu/.aws/credentials
-echo "aws s3 cp s3://ndexrapp ./ --recursive" >> /home/ubuntu/.bashrc

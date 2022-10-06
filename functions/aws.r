@@ -52,6 +52,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   box::use(readr[read_file])
   box::use(. / state / updateState[updateState])
   box::use(base64[encode])
+  box::use(utils[browseURL])
   # browser()
   base_64_user_data <- read_file(encode("./shell/install_docker_ec2.sh"))
   ec2 <- ec2()
@@ -76,6 +77,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   instanceData <- list(response$Instances[[1]])
   names(instanceData) <- response$Instances[[1]]$InstanceId
   updateState(instanceData, "aws-ec2")
+  browseURL("https://us-east-2.console.aws.amazon.com/ec2/")
   # a$terminate_instances(response$Instances[[1]]$InstanceId)
   response
 }
