@@ -8,6 +8,7 @@ ndexrappup:
 	aws s3 cp ./Makefile s3://ndexrapp/Makefile
 	aws s3 cp ./docker-compose-prod.yaml s3://ndexrapp/docker-compose-prod.yaml
 	aws s3 cp ./nginx.conf s3://ndexrapp/nginx.conf
+	aws s3 cp /etc/nginx/nginx.conf s3://ndexrapp/ec2.nginx.conf
 
 ndexrapp:
 	aws s3 cp s3://ndexrapp ./ --recursive
