@@ -117,7 +117,7 @@ s3_upload_proj <- function() {
   s3$put_object(
     Body = "docker-compose-prod.yaml",
     Bucket = "ndexrapp",
-    Key = "docker-compose-prod.yaml"
+    Key = "docker-compose.yaml"
   )
   s3$put_object(
     Body = "Makefile",

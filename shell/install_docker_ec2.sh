@@ -23,3 +23,6 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
 
+echo "[default]\nregion = us-east-2\noutput = json" >> /home/ubuntu/.aws/config
+echo "[default]\naws_access_key_id = AKIAWEUHS5MEZ24ZVER6\naws_secret_access_key = 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" >> /home/ubuntu/.aws/credentials
+echo "aws s3 cp s3://ndexrapp ./ --recursive" >> /home/ubuntu/.bashrc
