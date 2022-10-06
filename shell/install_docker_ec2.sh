@@ -34,4 +34,6 @@ echo "#!/bin/bash" >> /home/ubuntu/.start
 echo "aws s3 cp s3://ndexrapp ./ --recursive" >> /home/ubuntu/.start
 echo "make login" >> /home/ubuntu/.start
 echo "docker compose up -d" >> /home/ubuntu/.start
+echo "alias start=\". ./.start\"" >> /home/ubuntu/.bashrc
+
 

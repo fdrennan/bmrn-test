@@ -117,6 +117,12 @@ s3_upload_proj <- function() {
   )
 
   s3$put_object(
+    Body = "/etc/nginx/nginx.conf",
+    Bucket = "ndexrapp",
+    Key = "ec2.nginx.conf"
+  )
+
+  s3$put_object(
     Body = "docker-compose-prod.yaml",
     Bucket = "ndexrapp",
     Key = "docker-compose.yaml"
@@ -125,20 +131,5 @@ s3_upload_proj <- function() {
     Body = "Makefile",
     Bucket = "ndexrapp",
     Key = "Makefile"
-  )
-}
-
-#' @export
-s3_download_proj <- function() {
-  box::use(paws[s3])
-  s3 <- s3()
-  s3$get_object(
-    Bucket = "ndexrapp",
-    Key = "nginx.conf"
-  )
-
-  s3$get_object(
-    Bucket = "ndexrapp",
-    Key = "docker-compose-prod.yaml"
   )
 }
