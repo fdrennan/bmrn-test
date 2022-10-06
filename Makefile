@@ -83,5 +83,12 @@ gitlab:
 			    gitlab/gitlab-runner:latest
 gitlabauth:
 	sudo gitlab-runner register --non-interactive --executor docker+machine --docker-image docker:latest --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
+
+runnerinstall:
+	curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_${arch}.deb"
+	dpkg -i gitlab-runner_ubuntu.deb
+	sudo gitlab-runner register
+
+
 ### END GITLAB
 
