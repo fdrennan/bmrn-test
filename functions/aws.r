@@ -40,7 +40,7 @@ list_buckets <- function() {
 
 #' @export
 ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
-                                InstanceType = "t2.nano",
+                                InstanceType = "t2.xlarge",
                                 min = 1,
                                 max = 1,
                                 KeyName = Sys.getenv("AWS_PEM"),
@@ -88,7 +88,55 @@ ec2_instance_destroy <- function() {
   con <- storr$connection_storr()
   ids <- con$get("aws-ec2")
   lapply(ids, function(x) {
-    ec2$terminate_instance(x$InstanceId)
+    try(ec2$terminate_instance(x$InstanceId))
   })
   con$del("aws-ec2")
+}
+
+#' @export
+s3_upload_proj <- function() {
+  box::use(paws[s3])
+  s3 <- s3()
+  bucket_names <- sapply(s3$list_buckets()$Buckets, function(x) {
+    x[["Name"]]
+  })
+  if (!"ndexrapp" %in% bucket_names) {
+    s3$create_bucket(
+      Bucket = "ndexrapp",
+      CreateBucketConfiguration = list(
+        LocationConstraint = "us-east-2"
+      )
+    )
+  }
+  s3$put_object(
+    Body = "nginx.conf",
+    Bucket = "ndexrapp",
+    Key = "nginx.conf"
+  )
+
+  s3$put_object(
+    Body = "docker-compose-prod.yaml",
+    Bucket = "ndexrapp",
+    Key = "docker-compose-prod.yaml"
+  )
+  s3$put_object(
+    Body = "Makefile",
+    Bucket = "ndexrapp",
+    Key = "Makefile"
+  )
+}
+
+#' @export
+s3_download_proj <- function() {
+  box::use(paws[s3])
+  s3 <- s3()
+  s3$get_object(
+    Bucket = "ndexrapp",
+    Key = "nginx.conf"
+  )
+
+  s3$get_object(
+    Bucket = "ndexrapp",
+    Key = "docker-compose-prod.yaml"
+  )
 }

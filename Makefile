@@ -4,6 +4,13 @@
 BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
 HASH := $(shell git rev-parse HEAD)
 
+ndexrappup:
+	aws s3 cp ./Makefile s3://ndexrapp/Makefile
+	aws s3 cp ./docker-compose-prod.yaml s3://ndexrapp/docker-compose-prod.yaml
+	aws s3 cp ./nginx.conf s3://ndexrapp/nginx.conf
+
+ndexrapp:
+	aws s3 cp s3://ndexrapp ./ --recursive
 sass: style
 	scss www/sass/styles.scss www/styles.css
 
@@ -15,7 +22,7 @@ redpul:
 	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
 
-push: sass
+push: sass ndexrappup
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
@@ -77,5 +84,4 @@ gitlab:
 gitlabauth:
 	sudo gitlab-runner register --non-interactive --executor docker+machine --docker-image docker:latest --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
 ### END GITLAB
-
 
