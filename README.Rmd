@@ -1,0 +1,9 @@
+To get started
+1. Elastic IP is set
+```{bash}
+make ec2init
+```
+
+```bash
+make ec2destroy
+```
