@@ -118,4 +118,5 @@ jammy: login
 
 
 shiny:
-	docker
+	docker compose --file docker-compose-shiny.yaml up
+
