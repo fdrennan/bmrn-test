@@ -24,8 +24,11 @@ redpul:
 	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
 
-push: sass ndexrappup
+updatenginx:
+	R -e "box::use(./functions/nginx/nginx[update_conf]);update_conf()"
 	sudo cp localhost.nginx.conf /etc/nginx/nginx.conf
+
+push: updatenginx sass ndexrappup
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
