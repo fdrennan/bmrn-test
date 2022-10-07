@@ -13,10 +13,10 @@ services:
       - app
   app:
     container_name: ndexr_app
-    image: registry.gitlab.com/fdrennan/ndexr:latest
+    image: registry.gitlab.com/fdrennan/ndexr:shiny
     restart: always
     user: 'root'
     expose:
       - '9000'
-    command: ["R", "-e", "source('run.r')"]
+    command: ["R", "-e", "shiny::runExample(example = '01_hello', port = 9000)"]
 
