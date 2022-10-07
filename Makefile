@@ -117,3 +117,5 @@ jammy: login
 	sudo gitlab-runner register
 
 
+shiny:
+	docker
