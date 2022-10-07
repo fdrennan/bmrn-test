@@ -25,8 +25,6 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
  echo "echo \"login as root and execute tlog to view logs from ec2 user_data"
 } >> /home/ubuntu/.bashrc
 
-
-
 deb https://nginx.org/packages/ubuntu/ jammy nginx
 deb-src https://nginx.org/packages/ubuntu/ jammy nginx
 

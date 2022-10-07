@@ -55,6 +55,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   box::use(utils[browseURL])
   box::use(. / aws)
   try(aws$ec2_instance_destroy())
+
   aws$s3_upload_proj()
   base_64_user_data <- read_file(encode("./shell/install_docker_ec2.sh"))
   ec2 <- ec2()
@@ -102,6 +103,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   )
 
   browseURL("https://us-east-2.console.aws.amazon.com/ec2/")
+  browseURL(remote_public_ip)
   # a$terminate_instances(response$Instances[[1]]$InstanceId)
   response
 }

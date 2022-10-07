@@ -25,7 +25,7 @@ redpul:
 	R -e "devtools::install('./redpul')"
 
 push: sass ndexrappup
-	sudo cp ec2.nginx.conf /etc/nginx/nginx.conf
+	sudo cp localhost.nginx.conf /etc/nginx/nginx.conf
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
