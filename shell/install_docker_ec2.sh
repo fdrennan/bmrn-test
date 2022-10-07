@@ -25,12 +25,16 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
  echo "echo \"login as root and execute tlog to view logs from ec2 user_data"
 } >> /home/ubuntu/.bashrc
 
-deb https://nginx.org/packages/ubuntu/ jammy nginx
-deb-src https://nginx.org/packages/ubuntu/ jammy nginx
+
 
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release unzip \
-  make nginx
+  make
+
+# deb https://nginx.org/packages/ubuntu/ jammy nginx
+# deb-src https://nginx.org/packages/ubuntu/ jammy nginx
+# apt-get update
+# apt-get install nginx
 
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
