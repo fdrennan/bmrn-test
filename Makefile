@@ -1,10 +1,17 @@
 .PHONY: redpul aws build
 
+push: updatenginxconf sass ndexr2s3
+	git add --all
+	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
+	echo "Pushing to $(BRANCH)"
+	git push origin $(BRANCH)
+
+
 ### DEVELOPMENT
 BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
-HASH := $(shell git rev-parse HEAD)
+HASH := $(shell git rev-parse HEAD)W
 
-ndexrappup:
+ndexr2s3:
 	aws s3 cp ./Makefile s3://ndexrapp/Makefile
 	aws s3 cp ./docker-compose-prod.yaml s3://ndexrapp/docker-compose-prod.yaml
 	aws s3 cp ./nginx.conf s3://ndexrapp/nginx.conf
@@ -30,15 +37,11 @@ redpul:
 	R -e "devtools::document('./redpul')"
 	R -e "devtools::install('./redpul')"
 
-updatenginx:
+updatenginxconf:
 	R -e "box::use(./functions/nginx/nginx[update_conf]);update_conf()"
 	sudo cp localhost.nginx.conf /etc/nginx/nginx.conf
 
-push: updatenginx sass ndexrappup
-	git add --all
-	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
-	echo "Pushing to $(BRANCH)"
-	git push origin $(BRANCH)
+
 ### END DEVELOPMENT
 
 ### SERVICES
