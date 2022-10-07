@@ -5,20 +5,26 @@ savelog "$LOGFILE"
 exec &> >(tee "$LOGFILE")
 echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
 
-echo "#!/bin/bash" >> /root/.start
-echo "aws s3 cp s3://ndexrapp /home/ubuntu --recursive" >> /root/.start
-echo "mv /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf" >> /root/.start
-echo "systemctl restart nginx" >> /root/.start
+{
+  echo "#!/bin/bash"
+  echo "aws s3 cp s3://ndexrapp /home/ubuntu --recursive"
+  echo "mv /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
+  echo "systemctl restart nginx"
+}  >> /root/start
 
-echo "#!/bin/bash" >> /home/ubuntu/.start
-echo "make login" >> /ubuntu/.start
-echo "docker compose up -d" >> /home/ubuntu/.start
-echo "echo \"###################################\"" >> /home/ubuntu/.bashrc
-echo "echo \"LOOOOOOK HERE AT THESE INSTRUCTIONS\"" >> /home/ubuntu/.bashrc
-echo "echo \"login as root: sudo su -" >> /home/ubuntu/.bashrc
-echo "echo \"then execute . /root/.start\" to initialize" >> /home/ubuntu/.bashrc
-echo "echo \"login as root and execute tlog to view logs from ec2 user_data" >> /home/ubuntu/.bashrc
-echo "###################################"
+{
+  echo "#!/bin/bash"
+  echo "make login"
+  echo "docker compose up -d"
+} >> /home/ubuntu/start
+
+{
+ echo "echo \"LOOOOOOK HERE AT THESE INSTRUCTIONS\""
+ echo "echo \"login as root: sudo su -"
+ echo "echo \"then execute . /root/start\" to initialize"
+ echo "echo \"login as root and execute tlog to view logs from ec2 user_data"
+} >> /home/ubuntu/.bashrc
+
 
 
 deb https://nginx.org/packages/ubuntu/ jammy nginx

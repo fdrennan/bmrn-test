@@ -6,5 +6,5 @@ options(state.verbose = FALSE)
 options(quietly = TRUE)
 options("shiny.port" = 9000)
 options("shiny.host" = "127.0.0.1")
-
+options("remote_public_ip" = "3.137.10.251")
 box::use(. / functions / aws)

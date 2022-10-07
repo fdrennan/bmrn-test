@@ -54,6 +54,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   box::use(base64[encode])
   box::use(utils[browseURL])
   box::use(. / aws)
+  try(aws$ec2_instance_destroy())
   aws$s3_upload_proj()
   base_64_user_data <- read_file(encode("./shell/install_docker_ec2.sh"))
   ec2 <- ec2()
@@ -76,8 +77,30 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
       )
     )
   instanceData <- list(response$Instances[[1]])
-  names(instanceData) <- response$Instances[[1]]$InstanceId
+  InstanceId <- response$Instances[[1]]$InstanceId
+  names(instanceData) <- InstanceId
   updateState(instanceData, "aws-ec2")
+  remote_public_ip <- getOption("remote_public_ip")
+  sleep_seconds <- 10
+  # browser()
+
+  ready_for_association <- FALSE
+  while (isFALSE(ready_for_association)) {
+    ready_for_association <- tryCatch(
+      "running" == ec2$describe_instance_status(InstanceId)[[1]][[1]]$InstanceState$Name,
+      error = function(err) {
+        print(err)
+        Sys.sleep(1)
+        FALSE
+      }
+    )
+  }
+
+  ec2$associate_address(
+    InstanceId = InstanceId,
+    PublicIp = remote_public_ip
+  )
+
   browseURL("https://us-east-2.console.aws.amazon.com/ec2/")
   # a$terminate_instances(response$Instances[[1]]$InstanceId)
   response

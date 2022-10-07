@@ -94,4 +94,14 @@ runnerinstall: login
 
 
 ### END GITLAB
+focal: login
+	curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_focal.deb"
+	dpkg -i gitlab-runner_ubuntu.deb
+	sudo gitlab-runner register
+
+jammy: login
+	curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_jammy.deb"
+	dpkg -i gitlab-runner_ubuntu.deb
+	sudo gitlab-runner register
+
 
