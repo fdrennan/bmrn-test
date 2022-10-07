@@ -118,7 +118,7 @@ s3_upload_proj <- function() {
   )
 
   s3$put_object(
-    Body = "/etc/nginx/nginx.conf",
+    Body = "ec2.nginx.conf",
     Bucket = "ndexrapp",
     Key = "ec2.nginx.conf"
   )
