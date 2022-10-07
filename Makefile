@@ -10,6 +10,12 @@ ndexrappup:
 	aws s3 cp ./nginx.conf s3://ndexrapp/nginx.conf
 	aws s3 cp ec2.nginx.conf s3://ndexrapp/ec2.nginx.conf
 
+ec2init:
+	R -e "box::use(./functions/aws[ec2_instance_create]);ec2_instance_create()"
+
+ec2destroy:
+	R -e "box::use(./functions/aws[ec2_instance_destroy])"
+
 ndexrapp:
 	aws s3 cp s3://ndexrapp ./ --recursive
 

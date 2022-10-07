@@ -81,7 +81,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   InstanceId <- response$Instances[[1]]$InstanceId
   names(instanceData) <- InstanceId
   updateState(instanceData, "aws-ec2")
-  remote_public_ip <- getOption("remote_public_ip")
+  # remote_public_ip <- getOption("domain")
   sleep_seconds <- 10
   # browser()
 
@@ -96,15 +96,13 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
       }
     )
   }
-
   ec2$associate_address(
     InstanceId = InstanceId,
-    PublicIp = remote_public_ip
+    PublicIp = getOption("ec2.nginx.conf")
   )
-
+  system("pkill chrome")
   browseURL("https://us-east-2.console.aws.amazon.com/ec2/")
-  browseURL(remote_public_ip)
-  # a$terminate_instances(response$Instances[[1]]$InstanceId)
+  browseURL(getOption("domain"))
   response
 }
 
