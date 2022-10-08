@@ -61,8 +61,13 @@ describe:
 build: describe
 	docker-compose build --parallel
 
-latest:
-	docker-compose --file docker-compose-gitlab.yaml up
+prod:
+	docker compose --file docker-compose-prod.yaml pull
+	docker compose --file docker-compose-prod.yaml down
+	docker compose --file docker-compose-prod.yaml up
+
+up:
+	docker compose --file docker-compose.yaml up
 
 prune:
 	docker system prune -a
