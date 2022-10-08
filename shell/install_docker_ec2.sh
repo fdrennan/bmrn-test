@@ -8,12 +8,10 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
 {
   echo "#!/bin/bash"
   echo "aws s3 cp s3://ndexrapp /home/ubuntu --recursive"
-  echo "mv /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
-  echo "apt-get install -y certbot"
-  echo "apt-get install -y python-certbot-nginx"
-  echo "add to server \"    server_name ndexr.com www.ndexr.con;\""
-  echo "echo \"sudo certbot --nginx -d example.com -d www.example.com\""
-  echo "systemctl restart nginx"
+  echo "cp /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
+  echo "snap install core; sudo snap refresh core",
+  echo "snap install --classic certbot",
+  echo "ln -s /snap/bin/certbot /usr/bin/certbot"
 }  >> /root/start
 
 {
