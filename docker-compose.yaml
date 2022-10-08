@@ -7,6 +7,8 @@ services:
     command: ["R", "-e", "source('run.r')"]
     restart: always
     user: 'root'
+    ports:
+      - '80:9000'
     expose:
       - '9000'
     volumes:
