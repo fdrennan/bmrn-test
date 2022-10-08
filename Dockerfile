@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/fdrennan/ndexr:latest
+FROM registry.gitlab.com/fdrennan/ndexr:base
 
 COPY functions functions
 COPY run.r .
