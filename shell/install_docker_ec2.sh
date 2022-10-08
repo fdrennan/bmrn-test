@@ -14,9 +14,8 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
 
 {
  echo "echo \"LOOOOOOK HERE AT THESE INSTRUCTIONS\""
- echo "echo \"login as root: sudo su -"
- echo "echo \"then execute . /root/start\" to initialize"
- echo "echo \"login as root and execute tlog to view logs from ec2 user_data"
+ echo "echo \"execute tlog to view logs from ec2 user_data"
+ echo "echo \"execute . start to begin"
 } >> /home/ubuntu/.bashrc
 
 apt-get update
