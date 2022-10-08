@@ -8,7 +8,7 @@ RUN apt update -qq -y
 RUN apt install -y software-properties-common dirmngr libcurl4-openssl-dev libssl-dev libssh2-1-dev \
     libxml2-dev zlib1g-dev make git-core libcurl4-openssl-dev \
     libxml2-dev libpq-dev cmake r-base r-base-dev libsodium-dev libsasl2-dev \
-    libharfbuzz-dev libfribidi-dev
+    libharfbuzz-dev libfribidi-dev libmagick++-dev
 
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
