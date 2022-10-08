@@ -45,8 +45,8 @@ docker-build:
   only:
     - shiny
 
-docker-shiny:
-  image: Dockerfile.base
+docker-base:
+  build: Dockerfile.base
   stage: build
   services:
     - docker:dind
