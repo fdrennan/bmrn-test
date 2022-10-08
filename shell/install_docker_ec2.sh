@@ -7,15 +7,7 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
 
 {
   echo "#!/bin/bash"
-  echo "aws s3 cp s3://ndexrapp /home/ubuntu --recursive"
-  echo "cp /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
-  echo "snap install core; sudo snap refresh core",
-  echo "snap install --classic certbot",
-  echo "ln -s /snap/bin/certbot /usr/bin/certbot"
-}  >> /root/start
-
-{
-  echo "#!/bin/bash"
+  echo "sudo certbot --nginx -d ndexr.com -d www.ndexr.com"
   echo "make login"
   echo "docker compose up -d"
 } >> /home/ubuntu/start
@@ -27,16 +19,14 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
  echo "echo \"login as root and execute tlog to view logs from ec2 user_data"
 } >> /home/ubuntu/.bashrc
 
-
-
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release unzip \
-  make
+  make nginx certbot python3-certbot-nginx
 
-deb https://nginx.org/packages/ubuntu/ jammy nginx
-deb-src https://nginx.org/packages/ubuntu/ jammy nginx
-apt-get update
-apt-get install nginx
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+mkdir /root/.aws
 
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -49,10 +39,6 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 usermod -aG docker ubuntu
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-./aws/install
-mkdir /root/.aws
 
 echo "[default]
 region = us-east-2
@@ -60,4 +46,9 @@ output = json" >> /root/.aws/config
 echo "[default]
 aws_access_key_id = AKIAWEUHS5MEZ24ZVER6
 aws_secret_access_key = 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" >> /root/.aws/credentials
+
+ufw allow 'Nginx Full'
+systemctl restart nginx
+aws s3 cp s3://ndexrapp /home/ubuntu --recursive
+cp /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf
 
