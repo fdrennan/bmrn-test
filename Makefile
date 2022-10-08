@@ -1,12 +1,5 @@
 .PHONY: redpul aws build
 
-push: updatenginxconf sass ndexr2s3
-	git add --all
-	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
-	echo "Pushing to $(BRANCH)"
-	git push origin $(BRANCH)
-
-
 ### DEVELOPMENT
 BRANCH := $(shell git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$$(git rev-parse HEAD)/ {print \$$2}")
 HASH := $(shell git rev-parse HEAD)W
@@ -16,6 +9,15 @@ ndexr2s3:
 	aws s3 cp ./docker-compose-prod.yaml s3://ndexrapp/docker-compose-prod.yaml
 	aws s3 cp ./nginx.conf s3://ndexrapp/nginx.conf
 	aws s3 cp ec2.nginx.conf s3://ndexrapp/ec2.nginx.conf
+
+
+push: updatenginxconf sass ndexr2s3
+	git add --all
+	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
+	echo "Pushing to $(BRANCH)"
+	git push origin $(BRANCH)
+
+
 
 ec2init:
 	R -e "box::use(./functions/aws[ec2_instance_create]);ec2_instance_create()"
