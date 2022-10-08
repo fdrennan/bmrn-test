@@ -9,6 +9,7 @@ echo "alias tlog=\"tail -f /ndexrinstall.log\"" >> /home/ubuntu/.bashrc
   echo "#!/bin/bash"
   echo "aws s3 cp s3://ndexrapp /home/ubuntu --recursive"
   echo "mv /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
+  echo "cp /home/ubuntu/ec2.nginx.conf /etc/nginx/nginx.conf"
   echo "systemctl restart nginx"
 }  >> /root/start
 
@@ -31,10 +32,10 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release unzip \
   make
 
-# deb https://nginx.org/packages/ubuntu/ jammy nginx
-# deb-src https://nginx.org/packages/ubuntu/ jammy nginx
-# apt-get update
-# apt-get install nginx
+deb https://nginx.org/packages/ubuntu/ jammy nginx
+deb-src https://nginx.org/packages/ubuntu/ jammy nginx
+apt-get update
+apt-get install nginx
 
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
