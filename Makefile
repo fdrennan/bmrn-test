@@ -89,6 +89,9 @@ up:
 	docker-compose logs -f --tail=100
 ### END DOCKER
 
+base:
+	docker build --pull -t registry.gitlab.com/fdrennan/ndexr:base -f ./Dockerfile.base .
+	docker push registry.gitlab.com/fdrennan/ndexr:base
 
 ### GITLAB
 # https://docs.gitlab.com/runner/install/docker.html
