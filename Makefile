@@ -93,6 +93,10 @@ base:
 	docker build --pull -t registry.gitlab.com/fdrennan/ndexr:base -f ./Dockerfile.base .
 	docker push registry.gitlab.com/fdrennan/ndexr:base
 
+latest:
+	docker build --pull -t registry.gitlab.com/fdrennan/ndexr:latest -f ./Dockerfile .
+	docker push registry.gitlab.com/fdrennan/ndexr:latest
+
 ### GITLAB
 # https://docs.gitlab.com/runner/install/docker.html
 gitlabup:

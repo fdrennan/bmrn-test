@@ -7,6 +7,10 @@ $font-family-base: 'Fira Code', monospace;
 @import "spin";
 @import "sidebar";
 
+.nav-link:hover {
+  background-color: $teal-700;
+}
+
 ::backdrop
 {
     background-color: white;
