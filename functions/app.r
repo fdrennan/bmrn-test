@@ -49,17 +49,17 @@ app_ui <- function(id = "app") {
         div(
           class = "position-sticky pt-3",
           tags$h6("Infrastructure", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
-          tags$ul(
-            class = "nav flex-column",
-            tags$li(
-              class = "nav-item",
-              div(
-                id = ns("goToAdministration"),
-                tags$span(`data-feather` = "home", "Administration"),
-                class = "nav-link action-button"
-              )
-            )
-          ),
+          # tags$ul(
+          #   class = "nav flex-column",
+          #   tags$li(
+          #     class = "nav-item",
+          #     div(
+          #       id = ns("goToAdministration"),
+          #       tags$span(`data-feather` = "home", "Administration"),
+          #       class = "nav-link action-button"
+          #     )
+          #   )
+          # ),
           tags$ul(
             class = "nav flex-column",
             tags$li(
@@ -117,14 +117,14 @@ app_server <- function(id = "app") {
         reddit$server_subreddit()
       })
 
-      observeEvent(input$goToAdministration, {
-        output$currentApp <- renderUI({
-          administration$ui_administration(ns("administration"), container = function(...) {
-            column(12, ...)
-          })
-        })
-        administration$server_administration()
-      })
+      # observeEvent(input$goToAdministration, {
+      #   output$currentApp <- renderUI({
+      #     administration$ui_administration(ns("administration"), container = function(...) {
+      #       column(12, ...)
+      #     })
+      #   })
+      #   administration$server_administration()
+      # })
 
       observeEvent(input$goToDevelopment, {
         output$currentApp <- renderUI({
