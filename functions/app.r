@@ -50,11 +50,11 @@ app_ui <- function(id = "app") {
             class = "nav flex-column",
             tags$li(
               class = "nav-item",
-              tags$a(class = "item", href = route_link("hub"), "Hub")
+              tags$a(class = "nav-link text-light", href = route_link("hub"), "Hub")
             ),
             tags$li(
               class = "nav-item",
-              tags$a(class = "item", href = route_link("pigskin"), "Pigskin Analytics")
+              tags$a(class = "nav-link text-light", href = route_link("pigskin"), "Pigskin Analytics")
             )
           ),
           tags$h6("Build Status", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),

@@ -25,10 +25,10 @@ server_hub <- function(id = "hub") {
 
       output$ui <- shiny$renderUI({
         div(
+          shiny$h1("Hello"),
           div(class = "pull-right", shinyauthr$logoutUI(id = ns("logout"))),
           # add login panel UI function
-          shinyauthr$loginUI(id = ns("login")),
-          shiny$h1("Hello")
+          shinyauthr$loginUI(id = ns("login"))
         )
       })
 
