@@ -41,7 +41,7 @@ server <- function(router) {
 #' @export
 start <- function() {
   box::use(shiny[runApp, shinyApp])
-  box::use(. / start[ui, server])
+  box::use(. / main[ui, server])
   box::use(shiny.router[make_router, route, page404])
   box::use(. / app)
   router <- make_router(
