@@ -21,6 +21,7 @@ app_ui <- function(id = "app") {
 
   # http://jsfiddle.net/RichardHoultz/cxjje33y/
 
+
   div(
     header$header_ui(),
     includeScript("www/scripts/dashboard.js"),
@@ -31,7 +32,7 @@ app_ui <- function(id = "app") {
         id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
         div(
           class = "position-sticky h-100 pt-3 bg-dark",
-          tags$h6("Random Modules", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$h6("Apps", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
           tags$ul(
             class = "nav flex-column",
             tags$li(
@@ -107,6 +108,12 @@ app_server <- function(id = "app") {
 
       observeEvent(input$full, {
         js$fullScreen(ns("maximize"))
+      })
+
+      observe({
+        output$currentApp <- renderUI({
+          tags$h3("References")
+        })
       })
 
       observeEvent(input$goToSubreddit, {

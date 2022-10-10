@@ -3,6 +3,7 @@ box::use(shiny[runApp])
 if (interactive()) {
   options(shiny.host = "127.0.0.1")
   options(shiny.port = 8000)
+  # options(shiny.port = 3000)
 }
 runApp(
   start$start(),

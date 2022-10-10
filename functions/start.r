@@ -1,9 +1,6 @@
-
-
 #' @export
-ui <- function() {
-  box::use(. / app)
-  {
+ui <- function(router) {
+  function() {{
     box::use(
       shiny[addResourcePath, HTML, tags, div, fluidPage, column, fluidRow, includeCSS, includeScript],
       shinyjs[useShinyjs, extendShinyjs],
@@ -16,7 +13,6 @@ ui <- function() {
     box::use(shiny[tags, actionButton, icon])
   }
   addResourcePath("loaders", "./www/images/loaders")
-
   tags$body(
     HTML('<meta charset="utf-8">
           <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,19 +25,27 @@ ui <- function() {
     includeCSS("./www/styles.css"),
     includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
     includeScript("./www/scripts/enter.js"),
-    app$app_ui(id = "app")
-  )
+    router$ui
+  )  }
 }
 
 #' @export
-server <- function(input, output, session) {
-  box::use(. / app)
-  app$app_server(id = "app")
+server <- function(router) {
+  function(input, output, session) {
+    box::use(. / app)
+    router$server(input, output, session)
+    app$app_server(id = "app")
+  }
 }
 
 #' @export
 start <- function() {
   box::use(shiny[runApp, shinyApp])
   box::use(. / start[ui, server])
-  shinyApp(ui, server)
+  box::use(shiny.router[make_router, route])
+  box::use(. / app)
+  router <- make_router(
+    route("/", app$app_ui(id = "app"))
+  )
+  shinyApp(ui(router), server(router))
 }
