@@ -33,8 +33,10 @@ ui <- function(router) {
 server <- function(router) {
   function(input, output, session) {
     box::use(. / app)
+    box::use(. / nfl)
     router$server(input, output, session)
     app$app_server(id = "app")
+    nfl$server_pigskin_analytics("pigskin_analytics")
   }
 }
 
@@ -44,8 +46,10 @@ start <- function() {
   box::use(. / main[ui, server])
   box::use(shiny.router[make_router, route, page404])
   box::use(. / app)
+  box::use(. / nfl)
   router <- make_router(
-    route("/", app$app_ui(id = "app")),
+    route("", app$app_ui(id = "app")),
+    route("pigskin", nfl$ui_pigskin_analytics("pigskin_analytics")),
     page_404 = page404(message404 = "ABC")
   )
   shinyApp(ui(router), server(router))

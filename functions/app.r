@@ -42,14 +42,6 @@ app_ui <- function(id = "app") {
                 tags$span(`data-feather` = "home", "Subreddit"),
                 class = "nav-link action-button text-light"
               )
-            ),
-            tags$li(
-              class = "nav-item",
-              div(
-                id = ns("goToPigskin"),
-                tags$span(`data-feather` = "pigskin", "Pigskin Analytics"),
-                class = "nav-link action-button text-light"
-              )
             )
           ),
           prompter$add_prompt(
@@ -123,13 +115,6 @@ app_server <- function(id = "app") {
           })
         })
         reddit$server_subreddit()
-      })
-
-      observeEvent(input$goToPigskin, {
-        output$currentApp <- renderUI({
-          nfl$ui_pigskin_analytics(ns("pigskin_analytics"))
-        })
-        nfl$server_pigskin_analytics()
       })
     }
   )
