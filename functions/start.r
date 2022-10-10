@@ -42,10 +42,11 @@ server <- function(router) {
 start <- function() {
   box::use(shiny[runApp, shinyApp])
   box::use(. / start[ui, server])
-  box::use(shiny.router[make_router, route])
+  box::use(shiny.router[make_router, route, page404])
   box::use(. / app)
   router <- make_router(
-    route("/", app$app_ui(id = "app"))
+    route("/", app$app_ui(id = "app")),
+    page_404 = page404(message404 = "ABC")
   )
   shinyApp(ui(router), server(router))
 }
