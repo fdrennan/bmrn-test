@@ -1,6 +1,6 @@
 #' @export
 ui <- function(router) {
-  function() {{
+  function() {
     box::use(
       shiny[addResourcePath, HTML, tags, div, fluidPage, column, fluidRow, includeCSS, includeScript],
       shinyjs[useShinyjs, extendShinyjs],
@@ -11,22 +11,22 @@ ui <- function(router) {
       . / utilities / datatable
     )
     box::use(shiny[tags, actionButton, icon])
+    addResourcePath("loaders", "./www/images/loaders")
+    tags$body(
+      tags$meta(charset = "utf-8"),
+      tags$meta(`http-equiv` = "X-UA-Compatible", content = "IE=edge"),
+      tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
+      style = "max-height: 100vh; overflow-y: auto;",
+      useShinyjs(),
+      extendShinyjs(
+        text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
+      ),
+      includeCSS("./www/styles.css"),
+      includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
+      includeScript("./www/scripts/enter.js"),
+      router$ui
+    )
   }
-  addResourcePath("loaders", "./www/images/loaders")
-  tags$body(
-    HTML('<meta charset="utf-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1">'),
-    style = "max-height: 100vh; overflow-y: auto;",
-    useShinyjs(),
-    extendShinyjs(
-      text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
-    ),
-    includeCSS("./www/styles.css"),
-    includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
-    includeScript("./www/scripts/enter.js"),
-    router$ui
-  )  }
 }
 
 #' @export
