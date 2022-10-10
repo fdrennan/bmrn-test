@@ -9,7 +9,7 @@ app_ui <- function(id = "app") {
     box::use(shiny[actionButton, icon])
     box::use(shiny[includeCSS, includeScript, includeHTML])
     box::use(shinyjs[useShinyjs, extendShinyjs])
-    box::use(esquisse)
+    box::use(prompter)
     box::use(. / reddit)
     box::use(. / offcanvas)
     box::use(. / header)
@@ -19,21 +19,19 @@ app_ui <- function(id = "app") {
   }
   ns <- NS(id)
 
-
-
-
   # http://jsfiddle.net/RichardHoultz/cxjje33y/
 
   div(
     header$header_ui(),
     includeScript("www/scripts/dashboard.js"),
+    prompter$use_prompt(),
     div(
       class = "row",
       tags$nav(
         id = "sidebarMenu", class = "col-md-3 col-lg-2 d-md-block bg-light sidebar collapse",
         div(
           class = "position-sticky h-100 pt-3 bg-dark",
-          tags$h6("Random Apps", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$h6("Random Modules", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
           tags$ul(
             class = "nav flex-column",
             tags$li(
@@ -51,7 +49,15 @@ app_ui <- function(id = "app") {
                 tags$span(`data-feather` = "pigskin", "Pigskin Analytics"),
                 class = "nav-link action-button text-light"
               )
-            ),
+            )
+          ),
+          prompter$add_prompt(
+            tags$h6("Consulting", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+            message = "Under Development"
+          ),
+          tags$h6("Build Status", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$ul(
+            class = "nav flex-column",
             tags$li(
               class = "nav-item",
               tags$a(
@@ -71,7 +77,7 @@ app_ui <- function(id = "app") {
       ),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
-        includeHTML("www/html/dashboardMenu.html"),
+        # includeHTML("www/html/dashboardMenu.html"),
         uiOutput(ns("currentApp"), container = function(...) {
           div(class = "row", ...)
         })

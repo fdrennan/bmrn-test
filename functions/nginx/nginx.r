@@ -7,7 +7,6 @@ update_conf <- function(ip, showDoc = FALSE) {
   configs <- str_replace_all(nginx_conf, "localhost", ip_vec)
   configs[[1]] <- str_replace_all(configs[[1]], "servername", "server_name ndexr.com www.ndexr.com;")
   configs[[2]] <- str_replace_all(configs[[2]], "servername", "")
-
   write_file(configs[[1]], "ec2.nginx.conf")
   write_file(configs[[2]], "localhost.nginx.conf")
   if (all(interactive(), showDoc)) {

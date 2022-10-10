@@ -17,8 +17,6 @@ push: updatenginxconf sass ndexr2s3
 	echo "Pushing to $(BRANCH)"
 	git push origin $(BRANCH)
 
-
-
 ec2init:
 	R -e "box::use(./functions/aws[ec2_instance_create]);ec2_instance_create()"
 
