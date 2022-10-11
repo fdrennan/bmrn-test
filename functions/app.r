@@ -12,7 +12,7 @@ ui_app <- function(id = "app") {
     box::use(prompter)
     box::use(. / reddit)
     box::use(. / offcanvas)
-    box::use(. / header)
+    box::use(. / navbar)
     box::use(. / button)
     box::use(. / utilities / datatable)
     box::use(. / app)
@@ -21,7 +21,7 @@ ui_app <- function(id = "app") {
   ns <- NS(id)
 
   div(
-    header$header_ui(),
+    navbar$ui_navbar(),
     includeScript("www/scripts/dashboard.js"),
     prompter$use_prompt(),
     div(
@@ -42,16 +42,16 @@ ui_app <- function(id = "app") {
               )
             )
           ),
-          tags$h6("Consulting", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
+          tags$h6("Backend", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
           tags$ul(
             class = "nav flex-column",
             tags$li(
               class = "nav-item",
-              tags$a(class = "nav-link text-light", href = route_link("hub"), "Hub")
-            ),
-            tags$li(
-              class = "nav-item",
-              tags$a(class = "nav-link text-light", href = route_link("pigskin"), "Pigskin Analytics")
+              div(
+                id = ns("goToHub"),
+                tags$span(`data-feather` = "home", "Hub"),
+                class = "nav-link action-button text-light"
+              )
             )
           ),
           tags$h6("Build Status", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
@@ -103,6 +103,8 @@ server_app <- function(id = "app") {
     box::use(graphics)
     box::use(. / administration)
     box::use(. / nfl)
+    box::use(. / hub)
+    box::use(. / navbar)
   }
   moduleServer(
     id,
@@ -110,15 +112,20 @@ server_app <- function(id = "app") {
       ns <- session$ns
 
       observeEvent(input$fullscreen, {
-        # browser()
         js$fullScreen(ns("maximize"))
       })
 
-      observe({
-        output$currentApp <- renderUI({
-          tags$h3("References")
-        })
-      })
+      navbar$server_navbar()
+
+
+      # observe({
+      #   input$goToHub
+      #   output$currentApp <- renderUI({
+      #     hub$ui_hub(ns("hub"))
+      #   })
+      #   hub$server_hub("hub")
+      # })
+
 
       observeEvent(input$goToSubreddit, {
         output$currentApp <- renderUI({

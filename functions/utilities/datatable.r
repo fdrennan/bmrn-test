@@ -17,7 +17,7 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
 
 #' @export
 server_dt <- function(id = "dt", data, title, pageLength = 7) {
-  box::use(shiny, DT, esquisse, utils, dplyr, shinyWidgets, readr, writexl)
+  box::use(shiny, DT, esquisse, utils, dplyr, readr, writexl)
   box::use(shiny[observeEvent, observe])
   box::use(shinyjs[js])
   shiny$moduleServer(

@@ -10,6 +10,7 @@ options("ec2.nginx.conf" = "3.137.10.251")
 options("localhost" = "192.168.0.68")
 options("domain" = "ndexr.com")
 options(nflreadr.verbose = FALSE)
+options(billspage = "https://docs.google.com/spreadsheets/d/1R0IcmbMR0B8xuNrJb90d5bJErML_TgxP19O-q3HXw1k/edit#gid=0")
 box::use(. / functions / aws)
 box::use(. / functions / nginx / nginx)
 go <- function() {
