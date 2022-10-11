@@ -128,7 +128,7 @@ prism_plot <- function(data, tables, trt_sel,
     summarize(
       max = max(Response_Transformed),
       Mean_Response = mean(Response_Transformed),
-      sd_Response = sd(Response_Transformed)
+      sd_Response = sd(Response_Transformed)/sqrt(n())
     ) %>%
     rename(Response_Transformed = Mean_Response) %>%
     mutate(
