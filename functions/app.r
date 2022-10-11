@@ -77,10 +77,13 @@ ui_app <- function(id = "app") {
       tags$main(
         id = ns("maximize"),
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
-        includeHTML("www/html/dashboardMenu.html"),
-        shiny$actionButton(ns("fullscreen"), "Full Screen"),
+        # includeHTML("www/html/dashboardMenu.html"),
+        div(
+          class = "d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 mb-3 border-bottom",
+          shiny$h2("Dashboard"), shiny$actionButton(ns("fullscreen"), shiny::icon("expand"))
+        ),
         uiOutput(ns("currentApp"), container = function(...) {
-          div(class = "row", ...)
+          div(style = "max-height: 100vh; overflow-y: auto;", class = "row", ...)
         })
       )
     )

@@ -36,18 +36,18 @@ server <- function(router) {
     box::use(. / app)
     box::use(. / hub)
     box::use(. / nfl)
-    box::use(shinymanager[secure_server, check_credentials])
+    # box::use(shinymanager[secure_server, check_credentials])
 
-    credentials <- data.frame(
-      user = c("", "shinymanager"), # mandatory
-      password = c("", "12345"), # mandatory
-      stringsAsFactors = FALSE
-    )
+    # credentials <- data.frame(
+    #   user = c("", "shinymanager"), # mandatory
+    #   password = c("", "12345"), # mandatory
+    #   stringsAsFactors = FALSE
+    # )
 
-    res_auth <- secure_server(
-      keep_token = TRUE,
-      check_credentials = check_credentials(credentials)
-    )
+    # res_auth <- secure_server(
+    #   keep_token = TRUE,
+    #   check_credentials = check_credentials(credentials)
+    # )
 
     router$server(input, output, session)
     app$server_app("app")
@@ -55,7 +55,6 @@ server <- function(router) {
     nfl$server_pigskin_analytics("pigskin_analytics")
   }
 }
-
 
 
 #' @export
@@ -66,7 +65,7 @@ start <- function() {
   box::use(shiny.router[make_router, route, page404, route_link])
   box::use(. / app)
   box::use(. / nfl)
-  box::use(shinymanager[secure_app, auth_ui, secure_server, check_credentials])
+  # box::use(shinymanager[secure_app, auth_ui, secure_server, check_credentials])
   router <- make_router(
     route("home", app$ui_app(id = "app")),
     route("hub", hub$ui_hub("hub")),
@@ -75,7 +74,7 @@ start <- function() {
   )
 
   ui <- ui(router)
-  ui <- secure_app(ui, enable_admin = TRUE)
+  # ui <- secure_app(ui, enable_admin = TRUE)
   shinyApp(ui, server(router))
 }
 
