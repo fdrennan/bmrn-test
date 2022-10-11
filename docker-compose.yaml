@@ -4,7 +4,7 @@ services:
   app:
     container_name: ndexr_app
     build: .
-    command: ["R", "-e", "source('run.r')"]
+    command: ["R", "-e", "box::use(./functions/main);main$$main()"]
     restart: always
     user: 'root'
     ports:

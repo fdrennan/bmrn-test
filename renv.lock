@@ -1365,6 +1365,16 @@
         "rlang"
       ]
     },
+    "prompter": {
+      "Package": "prompter",
+      "Version": "1.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "eb63c3c596c2520fff23e1dd50008e74",
+      "Requirements": [
+        "shiny"
+      ]
+    },
     "ps": {
       "Package": "ps",
       "Version": "1.7.1",
@@ -1609,6 +1619,17 @@
         "sourcetools",
         "withr",
         "xtable"
+      ]
+    },
+    "shiny.router": {
+      "Package": "shiny.router",
+      "Version": "0.2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d73636bd5abdb4cb23bc6314107cfd2f",
+      "Requirements": [
+        "htmltools",
+        "shiny"
       ]
     },
     "shinyWidgets": {
