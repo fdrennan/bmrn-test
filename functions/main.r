@@ -52,7 +52,8 @@ start <- function() {
   box::use(shiny.router[make_router, route, page404, route_link])
   box::use(. / app)
   box::use(. / nfl)
-  # box::use(. / main)
+
+
   router <- make_router(
     route("home", app$app_ui(id = "app")),
     route("hub", hub$ui_hub("hub")),

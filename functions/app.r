@@ -79,7 +79,7 @@ app_ui <- function(id = "app") {
       ),
       tags$main(
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
-        # includeHTML("www/html/dashboardMenu.html"),
+        includeHTML("www/html/dashboardMenu.html"),
         uiOutput(ns("currentApp"), container = function(...) {
           div(class = "row", ...)
         })
