@@ -15,6 +15,7 @@ server_hub <- function(id = "hub") {
   box::use(shiny[div, observeEvent])
   box::use(tibble)
   box::use(shinyjs[js])
+
   shiny$moduleServer(
     id,
     function(input, output, session) {
