@@ -12,3 +12,6 @@ options("domain" = "ndexr.com")
 options(nflreadr.verbose = FALSE)
 box::use(. / functions / aws)
 box::use(. / functions / nginx / nginx)
+go <- function() {
+  rstudioapi::restartSession("box::use(./functions/main);main$main()")
+}

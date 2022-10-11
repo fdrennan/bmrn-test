@@ -84,7 +84,7 @@ ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
   updateState(instanceData, "aws-ec2")
   # remote_public_ip <- getOption("domain")
   sleep_seconds <- 10
-  # browser()
+  #
 
   ready_for_association <- FALSE
   while (isFALSE(ready_for_association)) {

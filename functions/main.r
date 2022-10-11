@@ -12,18 +12,21 @@ ui <- function(router) {
     )
     box::use(shiny[tags, actionButton, icon])
     addResourcePath("loaders", "./www/images/loaders")
+    addResourcePath("scripts", "./www/scripts")
     tags$body(
       tags$meta(charset = "utf-8"),
       tags$meta(`http-equiv` = "X-UA-Compatible", content = "IE=edge"),
       tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
       style = "max-height: 100vh; overflow-y: auto;",
       useShinyjs(),
-      extendShinyjs(
-        text = paste0(readLines("www/scripts/fullscreen.js"), collapse = "\n"), functions = "fullScreen"
-      ),
+      extendShinyjs("scripts/fullscreen.js", functions = "fullScreen"),
+      extendShinyjs("scripts/cookies.js", functions = c("setCookie", "removeCookie", "getCookie")),
       includeCSS("./www/styles.css"),
       includeScript("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"),
       includeScript("./www/scripts/enter.js"),
+      tags$script(
+        src = "https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"
+      ),
       router$ui
     )
   }
@@ -33,12 +36,12 @@ ui <- function(router) {
 server <- function(router) {
   function(input, output, session) {
     box::use(. / app)
-    box::use(. / nfl)
     box::use(. / hub)
+    box::use(. / nfl)
     router$server(input, output, session)
-    app$app_server(id = "app")
-    nfl$server_pigskin_analytics("pigskin_analytics")
+    app$server_app("app")
     hub$server_hub("hub")
+    nfl$server_pigskin_analytics("pigskin_analytics")
   }
 }
 
@@ -52,14 +55,28 @@ start <- function() {
   box::use(shiny.router[make_router, route, page404, route_link])
   box::use(. / app)
   box::use(. / nfl)
-
-
   router <- make_router(
-    route("home", app$app_ui(id = "app")),
+    route("home", app$ui_app(id = "app")),
     route("hub", hub$ui_hub("hub")),
     route("pigskin", nfl$ui_pigskin_analytics("pigskin_analytics")),
     page_404 = page404(message404 = "ABC")
   )
 
   shinyApp(ui(router), server(router))
+}
+
+
+#' @export
+main <- function() {
+  box::use(. / main)
+  box::use(shiny[runApp])
+  if (interactive()) {
+    options(shiny.host = "127.0.0.1")
+    options(shiny.port = 8000)
+  }
+  runApp(
+    main$start(),
+    port = getOption("shiny.port"),
+    host = getOption("shiny.host")
+  )
 }

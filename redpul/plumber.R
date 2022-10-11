@@ -216,7 +216,7 @@ function(urlvec = '["www.reddit.com","v.redd.it","youtu.be","i.redd.it","www.cbc
       con <- postgres_connector()
       on.exit(dbDisconnect(con))
 
-      # browser()
+      #
 
       file <- system.file("extdata", "GeoLite2-Country.mmdb", package = "rgeolocate")
       data <- tibble(

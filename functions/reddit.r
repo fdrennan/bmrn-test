@@ -157,7 +157,7 @@ server_subreddit <- function(id = "subreddit") {
       })
 
       # observe({
-      #   # browser()
+      #   #
       #   req(!is.null(input$poll))
       #   input$plots
       #   if (input$poll %% 2) {

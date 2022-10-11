@@ -6,7 +6,6 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   }) {
   box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
-  print(ns(id))
   container(
     class = class,
     id = ns(id),

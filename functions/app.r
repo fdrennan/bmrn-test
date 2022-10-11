@@ -1,14 +1,14 @@
 
 #' @export
-app_ui <- function(id = "app") {
+ui_app <- function(id = "app") {
   {
+    box::use(shiny)
     box::use(shiny[addResourcePath, NS])
     box::use(shiny[HTML, fluidPage, div, tags])
     box::use(shiny[fluidRow, column])
     box::use(shiny[plotOutput, uiOutput])
     box::use(shiny[actionButton, icon])
     box::use(shiny[includeCSS, includeScript, includeHTML])
-    box::use(shinyjs[useShinyjs, extendShinyjs])
     box::use(prompter)
     box::use(. / reddit)
     box::use(. / offcanvas)
@@ -19,9 +19,6 @@ app_ui <- function(id = "app") {
     box::use(shiny.router[route_link])
   }
   ns <- NS(id)
-
-  # http://jsfiddle.net/RichardHoultz/cxjje33y/
-
 
   div(
     header$header_ui(),
@@ -78,8 +75,10 @@ app_ui <- function(id = "app") {
         )
       ),
       tags$main(
+        id = ns("maximize"),
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         includeHTML("www/html/dashboardMenu.html"),
+        shiny$actionButton(ns("fullscreen"), "Full Screen"),
         uiOutput(ns("currentApp"), container = function(...) {
           div(class = "row", ...)
         })
@@ -89,7 +88,7 @@ app_ui <- function(id = "app") {
 }
 
 #' @export
-app_server <- function(id = "app") {
+server_app <- function(id = "app") {
   {
     box::use(shiny[moduleServer, observeEvent, div, reactive, reactiveValues])
     box::use(shiny[observe, uiOutput, renderPlot, icon, actionButton, req])
@@ -107,7 +106,8 @@ app_server <- function(id = "app") {
     function(input, output, session) {
       ns <- session$ns
 
-      observeEvent(input$full, {
+      observeEvent(input$fullscreen, {
+        # browser()
         js$fullScreen(ns("maximize"))
       })
 
