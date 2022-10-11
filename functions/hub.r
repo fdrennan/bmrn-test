@@ -5,12 +5,7 @@ ui_hub <- function(id = "hub") {
   ns <- shiny$NS(id)
   shiny$div(
     id = ns("maximize"),
-    # tags$head(shinyjs::useShinyjs()),
-    shiny$textInput(ns("name_set"), "What is your name?"),
-    shiny$actionButton(ns("save"), "Save cookie"),
-    shiny$actionButton(ns("remove"), "remove cookie"),
-    shiny$uiOutput(ns("name_get")),
-    shiny$actionButton(ns("full"), "Big Hub")
+    shiny$uiOutput(ns("app"))
   )
 }
 
@@ -24,14 +19,8 @@ server_hub <- function(id = "hub") {
     id,
     function(input, output, session) {
       ns <- session$ns
-
-      observeEvent(input$full, {
-        # browser()
-        js$fullScreen(ns("maximize"))
-      })
-
-      shiny$observeEvent(input$save, {
-        browser()
+      output$app <- shiny$renderUI({
+        shiny$h1("Hub")
       })
     }
   )

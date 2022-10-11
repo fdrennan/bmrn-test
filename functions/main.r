@@ -38,6 +38,23 @@ server <- function(router) {
     box::use(. / app)
     box::use(. / hub)
     box::use(. / nfl)
+    box::use(shinymanager[secure_app, auth_ui, secure_server, check_credentials])
+
+    credentials <- data.frame(
+      user = c("shiny", "shinymanager"), # mandatory
+      password = c("azerty", "12345"), # mandatory
+      start = c("2019-04-15"), # optinal (all others)
+      expire = c(NA, "2019-12-31"),
+      admin = c(FALSE, TRUE),
+      comment = "Simple and secure authentification mechanism
+  for single ‘Shiny’ applications.",
+      stringsAsFactors = FALSE
+    )
+
+    res_auth <- secure_server(
+      check_credentials = check_credentials(credentials)
+    )
+
     router$server(input, output, session)
     app$server_app("app")
     hub$server_hub("hub")
@@ -55,14 +72,16 @@ start <- function() {
   box::use(shiny.router[make_router, route, page404, route_link])
   box::use(. / app)
   box::use(. / nfl)
+  box::use(shinymanager[secure_app, auth_ui, secure_server, check_credentials])
   router <- make_router(
     route("home", app$ui_app(id = "app")),
     route("hub", hub$ui_hub("hub")),
     route("pigskin", nfl$ui_pigskin_analytics("pigskin_analytics")),
     page_404 = page404(message404 = "ABC")
   )
-
-  shinyApp(ui(router), server(router))
+  ui <- ui(router)()
+  # ui <- secure_app(ui)
+  shinyApp(ui, server(router))
 }
 
 
