@@ -1,0 +1,68 @@
+---
+title: "R Notebook"
+---
+
+```{r}
+library(fs)
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(purrr)
+library(readr)
+library(janitor)
+
+finances <- fs::dir_ls('finances')
+finances <- map_dfr(finances, function(x) {
+  out <- read_csv(x)
+  out$account <- x
+  out <- out |> clean_names()
+  out
+})
+```
+
+```{r}
+finances <- finances |> 
+  # filter(date >= Sys.Date() - 31) |> 
+  mutate(
+    month = floor_date(date, 'month'),
+    description = str_remove(description, '[:digit:]{6}$'),
+    description = str_trim(description)
+  ) 
+```
+ 
+
+
+```{r}
+general_trends <- finances |> 
+  group_by(date, account, category, description) |> 
+  summarise(n = n(), amount = sum(amount)) |> 
+  # arrange(desc(month),category, description)  
+  arrange(desc(date), amount)
+```
+
+```{r}
+
+gtp <- 
+  general_trends |> 
+  group_by(description) |> 
+  summarise(amount = sum(amount)) |> 
+  ggplot() +
+  aes(x = reorder(description, desc(amount)), y = amount) +
+  geom_col() +
+  coord_flip() +
+  xlab('Payee')
+ggplotly(gtp)
+```
+
+
+```{r}
+library(tidyr)
+finances |> 
+  mutate(credit = ifelse(amount > 0, 'credit', 'debit')) |> 
+  group_by(month, credit) |> 
+  summarise(
+    sum_amount = sum(amount)
+  ) |> 
+  pivot_wider(names_from = credit, values_from = sum_amount) |> 
+  mutate(profit = credit + debit)
+```

@@ -118,13 +118,13 @@ server_app <- function(id = "app") {
       navbar$server_navbar()
 
 
-      # observe({
-      #   input$goToHub
-      #   output$currentApp <- renderUI({
-      #     hub$ui_hub(ns("hub"))
-      #   })
-      #   hub$server_hub("hub")
-      # })
+      observe({
+        input$goToHub
+        output$currentApp <- renderUI({
+          hub$ui_hub(ns("hub"))
+        })
+        hub$server_hub("hub")
+      })
 
 
       observeEvent(input$goToSubreddit, {
