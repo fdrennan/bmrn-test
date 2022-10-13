@@ -31,7 +31,7 @@ docker-build:
   only:
     - dev
   tags:
-    -ndexr
+    - ndexr
 
 docker-build-base:
   image: docker:latest
