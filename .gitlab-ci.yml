@@ -17,6 +17,8 @@ docker-build-master:
     - docker push "$CI_REGISTRY_IMAGE"
   only:
     - main
+  tags:
+    - run
 
 docker-build:
   image: docker:latest
