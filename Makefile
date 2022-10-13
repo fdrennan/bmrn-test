@@ -106,7 +106,7 @@ gitlabsetup:
 gitlab:
 	docker run -d --name gitlab-runner --restart always \
 		    -v /var/run/docker.sock:/var/run/docker.sock \
-		        -v gitlab-runner-config:/etc/gitlab-runner \
+		        -v /etc/gitlab-runner/config.toml:/etc/gitlab-runner \
 			    gitlab/gitlab-runner:latest
 gitlabauth:
 	sudo gitlab-runner register --non-interactive --executor docker+machine --docker-image docker:latest --url https://gitlab.com/ --registration-token GR1348941whxCEwiTrhz8udmhej1p
@@ -119,7 +119,7 @@ runnerrun:
 	sudo gitlab-runner register \
 		  --non-interactive \
 		  --url "https://gitlab.com/" \
-		  --registration-token "GR1348941F3FKM9gQwsssPZ1J18C_" \
+		  --registration-token "GR1348941SUJsuHKnB9y5J4sauUrZ" \
 		  --executor "docker" \
 		  --docker-image alpine:latest \
 		  --description "docker-runner" \
