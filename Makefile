@@ -58,7 +58,7 @@ describe:
 	docker images ls
 	docker volume ls
 
-build: describe
+build:
 	docker-compose build --parallel
 
 prod:
