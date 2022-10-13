@@ -115,7 +115,19 @@ runnerinstall: login
 	curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_${arch}.deb"
 	dpkg -i gitlab-runner_ubuntu.deb
 	sudo gitlab-runner register
-
+runnerrun:
+	sudo gitlab-runner register \
+		  --non-interactive \
+		  --url "https://gitlab.com/" \
+		  --registration-token "GR1348941F3FKM9gQwsssPZ1J18C_" \
+		  --executor "docker" \
+		  --docker-image alpine:latest \
+		  --description "docker-runner" \
+		  --maintenance-note "Free-form maintainer notes about this runner" \
+		  --tag-list "run" \
+		  --run-untagged="true" \
+		  --locked="false" \
+		  --access-level="not_protected"
 
 ### END GITLAB
 focal: login
