@@ -20,7 +20,7 @@ docker-build-master:
   tags:
     - run
 
-docker-build:
+build-dev:
   image: docker:latest
   stage: build
   services:
