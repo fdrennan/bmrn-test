@@ -18,6 +18,7 @@ ui <- function(router) {
     tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
     style = "max-height: 100vh; overflow-y: auto;",
     useShinyjs(),
+    extendShinyjs("scripts/openWindow.js", functions = "openWindow"),
     extendShinyjs("scripts/fullscreen.js", functions = "fullScreen"),
     extendShinyjs("scripts/cookies.js", functions = c("setCookie", "removeCookie", "getCookie")),
     includeCSS("./www/styles.css"),

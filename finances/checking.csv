@@ -1,20 +1,29 @@
 Date,Description,Original Description,Category,Amount,Status
-2022-10-11,"MCDONALD'S F36634  G             101022","MCDONALD'S F36634  G             101022",Category Pending,-10.04,Pending
-2022-10-11,"SCOTCH PINE LIQUOR,              101022","SCOTCH PINE LIQUOR,              101022",Category Pending,-3.23,Pending
-2022-10-11,"CSU PARKING  FORT CO             101022","CSU PARKING  FORT CO             101022",Category Pending,-9.00,Pending
-2022-10-11,"CSU PARKING  FORT CO             101022","CSU PARKING  FORT CO             101022",Category Pending,-11.00,Pending
-2022-10-11,"CSU PARKING  FORT CO             101022","CSU PARKING  FORT CO             101022",Category Pending,-7.00,Pending
-2022-10-11,"SQ *SUGAR SHACK  EST             100922","SQ *SUGAR SHACK  EST             100922",Category Pending,-7.34,Pending
-2022-10-11,"ESTESCARPARKTOWNHALL             100922","ESTESCARPARKTOWNHALL             100922",Category Pending,-4.00,Pending
-2022-10-11,"ESTESCARPARKTOWNHALL             100922","ESTESCARPARKTOWNHALL             100922",Category Pending,-4.00,Pending
-2022-10-11,"STARBUCKS  SEATTLE 9             100922","STARBUCKS  SEATTLE 9             100922",Category Pending,-20.00,Pending
-2022-10-11,"STARBUCKS STORE 2620             100922","STARBUCKS STORE 2620             100922",Category Pending,-3.15,Pending
-2022-10-07,"STARBUCKS STORE 2620             100722","STARBUCKS STORE 2620             100722",Category Pending,-23.47,Pending
-2022-10-06,"SCOTCH PINE LIQUOR,              100622","SCOTCH PINE LIQUOR,              100622",Category Pending,-3.17,Pending
-2022-10-06,"SCOTCH PINE LIQUOR,              100622","SCOTCH PINE LIQUOR,              100622",Category Pending,-12.70,Pending
-2022-10-07,"CHICK-FIL-A #03676               100722","CHICK-FIL-A #03676               100722",Category Pending,-9.28,Pending
-2022-10-06,"CSU LAKE STREET MARK             100622","CSU LAKE STREET MARK             100622",Category Pending,-2.36,Pending
-2022-10-07,"APPLE.COM/BILL                   100722","APPLE.COM/BILL                   100722",Category Pending,-9.99,Pending
+2022-10-10,"SCOTCH PINE LIQUOR,              101022","SCOTCH PINE LIQUOR,              101022",Category Pending,-3.23,Pending
+2022-10-11,"APPLE.COM/BILL                   101122","APPLE.COM/BILL                   101122",Category Pending,-7.26,Pending
+2022-10-11,"PARKMOBILE                       101122","PARKMOBILE                       101122",Category Pending,-1.76,Pending
+2022-10-12,"APPLE.COM/BILL  www.             101222","APPLE.COM/BILL  www.             101222",Category Pending,-15.99,Pending
+2022-10-12,"Wal-Mart Super Cente             101222","Wal-Mart Super Cente             101222",Category Pending,-20.12,Posted
+2022-10-12,"USAA FUNDS TRANSFER CR","USAA FUNDS TRANSFER CR",Category Pending,150.00,Posted
+2022-10-12,"BIG D #51 1000 35TH              101222","BIG D #51 1000 35TH              101222",Category Pending,-0.53,Posted
+2022-10-11,"Shell","SHELL SERVICE STATION    GREELEY      CO",Gas,-24.26,Posted
+2022-10-11,"Starbucks","STARBUCKS STORE 26207    TINMATH      CO",Coffee Shops,-23.47,Posted
+2022-10-11,"Starbucks","STARBUCKS 800-782-7282   800-782-7282 WA",Coffee Shops,-20.00,Posted
+2022-10-11,"Scotch Pine Liquor Inc","SCOTCH PINE LIQUOR, INC. SEVERANCE    CO",Alcohol Bars,-12.70,Posted
+2022-10-11,"Csu Parking","CSU PARKING              FORT COLLINS CO",Parking,-11.00,Posted
+2022-10-11,"McDonald's","MCDONALD'S F36634        GREELEY      CO",Fast Food,-10.04,Posted
+2022-10-11,"Apple","APPLE.COM/BILL           866-712-7753 CA",Entertainment,-9.99,Posted
+2022-10-11,"Chick-fil-A","CHICK-FIL-A #03676       TIMNATH      CO",Fast Food,-9.28,Posted
+2022-10-11,"Csu Parking","CSU PARKING              FORT COLLINS CO",Parking,-9.00,Posted
+2022-10-11,"Sugar Shack","SQ *SUGAR SHACK          ESTES PARK   CO",Groceries,-8.34,Posted
+2022-10-11,"Apple","APPLE.COM/BILL           866-712-7753 CA",Entertainment,-7.99,Posted
+2022-10-11,"Csu Parking","CSU PARKING              FORT COLLINS CO",Parking,-7.00,Posted
+2022-10-11,"King Soopers","KING SOOPERS #01 1520 MAIWINDSOR      CO",Groceries,-4.69,Posted
+2022-10-11,"Estescarparktownhalllot","ESTESCARPARKTOWNHALLLOT  ESTES PARK   CO",Parking,-4.00,Posted
+2022-10-11,"Estescarparktownhalllot","ESTESCARPARKTOWNHALLLOT  ESTES PARK   CO",Parking,-4.00,Posted
+2022-10-11,"Scotch Pine Liquor Inc","SCOTCH PINE LIQUOR, INC. SEVERANCE    CO",Alcohol Bars,-3.17,Posted
+2022-10-11,"Starbucks","STARBUCKS STORE 26207    TINMATH      CO",Coffee Shops,-3.15,Posted
+2022-10-11,"Csu Lake Street Market","CSU LAKE STREET MARKET   FORT COLLINS CO",Fast Food,-2.36,Posted
 2022-10-07,"Walmart","Wal-Mart Super Center4599TIMNATH      CO",Shopping,-53.99,Posted
 2022-10-07,"Loaf 'N Jug","LOAF N JUG # 081 1601 S CFORT COLLINS CO",Gas,-32.67,Posted
 2022-10-07,"Transfer to Apple Pay","APPLE CASH               1INFINITELOOPCA",Transfer,-10.00,Posted
@@ -1548,3 +1557,425 @@ Date,Description,Original Description,Category,Amount,Status
 2022-03-01,"Docker Inv","DOCKER:INV-8A961F37-             030122",Internet,-7.00,Posted
 2022-03-01,"ParkMobile","PARKMOBILE                       030122",Parking,-3.20,Posted
 2022-03-01,"ParkMobile","PARKMOBILE                       030122",Parking,-1.20,Posted
+2022-02-28,"Target","TARGET T- 2936 Counc             022722",Shopping,-238.43,Posted
+2022-02-28,"HelloFresh","PP*HELLOFRESH                    022622",Groceries,-103.44,Posted
+2022-02-28,"Nailbar & Co Inc","NAILBAR & CO. INC.               022422",Personal Care,-66.00,Posted
+2022-02-28,"Brew Pub","G5 BREW PUB                      022422",Alcohol Bars,-54.43,Posted
+2022-02-28,"Envy Brewing","TST* ENVY BREWING                022822",Alcohol Bars,-50.00,Posted
+2022-02-28,"Green Dragon","GREEN DRAGON FORT CO             022622",Pharmacy,-39.31,Posted
+2022-02-28,"Garbanzo Mediterrane","GARBANZO MEDITERRANE             022522",Fast Food,-30.50,Posted
+2022-02-28,"USAA Transfer","USAA FUNDS TRANSFER DB",Transfer,-25.00,Posted
+2022-02-28,"Starbucks","STARBUCKS STORE 2620             022722",Coffee Shops,-21.71,Posted
+2022-02-28,"Starbucks","STARBUCKS STORE 2620             022522",Coffee Shops,-21.71,Posted
+2022-02-28,"Apple","APPLE.COM/BILL                   022722",Entertainment,-18.25,Posted
+2022-02-28,"Xbox Game Pass Ultimate","MICROSOFT*ULTIMATE 1             022722",Entertainment,-16.23,Posted
+2022-02-28,"Quiznos","QUIZNOS #5437                    022722",Fast Food,-14.43,Posted
+2022-02-28,"Chick-fil-A","CHICK-FIL-A #03676               022422",Fast Food,-13.37,Posted
+2022-02-28,"Smoothie King","SMOOTHIE KING - 1886             022422",Fast Food,-11.94,Posted
+2022-02-28,"Quiznos","QUIZNOS #5437                    022722",Fast Food,-11.68,Posted
+2022-02-28,"Apple","APPLE.COM/BILL                   022722",Entertainment,-9.67,Posted
+2022-02-28,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              022322",Alcohol Bars,-9.50,Posted
+2022-02-28,"HelloFresh","PP*HELLOFRESH                    022622",Groceries,-9.35,Posted
+2022-02-28,"Xpress","74 XPRESS                        022822",Gas,-7.38,Posted
+2022-02-28,"Ignite Smoke And Vap","IGNITE SMOKE AND VAP             022622",Shopping,-5.75,Posted
+2022-02-28,"Dollar General","DOLLAR GENERAL #DG 2             022722",Shopping,-4.12,Posted
+2022-02-28,"Target","TARGET T- 2936 Counc             022722",Shopping,-1.83,Posted
+2022-02-28,"Xpress","74 XPRESS                        022822",Gas,-1.69,Posted
+2022-02-25,"Murphy USA","MURPHY7494ATWAL                  022522",Gas,-41.21,Posted
+2022-02-25,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              022522",Alcohol Bars,-40.74,Posted
+2022-02-25,"Dollar General","DOLLAR GENERAL #DG 2             022522",Shopping,-23.30,Posted
+2022-02-25,"Starbucks","STARBUCKS STORE 2620             022422",Coffee Shops,-18.51,Posted
+2022-02-25,"Walmart","WAL-MART #4599                   022522",Shopping,-12.29,Posted
+2022-02-25,"Honolulu Poke Bar","HONOLULU POKE BAR                022422",Food Dining,-6.32,Posted
+2022-02-25,"Dollar General","DOLLAR GENERAL #DG 2             022422",Shopping,-5.87,Posted
+2022-02-25,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,1728.14,Posted
+2022-02-24,"Merrick Bank Transfer","MERRICK BANK COR MOBILE PAY ***********1368",Transfer,-41.00,Posted
+2022-02-24,"Walmart","WAL-MART #4599                   022422",Shopping,-24.94,Posted
+2022-02-24,"Sally Beauty","SALLY BEAUTY #38 284             022422",Personal Care,-23.57,Posted
+2022-02-24,"Smoothie King","SMOOTHIE KING - 1886             022222",Fast Food,-14.99,Posted
+2022-02-24,"ParkMobile","PARKMOBILE                       022422",Parking,-3.20,Posted
+2022-02-24,"Loaf 'N Jug","LOAF N JUG # 0811601             022422",Fast Food,-2.15,Posted
+2022-02-24,"ParkMobile","PARKMOBILE                       022422",Parking,-1.20,Posted
+2022-02-24,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,554.89,Posted
+2022-02-23,"Poudre Valley Ru Web","POUDRE VALLEY RU WEB PMTS   ***********6Q6J",Utilities,-159.12,Posted
+2022-02-23,"Xcel Energy","XCEL ENERGY-PSCO XCELENERGY ***********6208",Utilities,-68.25,Posted
+2022-02-23,"Merrick Bank Transfer","MERRICK BANK COR MOBILE PAY ***********6460",Transfer,-41.00,Posted
+2022-02-23,"Walmart","Wal-Mart Super Cente             022322",Shopping,-27.86,Posted
+2022-02-23,"Murphy USA","MURPHY7494ATWAL                  022322",Gas,-27.82,Posted
+2022-02-23,"Murphy USA","MURPHY7494ATWAL                  022322",Gas,-11.11,Posted
+2022-02-23,"ParkMobile","PARKMOBILE                       022322",Parking,-3.20,Posted
+2022-02-22,"Lumen","LumenCenturyLink SPEEDPAY   ***********CHEY",Bills Utilities,-65.59,Posted
+2022-02-22,"Waste Management","WASTE MANAGEMENT INTERNET   ***********2560",Utilities,-13.50,Posted
+2022-02-22,"PayPal Purchase","PAYPAL           INST XFER  *********** CBS",Uncategorized,-5.40,Posted
+2022-02-22,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-320.00,Posted
+2022-02-22,"Walmart","WM SUPERCENTER #Wal-             022022",Shopping,-213.89,Posted
+2022-02-22,"Motherload Cafe Ta","MOTHERLOAD CAFE + TA             021922",Food Dining,-73.74,Posted
+2022-02-22,"HelloFresh","PP*HELLOFRESH                    021922",Groceries,-72.30,Posted
+2022-02-22,"Town Of Severance","TOWN OF SEVERANCE                022122",Utilities,-68.87,Posted
+2022-02-22,"Union","UNION                            021822",Restaurants,-64.64,Posted
+2022-02-22,"ATM Withdrawal","PAI ISO4402 SORREL C             022122",Cash,-62.25,Posted
+2022-02-22,"Pet Supplies Plus","PET SUPPLIES PLUS #4             021922",Pet Food Supplies,-59.59,Posted
+2022-02-22,"BJ's Restaurant","BJ'S RESTAURANTS 539             022122",Restaurants,-55.70,Posted
+2022-02-22,"Walmart","WAL-MART #4599                   022122",Shopping,-48.77,Posted
+2022-02-22,"Barnes & Noble","Barnes and Nobl 2999             021922",Books,-47.87,Posted
+2022-02-22,"Circle K","CIRCLE K # 41152 450             021922",Gas,-47.58,Posted
+2022-02-22,"Honolulu Poke Bar","HONOLULU POKE BAR                021822",Food Dining,-43.83,Posted
+2022-02-22,"Square Poeme Macarons","SQ *POEME MACARONS               021822",Groceries,-42.34,Posted
+2022-02-22,"Walmart","WM SUPERC Wal-Mart S             022022",Shopping,-26.96,Posted
+2022-02-22,"Starbucks","STARBUCKS 800-782-72             022122",Coffee Shops,-25.00,Posted
+2022-02-22,"Savannah Bee Boulder","SAVANNAH BEE BOULDER             022022",Shopping,-23.40,Posted
+2022-02-22,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              021822",Alcohol Bars,-22.21,Posted
+2022-02-22,"Union","UNION                            021822",Restaurants,-20.75,Posted
+2022-02-22,"Apple","APPLE.COM/BILL                   022022",Entertainment,-20.40,Posted
+2022-02-22,"Dollar General","DOLLAR GENERAL #DG 2             022022",Shopping,-17.08,Posted
+2022-02-22,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-15.00,Posted
+2022-02-22,"Netflix","Netflix.com                      022122",Television,-13.99,Posted
+2022-02-22,"Barnes & Noble","Barnes and Nobl2999              021922",Books,-13.89,Posted
+2022-02-22,"Kum & Go","KUM&GO 0949 WINDSOR              021922",Gas,-12.23,Posted
+2022-02-22,"Lush Cosmetics","LUSH US - 351 - BOUL             021922",Personal Care,-11.75,Posted
+2022-02-22,"Smoothie King","SMOOTHIE KING - 1886             021822",Fast Food,-10.54,Posted
+2022-02-22,"Ignite Smoke And Vap","IGNITE SMOKE AND VAP             021722",Shopping,-9.60,Posted
+2022-02-22,"Starbucks","STARBUCKS STORE 2620             021922",Coffee Shops,-7.74,Posted
+2022-02-22,"Square Shebrews Coffee","SQ *SHEBREWS COFFEE              022122",Fast Food,-7.35,Posted
+2022-02-22,"Csu Parking","CSU PARKING                      021822",Parking,-5.00,Posted
+2022-02-22,"Transfer from Venmo","VENMO*Drennan Freddy             022122",Transfer,68.65,Posted
+2022-02-22,"ATM Fee Rebate","ATM REBATE",Atm Fee,2.25,Posted
+2022-02-18,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-1000.00,Posted
+2022-02-18,"USAA Loan Payment","USAA LOAN PAYMENT",Transfer,-234.72,Posted
+2022-02-18,"Chase S College","CHASE2000 S COLLEGE              021822",Cash,-83.50,Posted
+2022-02-18,"Gibs Bagels","TST* GIbs Bagels - W             021722",Restaurants,-22.90,Posted
+2022-02-18,"Square Alleycat Cafe","SQ *ALLEYCAT CAFE'               021822",Restaurants,-21.28,Posted
+2022-02-18,"Starbucks","STARBUCKS STORE 4883             021722",Coffee Shops,-18.54,Posted
+2022-02-18,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-15.00,Posted
+2022-02-18,"USAA Transfer","USAA FUNDS TRANSFER DB",Transfer,-15.00,Posted
+2022-02-18,"ParkMobile","PARKMOBILE                       021822",Parking,-3.20,Posted
+2022-02-18,"ParkMobile","PARKMOBILE                       021822",Parking,-1.60,Posted
+2022-02-18,"Society For Neurosci","SOCIETY FOR NEUROSCI             021722",Gifts Donations,37.00,Posted
+2022-02-18,"ATM Fee Rebate","ATM REBATE",Atm Fee,3.50,Posted
+2022-02-17,"PayPal Purchase","PAYPAL           INST XFER  ***********FTWA",Uncategorized,-9.95,Posted
+2022-02-17,"Disney+","DisneyPLUS                       021622",Television,-8.60,Posted
+2022-02-17,"Smoothie King","SMOOTHIE KING - 1886             021522",Fast Food,-3.91,Posted
+2022-02-17,"Google Drive","GOOGLE *Google Stora             021722",Electronics Software,-1.99,Posted
+2022-02-17,"Redbock Direct Deposit","REDBOCK          DIRECT DEP ***********8CTV",Paycheck,3827.85,Posted
+2022-02-16,"Union","UNION                            021522",Restaurants,-52.24,Posted
+2022-02-16,"ATM Withdrawal","PAI ISO4402 SORREL C             021622",Cash,-42.25,Posted
+2022-02-16,"Union","UNION                            021522",Restaurants,-18.06,Posted
+2022-02-16,"Xpress W 4th","74 XPRESS325 W 4TH A             021622",Gas,-14.32,Posted
+2022-02-16,"Dollar General","DOLLAR GENERAL #DG 2             021622",Shopping,-4.24,Posted
+2022-02-16,"ParkMobile","PARKMOBILE                       021622",Parking,-3.70,Posted
+2022-02-16,"Csu Lake Street Mark","CSU LAKE STREET MARK             021522",Fast Food,-2.36,Posted
+2022-02-16,"Ndexr.com","NDEXR.COM                        021522",Electronics Software,-0.50,Posted
+2022-02-16,"Ndexr.com","NDEXR.COM                        021522",Electronics Software,-0.50,Posted
+2022-02-16,"Ndexr.com","NDEXR.COM                        021522",Electronics Software,-0.50,Posted
+2022-02-16,"Ndexr.com","NDEXR.COM                        021522",Electronics Software,-0.50,Posted
+2022-02-16,"ATM Fee Rebate","ATM REBATE",Atm Fee,2.25,Posted
+2022-02-16,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,45.00,Posted
+2022-02-15,"Spotify","PAYPAL           INST XFER  ***********USAI",Music,-10.67,Posted
+2022-02-15,"Conoco","CONOCO - ALTA CONVEN             021422",Gas,-41.33,Posted
+2022-02-15,"Brew Pub","G5 BREW PUB                      021322",Alcohol Bars,-29.51,Posted
+2022-02-15,"Google Drive","GOOGLE *Google Stora             021522",Electronics Software,-9.99,Posted
+2022-02-15,"ParkMobile","PARKMOBILE                       021522",Parking,-3.20,Posted
+2022-02-15,"ParkMobile","PARKMOBILE                       021522",Parking,-3.20,Posted
+2022-02-15,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,75.00,Posted
+2022-02-14,"Interest Paid","INTEREST PAID",Interest Income,0.01,Posted
+2022-02-14,"Synchrony Credit Card","SYNCHRONY BANK   PAYMENT    ***********5410",Credit Card Payment,-56.00,Posted
+2022-02-14,"HelloFresh","PP*HELLOFRESH                    021222",Groceries,-62.95,Posted
+2022-02-14,"First Watch","FIRST WATCH - 422                021222",Restaurants,-53.87,Posted
+2022-02-14,"Domino's","DOMINO'S 6339                    021322",Fast Food,-40.40,Posted
+2022-02-14,"Adobe","PP*ADOBE INC                     021422",Electronics Software,-29.99,Posted
+2022-02-14,"Square Nuance Chocolate","SQ *NUANCE CHOCOLATE             021122",Groceries,-20.06,Posted
+2022-02-14,"Starbucks","STARBUCKS STORE 2620             021222",Coffee Shops,-18.62,Posted
+2022-02-14,"Chick-fil-A","CHICK-FIL-A #03676               021122",Fast Food,-15.51,Posted
+2022-02-14,"Dollar General","DOLLAR GENERAL #DG 2             021322",Shopping,-12.71,Posted
+2022-02-14,"Amazon Web Services","Amazon web services              021122",Hosting,-12.00,Posted
+2022-02-14,"Csu Lake Street Mark","CSU LAKE STREET MARK             021122",Fast Food,-6.21,Posted
+2022-02-14,"Alta Convenience","ALTA CONVENIENCE                 021422",Gas,-6.11,Posted
+2022-02-14,"Dollar General","DOLLAR GENERAL #DG 2             021322",Shopping,-4.12,Posted
+2022-02-14,"Hackmd Io","HACKMD.IO                        021322",Electronics Software,-4.00,Posted
+2022-02-14,"ParkMobile","PARKMOBILE                       021422",Parking,-3.20,Posted
+2022-02-14,"ParkMobile","PARKMOBILE                       021222",Parking,-3.20,Posted
+2022-02-14,"ParkMobile","PARKMOBILE                       021222",Parking,-3.20,Posted
+2022-02-14,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,150.00,Posted
+2022-02-11,"Credit One Bank","Credit One Bank  Payment    ***********9126",Transfer,-8.28,Posted
+2022-02-11,"US Postal Service","USPS PO 07889203 412             021122",Shipping,-29.79,Posted
+2022-02-11,"Starbucks","STARBUCKS 800-782-72             021122",Coffee Shops,-20.00,Posted
+2022-02-11,"Amazinglash","AMAZINGLASH0408                  021022",Spa Massage,-20.00,Posted
+2022-02-11,"Dollar General","DOLLAR GENERAL #DG 2             021022",Shopping,-17.21,Posted
+2022-02-11,"Dollar General","DOLLAR GENERAL #DG 2             021022",Shopping,-6.73,Posted
+2022-02-11,"Dollar General","DOLLAR GENERAL #DG 2             021122",Shopping,-4.45,Posted
+2022-02-10,"PayPal Purchase","PAYPAL           INST XFER  ***********CORD",Uncategorized,-4.99,Posted
+2022-02-10,"Walmart","WAL-MART #45994500 W             021022",Shopping,-170.88,Posted
+2022-02-10,"ParkMobile","PARKMOBILE                       021022",Parking,-3.20,Posted
+2022-02-10,"Coca Cola","COCA COLA JOHNSTOWN              020922",Food Dining,-1.75,Posted
+2022-02-10,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,554.17,Posted
+2022-02-09,"Transfer To Cash App","CASH APP*JENNY                   020822",Transfer,-180.00,Posted
+2022-02-09,"ATM Withdrawal","PAI ISO4402 SORREL C             020922",Cash,-62.25,Posted
+2022-02-09,"Murphy USA","MURPHY7494ATWAL                  020922",Gas,-28.60,Posted
+2022-02-09,"Smoothie King","SMOOTHIE KING - 1886             020722",Fast Food,-11.94,Posted
+2022-02-09,"Dollar General","DOLLAR GENERAL #DG 2             020922",Shopping,-8.00,Posted
+2022-02-09,"Freddy's Frozen Custard & Steakburgers","FREDDY'S 16-0008                 020822",Fast Food,-3.57,Posted
+2022-02-09,"ParkMobile","PARKMOBILE                       020922",Parking,-3.20,Posted
+2022-02-09,"ParkMobile","PARKMOBILE                       020922",Parking,-3.20,Posted
+2022-02-09,"ParkMobile","PARKMOBILE                       020922",Parking,-3.20,Posted
+2022-02-09,"ATM Fee Rebate","ATM REBATE",Atm Fee,2.25,Posted
+2022-02-09,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,60.00,Posted
+2022-02-08,"Brew Pub","G5 BREW PUB                      020622",Alcohol Bars,-23.72,Posted
+2022-02-08,"Murphy USA","MURPHY7494ATWAL                  020822",Gas,-5.71,Posted
+2022-02-08,"ParkMobile","PARKMOBILE                       020822",Parking,-3.20,Posted
+2022-02-07,"Mr. Cooper","Nationstar dba   Mr Cooper  ***********8302",Mortgage Payment,-1648.89,Posted
+2022-02-07,"Social Fort Collin","Social - Fort Collin             020422",Restaurants,-108.07,Posted
+2022-02-07,"Target","TARGET T- 2936 Counc             020522",Shopping,-101.81,Posted
+2022-02-07,"HelloFresh","PP*HELLOFRESH                    020522",Groceries,-100.01,Posted
+2022-02-07,"Suehiro Japanese Res","SUEHIRO JAPANESE RES             020522",Restaurants,-72.93,Posted
+2022-02-07,"Pet Supplies Plus","PET SUPPLIES PLUS #4             020522",Pet Food Supplies,-59.59,Posted
+2022-02-07,"Circle K","CIRCLE K # 41152 450             020522",Gas,-46.77,Posted
+2022-02-07,"Sport Clips","SPORT CLIPS - CO304              020522",Hair,-38.00,Posted
+2022-02-07,"Starbucks","STARBUCKS 800-782-72             020622",Coffee Shops,-25.00,Posted
+2022-02-07,"Walmart","WM SUPERCENTER #Wal-             020722",Shopping,-21.89,Posted
+2022-02-07,"Starbucks","STARBUCKS 800-782-72             020722",Coffee Shops,-15.00,Posted
+2022-02-07,"Smoothie King","SMOOTHIE KING - 1886             020422",Fast Food,-13.99,Posted
+2022-02-07,"Dollar General","DOLLAR GENERAL #DG 2             020722",Shopping,-12.75,Posted
+2022-02-07,"Spotify","SPOTIFY                          020522",Music,-10.67,Posted
+2022-02-07,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              020622",Alcohol Bars,-9.50,Posted
+2022-02-07,"McDonald's","MCDONALD'S F190                  020422",Fast Food,-9.22,Posted
+2022-02-07,"TCBY","TCBY FORT COLLINS                020622",Fast Food,-9.06,Posted
+2022-02-07,"Taco Bell","TACO BELL 036116                 020522",Fast Food,-5.33,Posted
+2022-02-07,"Girl Scout Cookies","GIRL SCOUT COOKIES               020622",Food Dining,-5.00,Posted
+2022-02-07,"ParkMobile","PARKMOBILE                       020522",Parking,-3.20,Posted
+2022-02-07,"Old Town Parking Gar","OLD TOWN PARKING GAR             020322",Parking,-2.00,Posted
+2022-02-07,"Amazon","AMZN Mktp US                     020422",Shopping,21.13,Posted
+2022-02-07,"Amazon","Amazon.com                       020422",Shopping,8.42,Posted
+2022-02-04,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-216.00,Posted
+2022-02-04,"Nail Spa Midtown","LV NAIL SPA MIDTOWN1             020322",Personal Care,-181.20,Posted
+2022-02-04,"Dollar General","DOLLAR GENERAL #DG 2             020422",Shopping,-26.29,Posted
+2022-02-04,"Hulu","HLU*Hulu 28024944229             020422",Television,-7.52,Posted
+2022-02-04,"Amazon","AMZN Mktp US*UA8BD7R             020322",Shopping,-7.40,Posted
+2022-02-04,"ParkMobile","PARKMOBILE                       020422",Parking,-3.20,Posted
+2022-02-03,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-1000.00,Posted
+2022-02-03,"USAA Insurance Payment","USAA INSURANCE PAYMENT",Financial,-243.17,Posted
+2022-02-03,"BJ's Restaurant","BJ'S RESTAURANTS 539             020222",Restaurants,-29.33,Posted
+2022-02-03,"King Soopers","KING SOOP 2325 S. CO             020322",Groceries,-25.72,Posted
+2022-02-03,"Dollar General","DOLLAR GENERAL #DG 2             020322",Shopping,-23.71,Posted
+2022-02-03,"Starbucks","STARBUCKS STORE 2620             020222",Coffee Shops,-15.04,Posted
+2022-02-03,"Smoothie King","SMOOTHIE KING - 1886             020122",Fast Food,-11.09,Posted
+2022-02-03,"Chick-fil-A","CHICK-FIL-A #01888               020122",Fast Food,-9.69,Posted
+2022-02-03,"Apple","APPLE.COM/BILL                   020322",Entertainment,-2.99,Posted
+2022-02-03,"Wendy's","WENDY'S #11966                   020222",Fast Food,-1.80,Posted
+2022-02-03,"Redbock Direct Deposit","REDBOCK          DIRECT DEP ***********8CTV",Paycheck,3827.83,Posted
+2022-02-02,"AT&T","ATT              Payment    ***********PAYL",Utilities,-224.97,Posted
+2022-02-02,"Amazon Web Services","Amazon web services              020222",Hosting,-51.16,Posted
+2022-02-02,"Mary's Mountain Cook","MARY'S MOUNTAIN COOK             013122",Restaurants,-13.73,Posted
+2022-02-02,"Dollar General","DOLLAR GENERAL #DG 2             020122",Shopping,-12.70,Posted
+2022-02-02,"SiriusXM","SXM*SIRIUSXM.COM/ACC             020222",Music,-10.79,Posted
+2022-02-02,"Csu Lake Street Mark","CSU LAKE STREET MARK             020122",Fast Food,-3.32,Posted
+2022-02-01,"Walmart","WAL-MART #45994500 W             020122",Shopping,-100.19,Posted
+2022-02-01,"BJ's Restaurant","BJ'S RESTAURANTS 539             013122",Restaurants,-79.48,Posted
+2022-02-01,"BJ's Restaurant","BJ'S RESTAURANTS 539             013122",Restaurants,-19.52,Posted
+2022-02-01,"Docker Inv","DOCKER:INV-B6CB872D-             020122",Internet,-7.00,Posted
+2022-02-01,"Dollar General","DOLLAR GENERAL #DG 2             020122",Shopping,-5.18,Posted
+2022-02-01,"Murphy USA","MURPHY7494ATWAL                  020122",Fast Food,-4.79,Posted
+2022-02-01,"ParkMobile","PARKMOBILE                       020122",Parking,-3.20,Posted
+2022-01-31,"Amazon Store Card","AMZ_STORECRD_PMT PAYMENT    ***********0540",Credit Card Payment,-67.11,Posted
+2022-01-31,"USAA Loan Payment","USAA LOAN PAYMENT",Transfer,-234.72,Posted
+2022-01-31,"Walmart","WM SUPERCENTER #Wal-             012922",Shopping,-110.70,Posted
+2022-01-31,"HelloFresh","PP*HELLOFRESH                    012922",Groceries,-100.01,Posted
+2022-01-31,"Conoco","CONOCO - 74 XPRESS               012822",Gas,-46.59,Posted
+2022-01-31,"Costco","COSTCO WHSE #1178                012922",Shopping,-38.39,Posted
+2022-01-31,"Imperfect Foods","IMPERFECT FOODS                  013022",Groceries,-31.64,Posted
+2022-01-31,"Dollar General","DOLLAR GENERAL #DG 2             013022",Shopping,-16.03,Posted
+2022-01-31,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-15.00,Posted
+2022-01-31,"Starbucks","STARBUCKS 800-782-72             012822",Coffee Shops,-15.00,Posted
+2022-01-31,"Starbucks","STARBUCKS STORE 2620             012922",Coffee Shops,-14.35,Posted
+2022-01-31,"Dollar General","DOLLAR GENERAL #DG 2             013122",Shopping,-13.70,Posted
+2022-01-31,"Smoothie King","SMOOTHIE KING - 1886             012822",Fast Food,-10.54,Posted
+2022-01-31,"Dollar General","DOLLAR GENERAL #DG 2             013022",Shopping,-7.94,Posted
+2022-01-31,"FreshBooks","FRESHBOOKS                       013022",Business Services,-7.50,Posted
+2022-01-31,"Amazon","AMZN Mktp US*200U82M             013122",Shopping,-5.81,Posted
+2022-01-31,"Wendy's","WENDY'S #11966                   012822",Fast Food,-4.27,Posted
+2022-01-31,"ParkMobile","PARKMOBILE                       013122",Parking,-3.20,Posted
+2022-01-31,"ParkMobile","PARKMOBILE                       013122",Parking,-3.20,Posted
+2022-01-31,"ParkMobile","PARKMOBILE                       012922",Parking,-2.20,Posted
+2022-01-28,"Walmart","WM SUPERCENTER #Wal-             012822",Shopping,-261.06,Posted
+2022-01-28,"Xbox Game Pass Ultimate","MICROSOFT*ULTIMATE 1             012722",Entertainment,-16.23,Posted
+2022-01-28,"Dollar General","DOLLAR GENERAL #DG 2             012822",Shopping,-15.09,Posted
+2022-01-28,"Dollar General","DOLLAR GENERAL #DG 2             012822",Shopping,-13.50,Posted
+2022-01-28,"Smoothie King","SMOOTHIE KING - 1886             012622",Fast Food,-11.94,Posted
+2022-01-28,"ParkMobile","PARKMOBILE                       012822",Parking,-2.40,Posted
+2022-01-28,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,1728.14,Posted
+2022-01-27,"Torchys Colli","044 TORCHYS FT COLLI             012622",Restaurants,-17.53,Posted
+2022-01-27,"Square Coffee House 29","SQ *COFFEE HOUSE 29              012722",Fast Food,-14.43,Posted
+2022-01-27,"Starbucks","STARBUCKS STORE 2620             012622",Coffee Shops,-14.19,Posted
+2022-01-27,"Chick-fil-A","CHICK-FIL-A #03676               012522",Fast Food,-12.10,Posted
+2022-01-27,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              012422",Alcohol Bars,-5.91,Posted
+2022-01-27,"ParkMobile","PARKMOBILE                       012722",Parking,-3.20,Posted
+2022-01-27,"ParkMobile","PARKMOBILE                       012722",Parking,-3.20,Posted
+2022-01-27,"ParkMobile","PARKMOBILE                       012722",Parking,-3.20,Posted
+2022-01-27,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,295.40,Posted
+2022-01-26,"Transfer To Cash App","CASH APP*JENNY                   012522",Transfer,-150.00,Posted
+2022-01-26,"The Honest Company","THE HONEST COMPANY,              012622",Shopping,-130.47,Posted
+2022-01-26,"Office Max","OFFICE MA 2211 S COL             012622",Office Supplies,-29.55,Posted
+2022-01-26,"Loaf 'N Jug","LOAF N JUG # 081 351             012622",Gas,-29.21,Posted
+2022-01-26,"Starbucks","STARBUCKS 800-782-72             012622",Coffee Shops,-15.00,Posted
+2022-01-26,"Smoothie King","SMOOTHIE KING - 1886             012422",Fast Food,-10.87,Posted
+2022-01-26,"ParkMobile","PARKMOBILE                       012622",Parking,-3.20,Posted
+2022-01-26,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,70.00,Posted
+2022-01-25,"Waste Management","WASTE MANAGEMENT INTERNET   ***********2718",Utilities,-196.62,Posted
+2022-01-25,"Xcel Energy","XCEL ENERGY-PSCO XCELENERGY ***********6208",Utilities,-115.68,Posted
+2022-01-25,"Merrick Bank Transfer","MERRICK BANK COR MOBILE PAY ***********0444",Transfer,-41.00,Posted
+2022-01-25,"Amazon","AMZN Mktp US*EC00Q25             012422",Shopping,-25.73,Posted
+2022-01-25,"ParkMobile","PARKMOBILE                       012522",Parking,-3.20,Posted
+2022-01-25,"ParkMobile","PARKMOBILE                       012522",Parking,-2.40,Posted
+2022-01-25,"Coca Cola","COCA COLA JOHNSTOWN              012422",Food Dining,-1.75,Posted
+2022-01-24,"Capital One Credit Card","CAPITAL ONE      MOBILE PMT ***********YB9M",Credit Card Payment,-144.00,Posted
+2022-01-24,"Capital One Credit Card","CAPITAL ONE      MOBILE PMT ***********JIEH",Credit Card Payment,-75.00,Posted
+2022-01-24,"Merrick Bank Transfer","MERRICK BANK COR MOBILE PAY ***********6912",Transfer,-50.00,Posted
+2022-01-24,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-336.00,Posted
+2022-01-24,"Taste And Savor Wine","TASTE AND SAVOR WINE             012122",Alcohol Bars,-136.63,Posted
+2022-01-24,"HelloFresh","PP*HELLOFRESH                    012222",Groceries,-100.01,Posted
+2022-01-24,"Synchrony Bank Credit Card","SYNCB PAYMENT                    012422",Credit Card Payment,-100.00,Posted
+2022-01-24,"King Soopers","KING SOOP 2325 S. CO             012422",Groceries,-44.30,Posted
+2022-01-24,"Dollar General","DOLLAR GENERAL #DG 2             012322",Shopping,-29.06,Posted
+2022-01-24,"Amazon","AMZN MKTP US*MI3LO8N             012222",Shopping,-25.72,Posted
+2022-01-24,"Starbucks","STARBUCKS 800-782-72             012422",Coffee Shops,-25.00,Posted
+2022-01-24,"Imperfect Foods","IMPERFECT FOODS                  012222",Groceries,-24.90,Posted
+2022-01-24,"Scotch Pine Liquor","SCOTCH PINE LIQUOR,              012222",Alcohol Bars,-19.13,Posted
+2022-01-24,"Union","UNION                            012122",Restaurants,-18.06,Posted
+2022-01-24,"Dollar General","DOLLAR GENERAL #DG 2             012322",Shopping,-14.08,Posted
+2022-01-24,"Amazon","AMAZON.COM*YJ6WA1413             012222",Shopping,-11.11,Posted
+2022-01-24,"Amazon","AMZN MKTP US*3I7PX5L             012322",Shopping,-8.44,Posted
+2022-01-24,"ParkMobile","PARKMOBILE                       012222",Parking,-3.20,Posted
+2022-01-21,"PayPal Purchase","PAYPAL           INST XFER  *********** CBS",Uncategorized,-5.40,Posted
+2022-01-21,"Zelle Transfer to Corina Yanes","Zelle: Corina Yanes",Transfer,-1000.00,Posted
+2022-01-21,"Walmart","WM SUPERCENTER #Wal-             012122",Shopping,-240.31,Posted
+2022-01-21,"USAA Transfer","USAA FUNDS TRANSFER DB",Transfer,-200.00,Posted
+2022-01-21,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-121.00,Posted
+2022-01-21,"Brewhouse","DC OAKES BREWHOUSE &             012122",Restaurants,-51.33,Posted
+2022-01-21,"King Soopers","KING SOOP 2630 TIMBE             012122",Groceries,-36.62,Posted
+2022-01-21,"Netflix","Netflix.com                      012122",Television,-13.99,Posted
+2022-01-21,"Wendy's","WENDY'S #11966                   012022",Fast Food,-9.89,Posted
+2022-01-21,"Square Alleycat Cafe","SQ *ALLEYCAT CAFE'               012122",Restaurants,-8.00,Posted
+2022-01-21,"ParkMobile","PARKMOBILE                       012122",Parking,-3.40,Posted
+2022-01-21,"ParkMobile","PARKMOBILE                       012122",Parking,-3.20,Posted
+2022-01-20,"Target","TARGET T- 2936 Counc             012022",Shopping,-31.54,Posted
+2022-01-20,"Walmart","WM SUPERC Wal-Mart S             012022",Shopping,-31.38,Posted
+2022-01-20,"Dollar General","DOLLAR GENERAL #DG 2             011922",Shopping,-6.18,Posted
+2022-01-20,"ParkMobile","PARKMOBILE                       012022",Parking,-3.20,Posted
+2022-01-20,"Redbock Direct Deposit","REDBOCK          DIRECT DEP ***********6CTV",Paycheck,3827.85,Posted
+2022-01-19,"Alternative Ser","Alternative Ser338 E             011922",Cash,-42.50,Posted
+2022-01-19,"ParkMobile","PARKMOBILE                       011922",Parking,-5.20,Posted
+2022-01-19,"Dollar General","DOLLAR GENERAL #DG 2             011922",Shopping,-3.35,Posted
+2022-01-19,"ATM Fee Rebate","ATM REBATE",Atm Fee,2.50,Posted
+2022-01-19,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,40.00,Posted
+2022-01-18,"Interest Paid","INTEREST PAID",Interest Income,0.01,Posted
+2022-01-18,"Spotify","PAYPAL           INST XFER  ***********USAI",Music,-10.67,Posted
+2022-01-18,"Betta Gumbo","TST* Betta Gumbo                 011422",Restaurants,-107.62,Posted
+2022-01-18,"BJ's Restaurant","BJ'S RESTAURANTS 539             011522",Restaurants,-90.36,Posted
+2022-01-18,"Murphy USA","MURPHY7494ATWAL                  011822",Gas,-41.03,Posted
+2022-01-18,"HelloFresh","PP*HELLOFRESH                    011522",Groceries,-36.47,Posted
+2022-01-18,"Starbucks","STARBUCKS 800-782-72             011722",Coffee Shops,-25.00,Posted
+2022-01-18,"Dollar General","DOLLAR GENERAL #DG 2             011722",Shopping,-20.69,Posted
+2022-01-18,"Dollar General","DOLLAR GENERAL #DG 2             011622",Shopping,-14.15,Posted
+2022-01-18,"Dollar General","DOLLAR GENERAL #DG 2             011822",Shopping,-13.77,Posted
+2022-01-18,"Brew Pub","G5 BREW PUB                      011522",Alcohol Bars,-12.98,Posted
+2022-01-18,"Starbucks","STARBUCKS STORE 2620             011522",Coffee Shops,-10.24,Posted
+2022-01-18,"Google Drive","GOOGLE *Google Stora             011522",Electronics Software,-9.99,Posted
+2022-01-18,"Disney+","DisneyPLUS                       011622",Television,-8.60,Posted
+2022-01-18,"Dollar General","DOLLAR GENERAL #DG 2             011722",Shopping,-7.72,Posted
+2022-01-18,"Google Drive","GOOGLE *Google Stora             011722",Electronics Software,-1.99,Posted
+2022-01-18,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,100.00,Posted
+2022-01-14,"Synchrony Credit Card","SYNCHRONY BANK   PAYMENT    ***********5410",Credit Card Payment,-56.00,Posted
+2022-01-14,"Adobe","PP*ADOBE INC                     011422",Electronics Software,-29.99,Posted
+2022-01-14,"ATM Withdrawal","PAI ISO4402 SORREL C             011422",Cash,-22.25,Posted
+2022-01-14,"USAA Transfer","USAA FUNDS TRANSFER DB",Transfer,-15.00,Posted
+2022-01-13,"Transfer To Cash App","CASH APP*JENNY           8774174551   CA",Transfer,-150.00,Posted
+2022-01-13,"USAA Transfer","USAA FUNDS TRANSFER DB",Transfer,-70.00,Posted
+2022-01-13,"Starbucks","STARBUCKS 800-782-7282   800-782-7282 WA",Coffee Shops,-30.00,Posted
+2022-01-13,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-29.00,Posted
+2022-01-13,"Chipotle","CHIPOTLE 1095            FORT COLLINS CO",Fast Food,-22.91,Posted
+2022-01-13,"Lyft","LYFT   *1 RIDE 01-11     LYFT.COM     CA",Rental Car Taxi,-21.60,Posted
+2022-01-13,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-16.21,Posted
+2022-01-13,"Panda Express","PANDA EXPRESS #3403      TIMNATH      CO",Fast Food,-10.35,Posted
+2022-01-13,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-6.44,Posted
+2022-01-13,"Hackmd Io Httpshackmd Ide","HACKMD.IO                HTTPSHACKMD.IDE",Electronics Software,-4.00,Posted
+2022-01-13,"ParkMobile","PARKMOBILE               770-818-9036 GA",Parking,-3.20,Posted
+2022-01-13,"Colorado State U Payroll","COLORADO STATE U Payroll    ***********41-5",Paycheck,291.40,Posted
+2022-01-12,"Empire","EMPIRE 3594              FT COLLINS   CO",Gas,-42.43,Posted
+2022-01-12,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-2.83,Posted
+2022-01-12,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,67.00,Posted
+2022-01-12,"USAA Transfer","USAA FUNDS TRANSFER CR",Transfer,60.00,Posted
+2022-01-11,"Starbucks","STARBUCKS 800-782-7282   800-782-7282 WA",Coffee Shops,-10.00,Posted
+2022-01-11,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-3.09,Posted
+2022-01-11,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-2.91,Posted
+2022-01-11,"Mobile Deposit","DEPOSIT@MOBILE",Income,115.00,Posted
+2022-01-11,"Mobile Deposit","DEPOSIT@MOBILE",Income,92.06,Posted
+2022-01-10,"**********","DESIGNCROWD PTY  IAT PAYPAL ***********0027",Uncategorized,-15.00,Posted
+2022-01-10,"PayPal Purchase","PAYPAL           INST XFER  ***********CORD",Uncategorized,-9.99,Posted
+2022-01-10,"Little America Wyoming Americwy","LITTLE AMERICA WYOMING   LITTLE AMERICWY",Hotel,-132.16,Posted
+2022-01-10,"Fred Meyer","FRED-MEYE FRED MEYER 4   BOISE        ID",Groceries,-82.21,Posted
+2022-01-10,"Jiffy Lube","JIFFY LUBE 3762          ONTARIO      OR",Service Parts,-79.99,Posted
+2022-01-10,"Revive Revide","REVIVE                   HTTPSWWW.REVIDE",Restaurants,-53.99,Posted
+2022-01-10,"USAA Credit Card","USAA CREDIT CARD PAYMENT",Credit Card Payment,-50.00,Posted
+2022-01-10,"Pilot Flying J","FLYING J #763            RAWLINS      WY",Gas,-45.63,Posted
+2022-01-10,"Resort Retailer","RESORT RETAILER          MORGAN       UT",Gas,-41.60,Posted
+2022-01-10,"Domino's","DOMINO'S 6279            970-416-8868 CO",Fast Food,-39.79,Posted
+2022-01-10,"Stinker Stores","STINKER #45              CALDWELL     ID",Gas,-37.15,Posted
+2022-01-10,"Little America (Fuel)","LITTLE AMERICA WEST GASGALITTLE AMERICWY",Gas,-31.10,Posted
+2022-01-10,"Maverik","MAVERIK #6523135 S. LINCOJEROME       ID",Gas,-28.91,Posted
+2022-01-10,"Ne Goodfellow","P429410321 NE GOODFELLOW ONTARIO      OR",Cash,-23.00,Posted
+2022-01-10,"Little America (Fuel)","LITTLE AMERICA WEST GASGALITTLE AMERICWY",Gas,-19.79,Posted
+2022-01-10,"Stinker Stores","STINKER #455250 BLACK CANCALDWELL     ID",Gas,-18.17,Posted
+2022-01-10,"Burger King","BURGER KING #3590  Q07   GARDEN CITY  ID",Fast Food,-15.87,Posted
+2022-01-10,"Resort Retailer","RESORT RETAILER          MORGAN       UT",Gas,-14.73,Posted
+2022-01-10,"Pilot Flying J","FLYING J #763            RAWLINS      WY",Gas,-14.55,Posted
+2022-01-10,"Scotch Pine Liquor Inc","SCOTCH PINE LIQUOR, INC.3SEVERANCE    CO",Alcohol Bars,-13.22,Posted
+2022-01-10,"Little America (Fuel)","LITTLE AMERICA WEST GASGALITTLE AMERICWY",Gas,-8.48,Posted
+2022-01-10,"Resort Retailer","RESORT RETAILER          MORGAN       UT",Gas,-5.54,Posted
+2022-01-10,"Little America (Fuel)","LITTLE AMERICA WEST GASGALITTLE AMERICWY",Fast Food,-4.68,Posted
+2022-01-10,"Resort Retailer","RESORT RETAILER          MORGAN       UT",Gas,-4.27,Posted
+2022-01-10,"Dollar General","DOLLAR GENERAL #DG 204489SEVERANCE    CO",Shopping,-3.18,Posted
+2022-01-07,"PayPal Purchase","PAYPAL           INST XFER  ***********TOPE",Uncategorized,-21.64,Posted
+2022-01-07,"Ne Goodfellow","P429410321 NE GOODFELLOW ONTARIO      OR",Cash,-83.00,Posted
+2022-01-07,"Chevron","CHEVRON 0208484          BOISE        ID",Gas,-46.89,Posted
+2022-01-07,"Winger's","WINGERS GRILL & BAR      ONTARIO      OR",Restaurants,-26.50,Posted
+2022-01-07,"Starbucks","STARBUCKS 800-782-7282   800-782-7282 WA",Coffee Shops,-25.00,Posted
+2022-01-07,"Jack in the Box","JACK IN THE BOX 6032     BOISE        ID",Fast Food,-13.48,Posted
+2022-01-07,"Pastry Perfection","PASTRY PERFECTION        BOISE        ID",Groceries,-8.68,Posted
+2022-01-06,"PayPal Purchase","PAYPAL           INST XFER  ***********NSAM",Uncategorized,-12.00,Posted
+2022-01-06,"WinCo Foods","WINCO FOODS #27 3032 E StEAGLE        ID",Groceries,-92.06,Posted
+2022-01-06,"Chevron","CHEVRON 0370282          FRUITLAND    ID",Gas,-24.93,Posted
+2022-01-06,"WinCo Foods","WINCO FOODS #27 3032 E StEAGLE        ID",Groceries,-22.53,Posted
+2022-01-06,"Wendy's","WENDY'S 5 8100 W FRANK   BOISE        ID",Fast Food,-22.10,Posted
+2022-01-06,"Chevron","CHEVRON/JACKSONS FOOD S  BOISE        ID",Gas,-10.04,Posted
+2022-01-06,"Sarmed Outpatient","SARMED OUTPATIENT PHARMACBOISE        ID",Pharmacy,-5.57,Posted
+2022-01-06,"Redbock Direct Deposit","REDBOCK          DIRECT DEP ***********8CTV",Paycheck,1171.00,Posted
+2022-01-05,"Mr. Cooper","Nationstar dba   Mr Cooper  ***********8302",Mortgage Payment,-1648.89,Posted
+2022-01-05,"Walmart","WM SUPERCENTER #Wal-Mart ONTARIO      OR",Shopping,-19.56,Posted
+2022-01-05,"Amazon Web Services","Amazon web services      AWS.AMAZON.COWA",Hosting,-12.00,Posted
+2022-01-05,"Spotify","SPOTIFY                  877-778-1161 NY",Music,-10.67,Posted
+2022-01-05,"Chevron","CHEVRON/HAMMER STORE     FRUITLAND    ID",Gas,-5.48,Posted
+2022-01-04,"PayPal Purchase","PAYPAL           INST XFER  ***********5916",Uncategorized,-156.00,Posted
+2022-01-04,"Capital One Credit Card","CAPITAL ONE      MOBILE PMT ***********JTZE",Credit Card Payment,-126.00,Posted
+2022-01-04,"Capital One Credit Card","CAPITAL ONE      MOBILE PMT ***********AIG9",Credit Card Payment,-75.00,Posted
+2022-01-04,"Credit One Bank","Credit One Bank  Payment    ***********9126",Transfer,-8.27,Posted
+2022-01-04,"Amazon","AMZN Mktp US*ZR9CF1KS3   AMZN.COM/BILLWA",Shopping,-27.18,Posted
+2022-01-04,"Stinker Stores","STINKER #568155 W FRANKLIBOISE        ID",Gas,-10.45,Posted
+2022-01-04,"Hulu","HLU*Hulu 280249444293-U  HULU.COM/BILLCA",Television,-7.52,Posted
+2022-01-03,"AT&T","ATT              Payment    ***********PAYG",Utilities,-225.07,Posted
+2022-01-03,"PayPal Purchase","PAYPAL           INST XFER  ***********OMO4",Uncategorized,-0.99,Posted
+2022-01-03,"USAA Loan Payment","USAA LOAN PAYMENT",Transfer,-234.72,Posted
+2022-01-03,"Ne Goodfellow","P429410321 NE GOODFELLOW ONTARIO      OR",Cash,-123.00,Posted
+2022-01-03,"WinCo Foods","WINCO FOODS #6 8200 FairvBOISE        ID",Groceries,-120.84,Posted
+2022-01-03,"Cafe Zupas","CAFE ZUPAS - BOISE MALL  BOISE        ID",Restaurants,-65.41,Posted
+2022-01-03,"Walgreens","WALGREENS STORE 8100 W FABOISE        ID",Pharmacy,-55.08,Posted
+2022-01-03,"Amazon Web Services","Amazon web services      AWS.AMAZON.COWA",Hosting,-50.91,Posted
+2022-01-03,"Stinker Stores","STINKER #568155 W FRANKLIBOISE        ID",Gas,-49.24,Posted
+2022-01-03,"Amazon","AMZN Mktp US*Z65GT7UD3   AMZN.COM/BILLWA",Shopping,-29.67,Posted
+2022-01-03,"Cheek Boss","PAYPAL *CHEEK BOSS       402-935-7733 NV",Clothing,-21.17,Posted
+2022-01-03,"Amazon","AMZN Mktp US*LT84D5ES3   AMZN.COM/BILLWA",Shopping,-18.01,Posted
+2022-01-03,"Stinker Stores","STINKER #455250 BLACK CANCALDWELL     ID",Gas,-11.65,Posted
+2022-01-03,"Burger King","BURGER KING #3590  Q07   GARDEN CITY  ID",Fast Food,-10.89,Posted
+2022-01-03,"SiriusXM","SXM*SIRIUSXM.COM/ACCT    888-635-5144 NY",Music,-10.79,Posted
+2022-01-03,"Panda Express","PANDA EXPRESS 2162       ONTARIO      OR",Fast Food,-10.00,Posted
+2022-01-03,"Burger King","BURGER KING #7138        ONTARIO      OR",Fast Food,-7.88,Posted
+2022-01-03,"Apple","APPLE.COM/BILL           866-712-7753 CA",Entertainment,-2.99,Posted
+2022-01-03,"ATM Fee Rebate","ATM REBATE",Atm Fee,3.00,Posted

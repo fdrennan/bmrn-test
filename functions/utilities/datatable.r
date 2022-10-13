@@ -6,17 +6,24 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
                   }) {
   box::use(shiny, DT, shiny[actionButton, icon])
   ns <- shiny$NS(id)
+  if (is.null(title)) title <- id
   container(
     class = class,
     id = ns(id),
-    actionButton(ns("full"), icon("expand")),
-    shiny$div(class = "text-right", shiny$downloadButton(ns("downloadData"), "Download")),
+    shiny$fluidRow(
+      class = "d-flex justify-content-between align-items-center border",
+      shiny$h3(title),
+      shiny$div(
+        class = "text-right", shiny$downloadButton(ns("downloadData"), "Download"),
+        actionButton(ns("full"), icon("expand"))
+      )
+    ),
     DT$DTOutput(ns("ui"), width = "100%")
   )
 }
 
 #' @export
-server_dt <- function(id = "dt", data, title, pageLength = 7) {
+server_dt <- function(id = "dt", data, title, pageLength = 10) {
   box::use(shiny, DT, esquisse, utils, dplyr, readr, writexl)
   box::use(shiny[observeEvent, observe])
   box::use(shinyjs[js])

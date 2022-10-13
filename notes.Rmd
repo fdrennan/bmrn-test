@@ -1,5 +1,7 @@
 ---
 title: "R Notebook"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -10,7 +12,12 @@ library(lubridate)
 library(purrr)
 library(readr)
 library(janitor)
+library(ggplot2)
+library(plotly)
+library(tidyr)
+```
 
+```{r}
 finances <- fs::dir_ls('finances')
 finances <- map_dfr(finances, function(x) {
   out <- read_csv(x)
@@ -18,19 +25,18 @@ finances <- map_dfr(finances, function(x) {
   out <- out |> clean_names()
   out
 })
+
 ```
 
 ```{r}
 finances <- finances |> 
-  # filter(date >= Sys.Date() - 31) |> 
+  filter(date >= Sys.Date() - 31) |>
   mutate(
     month = floor_date(date, 'month'),
     description = str_remove(description, '[:digit:]{6}$'),
     description = str_trim(description)
   ) 
 ```
- 
-
 
 ```{r}
 general_trends <- finances |> 
@@ -41,28 +47,30 @@ general_trends <- finances |>
 ```
 
 ```{r}
-
 gtp <- 
   general_trends |> 
   group_by(description) |> 
-  summarise(amount = sum(amount)) |> 
+  summarise(amount = sum(amount), category = unique(category)) |> 
   ggplot() +
-  aes(x = reorder(description, desc(amount)), y = amount) +
+  aes(x = reorder(description, desc(amount)), y = amount, colour = category) +
   geom_col() +
   coord_flip() +
   xlab('Payee')
 ggplotly(gtp)
 ```
-
-
+ 
+ 
 ```{r}
-library(tidyr)
-finances |> 
-  mutate(credit = ifelse(amount > 0, 'credit', 'debit')) |> 
-  group_by(month, credit) |> 
-  summarise(
-    sum_amount = sum(amount)
-  ) |> 
-  pivot_wider(names_from = credit, values_from = sum_amount) |> 
-  mutate(profit = credit + debit)
+gtp <- 
+  general_trends |> 
+  group_by(category) |> 
+  summarise(amount = sum(amount)) |> 
+  ggplot() +
+  aes(x = reorder(category, desc(amount)),
+      y = amount, colour = category) +
+  geom_col() +
+  coord_flip() +
+  xlab('Payee')
+
+ggplotly(gtp)
 ```
