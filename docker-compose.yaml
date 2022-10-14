@@ -44,17 +44,6 @@ services:
     ports:
       - "8611:80"
     restart: unless-stopped
-  monitoring:
-    image: nicolargo/glances:latest-alpine
-    restart: always
-    pid: host
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - "GLANCES_OPT=-w"
-    labels:
-      - "traefik.port=61208"
-      - "traefik.frontend.rule=Host:glances.docker.localhost"
   qsci_postgres:
     image: postgres:12.3
     container_name: qsci_postgres
@@ -74,6 +63,33 @@ services:
         interval: 30s
         timeout: 30s
         retries: 5
+
+  reverse-proxy:
+    image: traefik:alpine
+    command: --api --docker
+    ports:
+      - "8613:80"
+      - "8614:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  whoami:
+    image: emilevauge/whoami
+    labels:
+      - "traefik.frontend.rule=Host:whoami.docker.localhost"
+
+  monitoring:
+    image: nicolargo/glances:latest-alpine
+    restart: always
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "GLANCES_OPT=-w"
+    labels:
+      - "traefik.port=61208"
+      - "traefik.frontend.rule=Host:glances.docker.localhost"
+
 volumes:
     qsci_pgadmin:
     qsci_postgres:
