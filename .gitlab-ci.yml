@@ -15,7 +15,7 @@ main:
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
-    - docker compose --pull
+    - docker compose pull
     - docker compose restart
   only:
     - main
