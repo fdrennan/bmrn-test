@@ -80,7 +80,8 @@ ui_app <- function(id = "app") {
         # includeHTML("www/html/dashboardMenu.html"),
         div(
           class = "d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 mb-3 border-bottom",
-          shiny$h2("Dashboard"), shiny$actionButton(ns("fullscreen"), shiny::icon("expand"))
+          shiny$h2("Dashboard"), shiny$actionButton(ns("fullscreen"), shiny::icon("expand")),
+          shiny$actionButton(ns("kill"), shiny::icon("x"))
         ),
         uiOutput(ns("currentApp"), container = function(...) {
           div(style = "max-height: 100vh; overflow-y: auto;", class = "row", ...)
@@ -113,6 +114,10 @@ server_app <- function(id = "app") {
 
       observeEvent(input$fullscreen, {
         js$fullScreen(ns("maximize"))
+      })
+
+      observeEvent(input$kill, {
+        stop()
       })
 
       navbar$server_navbar()

@@ -16,6 +16,8 @@ services:
     volumes:
       - './www:/app/www'
       - './functions:/app/functions'
+      - './finances:/app/finances'
+      - './bills.rda:/app/bills.rda'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox
