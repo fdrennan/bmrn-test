@@ -1,0 +1,42 @@
+# https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose
+version: '3.4'
+services:
+  app:
+    container_name: ndexr_app
+    image: registry.gitlab.com/fdrennan/ndexr:latest
+    command: ["R", "-e", "box::use(./functions/main);main$$main()"]
+    restart: always
+    user: 'root'
+    ports:
+      - '3000:9000'
+    expose:
+      - '9000'
+    volumes:
+      - './www:/app/www'
+      - './functions:/app/functions'
+      - './application_default_credentials.json:/app/application_default_credentials.json'
+  selenium:
+    container_name: rselenium
+    image: selenium/standalone-firefox
+    ports:
+      - '4445:4444'
+  # postgres:
+  #   image: postgres:12.3
+  #   container_name: "postgres"
+  #   restart: always
+  #   ports:
+  #     - '5432:5432'
+  #   expose:
+  #     - '5432'
+  #   env_file: .Renviron
+  #   volumes:
+  #     - ndexr_postgres:/var/lib/postgresql/data
+  #     - ./volumes/postgres/backups:/data:Z
+  #   healthcheck:
+  #       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+  #       interval: 30s
+  #       timeout: 30s
+  #       retries: 5
+
+# volumes:
+#   ndexr_postgres: {}

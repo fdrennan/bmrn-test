@@ -40,7 +40,7 @@ list_buckets <- function() {
 
 #' @export
 ec2_instance_create <- function(ImageId = "ami-097a2df4ac947655f",
-                                InstanceType = "t2.xlarge",
+                                InstanceType = "t2.medium",
                                 min = 1,
                                 max = 1,
                                 KeyName = Sys.getenv("AWS_PEM"),
