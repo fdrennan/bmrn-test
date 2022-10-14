@@ -14,7 +14,7 @@ services:
     expose:
       - '9000'
     volumes:
-      - './.env:/.env'
+      - './.env:/app/.env'
       - './www:/app/www'
       - './functions:/app/functions'
       - './finances:/app/finances'
