@@ -1,9 +1,9 @@
 FROM registry.gitlab.com/fdrennan/ndexr:base
 
-COPY functions functions
+COPY functions /app/functions
 COPY .aws /root/.aws
-COPY .Renviron .
-COPY node_modules node_modules
-COPY www www
-COPY finances finances
-COPY application_default_credentials.json application_default_credentials.json
+COPY .Renviron /app/.Renviron
+COPY node_modules /app/node_modules
+COPY www /app/www
+COPY finances /app/finances
+COPY application_default_credentials.json /app/application_default_credentials.json
