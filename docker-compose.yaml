@@ -51,7 +51,7 @@ services:
 #        interval: 30s
 #        timeout: 30s
 #        retries: 5
-  glances:
+  ndexr_glances:
     image: docker.io/nicolargo/glances
     pid: host
     volumes:
@@ -60,8 +60,8 @@ services:
       - GLANCES_OPT="-w"
     ports:
       - '61208-61209:61208-61209'
-    restart:
-      always
+    restart: always
+    command: ["glances", "-w"]
 volumes:
     qsci_pgadmin:
     qsci_postgres:
