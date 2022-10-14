@@ -16,7 +16,6 @@ services:
     volumes:
       - './www:/app/www'
       - './functions:/app/functions'
-      - './application_default_credentials.json:/app/application_default_credentials.json'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox
