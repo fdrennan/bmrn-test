@@ -23,6 +23,49 @@ services:
     image: selenium/standalone-firefox
     ports:
       - '4445:4444'
+  web:
+    image: qsci_nginx
+    command: [nginx-debug, '-g', 'daemon off;']
+    ports:
+      - '8610:80'
+  qsci_pgadmin:
+    container_name: qsci_pgadmin
+    image: dpage/pgadmin4:6.14
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+       - qsci_pgadmin:/root/.pgadmin
+    ports:
+      - "8611:80"
+    restart: unless-stopped
+  qsci_postgres:
+    image: postgres:12.3
+    container_name: qsci_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '8612:5432'
+    expose:
+      - '8612'
+    volumes:
+      - qsci_postgres:/var/lib/postgresql/data
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+        interval: 30s
+        timeout: 30s
+        retries: 5
+volumes:
+    qsci_postgres:
+    qsci_postgres:
+
   # postgres:
   #   image: postgres:12.3
   #   container_name: "postgres"
