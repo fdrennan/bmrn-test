@@ -16,7 +16,7 @@ services:
     volumes:
       - './.env:/app/.env'
       - './www:/app/www'
-      - './functions:/app/functions'
+      # - './functions:/app/functions'
       - './finances:/app/finances'
       - './bills.rda:/app/bills.rda'
   selenium:
