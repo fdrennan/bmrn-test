@@ -10,25 +10,17 @@ services:
     env_file: .Renviron
     user: 'root'
     ports:
-      - '3000:8000'
+      - '8600:8000'
     expose:
-      - '3000'
+      - '8600'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox
     ports:
-      - '4445:4444'
-  qsci_nginx:
-    image: nginx:latest
-    command: [nginx-debug, '-g', 'daemon off;']
-    ports:
-      - '8610:80'
+      - '8601:4444'
   qsci_pgadmin:
     container_name: qsci_pgadmin
     image: dpage/pgadmin4:6.14
-    links:
-      - qsci_nginx
-      - qsci_postgres
     depends_on:
       - qsci_postgres
     environment:
@@ -37,20 +29,21 @@ services:
     volumes:
        - qsci_pgadmin:/root/.pgadmin
     ports:
-      - "8611:80"
+      - "8602:80"
     restart: unless-stopped
   qsci_postgres:
     image: postgres:12.3
     container_name: qsci_postgres
     restart: always
+    env_file: .Renviron
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - '8612:5432'
+      - '8603:5432'
     expose:
-      - '8612'
+      - '8603'
     volumes:
       - qsci_postgres:/var/lib/postgresql/data
     healthcheck:
