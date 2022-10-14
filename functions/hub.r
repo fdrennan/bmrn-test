@@ -11,7 +11,7 @@ ui_hub <- function(id = "hub") {
       class = "p-2",
       shiny$fluidRow(
         shiny$checkboxInput(ns("selectAll"), "Select All", TRUE),
-        shiny$actionButton(ns("updateTables"), "Update Tables")
+        shiny$actionButton(ns("updateTables"), "Update Tables", class='btn btn-primary')
       ),
       shiny$uiOutput(ns("preinputs"), container = function(...) {
         column(12, ...)
@@ -177,6 +177,13 @@ server_hub <- function(id = "hub") {
 #' @export
 read_sheets <- function() {
   box::use(googlesheets4)
+  box::use(googledrive)
+  googledrive$drive_auth(
+    email='drennanfreddy@gmail.com',
+    path='application_default_credentials.json'
+    # cache = 'gdrive'
+  )
+  googlesheets4$gs4_auth(token=googledrive$drive_token())
   sheet <- googlesheets4$read_sheet(getOption("billspage"))
 }
 

@@ -1,6 +1,6 @@
 #' @export
 ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
-                  width = 12, class = "", container = function(...) {
+                  width = 12, class = "border-top", container = function(...) {
                     box::use(shiny[column])
                     column(width = 12, ...)
                   }) {
@@ -10,14 +10,9 @@ ui_dt <- function(id = "dt", title = NULL, collapsed = TRUE,
   container(
     class = class,
     id = ns(id),
-    shiny$fluidRow(
-      class = "d-flex justify-content-between align-items-center border",
-      shiny$h3(title),
-      shiny$div(
-        class = "text-right", shiny$downloadButton(ns("downloadData"), "Download"),
-        actionButton(ns("full"), icon("expand"))
-      )
-    ),
+    shiny$h3(title),
+    shiny$downloadButton(ns("downloadData"), "Download"),
+    actionButton(ns("full"), icon("expand")),
     DT$DTOutput(ns("ui"), width = "100%")
   )
 }

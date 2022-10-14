@@ -12,6 +12,7 @@ services:
     expose:
       - '9000'
     volumes:
+      - './gdrive:/app/gdrive'
       - './functions:/app/functions'
       - './finances:/app/finances'
   selenium:
