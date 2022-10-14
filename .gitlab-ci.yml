@@ -52,7 +52,7 @@ base:
     - run
 
 
-base:
+stop:
   image: docker:latest
   stage: build
   services:
