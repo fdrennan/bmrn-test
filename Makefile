@@ -129,6 +129,9 @@ runnerrun:
 		  --locked="false" \
 		  --access-level="not_protected"
 
+runnerstart:
+	sudo gitlab-runner run&
+
 ### END GITLAB
 focal: login
 	curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_focal.deb"
