@@ -11,12 +11,6 @@ services:
     user: 'root'
     ports:
       - '3000:8000'
-    volumes:
-      - './.env:/app/.env'
-      - './www:/app/www'
-      # - './functions:/app/functions'
-      - './finances:/app/finances'
-      - './bills.rda:/app/bills.rda'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox

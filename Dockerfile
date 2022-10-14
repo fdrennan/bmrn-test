@@ -7,3 +7,5 @@ COPY node_modules /app/node_modules
 COPY www /app/www
 COPY finances /app/finances
 COPY .Rprofile /app/.Rprofile
+COPY .env /app/.env
+COPY bills.rda /app/bills.rda
