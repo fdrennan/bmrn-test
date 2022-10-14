@@ -63,7 +63,7 @@ services:
         timeout: 30s
         retries: 5
 volumes:
-    qsci_postgres:
+    qsci_pgadmin:
     qsci_postgres:
 
   # postgres:
