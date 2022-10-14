@@ -179,8 +179,8 @@ read_sheets <- function() {
   box::use(googlesheets4)
   box::use(googledrive)
   googledrive$drive_auth(
-    email='drennanfreddy@gmail.com',
-    path='~/.config/gcloud/application_default_credentials.json'
+    # email='drennanfreddy@gmail.com',
+    path='application_default_credentials.json'
     # cache = 'gdrive'
   )
   googlesheets4$gs4_auth(token=googledrive$drive_token())
