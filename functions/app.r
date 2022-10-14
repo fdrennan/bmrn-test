@@ -74,7 +74,7 @@ ui_app <- function(id = "app") {
             tags$li(
               class = "nav-item",
               tags$a(
-                class = "nav-link text-light", href = "http://127.0.0.1:8611",
+                class = "nav-link text-light", href = "http://127.0.0.1:8602",
                 "pgAdmin"
               )
             )
