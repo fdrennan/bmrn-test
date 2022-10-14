@@ -79,8 +79,9 @@ ui_app <- function(id = "app") {
         class = "col-md-9 ms-sm-auto col-lg-10 px-md-4",
         # includeHTML("www/html/dashboardMenu.html"),
         div(
-          class = "d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 mb-3 border-bottom",
-          shiny$h2("Dashboard"), shiny$actionButton(ns("fullscreen"), shiny::icon("expand")),
+          class = "d-flex justify-content-between",
+          shiny$h2("Dashboard"),
+          shiny$actionButton(ns("fullscreen"), shiny::icon("expand")),
           shiny$actionButton(ns("kill"), shiny::icon("x"))
         ),
         uiOutput(ns("currentApp"), container = function(...) {
