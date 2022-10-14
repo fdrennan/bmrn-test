@@ -23,8 +23,8 @@ services:
     image: selenium/standalone-firefox
     ports:
       - '4445:4444'
-  web:
-    image: qsci_nginx
+  qsci_nginx:
+    image: nginx:latest
     command: [nginx-debug, '-g', 'daemon off;']
     ports:
       - '8610:80'
