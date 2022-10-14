@@ -3,7 +3,8 @@ version: '3.4'
 services:
   app:
     container_name: ndexr_app
-    image: registry.gitlab.com/fdrennan/ndexr:latest
+    build: .
+    # image: registry.gitlab.com/fdrennan/ndexr:latest
     command: ["R", "-e", "box::use(./functions/main);main$$main()"]
     restart: always
     env_file: .Renviron

@@ -178,14 +178,30 @@ server_hub <- function(id = "hub") {
 read_sheets <- function() {
   box::use(googlesheets4)
   box::use(googledrive)
-  box::use(fs[dir_ls])
-  dir_ls()
+  box::use(fs)
+  # google_app <- httr::oauth_app(
+  #   "ndexrclient",
+  #   key = "86111319513-6jf9b8pklflmabf7fo794isla4cfo306.apps.googleusercontent.com",
+  #   secret = "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"
+  # )
+  # google_key <- readr::read_file("application_default_credentials.json")
   googledrive$drive_deauth()
-  googledrive$drive_auth(
+  googledrive$drive_auth_configure(path='gdrivesecret.json')
+  googledrive$drive_ls()
+  # confirm the changes
+  # drive_oauth_app()
+  # drive_api_key()
+# googledrive$drive_get(
+#   googledrive$as_id(
+#     '86111319513-6jf9b8pklflmabf7fo794isla4cfo306.apps.googleusercontent.com'
+#   )
+# )
+# googledrive$drive_auth(
     # email='drennanfreddy@gmail.com',
-    path='application_default_credentials.json'
+    # email = googledrive$drive_deauth(),
+    # path='application_default_credentials.json'
     # cache = 'gdrive'
-  )
+  # )
   googlesheets4$gs4_auth(token=googledrive$drive_token())
   sheet <- googlesheets4$read_sheet(getOption("billspage"))
 }
