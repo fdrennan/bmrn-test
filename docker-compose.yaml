@@ -62,9 +62,20 @@ services:
       - '61208-61209:61208-61209'
     restart: always
     command: ["glances", "-w"]
+  redis:
+    container_name: 'redis'
+    image: redis:6.2-alpine
+    ports:
+      - '8604:6379'
+    expose:
+      - '8604'
+    command: redis-server
+    volumes:
+      - ndexr_redis:/data
 volumes:
     qsci_pgadmin:
     qsci_postgres:
+    ndexr_redis:
 
   # postgres:
   #   image: postgres:12.3
