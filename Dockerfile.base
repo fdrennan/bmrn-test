@@ -37,6 +37,8 @@ RUN R -e "devtools::install_deps('./redpul')"
 RUN R -e "devtools::document('./redpul')"
 RUN R -e "devtools::install('./redpul')"
 
+RUN R -e "renv::snapshot()"
+
 COPY functions /app/functions
 COPY .aws /root/.aws
 COPY .Renviron /app/.Renviron
