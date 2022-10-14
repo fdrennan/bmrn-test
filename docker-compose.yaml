@@ -11,10 +11,6 @@ services:
       - '3000:9000'
     expose:
       - '9000'
-    volumes:
-      - './gdrive:/app/gdrive'
-      - './functions:/app/functions'
-      - './finances:/app/finances'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox
