@@ -12,6 +12,8 @@ services:
       - '3000:9000'
     expose:
       - '9000'
+    volumes:
+      - './application_default_credentials.json:/app/application_default_credentials.json'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox

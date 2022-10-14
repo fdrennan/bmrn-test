@@ -15,8 +15,7 @@ master:
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
-    - docker compose restart
-    - docker compose up -d
+    - docker compose down
   only:
     - main
   tags:

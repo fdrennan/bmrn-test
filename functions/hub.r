@@ -180,6 +180,7 @@ read_sheets <- function() {
   box::use(googledrive)
   box::use(fs[dir_ls])
   dir_ls()
+  googledrive$drive_deauth()
   googledrive$drive_auth(
     # email='drennanfreddy@gmail.com',
     path='application_default_credentials.json'
