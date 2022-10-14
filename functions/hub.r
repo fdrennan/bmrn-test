@@ -174,33 +174,6 @@ server_hub <- function(id = "hub") {
   )
 }
 
-#' @export
-read_sheets <- function() {
-  box::use(googlesheets4)
-  box::use(googledrive)
-  box::use(fs)
-
-  # google_key <- readr::read_file("gdrivesecret.json")
-  googledrive$drive_deauth()
-  googledrive$drive_auth_configure(api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8', path = 'gdrivesecret.json')
-  googledrive$drive_auth()
-  # confirm the changes
-  # drive_oauth_app()
-  # drive_api_key()
-# googledrive$drive_get(
-#   googledrive$as_id(
-#     '86111319513-6jf9b8pklflmabf7fo794isla4cfo306.apps.googleusercontent.com'
-#   )
-# )
-# googledrive$drive_auth(
-    # email='drennanfreddy@gmail.com',
-    # email = googledrive$drive_deauth(),
-    # path='application_default_credentials.json'
-    # cache = 'gdrive'
-  # )
-  googlesheets4$gs4_auth(token=googledrive$drive_token())
-  sheet <- googlesheets4$read_sheet(getOption("billspage"))
-}
 
 #' @export
 read_finances <- function() {
@@ -214,49 +187,25 @@ read_finances <- function() {
   }) |>
     mutate(month = month(date))
 
-  # browser()
   finances
 }
 
 #' @export
-selenium <- function() {
-  box::use(RSelenium)
-
-
-
-  # remDr <- RSelenium$remoteDriver(
-  #   remoteServerAddr = getOption('localhost'),
-  #   port = 4445L
-  # )
-  #
-  # open <- remDr$open()
-  # on.exit(remDr$close())
-  # browseURL('https://docs.google.com/spreadsheets/d/1R0IcmbMR0B8xuNrJb90d5bJErML_TgxP19O-q3HXw1k/edit#gid=0')
-  # url <- "https://www.usaa.com/my/checking/"
-  # browseURL(url)
-  # library(dplyr)
-  # library(ggplot2)
-  # data <- read.csv('~/Downloads/bk_download.csv')
-  # data |>
-  #   filter(Date >= Sys.Date() - 30) |>
-  #   group_by(Date, Category) |>
-  #   summarise(Amount = sum(Amount)) |>
-  #   # ungroup() +
-  #   # mutate(Amount = cumsum(Amount)) |>
-  #   ggplot() +
-  #   aes(x = Date, y = Amount) +
-  #   geom_col() +
-  #   facet_wrap(~ Category, scales = 'free_y')
-  #   # facet_wrap(~ Category, scales = 'free_y')
-
-  # remDr$screenshot(display = T)
-  # memberId <- remDr$findElement(using = 'xpath', value = "//input[@name='memberId']")
-  # remDr$screenshot(display = T)
-  # memberId$sendKeysToElement(list('freddy.drennan'))
-  # submit <- remDr$findElement(using='xpath', value="//button[@type='submit']")
-  # submit$sendKeysToElement(list(key='enter'))
-  # memberId$screenshot(display = T)
-  # # browser()
+read_sheets <- function() {
+  box::use(googlesheets4)
+  box::use(googledrive)
+  box::use(readr[read_rds, write_rds])
+  if (file.exists('bills.rda')) {
+    bills <- read_rds('bills.rda')
+    return(bills)
+  }
+  # box::use(fs)
+  # google_api_key <- 'AIzaSyDeiXBBnKnvC8b7mfKyu5_bX0ZsVkSTP8c'
+  # googledrive$drive_deauth()
+  # googledrive$drive_auth_configure(path='ndexr-gdrive-service.json',api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8')
+  googledrive$drive_auth()
+  googlesheets4$gs4_auth(token=googledrive$drive_token())
+  sheet <- googlesheets4$read_sheet(getOption("billspage"))
+  write_rds(sheet,'bills.rda')
+  sheet
 }
-
-# selenium()
