@@ -11,7 +11,7 @@ ndexr2s3:
 	aws s3 cp ec2.nginx.conf s3://ndexrapp/ec2.nginx.conf
 
 
-push: updatenginxconf sass ndexr2s3
+push: 
 	git add --all
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"

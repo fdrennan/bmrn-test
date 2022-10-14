@@ -17,6 +17,7 @@ build-master:
     - docker push "$CI_REGISTRY_IMAGE"
     - docker compose down
     - docker compose up -d
+    - docker compose logs -f
   only:
     - main
   tags:
