@@ -13,6 +13,7 @@ services:
       - '9000'
     volumes:
       - './functions:/app/functions'
+      - './finances:/app/finances'
   selenium:
     container_name: rselenium
     image: selenium/standalone-firefox
