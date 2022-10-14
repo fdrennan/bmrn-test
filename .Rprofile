@@ -1,5 +1,5 @@
 source("renv/activate.R")
-renv::settings$ignored.packages("redpul", persist = FALSE)
+renv::settings$ignored.packages(c("redpul", "biggr2", "state"), persist = FALSE)
 options(box.path = "functions")
 options(ndexr_sqlite_path = "redditdb.sqlite")
 options(state.verbose = FALSE)
