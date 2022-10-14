@@ -11,7 +11,7 @@ ui_hub <- function(id = "hub") {
       class = "p-2",
       shiny$fluidRow(
         shiny$checkboxInput(ns("selectAll"), "Select All", TRUE),
-        shiny$actionButton(ns("updateTables"), "Update Tables", class='btn btn-primary')
+        shiny$actionButton(ns("updateTables"), "Update Tables", class = "btn btn-primary")
       ),
       shiny$uiOutput(ns("preinputs"), container = function(...) {
         column(12, ...)
@@ -195,8 +195,8 @@ read_sheets <- function() {
   box::use(googlesheets4)
   box::use(googledrive)
   box::use(readr[read_rds, write_rds])
-  if (file.exists('bills.rda')) {
-    bills <- read_rds('bills.rda')
+  if (file.exists("bills.rda")) {
+    bills <- read_rds("bills.rda")
     return(bills)
   }
   # box::use(fs)
@@ -204,8 +204,8 @@ read_sheets <- function() {
   # googledrive$drive_deauth()
   # googledrive$drive_auth_configure(path='ndexr-gdrive-service.json',api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8')
   googledrive$drive_auth()
-  googlesheets4$gs4_auth(token=googledrive$drive_token())
+  googlesheets4$gs4_auth(token = googledrive$drive_token())
   sheet <- googlesheets4$read_sheet(getOption("billspage"))
-  write_rds(sheet,'bills.rda')
+  write_rds(sheet, "bills.rda")
   sheet
 }
