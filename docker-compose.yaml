@@ -44,6 +44,17 @@ services:
     ports:
       - "8611:80"
     restart: unless-stopped
+  monitoring:
+    image: nicolargo/glances:latest-alpine
+    restart: always
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "GLANCES_OPT=-w"
+    labels:
+      - "traefik.port=61208"
+      - "traefik.frontend.rule=Host:glances.docker.localhost"
   qsci_postgres:
     image: postgres:12.3
     container_name: qsci_postgres
