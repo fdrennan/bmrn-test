@@ -3,7 +3,7 @@ version: '3.4'
 services:
   app:
     container_name: ndexr_app
-    build: .
+    image: registry.gitlab.com/fdrennan/ndexr:latest
     command: ["R", "-e", "box::use(./functions/main);main$$main()"]
     restart: always
     user: 'root'
