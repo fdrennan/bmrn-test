@@ -3,8 +3,8 @@ version: '3.4'
 services:
   app:
     container_name: ndexr_app
-    build: .
-    # image: registry.gitlab.com/fdrennan/ndexr:latest
+    # build: .
+    image: registry.gitlab.com/fdrennan/ndexr:latest
     command: ["R", "-e", "box::use(./functions/main);main$$main()"]
     restart: always
     env_file: .Renviron
@@ -21,13 +21,11 @@ services:
   qsci_pgadmin:
     container_name: qsci_pgadmin
     image: dpage/pgadmin4:6.14
-    env_file:
-      - .Renviron
     depends_on:
       - qsci_postgres
-#    environment:
-#      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-#      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=fdrennan@ndexr.com
+      - PGADMIN_DEFAULT_PASSWORD=password
     volumes:
        - qsci_pgadmin:/root/.pgadmin
     ports:
