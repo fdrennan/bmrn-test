@@ -179,15 +179,11 @@ read_sheets <- function() {
   box::use(googlesheets4)
   box::use(googledrive)
   box::use(fs)
-  # google_app <- httr::oauth_app(
-  #   "ndexrclient",
-  #   key = "86111319513-6jf9b8pklflmabf7fo794isla4cfo306.apps.googleusercontent.com",
-  #   secret = "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"
-  # )
-  # google_key <- readr::read_file("application_default_credentials.json")
+
+  # google_key <- readr::read_file("gdrivesecret.json")
   googledrive$drive_deauth()
-  googledrive$drive_auth_configure(path='gdrivesecret.json')
-  googledrive$drive_ls()
+  googledrive$drive_auth_configure(api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8', path = 'gdrivesecret.json')
+  googledrive$drive_auth()
   # confirm the changes
   # drive_oauth_app()
   # drive_api_key()
