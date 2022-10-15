@@ -74,14 +74,14 @@ ui_app <- function(id = "app") {
             tags$li(
               class = "nav-item",
               tags$a(
-                class = "nav-link text-light", href = "http://127.0.0.1:8602",
+                class = "nav-link text-light", href = "http://192.168.0.68:8602",
                 "pgAdmin"
               )
             ),
             tags$li(
               class = "nav-item",
               tags$a(
-                class = "nav-link text-light", href = "http://127.0.0.1:61208",
+                class = "nav-link text-light", href = "http://192.168.0.68:61208",
                 "glances"
               )
             )

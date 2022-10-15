@@ -1,0 +1,23 @@
+$h1-font-size: 3rem;
+
+@import "bootswatch/dist/pulse/variables";
+@import "bootstrap/scss/bootstrap";
+@import "bootswatch/dist/pulse/bootswatch";
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
+
+html {
+  font-size: 16px;
+}
+
+.text-underline {
+  text-decoration-style: underline;
+}
+
+.underline-first-letter::first-letter {
+  text-decoration: underline;
+}
+
+#analysis_a_session_setup-file_progress {
+  height: 30px;
+}
