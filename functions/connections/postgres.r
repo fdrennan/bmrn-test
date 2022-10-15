@@ -32,6 +32,7 @@ table_create <- function(data,where_cols=NULL) {
   con <- connection_postgres()
   on.exit(DBI$dbDisconnect(con))
   dataname <- deparse1(substitute(data))
+  browser()
   if (isFALSE(DBI$dbExistsTable(con, dataname))) {
     DBI$dbCreateTable(con, dataname, data)
     if (!is.null(where_cols)) {
