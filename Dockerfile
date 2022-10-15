@@ -8,5 +8,4 @@ COPY www /app/www
 COPY transactions /app/transactions
 COPY .Rprofile /app/.Rprofile
 COPY .env /app/.env
-COPY bills.rda /app/bills.rda
 
