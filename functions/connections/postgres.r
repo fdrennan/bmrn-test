@@ -25,14 +25,14 @@ table_exists <- function(dataname) {
 
 #' @export
 table_create <- function(data,where_cols=NULL) {
-  browser()
+  # browser()
   box::use(DBI, dbx)
   box::use(glue[glue])
   box::use(./postgres[connection_postgres])
   con <- connection_postgres()
   on.exit(DBI$dbDisconnect(con))
   dataname <- deparse1(substitute(data))
-  browser()
+  # browser()
   if (isFALSE(DBI$dbExistsTable(con, dataname))) {
     DBI$dbCreateTable(con, dataname, data)
     if (!is.null(where_cols)) {
@@ -42,9 +42,8 @@ table_create <- function(data,where_cols=NULL) {
       ))
     }
   }
-  resp <- dbx$dbxUpdate(con, dataname, data, where_cols = where_cols)
-  print(resp)
-  resp
+  dbx$dbxUpsert(con, dataname, data, where_cols = where_cols)
+
   # DBI$dbAppendTable(con, dataname, data)
 }
 

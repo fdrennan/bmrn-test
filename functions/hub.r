@@ -194,11 +194,8 @@ read_transactions <- function() {
     mutate(id = sub(" ", '', id)) |>
     ungroup()
 
-  if (postgres$table_exists('transactions')) {
-    transactions <- postgres$table_get('transactions')
-    return(transactions)
-  }
   postgres$table_create(transactions, 'id')
+  transactions <- postgres$table_get('transactions')
   transactions
 }
 
