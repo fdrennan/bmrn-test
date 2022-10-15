@@ -180,6 +180,7 @@ read_transactions <- function() {
   box::use(fs[dir_ls], purrr[map_dfr], readr[read_csv], janitor[clean_names])
   box::use(lubridate[month])
   box::use(dplyr[mutate, ungroup, arrange, group_by, row_number])
+  box::use(./connections/postgres)
   transactions <- fs::dir_ls("transactions")
   transactions <- map_dfr(transactions, function(x) {
     out <- read_csv(x)
@@ -192,6 +193,12 @@ read_transactions <- function() {
     mutate(id = paste0(date, account, description, amount, row_number())) |>
     mutate(id = sub(" ", '', id)) |>
     ungroup()
+
+  if (postgres$table_exists('transactions')) {
+    transactions <- postgres$table_get('transactions')
+    return(transactions)
+  }
+  postgres$table_create(transactions, 'id')
   transactions
 }
 
@@ -202,9 +209,9 @@ read_sheets <- function() {
   box::use(dplyr[select])
   box::use(readr[read_rds, write_rds])
   box::use(./connections/postgres)
-  if (postgres$table_exists('transactions')) {
-    transactions <- postgres$table_get('transactions')
-    return(transactions)
+  if (postgres$table_exists('accounts')) {
+    accounts <- postgres$table_get('accounts')
+    return(accounts)
   }
   # box::use(fs)
   # google_api_key <- 'AIzaSyDeiXBBnKnvC8b7mfKyu5_bX0ZsVkSTP8c'
@@ -212,8 +219,8 @@ read_sheets <- function() {
   # googledrive$drive_auth_configure(path='ndexr-gdrive-service.json',api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8')
   googledrive$drive_auth()
   googlesheets4$gs4_auth(token = googledrive$drive_token())
-  transactions <- googlesheets4$read_sheet(getOption("billspage"))
-  transactions <- select(transactions, name, amount, url, login, password)
-  postgres$table_create(transactions)
-  transactions
+  accounts <- googlesheets4$read_sheet(getOption("billspage"))
+  accounts <- select(accounts, name, amount, url, login, password)
+  postgres$table_create(accounts)
+  accounts
 }
