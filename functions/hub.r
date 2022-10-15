@@ -58,11 +58,11 @@ server_hub <- function(id = "hub") {
       shiny$observeEvent(input$updateTables, {
         js$openWindow("https://usaa.com")
         system("xdg-open ~/Downloads")
-        system("xdg-open finances")
+        system("xdg-open transactions")
       })
       dataIn <- shiny$reactive({
         out <- list(
-          usaa_data = hub$read_finances(),
+          usaa_data = hub$read_transactions(),
           googleDrive = hub$read_sheets()
         )
         map(out, function(x) {
@@ -176,28 +176,35 @@ server_hub <- function(id = "hub") {
 
 
 #' @export
-read_finances <- function() {
+read_transactions <- function() {
   box::use(fs[dir_ls], purrr[map_dfr], readr[read_csv], janitor[clean_names])
-  box::use(lubridate[month], dplyr[mutate])
-  finances <- fs::dir_ls("finances")
-  finances <- map_dfr(finances, function(x) {
+  box::use(lubridate[month])
+  box::use(dplyr[mutate, ungroup, arrange, group_by, row_number])
+  transactions <- fs::dir_ls("transactions")
+  transactions <- map_dfr(transactions, function(x) {
     out <- read_csv(x)
     out$account <- x
     out <- out |> clean_names()
   }) |>
-    mutate(month = month(date))
-
-  finances
+    mutate(month = month(date)) |>
+    arrange(date, account, description, amount) |>
+    group_by(date, account, description, amount) |>
+    mutate(id = paste0(date, account, description, amount, row_number())) |>
+    mutate(id = sub(" ", '', id)) |>
+    ungroup()
+  transactions
 }
 
 #' @export
 read_sheets <- function() {
   box::use(googlesheets4)
   box::use(googledrive)
+  box::use(dplyr[select])
   box::use(readr[read_rds, write_rds])
-  if (file.exists("bills.rda")) {
-    bills <- read_rds("bills.rda")
-    return(bills)
+  box::use(./connections/postgres)
+  if (postgres$table_exists('transactions')) {
+    transactions <- postgres$table_get('transactions')
+    return(transactions)
   }
   # box::use(fs)
   # google_api_key <- 'AIzaSyDeiXBBnKnvC8b7mfKyu5_bX0ZsVkSTP8c'
@@ -205,7 +212,8 @@ read_sheets <- function() {
   # googledrive$drive_auth_configure(path='ndexr-gdrive-service.json',api_key = 'AIzaSyAWorkW-KQxMD8n39VuifEnyGjdAPGBpD8')
   googledrive$drive_auth()
   googlesheets4$gs4_auth(token = googledrive$drive_token())
-  sheet <- googlesheets4$read_sheet(getOption("billspage"))
-  write_rds(sheet, "bills.rda")
-  sheet
+  transactions <- googlesheets4$read_sheet(getOption("billspage"))
+  transactions <- select(transactions, name, amount, url, login, password)
+  postgres$table_create(transactions)
+  transactions
 }
