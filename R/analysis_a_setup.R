@@ -21,8 +21,8 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
     input_data$session_data <- data
     input_data
   })
-  
-  
+
+
 
   output$analysis_a_body <- renderUI({
     fluidRow(
@@ -88,10 +88,10 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
     date_cols <- str_detect(names(data), "[0-9]")
     date_cols <- names(data)[date_cols]
     date_cols <- date_cols[order(as.numeric(gsub("[A-z]| ", "", date_cols)))]
-    
+
     sessionMode <- id$session_data$sessionMode
-    
-    if(sessionMode=='Exploratory') {
+
+    if (sessionMode == "Exploratory") {
       selected <- last(date_cols)
       choices <- last(date_cols)
     } else {

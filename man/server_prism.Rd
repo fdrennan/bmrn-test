@@ -2,10 +2,10 @@
 % Please edit documentation in R/prism.R
 \name{server_prism}
 \alias{server_prism}
-\title{server_prism5}
+\title{server_prism}
 \usage{
 server_prism(id = "prism", test_1_output_data)
 }
 \description{
-server_prism5
+server_prism
 }

@@ -5,19 +5,20 @@ ui_prism <- function(id = "prism") {
   fluidRow(
     testSpinner(uiOutput(ns("plotsInputs"))),
     testSpinner(div(class = "py-5", box(
-      title = "Prism Output",
+      title = "",
       uiOutput(ns("plots")), maximizable = TRUE, collapsible = TRUE, width = 12,
       sidebar = boxSidebarTest(
-        id = ns('boxSidebar'), 
-        startOpen = TRUE, 
-        background = 'none',
+        id = ns("boxSidebar"),
+        startOpen = TRUE,
+        background = "none",
         width = 10,
         easyClose = FALSE,
-        div(class='text-dark p-3', # style='width: 100px;',
+        div(
+          class = "text-dark p-3", # style='width: 100px;',
           selectInput(ns("plotType"), "Plot Type", c("Bar", "Box"), "Bar"),
           numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
-          numericInput(ns('plotWidth'), label = 'Width', value = 1200, min = 0, max=3000, step = 50),
-          numericInput(ns('plotHeight'), label = 'Height', value = 600, min = 0, max=3000, step = 50),
+          numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
+          numericInput(ns("plotHeight"), label = "Height", value = 600, min = 0, max = 3000, step = 50),
         )
       )
     )))
@@ -52,7 +53,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
-        toi <- input_prism$tables$tables$tab1$`Times Included`[2]
+        toi <- input_prism$tables$tables$tab1$`Time Points`[2]
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -85,14 +86,14 @@ server_prism <- function(id = "prism", test_1_output_data) {
                 inline = TRUE
               ),
               radioButtons(ns("y_axisPrism"), h4("Select y axis"),
-                           choiceNames = list(
-                             "Transform (suggested by Box-Cox)",
-                             "No Transform (original scale)",
-                             "Change from Baseline"
-                           ),
-                           choiceValues = list(
-                             "transform", "no_transform", "change_from_baseline"
-                           )
+                choiceNames = list(
+                  "Transform (suggested by Box-Cox)",
+                  "No Transform (original scale)",
+                  "Change from Baseline"
+                ),
+                choiceValues = list(
+                  "transform", "no_transform", "change_from_baseline"
+                )
               )
             ),
             div(
@@ -186,7 +187,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
         req(uuid)
         input
         st <- storr_rds("storr")
-        
+
         id <- paste0(uuid, "-prism")
         st$set(id, reactiveValuesToList(input))
         data

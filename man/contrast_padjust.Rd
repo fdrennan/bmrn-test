@@ -4,7 +4,13 @@
 \alias{contrast_padjust}
 \title{contrast_padjust}
 \usage{
-contrast_padjust(model, contrast_list, data, variable)
+contrast_padjust(
+  model,
+  contrast_list,
+  data,
+  variable,
+  analysis_type = "Confirmatory"
+)
 }
 \description{
 contrast_padjust

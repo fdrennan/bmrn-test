@@ -3,7 +3,7 @@
 
 
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
-                         variable, save = "No", analysis_type) {
+                         variable, save = "No") {
   final_contrast <- final_contrast %>%
     mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
@@ -22,7 +22,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
         mean = mean(Response),
         median = median(Response)
       ), .)
-  # Specific Time point
+  # Specific Time pointQ
 
   # Need to make sure that toi matches above
   ST_os <- transformed_data %>%
@@ -129,16 +129,10 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     data.frame() %>%
     mutate_at(.vars = grep("se", colnames(.)), .funs = ~ round(., 3)) %>%
     mutate_at(.vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
-
-  if (analysis_type == "Exploratory") {
-    summary_stat <- summary_stat %>% filter(Endpoint == "Specific Time")
-  }
-
   tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   empty_col <- tab1 %>% apply(2, function(a) sum(is.na(a)))
-
   tab1 <- tab1[, which(empty_col < nrow(tab1))] %>%
     rename(
       Treatment = TreatmentNew,
@@ -168,27 +162,14 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
-
-  wb <- createWorkbook()
-  addWorksheet(wb = wb, sheetName = "Table 1")
-  addWorksheet(wb = wb, sheetName = "Table 2")
-  addWorksheet(wb = wb, sheetName = "Table 3")
-  writeData(wb = wb, sheet = "Table 1", x = tab1)
-  writeData(wb = wb, sheet = "Table 2", x = tab2)
-  writeData(wb = wb, sheet = "Table 3", x = tab3)
-
-  if (save == "yes") {
-    saveWorkbook(wb, file = "Example.xlsx", overwrite = TRUE)
-  }
-
   return(list(tab1 = tab1, tab2 = tab2, tab3 = tab3, power = power))
 }
 
 #' html_tables
 #' @export
 html_tables <- function(transformed_data, tab_list) {
-  #TODO sort the times only for exploratory
   trt_map <- distinct(transformed_data, Treatment, TreatmentNew)
+
   tab1 <- tab_list$tab1
   tab1 <- tab1[, which(apply(tab1, 2, function(a) !all(a == "")))]
   tab1 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
@@ -402,14 +383,18 @@ column_labels <- function(df_gt, column, label) {
 
 #' html_table_gt
 #' @export
-html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation) {
+
+html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
-    mutate(`Times Included` = if_else(grepl("Average", `Times Included`),
+    mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
-      `Times Included`
-    )) %>%
-    arrange(`Times Included`)
+      `Time Points`
+    ))
+  if (analysis_type == "Exploratory") {
+    data <- data %>% arrange(Treatment, `Time Points`)
+  }
+
   if (summary_only & transformation) {
     table_gt <- data %>%
       gt() %>%
@@ -417,7 +402,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         title = title
       ) %>%
       tab_spanner(
-        label = "Original Scale",
+        label = endpoint,
         columns = grep("Original", colnames(data), value = TRUE)
       ) %>%
       cols_label(
@@ -454,15 +439,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) %>%
-          column_labels(., col1, "LSMEAN Difference (95% CI)") %>%
+          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
           fmt_markdown(columns = everything()) %>%
           column_labels(., col2, "p value") %>%
           cols_align(
             align = "center",
             columns = everything()
-          ) %>%
-          cols_width(
-            starts_with("Difference") ~ px(175)
           )
       }
     } else {
@@ -477,6 +459,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           title = title
         ) %>%
         tab_source_note(source_note = footer)
+
 
 
       if (transformation) {
@@ -500,7 +483,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       } else {
         table_gt <- table_gt %>%
           tab_spanner(
-            label = "Original Scale",
+            label = endpoint,
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
           ) %>%
           cols_label(
@@ -523,15 +506,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           ) %>%
-          column_labels(., col1, "LSMEAN Difference (95% CI)") %>%
+          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
           fmt_markdown(columns = everything()) %>%
           column_labels(., col2, "p value") %>%
           cols_align(
             align = "center",
             columns = everything()
-          ) %>%
-          cols_width(
-            starts_with("Difference") ~ px(175),
           )
       }
     }

@@ -30,12 +30,30 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
 
       observeEvent(input$runReport, {
         showNotification("Making Report")
-        
+
         data <- req(data())
         uuid <- data$uuid
         email <- data$email
-        tryCatch({
-            
+        studyId <- data$studyId
+        statistician <- data$statistician
+        uuid <- data$uuid
+        full_path_files <- data$full_path_files
+        email_message <-
+          as.character(
+            html(
+              as.character(div(
+                p(
+                  paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
+                ),
+                p(
+                  paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
+                ),
+                tableHTML(data)
+              ))
+            )
+          )
+        tryCatch(
+          {
             rmarkdown::render(
               "Test_Report.Rmd",
               params = list(
@@ -47,17 +65,18 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
           }
         )
-        
-        tryCatch({
-          
+
+        tryCatch(
+          {
+            files <- dir_ls(data$full_path_files)
             send.mail(
-              from = Sys.getenv('EMAIL_USER'),
+              from = Sys.getenv("EMAIL_USER"),
               to = email,
               subject = "Report Generated",
-              body = "<html><h1>TEST Results</h1><h2></h2></html>",
+              body = email_message,
               html = TRUE,
               smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
-              attach.files = c("Test_Report.docx"),
+              attach.files = c("Test_Report.docx", dir_ls(full_path_files)),
               authenticate = TRUE,
               send = getOption("send")
             )
@@ -73,7 +92,6 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification("Report failed to email")
           }
         )
-        
       })
     }
   )

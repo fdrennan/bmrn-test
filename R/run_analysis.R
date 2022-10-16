@@ -246,19 +246,5 @@ run_analysis <- function(analysis_data) {
     if (power != 1) {
       summary_stat <- summary_stat %>% inner_join(bt_together)
     }
-
-    source("R/final_tables.R")
-    tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat)
-    tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat)
-    tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat)
-
-    wb <- createWorkbook()
-    addWorksheet(wb = wb, sheetName = "Table 1")
-    addWorksheet(wb = wb, sheetName = "Table 2")
-    addWorksheet(wb = wb, sheetName = "Table 3")
-    writeData(wb = wb, sheet = "Table 1", x = tab1)
-    writeData(wb = wb, sheet = "Table 2", x = tab2)
-    writeData(wb = wb, sheet = "Table 3", x = tab3)
   }
-  # saveWorkbook(wb, file = 'Example.xlsx', overwrite = TRUE)
 }

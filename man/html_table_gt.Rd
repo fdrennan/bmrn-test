@@ -10,7 +10,9 @@ html_table_gt(
   footer,
   include_summary,
   summary_only,
-  transformation
+  transformation,
+  analysis_type,
+  endpoint
 )
 }
 \description{

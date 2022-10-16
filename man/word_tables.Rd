@@ -11,7 +11,8 @@ word_tables(
   summary_only,
   footer_i = 1,
   footer_j = 1,
-  footer = "footer"
+  footer = "footer",
+  endpoint
 )
 }
 \description{
