@@ -7,7 +7,7 @@ library(test)
 
 devtools::load_all()
 plan(multiprocess)
-options("test_version" = "Version 1.12")
+options("test_version" = "Version 1.13")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   # options(shiny.host = "0.0.0.0")
@@ -105,10 +105,4 @@ server <- function(input, output, session,
   server_analysis_a_report(server_input = server_input)
 }
 
-
-# runApp(
-#  ,
-#   port = 5000,
-#   host = if (interactive()) '127.0.0.1' else '0.0.0.0'
-# )
 shinyApp(ui = ui, server = server)
