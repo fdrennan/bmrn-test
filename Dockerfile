@@ -22,7 +22,6 @@ COPY DESCRIPTION .
 COPY R R
 COPY data data
 COPY inputs inputs
-COPY data data
 #RUN R -e "install.packages(c('ggpubr', 'DT'))"
 RUN R -e "devtools::install_deps('.')"
 RUN R -e "devtools::document('.')"
