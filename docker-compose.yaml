@@ -10,10 +10,10 @@ services:
       - '8620:80'
     links:
       # - "appdev"
-      - "appprod"
+      - "app"
     depends_on:
       # - "appdev"
-      - "appprod"
+      - "app"
     network_mode: bridge
   # appdev:
   #   image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
@@ -25,11 +25,13 @@ services:
   #   volumes:
   #     - './test_output:/app/test_output'
   #   network_mode: bridge
-  appprod:
+  app:
     image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
     container_name: test-app
     # build: .
     restart: always
+    expose: 
+      - '5000'
     user: 'root'
     command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
