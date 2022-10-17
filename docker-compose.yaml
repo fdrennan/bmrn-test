@@ -30,6 +30,8 @@ services:
     container_name: test-app
     # build: .
     restart: always
+    ports:
+      - '5000:5000'
     expose: 
       - '5000'
     user: 'root'
