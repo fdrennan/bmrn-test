@@ -6,7 +6,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - '8380:80'
+      - '8620:80'
     links:
       - app
     depends_on:
