@@ -9,8 +9,10 @@ prod:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker build --pull -t git.bmrn.com:4567/qsci/test-app:prod .
     - docker push git.bmrn.com:4567/qsci/test-app:prod
-    # - docker compose pull
+    - docker compose pull
+    - docker container ls
     - docker compose up -d
+    - docker container restart test-nginx
     - docker container restart test-app
   only:
     - prod

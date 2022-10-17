@@ -9,16 +9,15 @@ services:
     ports:
       - '8620:80'
     links:
-      # - "appdev"
+      - "appdev"
       - "appprod"
     depends_on:
-      # - "appdev"
+      - "appdev"
       - "appprod"
     network_mode: bridge
   appdev:
     image: git.bmrn.com:4567/qsci/test-app:dev
     container_name: test-app-dev
-    # build: .
     restart: always
     ports:
       - '8622:8622'
@@ -26,13 +25,12 @@ services:
       - '8622'
     user: 'root'
     command: ["R", "-e", "options(shiny.port=8622);options(shiny.host='0.0.0.0');shiny::runApp('/app/app.R',launch.browser=FALSE)"]
-    # volumes:
-      # - './test_output:/app/test_output'
+    volumes:
+      - './test_output:/app/test_output'
     network_mode: bridge
   appprod:
     image: git.bmrn.com:4567/qsci/test-app:prod
     container_name: test-app
-    # build: .
     restart: always
     ports:
       - '8621:8621'
@@ -40,6 +38,6 @@ services:
       - '8621'
     user: 'root'
     command: ["R", "-e", "options(shiny.port=8621);options(shiny.host='0.0.0.0');shiny::runApp('/app/app.R',launch.browser=FALSE)"]
-    # volumes:
-      # - './test_output:/app/test_output'
+    volumes:
+      - './test_output:/app/test_output'
     network_mode: bridge
