@@ -38,10 +38,11 @@ bmrn-test:
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
-    - docker compose pull
-    - docker compose restart
+    - docker compose up -d
+    # - docker compose pull
+    # - docker compose restart
   only:
-    - bmrn-test-2
+    - bmrn-test-3
   tags:
     - run
 
