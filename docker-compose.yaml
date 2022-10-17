@@ -9,9 +9,11 @@ services:
     ports:
       - '8620:80'
     links:
-      - "app"
+      - "appdev"
+      - "appprod"
     depends_on:
-      - "app"
+      - "appdev"
+      - "appprod"
     network_mode: bridge
   appdev:
     image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
