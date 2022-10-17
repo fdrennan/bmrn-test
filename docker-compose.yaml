@@ -1,21 +1,21 @@
 version: "2"
 services:
-  nginx:
-    image: nginx:latest
-    container_name: test-nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - '8380:80'
-    links:
-      - app
-    depends_on:
-      - "app"
-    network_mode: bridge
-    links:
-      - 'app:shinyapp'
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: test-nginx
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - '8380:80'
+  #   links:
+  #     - app
+  #   depends_on:
+  #     - "app"
+  #   network_mode: bridge
+  #   links:
+  #     - 'app:shinyapp'
   app:
-    image: registry.gitlab.com/fdrennan/ndexr:bmrn-test-3
+    image: registry.gitlab.com/fdrennan/ndexr:bmrntest
     container_name: test-app
     # build: .
     restart: always
