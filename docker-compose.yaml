@@ -15,7 +15,7 @@ services:
     links:
       - 'app'
   app:
-    image: registry.gitlab.com/fdrennan/ndexr:bmrntest
+    image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
     container_name: test-app
     # build: .
     restart: always
