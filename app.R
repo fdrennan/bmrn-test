@@ -97,7 +97,6 @@ server <- function(input, output, session,
     cache = FALSE
   )
 
-
   prism_input <- reactive({
     req(test_1_output_data())
     test_1_output_data()
@@ -107,7 +106,6 @@ server <- function(input, output, session,
 }
 
 
-# thematic::thematic_shiny()
 runApp(
   shinyApp(ui = ui, server = server),
   port = 5000,
