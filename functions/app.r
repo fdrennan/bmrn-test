@@ -54,23 +54,7 @@ ui_app <- function(id = "app") {
               )
             )
           ),
-          tags$h6("Build Status", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
-          tags$ul(
-            class = "nav flex-column",
-            tags$li(
-              class = "nav-item",
-              tags$a(
-                class = "nav-link text-light", href = "https://gitlab.com/fdrennan/ndexr/-/commits/main",
-                tags$img(alt = "pipeline status", src = "https://gitlab.com/fdrennan/ndexr/badges/main/pipeline.svg")
-              )
-            ),
-            tags$li(
-              class = "nav-item",
-              tags$a(
-                class = "nav-link text-light", href = "https://gitlab.com/fdrennan/ndexr/-/releases",
-                tags$img(alt = "Latest Release", src = "https://gitlab.com/fdrennan/ndexr/-/badges/release.svg")
-              )
-            ),
+          tags$h6("Home References", class = "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"),
             tags$li(
               class = "nav-item",
               tags$a(

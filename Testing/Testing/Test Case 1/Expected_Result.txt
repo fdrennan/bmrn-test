@@ -1,0 +1,3 @@
+Variance in the positive control is different than the basic model (i.e. twice as large as the variance in the basic model)
+BLQ values are imputed with -0.1 (The only BLQ is on the Seventh row of the dataset at Time 4).
+
