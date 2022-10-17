@@ -8,12 +8,10 @@ services:
     ports:
       - '8620:80'
     links:
-      - app
+      - "app"
     depends_on:
       - "app"
     network_mode: bridge
-    links:
-      - 'app'
   app:
     image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
     container_name: test-app
