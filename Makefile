@@ -16,6 +16,7 @@ push:
 	git commit -m  " *  Author: $$(whoami)  *  Created on: $$(date)"
 	echo "Pushing to $(BRANCH)"
 	git push origin $(BRANCH)
+	git push upstream $(BRANCH)
 
 ec2init:
 	R -e "box::use(./functions/aws[ec2_instance_create]);ec2_instance_create()"
