@@ -3,8 +3,8 @@ services:
   nginx:
     image: nginx:latest
     container_name: test-nginx
-    volumes:
-      - './nginx:/etc/nginx:ro'
+    # volumes:
+      # - './nginx:/etc/nginx:ro'
     ports:
       - '8620:80'
     links:
