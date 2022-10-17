@@ -1,10 +1,11 @@
 version: "2"
 services:
   nginx:
-    image: nginx:latest
+    # image: nginx:latest
     container_name: test-nginx
-    # volumes:
-      # - './nginx:/etc/nginx:ro'
+    build: 
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
       - '8620:80'
     links:
