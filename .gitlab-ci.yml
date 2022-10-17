@@ -29,9 +29,17 @@ bmrn-test:
   services:
     - docker:dind
   before_script:
+    - echo "$CI_REGISTRY_USER"
+    - echo "$CI_REGISTRY_PASSWORD"
+    - echo "$CI_REGISTRY"
+    - echo "$CI_REGISTRY_IMAGE"
+    - echo "$CI_COMMIT_REF_SLUG"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"  "$CI_REGISTRY"
   script:
-    - docker container ls
+    - docker build -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+    - docker compose pull
+    - docker compose restart
   only:
     - bmrn-test-1
   tags:
