@@ -80,7 +80,7 @@ bmrn-test:
     - run
 
 
-bmrn-test:
+bmrn-test-prod:
   image: docker:latest
   stage: build
   services:
@@ -98,7 +98,7 @@ bmrn-test:
   tags:
     - run
     
-bmrn-test:
+bmrn-test-dev:
   image: docker:latest
   stage: build
   services:

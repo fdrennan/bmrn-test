@@ -25,7 +25,7 @@ services:
     expose: 
       - '8622'
     user: 'root'
-    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 8622, launch.browser=FALSE, host='0.0.0.0')"]
+    command: ["R", "-e", "options(shiny.port=8622);options(shiny.host='0.0.0.0');shiny::runApp('/app/app.R',launch.browser=FALSE)"]
     volumes:
       - './test_output:/app/test_output'
     network_mode: bridge
