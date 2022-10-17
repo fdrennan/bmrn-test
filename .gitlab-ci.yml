@@ -41,7 +41,7 @@ bmrn-test:
     - docker compose pull
     - docker compose restart
   only:
-    - bmrn-test-1
+    - bmrn-test-2
   tags:
     - run
 
