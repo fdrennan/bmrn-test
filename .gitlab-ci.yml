@@ -81,7 +81,7 @@ bmrn-test-prod:
     - hpcgit001
 
     
-bmrn-test-dev:A
+bmrn-test-dev:
   image: docker:latest
   stage: build
   services:
