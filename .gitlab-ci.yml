@@ -31,8 +31,8 @@ bmrn-test:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:bmrntest" .
-    - docker push "$CI_REGISTRY_IMAGE:bmrntest"
+    - docker build --pull -t registry.gitlab.com/fdrennan/ndexr:bmrntest .
+    - docker push registry.gitlab.com/fdrennan/ndexr:bmrntest
     - ls -lah
     - docker compose up -d
     # - docker compose pull
