@@ -12,6 +12,7 @@ prod:
     - docker compose pull
     - docker container ls
     - docker compose up -d
+    - docker compose logs test-app
     - docker container restart test-nginx
     - docker container restart test-app
   only:
