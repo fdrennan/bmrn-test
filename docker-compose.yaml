@@ -1,17 +1,17 @@
 version: "2"
 services:
-  # nginx:
-  #   image: nginx:latest
-  #   container_name: test-nginx
-  #   volumes:
-  #     - './nginx.conf:/etc/nginx/nginx.conf'
-  #   ports:
-  #     - '8620:80'
-  #   links:
-  #     - "app"
-  #   depends_on:
-  #     - "app"
-  #   network_mode: bridge
+  nginx:
+    image: nginx:latest
+    container_name: test-nginx
+    volumes:
+      - './nginx.conf:/etc/nginx/nginx.conf'
+    ports:
+      - '8620:80'
+    links:
+      - "app"
+    depends_on:
+      - "app"
+    network_mode: bridge
   app:
     image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
     container_name: test-app
@@ -19,9 +19,9 @@ services:
     restart: always
     user: 'root'
     ports:
-    - '8620:5000'
+    - '5000:5000'
     expose:
-    - '8620'
+    - '5000'
     command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
       - './test_output:/app/test_output'
