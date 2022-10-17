@@ -10,10 +10,10 @@ services:
       - '8620:80'
     links:
       # - "appdev"
-      - "app"
+      - "appprod"
     depends_on:
       # - "appdev"
-      - "app"
+      - "appprod"
     network_mode: bridge
   # appdev:
   #   image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
@@ -25,7 +25,7 @@ services:
   #   volumes:
   #     - './test_output:/app/test_output'
   #   network_mode: bridge
-  app:
+  appprod:
     image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
     container_name: test-app
     # build: .
