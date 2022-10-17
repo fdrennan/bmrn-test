@@ -10,7 +10,7 @@ plan(multiprocess)
 options("test_version" = "Version 1.12")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
-  options(shiny.port = 5000, shiny.host = "0.0.0.0")
+  # options(shiny.host = "0.0.0.0")
   Sys.setenv(BASE_DOMAIN = "/qsci/test")
   options(send = TRUE)
   options("devmode" = FALSE)
