@@ -16,7 +16,7 @@ services:
       - 'app:shinyapp'
   app:
     image: registry.gitlab.com/fdrennan/ndexr:bmrn-test-3
-    # container_name: test-app
+    container_name: test-app
     # build: .
     restart: always
     user: 'root'
