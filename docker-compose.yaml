@@ -30,7 +30,7 @@ services:
       - './test_output:/app/test_output'
     network_mode: bridge
   appprod:
-    image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
+    image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
     container_name: test-app
     # build: .
     restart: always
