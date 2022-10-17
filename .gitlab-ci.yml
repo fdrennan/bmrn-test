@@ -71,9 +71,9 @@ bmrn-test:
   script:
     - docker build --pull -t registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev .
     - docker push registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
-    # - ls -lah
-    # - docker compose pull
-    # - docker compose up -d
+    - docker compose pull
+    - docker compose up -d
+    - docker container restart test-app
   only:
     - bmrn-test-dev
   tags:
