@@ -71,7 +71,7 @@ bmrn-test:
   script:
     - docker build --pull -t registry.gitlab.com/fdrennan/ndexr:bmrn-test-dev .
     - docker push registry.gitlab.com/fdrennan/ndexr:bmrn-test-dev
-    - ls -lah
+    # - ls -lah
     - docker compose pull
     # - docker compose up -d
     # - docker compose pull
