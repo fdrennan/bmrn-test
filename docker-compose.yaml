@@ -30,7 +30,7 @@ services:
   #     - './test_output:/app/test_output'
   #   network_mode: bridge
   appprod:
-    image: git.bmrn.com:4567/qsci/bmrn-test:prod
+    image: git.bmrn.com:4567/qsci/test-app:prod
     container_name: test-app
     # build: .
     restart: always
