@@ -25,13 +25,13 @@ services:
     volumes:
       - './test_output:/app/test_output'
     network_mode: bridge
-  appprod:
-    image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
-    container_name: test-app
-    # build: .
-    restart: always
-    user: 'root'
-    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
-    volumes:
-      - './test_output:/app/test_output'
-    network_mode: bridge
+  # appprod:
+  #   image: registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
+  #   container_name: test-app
+  #   # build: .
+  #   restart: always
+  #   user: 'root'
+  #   command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
+  #   volumes:
+  #     - './test_output:/app/test_output'
+  #   network_mode: bridge
