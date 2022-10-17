@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Reddit Application.iml" filepath="$PROJECT_DIR$/.idea/Reddit Application.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../history/redpul_bak/.idea/redpul.iml" filepath="$PROJECT_DIR$/../history/redpul_bak/.idea/redpul.iml" />
-    </modules>
-  </component>
-</project>
