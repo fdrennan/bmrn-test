@@ -31,11 +31,11 @@ services:
     # build: .
     restart: always
     ports:
-      - '5000:5000'
+      - '8621:8621'
     expose: 
-      - '5000'
+      - '8621'
     user: 'root'
-    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
+    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 8621, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
       - './test_output:/app/test_output'
     network_mode: bridge
