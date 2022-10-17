@@ -6,11 +6,6 @@ main:
   services:
     - docker:dind
   before_script:
-    - echo "$CI_REGISTRY_USER"
-    - echo "$CI_REGISTRY_PASSWORD"
-    - echo "$CI_REGISTRY"
-    - echo "$CI_REGISTRY_IMAGE"
-    - echo "$CI_COMMIT_REF_SLUG"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"  "$CI_REGISTRY"
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
