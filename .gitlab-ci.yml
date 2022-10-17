@@ -69,15 +69,17 @@ bmrn-test-prod:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - docker build --pull -t registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod .
-    - docker push registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
+    - docker build --pull -t registry.gitlab.com/qsci/test-app:bmrn-test-prod .
+    - docker push registry.gitlab.com/qsci/test-app:bmrn-test-prod
     - docker compose pull
     - docker compose up -d
     - docker container restart test-app
   only:
     - bmrn-test-prod
   tags:
-    - run
+    - docker
+    - hpcgit001
+
     
 bmrn-test-dev:
   image: docker:latest
@@ -87,12 +89,13 @@ bmrn-test-dev:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - docker build --pull -t registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev .
-    - docker push registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-dev
+    - docker build --pull -t registry.gitlab.com/qsci/test-app:bmrn-test-dev .
+    - docker push registry.gitlab.com/qsci/test-app:bmrn-test-dev
     - docker compose pull
     - docker compose up -d
     - docker container restart test-app-dev
   only:
     - bmrn-test-dev
   tags:
-    - run
+    - docker
+    - hpcgit001
