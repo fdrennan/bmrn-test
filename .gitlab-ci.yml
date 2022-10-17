@@ -20,7 +20,7 @@ main:
   only:
     - main
   tags:
-    - porttest
+    - run 
 
 dev:
   image: docker:latest
