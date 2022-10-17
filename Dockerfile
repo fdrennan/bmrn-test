@@ -30,4 +30,8 @@ RUN R -e "devtools::install('.')"
 COPY word_style.docx .
 COPY bib.bib .
 COPY test_logo.svg test_logo.svg
-
+COPY Test_Report.Rmd /app/Test_Report.Rmd
+COPY app.R /app/app.R
+COPY .env.container /app/.env
+COPY .Rprofile /app/.Rprofile
+COPY www /app/www

@@ -26,12 +26,6 @@ services:
     - '5000'
     command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
-      - './app.R:/app/app.R'
-      - './.env.container:/app/.env'
-      - './.Rprofile:/app/.Rprofile'
-      - './www:/app/www'
-      - './R:/app/R'
       - './test_output:/app/test_output'
-      - './Test_Report.Rmd:/app/Test_Report.Rmd'
     network_mode: bridge
 
