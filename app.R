@@ -108,4 +108,7 @@ server <- function(input, output, session,
 
 
 # thematic::thematic_shiny()
-runApp(shinyApp(ui = ui, server = server))
+runApp(
+  shinyApp(ui = ui, server = server),
+  port = 5000, host = if (interactive()) '127.0.0.1' else '0.0.0.0'
+)
