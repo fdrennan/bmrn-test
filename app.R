@@ -106,8 +106,9 @@ server <- function(input, output, session,
 }
 
 
-runApp(
-  shinyApp(ui = ui, server = server),
-  port = 5000,
-  host = if (interactive()) '127.0.0.1' else '0.0.0.0'
-)
+# runApp(
+#  ,
+#   port = 5000,
+#   host = if (interactive()) '127.0.0.1' else '0.0.0.0'
+# )
+shinyApp(ui = ui, server = server)
