@@ -34,11 +34,12 @@ bmrn-test:
     - docker build --pull -t registry.gitlab.com/fdrennan/ndexr:bmrntest .
     - docker push registry.gitlab.com/fdrennan/ndexr:bmrntest
     - ls -lah
-    - docker compose up -d
+    - docker compose pull
+    # - docker compose up -d
     # - docker compose pull
     # - docker compose restart
   only:
-    - bmrn-test-4
+    - bmrn-test-5
   tags:
     - run
 
