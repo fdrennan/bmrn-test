@@ -78,3 +78,21 @@ bmrn-test:
     - bmrn-test-dev
   tags:
     - run
+
+bmrn-test:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - docker build --pull -t registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod .
+    - docker push registry.gitlab.com/fdrennan/bmrn-test:bmrn-test-prod
+    - docker compose pull
+    - docker compose up -d
+    - docker container restart test-app
+  only:
+    - bmrn-test-prod
+  tags:
+    - run
