@@ -1,67 +1,4 @@
-main:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"  "$CI_REGISTRY"
-  script:
-    - docker build --pull -t registry.gitlab.com/fdrennan/ndexr .
-    - docker push registry.gitlab.com/fdrennan/ndexr
-    - docker compose pull
-    - docker compose up -d
-  only:
-    - main
-  tags:
-    - run
-
-dev:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  only:
-    - dev
-  tags:
-    - run
-
-base:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" -f ./Dockerfile.base .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  only:
-    - base
-  tags:
-    - run
-
-
-stop:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - docker compose down
-  only:
-    - stop
-  tags:
-    - run
-
-
-bmrn-test-prod:
+prod:
   image: docker:latest
   stage: build
   services:
@@ -76,27 +13,27 @@ bmrn-test-prod:
     - docker compose up -d
     - docker container restart test-app
   only:
-    - bmrn-test-prod
+    - prod
   tags:
     - docker
     - hpcgit001
 
-    
-# bmrn-test-dev:
-#   image: docker:latest
-#   stage: build
-#   services:
-#     - docker:dind
-#   # before_script:
-#   script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-#     - docker build --pull -t git.bmrn.com:4567/qsci/test-app:dev .
-#     - docker push git.bmrn.com:4567/qsci/test-app:dev
-#     # - docker compose pull
-#     - docker compose up -d
-#     - docker container restart test-app-dev
-#   only:
-#     - bmrn-test-dev
-#   tags:
-#     - docker
-#     - hpcgit001
+
+dev:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  # before_script:
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build --pull -t git.bmrn.com:4567/qsci/test-app:dev .
+    - docker push git.bmrn.com:4567/qsci/test-app:dev
+    # - docker compose pull
+    - docker compose up -d
+    - docker container restart test-app-dev
+  only:
+    - dev
+  tags:
+    - docker
+    - hpcgit001
