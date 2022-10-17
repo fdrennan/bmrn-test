@@ -4,7 +4,7 @@ services:
     image: nginx:latest
     container_name: test-nginx
     volumes:
-      - './nginx:/etc/nginx'
+      - './nginx:/etc/nginx:ro'
     ports:
       - '8620:80'
     links:
