@@ -3,16 +3,16 @@ services:
   nginx:
     # image: nginx:latest
     container_name: test-nginx
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.nginx
     ports:
       - '8620:80'
     links:
-      - "appdev"
+      # - "appdev"
       - "appprod"
     depends_on:
-      - "appdev"
+      # - "appdev"
       - "appprod"
     network_mode: bridge
   # appdev:
@@ -22,7 +22,7 @@ services:
   #   restart: always
   #   ports:
   #     - '8622:8622'
-  #   expose: 
+  #   expose:
   #     - '8622'
   #   user: 'root'
   #   command: ["R", "-e", "options(shiny.port=8622);options(shiny.host='0.0.0.0');shiny::runApp('/app/app.R',launch.browser=FALSE)"]
@@ -36,7 +36,7 @@ services:
     restart: always
     ports:
       - '8621:8621'
-    expose: 
+    expose:
       - '8621'
     user: 'root'
     command: ["R", "-e", "options(shiny.port=8621);options(shiny.host='0.0.0.0');shiny::runApp('/app/app.R',launch.browser=FALSE)"]
