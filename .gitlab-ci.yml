@@ -36,8 +36,8 @@ bmrn-test:
     - echo "$CI_COMMIT_REF_SLUG"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"  "$CI_REGISTRY"
   script:
-    - docker build -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build -t "$BMRN_TEST_REGISTRY_IMAGE" .
+    - docker push "$BMRN_TEST_REGISTRY_IMAGE"
     - docker compose up -d
     # - docker compose pull
     # - docker compose restart
