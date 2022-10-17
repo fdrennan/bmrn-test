@@ -81,13 +81,13 @@ bmrn-test-prod:
     - hpcgit001
 
     
-bmrn-test-dev:
+bmrn-test-dev:A
   image: docker:latest
   stage: build
   services:
     - docker:dind
   before_script:
-    - docker login git.bmrn.com:4567
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     - docker build --pull -t git.bmrn.com:4567/qsci/test-app:bmrn-test-dev .
     - docker push git.bmrn.com:4567/qsci/test-app:bmrn-test-dev
