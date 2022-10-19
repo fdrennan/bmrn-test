@@ -68,7 +68,7 @@ server_app <- function(id = "app") {
         browser()
       })
 
-      test_1_output_data <- analysis_a_run_server(ns("test_1"), setup_out)
+      test_1_output_data <- analysis_a_run_server('analysis_a_run', setup_out)
 
       shiny$observe({
         shiny$req(test_1_output_data())

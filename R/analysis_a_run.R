@@ -4,7 +4,7 @@
 analysis_a_run <- function(id = "analysis_a", user, is_admin) {
   box::use(shiny)
   ns <- NS(id)
-
+  print(ns('ui'))
   tabsetPanel(
     id = "test_1_tabs",
     tabPanel(
@@ -61,7 +61,7 @@ analysis_a_run_server <- function(id, signal, cache = TRUE) {
     id,
     function(input, output, session) {
       ns <- session$ns
-
+      print(ns('server'))
 
       input_data <- reactive({
         req(signal())
