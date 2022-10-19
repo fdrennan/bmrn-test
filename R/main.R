@@ -56,27 +56,16 @@ server_app <- function(id = "app") {
       server_navbar("navbar")
 
       session_out <- test_session_setup_server("test_session_setup")
-   
 
-      setup_out <- shiny$eventReactive(session_out(), {
-        setup_out <- analysis_a_setup_server("analysis_a_setup", session_out)
-        setup_out()
-      })
-      
 
-      shiny$observeEvent(setup_out(), {
-        browser()
-        test_1_output_data <- analysis_a_run_server("analysis_a_run", setup_out)
-        
-        test_1_output_data()
-      })
-      #
-      # observe({
-      #   req(setup_out())
-      #   showNotification(
-      #     h6(class = "text-center p-2", "Setup complete, you may now review the other panels.")
-      #   )
+      test_1_output_data <- analysis_a_run_server("analysis_a_run", session_out)
+
+      # shiny$observe({
+      #   shiny$req(test_1_output_data())
+      #   browser()
       # })
+      #
+
       #
       # test_1_output_data <- callModule(
       #   analysis_a_run_server, "test_1", user, is_admin, setup_out,

@@ -14,8 +14,9 @@ analysis_a_setup_server <- function(id, signal) {
     function(input, output, session) {
       ns <- session$ns
       input_data <- reactive({
-        req(signal())
-        input_data <- signal()$input_data
+        #
+        req(signal)
+        input_data <- signal$data
         con <- connect_table()
         data <- tbl(con, "sessions") %>%
           arrange(desc(timestamp)) %>%
@@ -49,8 +50,8 @@ analysis_a_setup_server <- function(id, signal) {
       })
 
       output$typeAssignmentTable <- renderUI({
-        browser()
-        data <- input_data()$data
+        shiny$req(input_data())
+        data <- input_data()
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
       })
@@ -58,7 +59,8 @@ analysis_a_setup_server <- function(id, signal) {
 
 
       output$groupAssignmentTable <- renderUI({
-        data <- input_data()$data
+        shiny$req(input_data())
+        data <- input_data()
 
         treatment_input <-
           distinct(data, treatment_snake, Treatment) %>%
@@ -78,16 +80,19 @@ analysis_a_setup_server <- function(id, signal) {
       })
 
       output$analysisInputUI <- renderUI({
-        id <- input_data()
-        data <- id$data
-        req(data)
+        shiny$req(input_data())
+        session_data <- input_data()$session_data
+        data <- input_data()
+        #
+        # data <- id$data
+        # req(data)
         nd <- names(data)
 
         date_cols <- str_detect(names(data), "[0-9]")
         date_cols <- names(data)[date_cols]
         date_cols <- date_cols[order(as.numeric(gsub("[A-z]| ", "", date_cols)))]
 
-        sessionMode <- id$session_data$sessionMode
+        sessionMode <- session_data$sessionMode[[1]]
 
         if (sessionMode == "Exploratory") {
           selected <- last(date_cols)
@@ -120,11 +125,12 @@ analysis_a_setup_server <- function(id, signal) {
         )
       })
 
-
       out <- eventReactive(input$runAnalysis, {
-        data <- update.list(signal(), reactiveValuesToList(input))
+        shiny$showNotification("input run analysis pressed")
+        data <- update.list(input_data(), reactiveValuesToList(input))
         st <- storr_rds("storr")
-        st$set(data$session_data$uuid, data)
+        st$set(unique(data$session_data$uuid), data)
+
         data
       })
 

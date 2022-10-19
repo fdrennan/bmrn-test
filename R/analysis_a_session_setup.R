@@ -179,7 +179,6 @@ test_session_setup_server <- function(id) {
           dbCreateTable(con, "sessions", df)
         }
         dbAppendTable(con, "sessions", df)
-        change_page("analysisa_run")
         removeNotification(id = "setupnotification")
         list(
           session_data = df,
