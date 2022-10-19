@@ -5,7 +5,7 @@ router_test <- function() {
     route("home", ui_home()),
     route(
       "analysisasetup",
-      analysis_a_session_setup(user = "testuser", is_admin = TRUE)
+      analysis_a_session_setup(user = "testuser")
     ),
     route("analysisa_run", analysis_a_run(id = "test_1")),
     route("report", ui_analysis_a_report()),

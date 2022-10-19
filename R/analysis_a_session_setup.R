@@ -1,6 +1,6 @@
 #' analysis_a_session_setup
 #' @export
-analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_admin) {
+analysis_a_session_setup <- function(id = "analysis_a_session_setup") {
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -99,9 +99,12 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
 #' analysis_a_session_setup_server
 #' @export
 analysis_a_session_setup_server <- function(id) {
-  callModule(
+  moduleServer(
     id,
     function(input, output, session) {
+      # browser()
+      ns <- session$ns
+      
       iv <- InputValidator$new()
       iv$add_rule("name", sv_required())
       iv$add_rule("email", sv_required())
@@ -109,7 +112,6 @@ analysis_a_session_setup_server <- function(id) {
       iv$add_rule("description", sv_required())
       iv$enable()
 
-      ns <- session$ns
       output$selectizeInput <- renderUI({
         load("data/program_lists.rda")
         x <- input$program

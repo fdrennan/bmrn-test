@@ -1,4 +1,3 @@
-
 #' ui_home
 #' @export
 ui_home <- function(id = "home") {
@@ -63,10 +62,7 @@ server_home <- function(id = "home") {
           )
         )
       })
-      observeEvent(
-        input$analysisaGo,
-        {
-          showNotification("analysisaGo")
+      observeEvent(input$analysisaGo, {
           change_page("analysisasetup")
         }
       )
