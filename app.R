@@ -1,4 +1,4 @@
-library(test)
+# library(test)
 
 devtools::load_all()
 plan(multiprocess)
@@ -6,8 +6,7 @@ options("test_version" = "Version 1.133")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
   Sys.setenv(BASE_DOMAIN = "/qsci/test")
-  options(send 
-          = TRUE)
+  options(send = TRUE)
   options("devmode" = FALSE)
 } else {
   options(require_validation = FALSE)

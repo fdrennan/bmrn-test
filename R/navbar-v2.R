@@ -51,8 +51,10 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
         deleteFile = FALSE
       )
       observeEvent(input$goHome, {
+        showNotification(input$goHome)
         change_page("home")
       })
+      
       observeEvent(input$collapse, {
         print(reactiveValuesToList(input))
         id <- paste0("#", ns(navbarId))

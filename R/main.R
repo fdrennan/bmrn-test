@@ -9,7 +9,6 @@ server <- function(input, output, session) {
   server_app('app')
 }
 
-
 #' @export
 ui_app <- function(id = "app") {
   box::use(shiny)
@@ -19,8 +18,7 @@ ui_app <- function(id = "app") {
     class = "bg-light",
     dashboardPage(
       fullscreen = FALSE, dark = FALSE,
-      header = dashboardHeader(
-        div(
+      header = dashboardHeader(div(
           headers(),
           ui_navbar(ns('navbar'))
         )
@@ -56,10 +54,8 @@ server_app <- function(id = "app") {
 
       server_landing('landing')
       server_home('home')
-      # server_navbar('navbar')
-      # observeEvent(input$gohome, {
-      #   change_page("home")
-      # })
+      server_navbar('navbar')
+
       # 
       # session_out <- callModule(
       #   analysis_a_session_setup_server,
