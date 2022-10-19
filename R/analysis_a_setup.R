@@ -2,16 +2,16 @@
 #' @export
 analysis_a_setup <- function(id) {
   ns <- NS(id)
-  # browser()
   uiOutput(ns("analysis_a_body"))
 }
 
 #' analysis_a_setup_server
 #' @export
 analysis_a_setup_server <- function(id, signal) {
+  box::use(shiny)
   moduleServer(
     id,
-    function(input, output, session, signal) {
+    function(input, output, session) {
       ns <- session$ns
       input_data <- reactive({
         req(signal())
@@ -43,16 +43,13 @@ analysis_a_setup_server <- function(id, signal) {
           ),
           div(
             class = "d-flex justify-content-end",
-            actionButton(
-              ns("runAnalysis"),
-              h6("Run Analysis"),
-              class = "btn-primary"
-            )
+            actionButton(ns("runAnalysis"), h6("Run Analysis"), class = "btn-primary")
           )
         )
       })
 
       output$typeAssignmentTable <- renderUI({
+        browser()
         data <- input_data()$data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)

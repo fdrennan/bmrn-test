@@ -56,22 +56,19 @@ server_app <- function(id = "app") {
       server_navbar("navbar")
 
       session_out <- test_session_setup_server("test_session_setup")
-      shiny$observe({
-        shiny$req(session_out())
-        # browser()
+   
+
+      setup_out <- shiny$eventReactive(session_out(), {
+        setup_out <- analysis_a_setup_server("analysis_a_setup", session_out)
+        setup_out()
       })
+      
 
-      setup_out <- analysis_a_setup_server("analysis_a_setup", session_out)
-
-      shiny$observe({
-        shiny$req(setup_out())
+      shiny$observeEvent(setup_out(), {
         browser()
-      })
-
-      test_1_output_data <- analysis_a_run_server('analysis_a_run', setup_out)
-
-      shiny$observe({
-        shiny$req(test_1_output_data())
+        test_1_output_data <- analysis_a_run_server("analysis_a_run", setup_out)
+        
+        test_1_output_data()
       })
       #
       # observe({
