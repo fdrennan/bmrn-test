@@ -1,4 +1,4 @@
-library(test)
+# library(test)
 # if exploratory drop out time, and use last date
 # Select timepoints to be included in table (table output selector)
 # run today
@@ -10,7 +10,6 @@ plan(multiprocess)
 options("test_version" = "Version 1.133")
 if (isTRUE(getOption("production"))) {
   options(require_validation = TRUE)
-  # options(shiny.host = "0.0.0.0")
   Sys.setenv(BASE_DOMAIN = "/qsci/test")
   options(send = TRUE)
   options("devmode" = FALSE)
@@ -20,45 +19,50 @@ if (isTRUE(getOption("production"))) {
   options("devmode" = FALSE)
 }
 
-
-router <- make_router(
-  route("home", ui_home()),
-  route(
-    "analysisasetup",
-    analysis_a_session_setup(user = "testuser", is_admin = TRUE)
-  ),
-  route("analysisa_run", analysis_a_run(id = "test_1")),
-  route("report", ui_analysis_a_report()),
-  page_404 = page404(message404 = "...hmmm")
-)
-
-
-ui <- div(
-  class = "bg-light",
-  dashboardPage(
-    fullscreen = FALSE, dark = FALSE,
-    header = dashboardHeader(
-      div(
-        headers(),
-        ui_navbar()
-      )
+#' @export
+router <- function() {
+  make_router(
+    route("home", ui_home()),
+    route(
+      "analysisasetup",
+      analysis_a_session_setup(user = "testuser", is_admin = TRUE)
     ),
-    body = dashboardBody(router$ui),
-    sidebar = dashboardSidebar(disable = T),
-    footer = dashboardFooter(
-      div(
-        class = "d-flex justify-content-around",
+    route("analysisa_run", analysis_a_run(id = "test_1")),
+    route("report", ui_analysis_a_report()),
+    page_404 = page404(message404 = "...hmmm")
+  )
+}
+
+#' @export ui
+ui <- function() {
+  div(
+    class = "bg-light",
+    dashboardPage(
+      fullscreen = FALSE, dark = FALSE,
+      header = dashboardHeader(
         div(
-          getOption("test_version")
-        ),
+          headers(),
+          ui_navbar()
+        )
+      ),
+      body = dashboardBody(router$ui),
+      sidebar = dashboardSidebar(disable = T),
+      footer = dashboardFooter(
         div(
-          "© 2022 BioMarin"
+          class = "d-flex justify-content-around",
+          div(
+            getOption("test_version")
+          ),
+          div(
+            "© 2022 BioMarin"
+          )
         )
       )
     )
   )
-)
+}
 
+#' @export
 server <- function(input, output, session,
                    user = "fr904103", is_admin = FALSE, cache = FALSE) {
   router$server(input, output, session)

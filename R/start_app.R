@@ -1,9 +1,8 @@
 #' @export
 start_app <- function() {
-  
   plan(multiprocess)
   options("test_version" = "Version 1.21")
-  
+
   if (isTRUE(getOption("production"))) {
     options(shiny.maxRequestSize = 300 * 1024^2)
     options(require_validation = TRUE)
@@ -14,18 +13,17 @@ start_app <- function() {
     options(send = FALSE)
     options("devmode" = TRUE)
   }
-  
-  
+
+
   ui <- function() {
     ui_test_app()
   }
-  
+
   server <- function(input, output, session) {
     server_test_app()
   }
-  
+
   runApp(
     shinyApp(ui = ui, server = server)
   )
-  
 }

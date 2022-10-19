@@ -14,7 +14,7 @@ server_test_app <- function(id = "test_app") {
       ns <- session$ns
       output$ui <- shiny$renderUI({
         bs4Dash$dashboardPage(
-          fullscreen = FALSE, 
+          fullscreen = FALSE,
           dark = FALSE,
           header = ui_header(),
           body = ui_body(),
