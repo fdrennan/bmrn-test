@@ -24,8 +24,6 @@ ui_app <- function(id = "app") {
       )),
       body = dashboardBody(
         router$ui
-        # ui_home(ns('home')),
-        # analysis_a_session_setup(ns('analysis_a_session_setup_server'))
       ),
       sidebar = dashboardSidebar(disable = T),
       footer = dashboardFooter(
