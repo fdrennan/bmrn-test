@@ -3,7 +3,6 @@
 ui_home <- function(id = "home") {
   box::use(shiny)
   ns <- NS(id)
-  # print(ns('ui'))
   base <- Sys.getenv("BASE_DOMAIN")
   uiOutput(ns("testLocations"), container = function(...) {
     shiny$fluidRow(..., class = "m-5")
@@ -18,7 +17,6 @@ server_home <- function(id = "home") {
     id,
     function(input, output, session) {
       ns <- session$ns
-      print(ns("server"))
       # observe({
       showModal(modalDialog(
         style = "height: 500px;",

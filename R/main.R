@@ -57,14 +57,11 @@ server_app <- function(id = "app") {
       
       session_out <- analysis_a_session_setup_server('analysis_a_session_setup')
       shiny$observe({
-        session_out()
-        browser()
+        shiny$req(session_out())
+        print(session_out())
+        # browser()
       })
-      #
-      # session_out <- callModule(
-      #   analysis_a_session_setup_server,
-      #   "analysis_a_session_setup"
-      # )
+
       #
       # setup_out <- callModule(
       #   analysis_a_setup_server,
