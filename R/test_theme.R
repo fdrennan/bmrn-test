@@ -55,44 +55,7 @@ test_theme_base <- function() {
 #' @export
 headers <- function() {
 
-  # sass(
-  #   sass_file("www/styles.scss"),
-  #   output = "www/styles.css"
-  # )
   theme <- test_theme_base()
-
-  # mycss <- make_css(
-  # list(
-  #   "body",
-  #   c("font-family", "color", "background", "font-size"),
-  #   c(theme$ndexr$font, theme$ndexr$text, theme$ndexr$background, "1.4rem")
-  # ),
-  # list(
-  #   ".background-primary", "background", theme$ndexr$background
-  # ),
-  # list(
-  #   ".well",
-  #   c("color", "background"),
-  #   c(theme$ndexr$text, theme$ndexr$well)
-  # ),
-  # list(".footer", c("color"), theme$ndexr$text),
-  # list("a", c("color", "text-decoration"), c(theme$ndexr$link, "none")),
-  # list(".btn", c("color", "background"), c(theme$ndexr$text, theme$ndexr$code)),
-  # list("ul", "background-color", theme$ndexr$code),
-  # list(".selected", "background-color", theme$ndexr$background),
-  # list("ul li", "color", theme$ndexr$text),
-  # list("a:visited a:hover a:active a:selected", c("color", "text-decoration"), c(theme$ndexr$text, "none")),
-  # list(".dataTable", c("background-color", "color"), c(theme$ndexr$well, theme$ndexr$text)),
-  # list("tr td", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".form-control", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".items", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".item", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".selectize-dropdown-content", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".selectize-input.full", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(".option", c("background-color", "color"), c(theme$ndexr$background, theme$ndexr$text))
-  # list(" .tabbable > .nav > li > a", c("background-color", 'color'), c(theme$ndexr$background, theme$ndexr$text)),
-  # list(" .tabbable > .nav > li[class=active] > a", c("background-color", 'color'), c(theme$ndexr$well, theme$ndexr$text))
-  # )
 
   withTags(
     head(
