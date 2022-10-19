@@ -2,7 +2,6 @@
 #' @export
 
 cor_select <- function(transformed_data, variable) {
-  print(variable)
   num_times <- transformed_data %>%
     distinct(Time) %>%
     nrow()
@@ -14,7 +13,6 @@ cor_select <- function(transformed_data, variable) {
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corAR1(form = ~ 1 | SubjectID)
   )
-  print(AR1)
   aic_AR1 <- c("AR1" = -2 * logLik(AR1)[1] + 2 * 2)
   ARH1 <- gls(
     data = transformed_data %>% filter(basic_model),
@@ -29,7 +27,6 @@ cor_select <- function(transformed_data, variable) {
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corCompSymm(form = ~ 1 | SubjectID)
   )
-  print(CS)
   aic_CS <- c("CS" = -2 * logLik(CS)[1] + 2 * 2)
   CSH <- gls(
     data = transformed_data %>% filter(basic_model),
@@ -56,7 +53,6 @@ cor_select <- function(transformed_data, variable) {
   aic_UN <- c("UN" = ifelse(class(UN) == "try-error", NA, AIC(UN)))
 
   aic <- c(aic_AR1, aic_ARH1, aic_CS, aic_CSH, aic_TOEP, aic_UN)
-  print(aic)
   message(paste("The best correlation structure is", names(aic[which.min(aic)])))
 
   return(names(aic[which.min(aic)]))

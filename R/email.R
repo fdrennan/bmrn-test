@@ -15,11 +15,9 @@ server_email <- function(id = "email") {
     function(input, output, session) {
       ns <- session$ns
       observe({
-        print(reactiveValuesToList(input))
         resp <- GET("http://apilink:8000/code/markdown?code=mtcars")
         # resp <- GET('http://apilink:8000/email?user.name=drennanfreddy@gmail.com&passwd=AeliaEmerson32&to=fr904103@bmrn.com')
         resp <- content(resp, "text")
-        print(resp)
       })
     }
   )

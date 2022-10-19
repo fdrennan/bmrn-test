@@ -54,22 +54,24 @@ server_app <- function(id = "app") {
       server_landing("landing")
       server_home("home")
       server_navbar("navbar")
-      
-      session_out <- analysis_a_session_setup_server('analysis_a_session_setup')
+
+      session_out <- test_session_setup_server("test_session_setup")
       shiny$observe({
         shiny$req(session_out())
-        print(session_out())
         # browser()
       })
 
-      setup_out <- callModule(
-        analysis_a_setup_server,
-        "analysis_a_setup",
-        user, is_admin, session_out
-      )
+      setup_out <- analysis_a_setup_server("analysis_a_setup", session_out)
+
       shiny$observe({
         shiny$req(setup_out())
         browser()
+      })
+
+      test_1_output_data <- analysis_a_run_server(ns("test_1"), setup_out)
+
+      shiny$observe({
+        shiny$req(test_1_output_data())
       })
       #
       # observe({

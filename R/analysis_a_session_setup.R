@@ -1,6 +1,6 @@
-#' analysis_a_session_setup
+#' test_session_setup
 #' @export
-analysis_a_session_setup <- function(id = "analysis_a_session_setup") {
+test_session_setup <- function(id = "test_session_setup") {
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -96,15 +96,14 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup") {
 }
 
 
-#' analysis_a_session_setup_server
+#' test_session_setup_server
 #' @export
-analysis_a_session_setup_server <- function(id) {
+test_session_setup_server <- function(id) {
   moduleServer(
     id,
     function(input, output, session) {
-      
       ns <- session$ns
-      
+
       iv <- InputValidator$new()
       iv$add_rule("name", sv_required())
       iv$add_rule("email", sv_required())
@@ -115,15 +114,9 @@ analysis_a_session_setup_server <- function(id) {
       output$selectizeInput <- renderUI({
         load("data/program_lists.rda")
         x <- input$program
-        print(input$program)
         ns <- session$ns
-        print(paste0("NS Server is ", ns("project")))
         project <- unique(filter(program_lists, Program == input$program)$Project)
-        selectizeInput(
-          {
-            print(paste0("NSUI is ", ns("project")))
-            ns("project")
-          },
+        selectizeInput(ns("project"),
           "Project (select or type)",
           options = list(create = TRUE),
           choices = project

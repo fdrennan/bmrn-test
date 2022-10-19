@@ -56,7 +56,6 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       })
 
       observeEvent(input$collapse, {
-        print(reactiveValuesToList(input))
         id <- paste0("#", ns(navbarId))
         toggle(id)
       })

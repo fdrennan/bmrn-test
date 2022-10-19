@@ -56,7 +56,6 @@ run_analysis <- function(analysis_data) {
     est <- emmeans(object = model, ~ Treatment * Time, adjust = "none")
     est_me <- emmeans(object = model, ~Treatment, adjust = "none")
     final_contrast <- future_map_df(.x = LETTERS[1:9], .f = ~ {
-      print(.x)
       # Maybe there is a way to have NA for contrasts that don't exist
       out <- final_contrasts(model = model, cont_list = contrast_list[[.x]], est = est)
       if (!is.null(out)) {

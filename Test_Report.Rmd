@@ -34,7 +34,6 @@ st <- storr_rds("storr")
 #   head(1)
 key <- paste0(params$uuid,'-final')
 prismInputs <- paste0(params$uuid, '-prism')
-print(params$uuid)
 data <- st$get(key)
 prismInputs <- st$get(
   prismInputs
