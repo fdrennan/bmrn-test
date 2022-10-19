@@ -54,7 +54,6 @@ test_theme_base <- function() {
 #' headers
 #' @export
 headers <- function() {
-
   theme <- test_theme_base()
 
   withTags(
