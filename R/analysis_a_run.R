@@ -121,25 +121,29 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
         )
       })
 
+  
+      
       analysis_input <- reactive({
-        shiny$req(signal())
-        req(input_data()$data)
-        browser()
+        req(signal())
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
-        #
-        input_data <- input_data()$data$data
-        names_input <- names(input_data)
+        id <- input_data()
+        sig <- signal()
+        browser()
+        # id <- signal()$input_data
+        id <- id$data$data
+        names_input <- names(sig)
         type_inputs <- str_detect(names_input, "type_")
         treatment_inputs <- str_detect(names_input, "treatment_")
-        type_list <- input_data[type_inputs]
-        treatment_list <- input_data[treatment_inputs]
-        type_table <- bind_rows(imap(type_list, function(x, y) tibble(TypeNew = x, type_snake = y)))
+        type_list <- distinct(sig[type_inputs])
+        treatment_list <- distinct(sig[treatment_inputs])
+        type_table <- distinct(bind_rows(imap(type_list, function(x, y) tibble(TypeNew = x, type_snake = y))))
+        filtered_1 <- inner_join(id, type_table)
+        
         treatment_table <- bind_rows(imap(treatment_list, function(x, y) tibble(TreatmentNew = x, treatment_snake = y)))
-        filtered_1 <- bind_cols(input_data, type_table)
-        filtered_1 <- bind_cols(filtered_1, treatment_table)
+        filtered_1 <- left_join(filtered_1, treatment_table)
         filtered_1 <-
           filtered_1 %>%
           mutate(TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew))
