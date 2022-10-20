@@ -135,15 +135,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
-
-        # Browse[2]> treatment_table
-        # # A tibble: 4 × 2
-        # TreatmentNew     treatment_snake
-        # <chr>            <chr>
-        #   1 Treatment        treatment_e_13
-        # 2 Negative Control treatment_wild_type
-        # 3 Vehicle          treatment_e_13_no_rap
-        # 4 Negative Control treatment_e_13_empty_np
         sig <- signal()
         id <- sig$selections
         input_data <- sig$input_data$data
@@ -256,6 +247,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
+        # browser()
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
