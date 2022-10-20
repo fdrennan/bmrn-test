@@ -116,7 +116,7 @@ analysis_a_setup_server <- function(id, input_data) {
       out <- eventReactive(input$runAnalysis, {
         shiny$showNotification("input run analysis pressed")
         # 
-        data <- update.list(input_data(), reactiveValuesToList(input))
+        data <- update.list(input_data(), list(selections = reactiveValuesToList(input)))
         st <- storr_rds("storr")
         st$set(unique(data$session_data$uuid), data)
 

@@ -132,28 +132,35 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input <- reactive({
         req(signal())
-        # 
+         
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
-        browser()
         
+        # Browse[2]> treatment_table
+        # # A tibble: 4 × 2
+        # TreatmentNew     treatment_snake        
+        # <chr>            <chr>                  
+        #   1 Treatment        treatment_e_13         
+        # 2 Negative Control treatment_wild_type    
+        # 3 Vehicle          treatment_e_13_no_rap  
+        # 4 Negative Control treatment_e_13_empty_np
         sig <- signal()
-        id <- sig$input_data$data
-        # 
-        # id <- signal()$input_data
-        # id <- id$data$data
-        names_input <- names(sig)
+        id <- sig$selections
+        input_data <- sig$input_data$data
+        input_data$Type=NULL
+        input_data$Treatment=NULL
+        names_input <- names(id)
         type_inputs <- str_detect(names_input, "type_")
         treatment_inputs <- str_detect(names_input, "treatment_")
-        type_list <- distinct(sig[type_inputs])
-        treatment_list <- distinct(id[treatment_inputs])
-        type_table <- distinct(bind_rows(imap(type_list, function(x, y) tibble(Type = x, type_snake = y))))
-        filtered_1 <- inner_join(id$data$data, type_table)
+        type_list <- id[type_inputs]
+        treatment_list <- id[treatment_inputs]
+        type_table <- bind_rows(imap(type_list, function(x, y) tibble(Type = x, type_snake = y)))
 
-        treatment_table <- distinct(bind_rows(imap(treatment_list, function(x, y) tibble(Treatment = x, treatment_snake = y))))
-        filtered_1 <- left_join(filtered_1, treatment_table)
+        filtered_1 <- inner_join(input_data, type_table)
+        treatment_table <- bind_rows(imap(treatment_list, function(x, y) tibble(Treatment = x, treatment_snake = y)))
+        filtered_1 <- inner_join(filtered_1, treatment_table)
         filtered_1 <-
           filtered_1 %>%
           mutate(Treatment = ifelse(Type == "Wild Type", "Wild Type", Treatment))
@@ -187,15 +194,16 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        
+        browser()
         data <- analysis_input_data()
-
+        selections <- signal()$selections
         data <- data %>%
           mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
             paste(Treatment, Dose)
           )))
+        
         data <- tryCatch(expr = {
-          pre_modeling(data, signal()$changeFromBaseline)
+          pre_modeling(data, selections$changeFromBaseline)
         }, error = function(err) {
           err <- as.character(err)
           showNotification(err, duration = NULL)
@@ -205,16 +213,10 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(data)
         data
       })
-
-      # observe({
-      #   req(pre_modeling_output())
-      #   showNotification(
-      #     h6(class = "text-center p-2", "Setup complete, you may now review the other panels.")
-      #   )
-      # })
+ 
       pre_plot_input <- reactive({
         req(signal())
-        endpoint <- signal()$input_data$endpoint
+        endpoint <- signal()$selections$endpoint
         data <- pre_modeling_output()
         req(input$y_axis)
         req(input$treatmentPlotSelectors)
@@ -224,7 +226,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           trt_sel = input$treatmentPlotSelectors,
           time_sel = input$timePlotSelectors
         )
-
+        
         times <- unique(data$transformed_data$Time)[
           order(as.numeric(gsub("[A-z]| ", "", unique(data$transformed_data$Time))))
         ]
