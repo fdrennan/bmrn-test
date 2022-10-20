@@ -162,7 +162,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
             Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
           )
-        # browser()
+        # 
         filtered_1
       })
 
@@ -189,7 +189,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        # browser()
+        # 
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -211,7 +211,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       pre_plot_input <- reactive({
         req(signal())
-        endpoint <- signal()$selections$endpoint
+        browser()
+        endpoint <- signal()$input_data$endpoint
         data <- pre_modeling_output()
         req(input$y_axis)
         req(input$treatmentPlotSelectors)
@@ -240,6 +241,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
+        browser()
         data <- pre_plot_input()$data
         endpoint <- pre_plot_input()$endpoint
         baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
