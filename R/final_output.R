@@ -12,12 +12,12 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   # average and specific time point
   # Average Time
   AT_os <- transformed_data %>%
-    group_by(TreatmentNew, Time) %>%
+    group_by(Treatment, Time) %>%
     summarize(sd = sd(Response)) %>%
-    group_by(TreatmentNew) %>%
+    group_by(Treatment) %>%
     summarize(se = mean(sd) / n()) %>%
     inner_join(transformed_data %>%
-      group_by(TreatmentNew) %>%
+      group_by(Treatment) %>%
       summarize(
         mean = mean(Response),
         median = median(Response)
@@ -27,7 +27,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   # Need to make sure that toi matches above
   ST_os <- transformed_data %>%
     filter(Time == toi) %>%
-    group_by(TreatmentNew, Time) %>%
+    group_by(Treatment, Time) %>%
     summarize(
       mean = mean(Response),
       median = median(Response),
@@ -35,15 +35,15 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     )
 
   os_together <- bind_rows(AT_os, ST_os) %>%
-    arrange(TreatmentNew) %>%
+    arrange(Treatment) %>%
     mutate(
-      TreatmentNew = factor(TreatmentNew),
+      Treatment = factor(Treatment),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, mean, median, se) %>%
-    arrange(TreatmentNew)
+    select(Treatment, Endpoint, mean, median, se) %>%
+    arrange(Treatment)
   # Back Transformation
   ST_bt <- emmeans_obj$ST %>%
     data.frame() %>%
@@ -76,15 +76,15 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     )
 
   bt_together <- bind_rows(AT_bt, ST_bt) %>%
-    arrange(TreatmentNew) %>%
+    arrange(Treatment) %>%
     mutate(
-      TreatmentNew = factor(TreatmentNew),
+      Treatment = factor(Treatment),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, emmean_bt, se_bt) %>%
-    arrange(TreatmentNew)
+    select(Treatment, Endpoint, emmean_bt, se_bt) %>%
+    arrange(Treatment)
 
   # LSmeans
   ST_lsmeans <- emmeans_obj$ST %>%
@@ -95,15 +95,15 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     data.frame()
 
   lsmeans_together <- bind_rows(AT_lsmeans, ST_lsmeans) %>%
-    arrange(TreatmentNew) %>%
+    arrange(Treatment) %>%
     mutate(
-      TreatmentNew = factor(TreatmentNew),
+      Treatment = factor(Treatment),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, emmean, SE) %>%
-    arrange(TreatmentNew) %>%
+    select(Treatment, Endpoint, emmean, SE) %>%
+    arrange(Treatment) %>%
     rename(
       emmean_lsmeans = emmean,
       se_lsmeans = SE
@@ -135,7 +135,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   empty_col <- tab1 %>% apply(2, function(a) sum(is.na(a)))
   tab1 <- tab1[, which(empty_col < nrow(tab1))] %>%
     rename(
-      Treatment = TreatmentNew,
+      Treatment = Treatment,
       "Original Scale Mean" = mean,
       "Original Scale Median" = median,
       "Original Scale SE" = se,
@@ -147,7 +147,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   empty_col <- tab2 %>% apply(2, function(a) sum(is.na(a)))
   tab2 <- tab2[, which(empty_col < nrow(tab2))] %>%
     rename(
-      Treatment = TreatmentNew,
+      Treatment = Treatment,
       "Original Scale Mean" = mean,
       "Original Scale Median" = median,
       "Original Scale SE" = se,
@@ -158,7 +158,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   colnames(tab2) <- gsub("\\.", " ", colnames(tab2))
   empty_col <- tab3 %>% apply(2, function(a) sum(is.na(a)))
   tab3 <- tab3[, which(empty_col < nrow(tab3))] %>%
-    rename(Treatment = TreatmentNew) %>%
+    rename(Treatment = Treatment) %>%
     select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
@@ -168,14 +168,14 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
 #' html_tables
 #' @export
 html_tables <- function(transformed_data, tab_list) {
-  trt_map <- distinct(transformed_data, Treatment, TreatmentNew)
+  trt_map <- distinct(transformed_data, Treatment, Treatment)
 
   tab1 <- tab_list$tab1
   tab1 <- tab1[, which(apply(tab1, 2, function(a) !all(a == "")))]
-  tab1 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
+  tab1 <- distinct(transformed_data, Treatment, Treatment) %>%
     rename(
       "Treatment_orig" = Treatment,
-      "Treatment" = TreatmentNew
+      "Treatment" = Treatment
     ) %>%
     inner_join(., tab1) %>%
     dplyr::select(-Treatment) %>%
@@ -183,10 +183,10 @@ html_tables <- function(transformed_data, tab_list) {
 
   tab2 <- tab_list$tab2
   tab2 <- tab2[, which(apply(tab2, 2, function(a) !all(a == "")))]
-  tab2 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
+  tab2 <- distinct(transformed_data, Treatment, Treatment) %>%
     rename(
       "Treatment_orig" = Treatment,
-      "Treatment" = TreatmentNew
+      "Treatment" = Treatment
     ) %>%
     arrange(Treatment) %>%
     inner_join(., tab2) %>%
@@ -195,27 +195,27 @@ html_tables <- function(transformed_data, tab_list) {
 
   tab3 <- tab_list$tab3
   tab3 <- tab3[, which(apply(tab3, 2, function(a) !all(a == "")))]
-  tab3 <- distinct(transformed_data, Treatment, TreatmentNew) %>%
+  tab3 <- distinct(transformed_data, Treatment, Treatment) %>%
     rename(
       "Treatment_orig" = Treatment,
-      "Treatment" = TreatmentNew
+      "Treatment" = Treatment
     ) %>%
     inner_join(., tab3) %>%
     dplyr::select(-Treatment) %>%
     rename("Treatment" = Treatment_orig)
 
-  swap_table <- transformed_data %>% distinct(Treatment, TreatmentNew)
+  swap_table <- transformed_data %>% distinct(Treatment, Treatment)
   for (i in 1:nrow(swap_table)) {
     colnames(tab1) <- gsub(
-      pattern = swap_table$TreatmentNew[i],
+      pattern = swap_table$Treatment[i],
       replacement = swap_table$Treatment[i], x = colnames(tab1)
     )
     colnames(tab2) <- gsub(
-      pattern = swap_table$TreatmentNew[i],
+      pattern = swap_table$Treatment[i],
       replacement = swap_table$Treatment[i], x = colnames(tab2)
     )
     colnames(tab3) <- gsub(
-      pattern = swap_table$TreatmentNew[i],
+      pattern = swap_table$Treatment[i],
       replacement = swap_table$Treatment[i], x = colnames(tab3)
     )
   }
@@ -273,7 +273,7 @@ html_UI <- function(transformed_data, tables) {
   if (!any(grepl("Transformed", colnames(tab1)))) {
     group <- unique(word(colnames(tab1)[6:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>% filter(Treatment == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[6:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[6:ncol(tab1)])
@@ -289,7 +289,7 @@ html_UI <- function(transformed_data, tables) {
   } else {
     group <- unique(word(colnames(tab1)[8:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>% filter(Treatment == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[8:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[8:ncol(tab1)])
@@ -313,7 +313,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>% filter(Treatment == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[6:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[6:ncol(tab2)])
@@ -332,7 +332,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>% filter(Treatment == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[8:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[8:ncol(tab2)])
@@ -355,7 +355,7 @@ html_UI <- function(transformed_data, tables) {
     group <- c(group, paste(word(colnames(tab3)[i], -c(2, 1)), collapse = " "))
   }
   group <- map_chr(.x = group, .f = ~ {
-    tmp <- trt_map %>% filter(TreatmentNew == .x)
+    tmp <- trt_map %>% filter(Treatment == .x)
     as.character(tmp$Treatment)
   })
   colnames(tab3)[3:ncol(tab3)] <- gsub(" from.*", "", colnames(tab3)[3:ncol(tab3)])

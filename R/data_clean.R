@@ -2,7 +2,7 @@
 #' @export data_clean
 data_clean <- function(analysis_data) {
   dose_num <- analysis_data %>%
-    filter(TreatmentNew == "Treatment") %>%
+    filter(Treatment == "Treatment") %>%
     select(Dose) %>%
     unlist() %>%
     unique()
@@ -12,11 +12,11 @@ data_clean <- function(analysis_data) {
   analysis_data <- analysis_data %>%
     left_join(final_data_num) %>%
     mutate(
-      TreatmentNew = as.character(TreatmentNew),
-      TreatmentNew = if_else(TreatmentNew == "Treatment",
-        paste0("Dose ", order), TreatmentNew
+      Treatment = as.character(Treatment),
+      Treatment = if_else(Treatment == "Treatment",
+        paste0("Dose ", order), Treatment
       ),
-      TreatmentNew = factor(TreatmentNew)
+      Treatment = factor(Treatment)
     ) %>%
     select(-order)
 

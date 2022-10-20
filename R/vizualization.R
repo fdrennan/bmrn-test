@@ -92,14 +92,14 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
       filter(
         !is.na(Response_Transformed)
       ) %>%
-      group_by(SubjectID, Treatment, TreatmentNew, Time) %>%
+      group_by(SubjectID, Treatment, Treatment, Time) %>%
       summarize(Response_Transformed = mean(Response_Transformed)) %>%
       ungroup()
   }
 
   correct_level_order <- transformed_data %>%
-    arrange(TreatmentNew) %>%
-    distinct(Treatment, TreatmentNew) %>%
+    arrange(Treatment) %>%
+    distinct(Treatment, Treatment) %>%
     dplyr::select(Treatment) %>%
     unlist()
 
@@ -107,7 +107,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, baseline, trans
     mutate(Treatment = factor(Treatment, levels = correct_level_order))
 
   transformed_data_sum <- transformed_data %>%
-    group_by(Treatment, TreatmentNew, Time) %>%
+    group_by(Treatment, Treatment, Time) %>%
     summarize(
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)

@@ -2,14 +2,14 @@
 # This corresponds to box fifth in the flow chart
 variance_check <- function(transformed_data, variable) {
 
-  # First find the variance for each TreatmentNew and week combination,
+  # First find the variance for each Treatment and week combination,
   # then take the average of these variances to estimate the variance
   # for each group
   tmp <- transformed_data
   variances <- transformed_data %>%
-    group_by(TreatmentNew, basic_model, Time) %>%
+    group_by(Treatment, basic_model, Time) %>%
     summarize(var = var(get(variable))) %>%
-    group_by(TreatmentNew, basic_model) %>%
+    group_by(Treatment, basic_model) %>%
     summarize(mean_var = mean(var))
 
   # We really want to make sure that the variance for the groups in the basic model
@@ -22,13 +22,13 @@ variance_check <- function(transformed_data, variable) {
   # model (reduced model) and a model estimating the variances separately (full model)
 
   full_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")), ,
+    model = as.formula(paste(variable, "~ Treatment * Time")), ,
     data = transformed_data,
     weights = varIdent(form = ~ 1 | basic_model)
   )
 
   restricted_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")), ,
+    model = as.formula(paste(variable, "~ Treatment * Time")), ,
     data = transformed_data
   )
 
@@ -53,7 +53,7 @@ variance_check <- function(transformed_data, variable) {
       mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 2),
-        diff_group = if_else(abs(fold_change) > 1, as.character(TreatmentNew), "Pooled")
+        diff_group = if_else(abs(fold_change) > 1, as.character(Treatment), "Pooled")
       ) %>%
       ungroup() %>%
       select(-basic_model)
@@ -68,7 +68,7 @@ variance_check <- function(transformed_data, variable) {
       mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 3),
-        diff_group = if_else(abs(fold_change) <= 1, "Pooled", as.character(TreatmentNew))
+        diff_group = if_else(abs(fold_change) <= 1, "Pooled", as.character(Treatment))
       ) %>%
       ungroup() %>%
       select(-basic_model)
@@ -77,7 +77,7 @@ variance_check <- function(transformed_data, variable) {
   transformed_data <- transformed_data %>%
     left_join(variances)
 
-  print(table(transformed_data$TreatmentNew, transformed_data$diff_group))
+  print(table(transformed_data$Treatment, transformed_data$diff_group))
 
   # Output a new dataset with diff_var column which indicates the groupings
   # for the final model

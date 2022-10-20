@@ -22,9 +22,9 @@ transformation_check <- function(analysis_data) {
     pivot_longer(cols = c(Response, Baseline), names_to = "Time", values_to = "Response") %>%
     mutate(Response = as.numeric(Response)) %>%
     filter(basic_model) %>%
-    group_by(SubjectID, `Technical Replicate ID`, TreatmentNew) %>%
+    group_by(SubjectID, `Technical Replicate ID`, Treatment) %>%
     summarize(sub_mean = mean(Response))
-  model <- lm(data = sub_mean, formula = 0 + sub_mean ~ TreatmentNew)
+  model <- lm(data = sub_mean, formula = 0 + sub_mean ~ Treatment)
   # Conduct the Shapiro-Wilk Test. The aim of this step is to avoid unnecessary
   # data transformations.
   shapiro_wilk <- shapiro.test(model$residuals)$p.value
@@ -55,7 +55,7 @@ transformation_check <- function(analysis_data) {
       )
 
     # Coonduct the box cox transformation
-    bc <- MASS::boxcox(Response ~ TreatmentNew * Time,
+    bc <- MASS::boxcox(Response ~ Treatment * Time,
       data = bc_data,
       lambda = seq(-1, 2, 1 / 100)
     )
@@ -99,10 +99,10 @@ transformation_check <- function(analysis_data) {
       select(-Time) %>%
       pivot_longer(cols = c(Response_Transformed, Baseline_Transformed), names_to = "Time", values_to = "Response_Transformed") %>%
       filter(basic_model) %>%
-      group_by(SubjectID, `Technical Replicate ID`, TreatmentNew) %>%
+      group_by(SubjectID, `Technical Replicate ID`, Treatment) %>%
       summarize(sub_mean = mean(Response_Transformed))
 
-    model2 <- lm(data = sub_mean2, formula = 0 + sub_mean ~ TreatmentNew)
+    model2 <- lm(data = sub_mean2, formula = 0 + sub_mean ~ Treatment)
     shapiro_wilk2 <- shapiro.test(model2$residuals)$p.value
     if (shapiro_wilk2 < 0.05) {
       error_transform <- TRUE
@@ -124,15 +124,15 @@ transformation_check <- function(analysis_data) {
   if (!all(is.na(analysis_data$Baseline))) {
     analysis_data <- analysis_data %>%
       select(-`Technical Replicate ID`) %>%
-      group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
+      group_by(SubjectID, Time, Treatment, Type, Treatment, basic_model) %>%
       summarise(across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean)) %>%
       ungroup() %>%
       mutate(Response_Transformed_bc = Response_Transformed - Baseline_Transformed)
   } else {
     analysis_data <- analysis_data %>%
       select(-`Technical Replicate ID`) %>%
-      group_by(Type, Treatment, SubjectID, Dose, TypeNew, TreatmentNew, basic_model, Time) %>%
-      group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
+      group_by(Type, Treatment, SubjectID, Dose, Treatment, basic_model, Time) %>%
+      group_by(SubjectID, Time, Treatment, Type, Treatment, basic_model) %>%
       summarise(across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean)) %>%
       ungroup()
   }

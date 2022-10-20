@@ -99,8 +99,8 @@ prism_plot <- function(data, tables, trt_sel,
 
 
   correct_level_order <- data %>%
-    arrange(TreatmentNew) %>%
-    distinct(Treatment, TreatmentNew) %>%
+    arrange(Treatment) %>%
+    distinct(Treatment) %>%
     dplyr::select(Treatment) %>%
     unlist()
 

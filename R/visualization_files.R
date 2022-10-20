@@ -8,16 +8,16 @@ pre_modeling <- function(input_data, baseline) {
   analysis_data <- analysis_data %>%
     mutate(
       Time = factor(Time, levels = times),
-      TreatmentNew = factor(TreatmentNew,
+      Treatment = factor(Treatment,
         levels = c(
           "Wild Type", "Negative Control", "Positive Control",
           "Other Comparator", "Vehicle",
-          grep("Dose", levels(TreatmentNew), value = TRUE)
+          grep("Dose", levels(Treatment), value = TRUE)
         )
       ),
-      TreatmentNew = droplevels(TreatmentNew)
+      Treatment = droplevels(Treatment)
     ) %>%
-    arrange(TreatmentNew, SubjectID, Time)
+    arrange(Treatment, SubjectID, Time)
 
   ready_final_model <- transform_diagnostics(analysis_data, baseline)
   transformed_data <-
@@ -37,7 +37,7 @@ pre_modeling <- function(input_data, baseline) {
       transformed_data = transformed_data$data,
       variable = ready_final_model$variable
     ) %>%
-    arrange(TreatmentNew, SubjectID, Time)
+    arrange(Treatment, SubjectID, Time)
   best_model <- future_map_dfr(.x = c("AR1", "ARH1", "CS", "CSH", "TOEP", "UN"), .f = ~ {
     tmp <- final_model(
       transformed_data = transformed_data_vc %>% filter(basic_model),

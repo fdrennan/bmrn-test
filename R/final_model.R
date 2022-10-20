@@ -13,7 +13,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corAR1(form = ~ 1 | SubjectID)
       )
     } else {
@@ -21,7 +21,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corAR1(form = ~ 1 | SubjectID),
         weights = varIdent(form = ~ 1 | diff_group)
       )
@@ -33,7 +33,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corAR1(form = ~ 1 | SubjectID),
         weights = varIdent(form = ~ 1 | Time)
       )
@@ -42,7 +42,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corAR1(form = ~ 1 | SubjectID),
         weights = varComb(varIdent(form = ~ 1 | diff_group), varIdent(form = ~ 1 | Time))
       )
@@ -54,7 +54,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corCompSymm(form = ~ 1 | SubjectID)
       )
     } else {
@@ -62,7 +62,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corCompSymm(form = ~ 1 | SubjectID),
         weights = varIdent(form = ~ 1 | diff_group)
       )
@@ -74,7 +74,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corCompSymm(form = ~ 1 | SubjectID),
         weights = varIdent(form = ~ 1 | Time)
       )
@@ -83,7 +83,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corCompSymm(form = ~ 1 | SubjectID),
         weights = varComb(varIdent(form = ~ 1 | diff_group), varIdent(form = ~ 1 | Time))
       )
@@ -95,7 +95,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
       )
     } else {
@@ -103,7 +103,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
         weights = varComb(varIdent(form = ~ 1 | diff_group), varIdent(form = ~ 1 | Time))
       )
@@ -115,7 +115,7 @@ final_model <- function(transformed_data, best, variable) {
     if (all(transformed_data$diff_group == "Pooled")) {
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corSymm(form = ~ 1 | SubjectID),
         weights = varIdent(form = ~ 1 | Time)
       )
@@ -124,7 +124,7 @@ final_model <- function(transformed_data, best, variable) {
       # computed based on the variance of the group
       final_mod <- gls(
         data = transformed_data,
-        model = tmp ~ TreatmentNew * Time,
+        model = tmp ~ Treatment * Time,
         correlation = corSymm(form = ~ 1 | SubjectID),
         weights = varComb(varIdent(form = ~ 1 | diff_group), varIdent(form = ~ 1 | Time))
       )

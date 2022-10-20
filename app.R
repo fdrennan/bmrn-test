@@ -1,3 +1,4 @@
+options(require_validation = FALSE)
 # library(test)
 
 devtools::load_all()
@@ -9,7 +10,6 @@ if (isTRUE(getOption("production"))) {
   options(send = TRUE)
   options("devmode" = FALSE)
 } else {
-  options(require_validation = FALSE)
   options(send = FALSE)
   options("devmode" = FALSE)
 }

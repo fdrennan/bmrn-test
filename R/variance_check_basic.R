@@ -5,14 +5,14 @@ variance_test_basic <- function(transformed_data, variable) {
   error_bm_var <- FALSE
 
   orig_data <- transformed_data
-  # First find the variance for each TreatmentNew and week combination,
+  # First find the variance for each Treatment and week combination,
   # then take the average of these variances to estimate the variance
   # for each group
   variances <- transformed_data %>%
     filter(basic_model) %>%
-    group_by(TreatmentNew, Time) %>%
+    group_by(Treatment, Time) %>%
     summarize(var = var(get(variable))) %>%
-    group_by(TreatmentNew) %>%
+    group_by(Treatment) %>%
     summarize(mean_var = mean(var))
 
   pooled_var <- variances %>%
@@ -29,14 +29,14 @@ variance_test_basic <- function(transformed_data, variable) {
   # model (reduceed model) and a model estimating the variances separately (full model)
 
   full_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")),
+    model = as.formula(paste(variable, "~ Treatment * Time")),
     data = transformed_data %>%
       filter(basic_model),
-    weights = varIdent(form = ~ 1 | TreatmentNew)
+    weights = varIdent(form = ~ 1 | Treatment)
   )
 
   restricted_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")),
+    model = as.formula(paste(variable, "~ Treatment * Time")),
     data = transformed_data %>%
       filter(basic_model)
   )

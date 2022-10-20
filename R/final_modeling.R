@@ -4,7 +4,7 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type) {
   var <- ready_final_model$var
   power <- ready_final_model$box_cox
   transformed_data <- ready_final_model$transformed_data %>%
-    arrange(TreatmentNew, SubjectID, Time)
+    arrange(Treatment, SubjectID, Time)
   best_model <- ready_final_model$best_model
   time_order <- unique(transformed_data$Time)
   final_model <- final_model(

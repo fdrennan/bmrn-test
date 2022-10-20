@@ -4,13 +4,13 @@
 contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory") {
   data <- data %>% rename(tmp = variable)
   est <- emmeans(
-    object = model, ~ TreatmentNew * Time,
+    object = model, ~ Treatment * Time,
     adjust = "none", data = data,
     mode = "auto"
   )
 
   est_me <- emmeans(
-    object = model, ~TreatmentNew, adjust = "none", data = data,
+    object = model, ~Treatment, adjust = "none", data = data,
     mode = "auto"
   )
 
@@ -29,7 +29,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
           out$contrast <- paste0(.x, 1:nrow(out))
         }
         if (.x == "G") {
-          groups <- t(combn(x = sum(grepl("Dose", levels(data$TreatmentNew))), m = 2)) %>%
+          groups <- t(combn(x = sum(grepl("Dose", levels(data$Treatment))), m = 2)) %>%
             data.frame() %>%
             mutate(combn = paste0("G", X1, X2))
           out$contrast <- groups$combn
@@ -48,8 +48,8 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
             rownames(out) <- c("G12", "G12_st")
           } else {
             rownames(out) <- cbind(
-              combn(1:sum(grepl("Dose", levels(data$TreatmentNew))), 2),
-              combn(1:sum(grepl("Dose", levels(data$TreatmentNew))), 2)
+              combn(1:sum(grepl("Dose", levels(data$Treatment))), 2),
+              combn(1:sum(grepl("Dose", levels(data$Treatment))), 2)
             ) %>%
               t() %>%
               data.frame() %>%
