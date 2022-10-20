@@ -16,14 +16,20 @@ analysis_a_setup_server <- function(id, signal) {
       input_data <- reactive({
         #
         req(signal)
-        input_data <- signal$data
-        con <- connect_table()
-        data <- tbl(con, "sessions") %>%
-          arrange(desc(timestamp)) %>%
-          first() %>%
-          collect()
-        input_data$session_data <- data
-        input_data
+        
+        
+        out <- list(
+          session_data = {
+            con <- connect_table()
+            data <- tbl(con, "sessions") %>%
+              arrange(desc(timestamp)) %>%
+              first() %>%
+              collect()
+          },
+          input_data = signal$data 
+        )
+        # browser()
+        out
       })
 
       output$analysis_a_body <- renderUI({
@@ -51,7 +57,7 @@ analysis_a_setup_server <- function(id, signal) {
 
       output$typeAssignmentTable <- renderUI({
         shiny$req(input_data())
-        data <- input_data()
+        data <- input_data()$input_data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
       })
@@ -60,7 +66,7 @@ analysis_a_setup_server <- function(id, signal) {
 
       output$groupAssignmentTable <- renderUI({
         shiny$req(input_data())
-        data <- input_data()
+        data <- input_data()$input_data
 
         treatment_input <-
           distinct(data, treatment_snake, Treatment) %>%
@@ -82,7 +88,7 @@ analysis_a_setup_server <- function(id, signal) {
       output$analysisInputUI <- renderUI({
         shiny$req(input_data())
         session_data <- input_data()$session_data
-        data <- input_data()
+        data <- input_data()$input_data
         #
         # data <- id$data
         # req(data)

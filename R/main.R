@@ -62,7 +62,7 @@ server_app <- function(id = "app") {
 
       # shiny$observe({
       #   shiny$req(test_1_output_data())
-      #   browser()
+      #   
       # })
       #
 

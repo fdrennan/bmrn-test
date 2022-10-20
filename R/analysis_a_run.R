@@ -54,7 +54,7 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 
 #' analysis_a_run_server
 #' @export
-analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
+analysis_a_run_server <- function(id, input_signal) {
   box::use(shiny)
   moduleServer(
     id,
@@ -62,9 +62,17 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
       ns <- session$ns
 
       input_data <- reactive({
-        req(input_signal())
+        
+        if(TRUE) {
+          req(input_signal())
+          input_signal <- input_signal()
+          write_rds(input_signal, 'input_signal.rda')
+        } else {
+          input_signal <- read_rds('input_signal.rda')
+        }
+        
         change_page("analysisa_run")
-        input_data <- input_signal()$input_data
+        input_data <- input_signal$input_data
         con <- connect_table()
         session_data <- tbl(con, "sessions") %>%
           arrange(desc(timestamp)) %>%
@@ -81,7 +89,7 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
 
       observeEvent(signal(),
         {
-          browser()
+          
           updateTabItems(
             session,
             inputId = "test_1_tabs",
@@ -102,7 +110,7 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
 
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        browser()
+        
         data <- input_data()$data
 
         treatment_input <-
@@ -131,7 +139,7 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
         }
         id <- input_data()
         sig <- signal()
-        # browser()
+        # 
         # id <- signal()$input_data
         # id <- id$data$data
         names_input <- names(sig)
@@ -153,7 +161,7 @@ analysis_a_run_server <- function(id, input_signal, cache = TRUE) {
 
       analysis_input_data <- reactive({
         req(analysis_input())
-        browser()
+        
         data <- analysis_input()
         data <-
           data %>%
