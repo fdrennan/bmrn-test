@@ -4,7 +4,7 @@ options(require_validation = FALSE)
 # devtools::install()
 devtools::load_all()
 plan(multiprocess)
-options('false' = TRUE)
+options("false" = TRUE)
 if (isTRUE(getOption("production"))) {
   options(shiny.maxRequestSize = 300 * 1024^2)
   options(require_validation = TRUE)

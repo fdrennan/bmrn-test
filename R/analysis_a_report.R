@@ -79,7 +79,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
           }
         )
-        
+
         tryCatch(
           {
             showNotification("Generating Email", duration = NULL, closeButton = TRUE)

@@ -153,26 +153,28 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
             Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
           )
-        # 
+        #
         filtered_1
       })
 
       analysis_input_data <- reactive({
         req(analysis_input())
         data <- analysis_input()
-        base_col = which(colnames(data) == 'Baseline')
-        type_snake_col = which(colnames(data) == 'type_snake')
+        base_col <- which(colnames(data) == "Baseline")
+        type_snake_col <- which(colnames(data) == "type_snake")
         data <-
           data %>%
           mutate(
             trt = TreatmentNew,
-            TreatmentNew = if_else(TypeNew == 'Wild Type', "Wild Type", TreatmentNew),
+            TreatmentNew = if_else(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
             basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
           )
-        data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
-                             names_to = "Time", values_to = "Response") %>%
+        data <- pivot_longer(data,
+          cols = (base_col + 1):(type_snake_col - 1),
+          names_to = "Time", values_to = "Response"
+        ) %>%
           mutate(Time = as_factor(Time))
-        
+
         data
       })
 
@@ -180,7 +182,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        # 
+        #
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -214,16 +216,16 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           time_sel = input$timePlotSelectors,
           num_rows = input$num_rows
         )
-        
+
         list(
           data = data, endpoint = endpoint, ui_selections = ui_selections
         )
       })
-      
+
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
-        
+
         data <- pre_plot_input()$data
         ui_sel <- pre_plot_input()$ui_selections
         endpoint <- pre_plot_input()$endpoint
@@ -234,16 +236,16 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           endpoint = endpoint,
           ui_sel = ui_sel
         )
-        
+
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
-      
+
       shiny$observe({
-        # 
+        #
         shiny$req(interactive_plots())
-        showNotification('success')
+        showNotification("success")
       })
-      
+
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
@@ -254,9 +256,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         print_tables <- ifelse(all(!data$error), TRUE, FALSE)
         if (!print_tables) {
           message <- if_else(data$error$error_trans == TRUE,
-                             "Consult Statistician: Transformation did not
+            "Consult Statistician: Transformation did not
                        lead to normally distributed residuals",
-                       "Consult Statistician: Variance within basic model (Vehicle and Treatment
+            "Consult Statistician: Variance within basic model (Vehicle and Treatment
                        groups) are statistically different."
           )
           showNotification(
@@ -272,9 +274,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
           } else {
             final_model <- final_modeling(data,
-                                          toi = signal()$timeSelectionInput,
-                                          analysis_type = analysis_type,
-                                          overall_trend = FALSE # Change this to TRUE to include the overall average
+              toi = signal()$timeSelectionInput,
+              analysis_type = analysis_type,
+              overall_trend = FALSE # Change this to TRUE to include the overall average
             )
           }
 
@@ -575,17 +577,19 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               choices = timePlotSelectors, multiple = TRUE
             ),
             radioButtons(ns("y_axis"), h4("Select y axis"),
-                         choiceNames = list(
-                           "Transform (suggested by Box-Cox)",
-                           "No Transform (original scale)",
-                           "Change from Baseline"
-                         ),
-                         choiceValues = list(
-                           "transform", "no_transform", "change_from_baseline"
-                         )
+              choiceNames = list(
+                "Transform (suggested by Box-Cox)",
+                "No Transform (original scale)",
+                "Change from Baseline"
+              ),
+              choiceValues = list(
+                "transform", "no_transform", "change_from_baseline"
+              )
             ),
-            numericInput(ns("num_rows"), label = "Number of Rows for Panel Plots",
-                         value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1)
+            numericInput(ns("num_rows"),
+              label = "Number of Rows for Panel Plots",
+              value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1
+            )
           )
         )
       })

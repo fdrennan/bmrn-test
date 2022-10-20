@@ -27,7 +27,7 @@ ndexrapp:
 	aws s3 cp s3://ndexrapp ./ --recursive
 
 sass: style
-	scss www/sass/styles.scss www/styles.css
+	scss www/styles.scss www/styles.css
 
 style:
 	R -e "styler::style_dir()"

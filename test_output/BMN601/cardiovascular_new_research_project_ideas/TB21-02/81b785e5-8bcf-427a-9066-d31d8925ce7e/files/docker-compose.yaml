@@ -1,0 +1,36 @@
+version: "2"
+services:
+  nginx:
+    image: nginx:latest
+    container_name: test-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - '8380:80'
+    links:
+      - app
+    depends_on:
+      - "app"
+    network_mode: bridge
+    links:
+      - 'app:shinyapp'
+  app:
+    container_name: test-app
+    build: .
+    restart: always
+    user: 'root'
+    ports:
+    - '5000:5000'
+    expose:
+    - '5000'
+    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
+    volumes:
+      - './app.R:/app/app.R'
+      - './.env.container:/app/.env'
+      - './.Rprofile:/app/.Rprofile'
+      - './www:/app/www'
+      - './R:/app/R'
+      - './test_output:/app/test_output'
+      - './Test_Report.Rmd:/app/Test_Report.Rmd'
+    network_mode: bridge
+
