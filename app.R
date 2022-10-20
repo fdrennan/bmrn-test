@@ -4,6 +4,7 @@ options(require_validation = FALSE)
 devtools::load_all()
 plan(multiprocess)
 options("test_version" = "Version 1.133")
+options('cachetest' = TRUE)
 if (isTRUE(getOption("production"))) {
   options(require_valiation = TRUE)
   Sys.setenv(BASE_DOMAIN = "/qsci/test")

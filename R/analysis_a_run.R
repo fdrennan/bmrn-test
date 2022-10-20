@@ -54,7 +54,7 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 
 #' analysis_a_run_server
 #' @export
-analysis_a_run_server <- function(id, input_signal) {
+analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
   box::use(shiny)
   moduleServer(
     id,
@@ -63,12 +63,12 @@ analysis_a_run_server <- function(id, input_signal) {
 
       input_data <- reactive({
         
-        if(TRUE) {
+        if(cache) {
+          input_signal <- read_rds('input_signal.rda')
+        } else {
           req(input_signal())
           input_signal <- input_signal()
           write_rds(input_signal, 'input_signal.rda')
-        } else {
-          input_signal <- read_rds('input_signal.rda')
         }
         
         change_page("analysisa_run")
@@ -79,13 +79,14 @@ analysis_a_run_server <- function(id, input_signal) {
           first() %>%
           collect()
 
+        
         list(
-          data = input_data,
+          input_data = input_data,
           session_data = session_data
         )
       })
 
-      signal <- analysis_a_setup_server("analysis_a_setup", input_data()$data)
+      signal <- analysis_a_setup_server("analysis_a_setup", input_data)
 
       observeEvent(signal(),
         {
@@ -96,14 +97,14 @@ analysis_a_run_server <- function(id, input_signal) {
             selected = "Plots"
           )
         },
-        ignoreInit = TRUE
+        ignoreInit = FALSE
       )
 
 
       output$typeAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        browser()
-        data <- signal()$data
+        # 
+        data <- signal()$input_data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
       })
@@ -111,7 +112,7 @@ analysis_a_run_server <- function(id, input_signal) {
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
         
-        data <- input_data()$data
+        data <- input_data()$input_data
 
         treatment_input <-
           distinct(data, treatment_snake, Treatment) %>%
@@ -129,16 +130,17 @@ analysis_a_run_server <- function(id, input_signal) {
         )
       })
 
-
-
       analysis_input <- reactive({
         req(signal())
+        # 
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
-        id <- input_data()
+        browser()
+        
         sig <- signal()
+        id <- sig$input_data$data
         # 
         # id <- signal()$input_data
         # id <- id$data$data
@@ -146,7 +148,7 @@ analysis_a_run_server <- function(id, input_signal) {
         type_inputs <- str_detect(names_input, "type_")
         treatment_inputs <- str_detect(names_input, "treatment_")
         type_list <- distinct(sig[type_inputs])
-        treatment_list <- distinct(sig[treatment_inputs])
+        treatment_list <- distinct(id[treatment_inputs])
         type_table <- distinct(bind_rows(imap(type_list, function(x, y) tibble(Type = x, type_snake = y))))
         filtered_1 <- inner_join(id$data$data, type_table)
 
@@ -184,8 +186,8 @@ analysis_a_run_server <- function(id, input_signal) {
 
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
-        browser()
         req(analysis_input_data())
+        
         data <- analysis_input_data()
 
         data <- data %>%

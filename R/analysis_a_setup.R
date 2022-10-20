@@ -7,32 +7,15 @@ analysis_a_setup <- function(id) {
 
 #' analysis_a_setup_server
 #' @export
-analysis_a_setup_server <- function(id, signal) {
+analysis_a_setup_server <- function(id, input_data) {
   box::use(shiny)
   moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
-      input_data <- reactive({
-        #
-        req(signal)
-        
-        
-        out <- list(
-          session_data = {
-            con <- connect_table()
-            data <- tbl(con, "sessions") %>%
-              arrange(desc(timestamp)) %>%
-              first() %>%
-              collect()
-          },
-          input_data = signal$data 
-        )
-        # browser()
-        out
-      })
 
       output$analysis_a_body <- renderUI({
+        shiny$req(input_data())
         fluidRow(
           box(
             width = 4, collapsible = F,
@@ -57,7 +40,8 @@ analysis_a_setup_server <- function(id, signal) {
 
       output$typeAssignmentTable <- renderUI({
         shiny$req(input_data())
-        data <- input_data()$input_data
+        
+        data <- input_data()$input_data$data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
       })
@@ -66,7 +50,7 @@ analysis_a_setup_server <- function(id, signal) {
 
       output$groupAssignmentTable <- renderUI({
         shiny$req(input_data())
-        data <- input_data()$input_data
+        data <- input_data()$input_data$data
 
         treatment_input <-
           distinct(data, treatment_snake, Treatment) %>%
@@ -88,10 +72,8 @@ analysis_a_setup_server <- function(id, signal) {
       output$analysisInputUI <- renderUI({
         shiny$req(input_data())
         session_data <- input_data()$session_data
-        data <- input_data()$input_data
-        #
-        # data <- id$data
-        # req(data)
+        data <- input_data()$input_data$data
+ 
         nd <- names(data)
 
         date_cols <- str_detect(names(data), "[0-9]")
@@ -133,6 +115,7 @@ analysis_a_setup_server <- function(id, signal) {
 
       out <- eventReactive(input$runAnalysis, {
         shiny$showNotification("input run analysis pressed")
+        # 
         data <- update.list(input_data(), reactiveValuesToList(input))
         st <- storr_rds("storr")
         st$set(unique(data$session_data$uuid), data)
