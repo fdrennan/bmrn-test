@@ -22,31 +22,31 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
         testSpinner(uiOutput(ns("PlotsPanel"))),
         testSpinner(uiOutput(ns("Plots")))
       )
+    ),
+    tabPanel(
+      h5("Analysis Results", class = "p-2"),
+      value = "Analysis Results",
+      fluidRow(
+        class = "p-3",
+        testSpinner(uiOutput(ns("tableSelectors"))),
+        testSpinner(
+          uiOutput(ns("analysisPanel"))
+        )
+      )
+    ),
+    tabPanel(
+      h5("Custom Plots", class = "p-2"),
+      value = "Prism Plots",
+      fluidRow(
+        class = "p-2",
+        ui_prism()
+      )
+    ),
+    tabPanel(
+      h5("Export", class = "p-2"),
+      value = "Export",
+      div(ui_analysis_a_report(), class = "p-3")
     )
-    # tabPanel(
-    #   h5("Analysis Results", class = "p-2"),
-    #   value = "Analysis Results",
-    #   fluidRow(
-    #     class = "p-3",
-    #     testSpinner(uiOutput(ns("tableSelectors"))),
-    #     testSpinner(
-    #       uiOutput(ns("analysisPanel"))
-    #     )
-    #   )
-    # ),
-    # tabPanel(
-    #   h5("Custom Plots", class = "p-2"),
-    #   value = "Prism Plots",
-    #   fluidRow(
-    #     class = "p-2",
-    #     ui_prism()
-    #   )
-    # ),
-    # tabPanel(
-    #   h5("Export", class = "p-2"),
-    #   value = "Export",
-    #   div(ui_analysis_a_report(), class = "p-3")
-    # )
   )
 }
 
@@ -211,7 +211,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       pre_plot_input <- reactive({
         req(signal())
-        browser()
+        req(pre_modeling_output())
         endpoint <- signal()$input_data$endpoint
         data <- pre_modeling_output()
         req(input$y_axis)
@@ -220,66 +220,39 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         ui_selections <- list(
           y_axis = input$y_axis,
           trt_sel = input$treatmentPlotSelectors,
-          time_sel = input$timePlotSelectors
+          time_sel = input$timePlotSelectors,
+          num_rows = input$num_rows
         )
-
-        times <- unique(data$transformed_data$Time)[
-          order(as.numeric(gsub("[A-z]| ", "", unique(data$transformed_data$Time))))
-        ]
-        data$transformed_data$Time <- factor(data$transformed_data$Time,
-          levels = times
-        )
-
-        data$transformed_data <- filter(data$transformed_data, Treatment %in% input$treatmentPlotSelectors)
-        data$transformed_data <- filter(data$transformed_data, Time %in% input$timePlotSelectors)
-
+        
         list(
           data = data, endpoint = endpoint, ui_selections = ui_selections
         )
       })
-
+      
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
-        browser()
+        
         data <- pre_plot_input()$data
+        ui_sel <- pre_plot_input()$ui_selections
         endpoint <- pre_plot_input()$endpoint
         baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-        req(input$y_axis)
-        if (input$y_axis == "transform") {
-          plots <- vizualization(
-            transformed_data = data$transformed_data,
-            power = data$box_cox,
-            endpoint = endpoint,
-            baseline = FALSE || !baseline_selected, # logic is backwards in the functions
-            transformation = TRUE
-          )
-        }
-        if (input$y_axis == "no_transform") {
-          plots <- vizualization(
-            transformed_data = data$transformed_data,
-            power = data$box_cox,
-            endpoint = endpoint,
-            transformation = FALSE,
-            baseline = FALSE || !baseline_selected
-          )
-        }
-
-        if (input$y_axis == "change_from_baseline") {
-          transformed_data <- data$transformed_data %>%
-            mutate(Response_Transformed = as.numeric(Response_Transformed) - as.numeric(Baseline))
-
-          plots <- vizualization(
-            transformed_data = data$transformed_data,
-            power = data$box_cox,
-            endpoint = endpoint,
-            transformation = FALSE,
-            baseline = TRUE
-          )
-        }
+        plots <- vizualization(
+          transformed_data = data$transformed_data,
+          power = data$box_cox,
+          endpoint = endpoint,
+          ui_sel = ui_sel
+        )
+        
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
-
+      
+      shiny$observe({
+        # 
+        shiny$req(interactive_plots())
+        showNotification('success')
+      })
+      
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
@@ -289,10 +262,10 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         print_tables <- ifelse(all(!data$error), TRUE, FALSE)
         if (!print_tables) {
           message <- if_else(data$error$error_trans == TRUE,
-            "Consult Statistician: Transformation did not
-                             lead to normally distributed residuals",
-            "Consult Statistician: Variance within basic model (Vehicle and Treatment
-                             groups) are statistically different."
+                             "Consult Statistician: Transformation did not
+                       lead to normally distributed residuals",
+                       "Consult Statistician: Variance within basic model (Vehicle and Treatment
+                       groups) are statistically different."
           )
           showNotification(
             div(
@@ -303,14 +276,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )
           req(FALSE)
         } else {
-          # showNotification("Analysis setup complete, you may visit the other panels.")
-          # TODO timeshow is the new selector
           if (analysis_type == "Exploratory") {
-            final_model <- final_modeling(data, analysis_type = analysis_type)
+            final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
           } else {
             final_model <- final_modeling(data,
-              toi = signal()$timeSelectionInput,
-              analysis_type = analysis_type
+                                          toi = signal()$timeSelectionInput,
+                                          analysis_type = analysis_type,
+                                          overall_trend = FALSE # Change this to TRUE to include the overall average
             )
           }
 
@@ -324,15 +296,17 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
           footer <- if_else(
             trans_name == "No transformation",
-            "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
-            paste(trans_name, "transformation was applied to the data.  Difference and CI are estimated using model based LSmean")
+            "No transformation was applied to the data. Mean and SE are estimated using model based LSmean",
+            paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
           )
 
           tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
             dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
           if (analysis_type == "Exploratory") {
             tables$tab0 <- tables$tab0 %>%
-              arrange(Treatment, `Time Points`)
+              mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
+              arrange(Treatment, num) %>%
+              select(-num)
           }
           list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
         }
@@ -341,7 +315,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       observeEvent(input$submitError, {
         showNotification("Data submitted for review")
       })
-
+      #
 
       output$tableSelectors <- renderUI({
         data <- pre_modeling_output()
@@ -355,33 +329,51 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           timePlotSelectors <- toi
         }
 
-        box(
-          width = 12,
-          title = "Options",
-          collapsible = TRUE,
-          div(
-            class = "d-flex justify-content-around",
-            tooltip(
-              selectizeInput(
-                inputId = ns("timeTreatmentSelectorsTable"),
-                label = h4("Select Times (up to 5) to be Displayed"),
-                selected = toi,
-                choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
-              ),
-              "Use delete key to remove, mouse click to add."
+        if (signal()$session$sessionMode == "Exploratory") {
+          box(
+            width = 12,
+            title = "Options",
+            collapsible = TRUE,
+            div(
+              class = "d-flex justify-content-around",
+              tooltip(
+                selectizeInput(
+                  inputId = ns("timeTreatmentSelectorsTable"),
+                  label = h4("Select Times (up to 5) to be Displayed"),
+                  selected = toi,
+                  choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
+                ),
+                "Use delete key to remove, mouse click to add."
+              )
             )
           )
-        )
+        } else {
+          div()
+        }
       })
 
       output$analysisInputsData <- renderUI({
         tables <- pre_tables_input()$tables
+        wb <- createWorkbook()
+        addWorksheet(wb = wb, sheetName = "Table 1")
+        addWorksheet(wb = wb, sheetName = "Table 2")
+        addWorksheet(wb = wb, sheetName = "Table 3")
+        addWorksheet(wb = wb, sheetName = "Table 4")
+        writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
+        writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
+        writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
+        writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
+        tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
+
+        saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+
         footer <- pre_tables_input()$footer
         transformation <- pre_tables_input()$power != 1
         print_tables <- pre_tables_input()$print_tables
         analysis_type <- signal()$session$sessionMode
-        times <- input$timeTreatmentSelectorsTable
+
         if (analysis_type == "Exploratory") {
+          times <- input$timeTreatmentSelectorsTable
           tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
           tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
           tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
@@ -390,16 +382,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         if (print_tables) {
           if (transformation) {
-            wb <- createWorkbook()
-            addWorksheet(wb = wb, sheetName = "Table 1")
-            addWorksheet(wb = wb, sheetName = "Table 2")
-            addWorksheet(wb = wb, sheetName = "Table 3")
-            addWorksheet(wb = wb, sheetName = "Table 4")
-            writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
-            writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
-            writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
-            writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-
             table_gt <- list(
               list(
                 table = html_table_gt(
@@ -421,7 +403,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               list(
                 table = html_table_gt(
                   data = tables$tab2, title = paste(
-                    "Table 3: Comparison between Doses as to",
+                    "Table 3: Comparison among the Vehicle and Treatment Groups as to",
                     signal()$input_data$endpoint
                   ),
                   footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
@@ -434,19 +416,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
                     "Table 4: Comparison between Doses and Controls/Wild Type as to",
                     signal()$input_data$endpoint
                   ),
-                  footer = footer, include_summary = F, summary_only = F, transformation = T, analysis_type = analysis_type,
+                  footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
                   endpoint = signal()$input_data$endpoint
                 )
               )
             )
           } else {
-            wb <- createWorkbook()
-            addWorksheet(wb = wb, sheetName = "Table 1")
-            addWorksheet(wb = wb, sheetName = "Table 2")
-            addWorksheet(wb = wb, sheetName = "Table 3")
-            writeData(wb = wb, sheet = "Table 1", x = tables$tab1)
-            writeData(wb = wb, sheet = "Table 2", x = tables$tab2)
-            writeData(wb = wb, sheet = "Table 3", x = tables$tab3)
             table_gt <- list(
               list(
                 table = html_table_gt(
@@ -461,7 +436,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               list(
                 table = html_table_gt(
                   data = tables$tab2, title = paste(
-                    "Table 2: Comparison between Doses as to",
+                    "Table 2: Comparison among the Vehicle and Treatment Groups as to",
                     signal()$input_data$endpoint
                   ),
                   footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
@@ -480,15 +455,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               )
             )
           }
-          tables_path <- path_join(c(input_data()$session_data$full_path_files, "tables.xlsx"))
-          saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+
           div(
             map(
               .x = table_gt, .f = function(x) {
                 box(
                   maximizable = TRUE, collapsible = TRUE,
                   width = 12, x$table
-                  # style = "padding: 10px;", class = "flex-center p-3"
                 )
               }
             )
@@ -498,22 +471,26 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_1 <- renderPlotly({
         plots <- interactive_plots()
-        plot <- ylab_move(plot = ggplotly(plots$plots[[1]]), parameter = 0.02)
+        plot <- plots$plots$box
+        plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
         plot$x$layout$margin$t <- 75
         plot$x$layout$margin$l <- 75
-        plot
+        plot <- bold_interactive(plot, panel = TRUE)
+        plot <- label_fix(plot = plot) %>% layout(height = 525)
       })
 
       output$analysisPlot_2 <- renderPlotly({
         plots <- interactive_plots()
-        label_fix(plot = ggplotly(plots$plots[[2]]))
+        plot <- plots$plots$bar
+        plot <- bold_interactive(plot, panel = FALSE)
+        label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
       })
 
 
       output$analysisPlot_3 <- renderPlotly({
         req(pre_plot_input())
         plots <- interactive_plots()
-        tmp <- ggplotly(plots$plots[[3]])
+        tmp <- ggplotly(plots$plots$group_line)
         for (i in 1:length(tmp$x$data)) {
           tmp2 <- tmp$x$data[[i]]
           if (tmp2$type == "scatter") {
@@ -543,23 +520,26 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             }
           }
         }
-        tmp
+        tmp <- bold_interactive(tmp, panel = FALSE)
+        label_fix(plot = ggplotly(tmp)) %>% layout(height = 600)
       })
 
 
       output$analysisPlot_4 <- renderPlotly({
         plots <- interactive_plots()
-        plot <- label_fix(ggplotly(plots$plots[[4]]))
+        plot <- label_fix(ggplotly(plots$plots$sub_line))
         plot$x$layout$margin$t <- 75
         plot$x$layout$margin$l <- 75
-        plot
+        plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
+        plot <- bold_interactive(plot, panel = TRUE)
+        label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
       })
 
 
       output$analysisPanel <- renderUI({
         data <- pre_modeling_output()
         req(data)
-        treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
+        treatmentPlotSelectors <- levels(data$transformed_data$TreatmentNew)
         timePlotSelectors <- c("Baseline", unique(as.character(data$transformed_data$Time)))
 
         fluidRow(
@@ -603,15 +583,17 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               choices = timePlotSelectors, multiple = TRUE
             ),
             radioButtons(ns("y_axis"), h4("Select y axis"),
-              choiceNames = list(
-                "Transform (suggested by Box-Cox)",
-                "No Transform (original scale)",
-                "Change from Baseline"
-              ),
-              choiceValues = list(
-                "transform", "no_transform", "change_from_baseline"
-              )
-            )
+                         choiceNames = list(
+                           "Transform (suggested by Box-Cox)",
+                           "No Transform (original scale)",
+                           "Change from Baseline"
+                         ),
+                         choiceValues = list(
+                           "transform", "no_transform", "change_from_baseline"
+                         )
+            ),
+            numericInput(ns("num_rows"), label = "Number of Rows for Panel Plots",
+                         value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1)
           )
         )
       })
@@ -625,12 +607,14 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               collapsible = TRUE,
               maximizable = TRUE,
               testSpinner(
-                plotlyOutput(ns(x))
+                plotlyOutput(ns(x), height = ifelse(x == "analysisPlot_3", "600px", "525px"))
               )
             )
           }
         )
       })
+
+
 
       # Split data for UI AND Markdown
       test_1_output_data <- reactive({
@@ -652,6 +636,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         st$set(id, data)
         data
       })
+
       eventReactive(input$runReport, {
         data <- test_1_output_data()
       })
