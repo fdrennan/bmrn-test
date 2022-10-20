@@ -1,4 +1,3 @@
-
 #' @export ui
 ui <- function() {
   ui_app("app")

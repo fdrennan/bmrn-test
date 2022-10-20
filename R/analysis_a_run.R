@@ -203,13 +203,14 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       pre_plot_input <- reactive({
-        req(signal())
-        req(pre_modeling_output())
-        endpoint <- signal()$input_data$endpoint
-        data <- pre_modeling_output()
         req(input$y_axis)
         req(input$treatmentPlotSelectors)
         req(input$timePlotSelectors)
+        req(signal())
+        req(pre_modeling_output())
+        
+        endpoint <- signal()$input_data$endpoint
+        data <- pre_modeling_output()
         ui_selections <- list(
           y_axis = input$y_axis,
           trt_sel = input$treatmentPlotSelectors,
@@ -239,231 +240,11 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
-
-      shiny$observe({
-        #
-        shiny$req(interactive_plots())
-        showNotification("success")
-      })
-
-      pre_tables_input <- reactive({
-        req(signal())
-        req(pre_modeling_output())
-        # browser()
-        input <- signal()$input_data
-        data <- pre_modeling_output()
-        analysis_type <- signal()$session_data$sessionMode
-        print_tables <- ifelse(all(!data$error), TRUE, FALSE)
-        if (!print_tables) {
-          message <- if_else(data$error$error_trans == TRUE,
-            "Consult Statistician: Transformation did not
-                       lead to normally distributed residuals",
-            "Consult Statistician: Variance within basic model (Vehicle and Treatment
-                       groups) are statistically different."
-          )
-          showNotification(
-            div(
-              message,
-              actionButton(ns("submitError"), "Request Review", class = "btn btn-primary")
-            ),
-            type = "error", closeButton = T, duration = NULL
-          )
-          req(FALSE)
-        } else {
-          if (analysis_type == "Exploratory") {
-            final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
-          } else {
-            final_model <- final_modeling(data,
-              toi = signal()$timeSelectionInput,
-              analysis_type = analysis_type,
-              overall_trend = FALSE # Change this to TRUE to include the overall average
-            )
-          }
-
-          tables <- html_tables(data$transformed_data, final_model)
-
-          trans_name <- transform_table() %>%
-            filter(power == final_model$power) %>%
-            select(transform_name) %>%
-            unlist() %>%
-            unname()
-
-          footer <- if_else(
-            trans_name == "No transformation",
-            "No transformation was applied to the data. Mean and SE are estimated using model based LSmean",
-            paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
-          )
-
-          tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
-            dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
-          if (analysis_type == "Exploratory") {
-            tables$tab0 <- tables$tab0 %>%
-              mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
-              arrange(Treatment, num) %>%
-              select(-num)
-          }
-          list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
-        }
-      })
-
-      observeEvent(input$submitError, {
-        showNotification("Data submitted for review")
-      })
-      #
-
-      output$tableSelectors <- renderUI({
-        data <- pre_modeling_output()
-        req(signal())
-        sessionMode <- signal()$session_data$sessionMode
-        if (sessionMode == "Exploratory") {
-          timePlotSelectors <- unique(as.character(data$transformed_data$Time))
-          toi <- timePlotSelectors[length(timePlotSelectors)]
-        } else {
-          toi <- signal()$timeSelectionInput
-          timePlotSelectors <- toi
-        }
-
-        if (signal()$session$sessionMode == "Exploratory") {
-          box(
-            width = 12,
-            title = "Options",
-            collapsible = TRUE,
-            div(
-              class = "d-flex justify-content-around",
-              tooltip(
-                selectizeInput(
-                  inputId = ns("timeTreatmentSelectorsTable"),
-                  label = h4("Select Times (up to 5) to be Displayed"),
-                  selected = toi,
-                  choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
-                ),
-                "Use delete key to remove, mouse click to add."
-              )
-            )
-          )
-        } else {
-          div()
-        }
-      })
-
-      output$analysisInputsData <- renderUI({
-        tables <- pre_tables_input()$tables
-        wb <- createWorkbook()
-        addWorksheet(wb = wb, sheetName = "Table 1")
-        addWorksheet(wb = wb, sheetName = "Table 2")
-        addWorksheet(wb = wb, sheetName = "Table 3")
-        addWorksheet(wb = wb, sheetName = "Table 4")
-        writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
-        writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
-        writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
-        writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
-        tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
-
-        saveWorkbook(wb, file = tables_path, overwrite = TRUE)
-
-        footer <- pre_tables_input()$footer
-        transformation <- pre_tables_input()$power != 1
-        print_tables <- pre_tables_input()$print_tables
-        analysis_type <- signal()$session$sessionMode
-
-        if (analysis_type == "Exploratory") {
-          times <- input$timeTreatmentSelectorsTable
-          tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
-          tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
-          tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
-          tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
-        }
-
-        if (print_tables) {
-          if (transformation) {
-            table_gt <- list(
-              list(
-                table = html_table_gt(
-                  data = tables$tab0, title = paste("Table 1: Summary Statistics for", signal()$input_data$endpoint),
-                  footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              ),
-              list(
-                table = html_table_gt(
-                  data = tables$tab1, title = paste(
-                    "Table 2: Comparison between Controls and Wild Type as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              ),
-              list(
-                table = html_table_gt(
-                  data = tables$tab2, title = paste(
-                    "Table 3: Comparison among the Vehicle and Treatment Groups as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              ),
-              list(
-                table = html_table_gt(
-                  data = tables$tab3, title = paste(
-                    "Table 4: Comparison between Doses and Controls/Wild Type as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              )
-            )
-          } else {
-            table_gt <- list(
-              list(
-                table = html_table_gt(
-                  data = tables$tab1, title = paste(
-                    "Table 1: Comparison between Controls and Wild Type as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              ),
-              list(
-                table = html_table_gt(
-                  data = tables$tab2, title = paste(
-                    "Table 2: Comparison among the Vehicle and Treatment Groups as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              ),
-              list(
-                table = html_table_gt(
-                  data = tables$tab3, title = paste(
-                    "Table 3: Comparison between Doses and Controls/Wild Type as to",
-                    signal()$input_data$endpoint
-                  ),
-                  footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type,
-                  endpoint = signal()$input_data$endpoint
-                )
-              )
-            )
-          }
-
-          div(
-            map(
-              .x = table_gt, .f = function(x) {
-                box(
-                  maximizable = TRUE, collapsible = TRUE,
-                  width = 12, x$table
-                )
-              }
-            )
-          )
-        }
-      })
-
+ 
+      
       output$analysisPlot_1 <- renderPlotly({
+        shiny$req(interactive_plots())
+        
         plots <- interactive_plots()
         plot <- plots$plots$box
         plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
@@ -474,7 +255,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       output$analysisPlot_2 <- renderPlotly({
-        plots <- interactive_plots()
+        shiny$req(interactive_plots())
+        
         plot <- plots$plots$bar
         plot <- bold_interactive(plot, panel = FALSE)
         label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
@@ -483,6 +265,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_3 <- renderPlotly({
         req(pre_plot_input())
+        
         plots <- interactive_plots()
         tmp <- ggplotly(plots$plots$group_line)
         for (i in 1:length(tmp$x$data)) {
@@ -531,6 +314,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
 
       output$analysisPanel <- renderUI({
+        shiny$req(pre_modeling_output())
         data <- pre_modeling_output()
         req(data)
         treatmentPlotSelectors <- levels(data$transformed_data$TreatmentNew)
@@ -609,17 +393,246 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           }
         )
       })
+      
+      
+      
+      
+      
 
+# TABLES ------------------------------------------------------------------
+      
+      # pre_tables_input <- reactive({
+      #   req(signal())
+      #   req(pre_modeling_output())
+      #   # browser()
+      #   input <- signal()$input_data
+      #   data <- pre_modeling_output()
+      #   analysis_type <- signal()$session_data$sessionMode
+      #   print_tables <- ifelse(all(!data$error), TRUE, FALSE)
+      #   if (!print_tables) {
+      #     message <- if_else(data$error$error_trans == TRUE,
+      #                        "Consult Statistician: Transformation did not
+      #                  lead to normally distributed residuals",
+      #                  "Consult Statistician: Variance within basic model (Vehicle and Treatment
+      #                  groups) are statistically different."
+      #     )
+      #     showNotification(
+      #       div(
+      #         message,
+      #         actionButton(ns("submitError"), "Request Review", class = "btn btn-primary")
+      #       ),
+      #       type = "error", closeButton = T, duration = NULL
+      #     )
+      #     req(FALSE)
+      #   } else {
+      #     if (analysis_type == "Exploratory") {
+      #       final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
+      #     } else {
+      #       final_model <- final_modeling(data,
+      #                                     toi = signal()$timeSelectionInput,
+      #                                     analysis_type = analysis_type,
+      #                                     overall_trend = FALSE # Change this to TRUE to include the overall average
+      #       )
+      #     }
+      #     
+      #     tables <- html_tables(data$transformed_data, final_model)
+      #     
+      #     trans_name <- transform_table() %>%
+      #       filter(power == final_model$power) %>%
+      #       select(transform_name) %>%
+      #       unlist() %>%
+      #       unname()
+      #     
+      #     footer <- if_else(
+      #       trans_name == "No transformation",
+      #       "No transformation was applied to the data. Mean and SE are estimated using model based LSmean",
+      #       paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
+      #     )
+      #     
+      #     tables$tab0 <- bind_rows(tables$tab1, tables$tab2) %>%
+      #       dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
+      #     if (analysis_type == "Exploratory") {
+      #       tables$tab0 <- tables$tab0 %>%
+      #         mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
+      #         arrange(Treatment, num) %>%
+      #         select(-num)
+      #     }
+      #     list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)
+      #   }
+      # })
+      # 
+      # observeEvent(input$submitError, {
+      #   
+      #   showNotification("Data submitted for review")
+      # })
+      # #
+      # 
+      # output$tableSelectors <- renderUI({
+      #   req(signal())
+      #   shiny$req(pre_tables_input())
+      #   data <- pre_modeling_output()
+      #   
+      #   sessionMode <- signal()$session_data$sessionMode
+      #   if (sessionMode == "Exploratory") {
+      #     timePlotSelectors <- unique(as.character(data$transformed_data$Time))
+      #     toi <- timePlotSelectors[length(timePlotSelectors)]
+      #   } else {
+      #     toi <- signal()$timeSelectionInput
+      #     timePlotSelectors <- toi
+      #   }
+      #   
+      #   if (signal()$session$sessionMode == "Exploratory") {
+      #     box(
+      #       width = 12,
+      #       title = "Options",
+      #       collapsible = TRUE,
+      #       div(
+      #         class = "d-flex justify-content-around",
+      #         tooltip(
+      #           selectizeInput(
+      #             inputId = ns("timeTreatmentSelectorsTable"),
+      #             label = h4("Select Times (up to 5) to be Displayed"),
+      #             selected = toi,
+      #             choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
+      #           ),
+      #           "Use delete key to remove, mouse click to add."
+      #         )
+      #       )
+      #     )
+      #   } else {
+      #     div()
+      #   }
+      # })
+      # 
+      # output$analysisInputsData <- renderUI({
+      #   shiny$req(pre_tables_input())
+      #   tables <- pre_tables_input()$tables
+      #   wb <- createWorkbook()
+      #   addWorksheet(wb = wb, sheetName = "Table 1")
+      #   addWorksheet(wb = wb, sheetName = "Table 2")
+      #   addWorksheet(wb = wb, sheetName = "Table 3")
+      #   addWorksheet(wb = wb, sheetName = "Table 4")
+      #   writeData(wb = wb, sheet = "Table 1", x = tables$tab0)
+      #   writeData(wb = wb, sheet = "Table 2", x = tables$tab1)
+      #   writeData(wb = wb, sheet = "Table 3", x = tables$tab2)
+      #   writeData(wb = wb, sheet = "Table 4", x = tables$tab3)
+      #   tables_path <- path_join(c(input_data()$session_data$full_path_files, "analysis_results.xlsx"))
+      #   
+      #   saveWorkbook(wb, file = tables_path, overwrite = TRUE)
+      #   
+      #   footer <- pre_tables_input()$footer
+      #   transformation <- pre_tables_input()$power != 1
+      #   print_tables <- pre_tables_input()$print_tables
+      #   analysis_type <- signal()$session$sessionMode
+      #   
+      #   if (analysis_type == "Exploratory") {
+      #     times <- input$timeTreatmentSelectorsTable
+      #     tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
+      #     tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
+      #     tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
+      #     tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
+      #   }
+      #   
+      #   if (print_tables) {
+      #     if (transformation) {
+      #       table_gt <- list(
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab0, title = paste("Table 1: Summary Statistics for", signal()$input_data$endpoint),
+      #             footer = "", include_summary = F, summary_only = T, transformation = T, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         ),
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab1, title = paste(
+      #               "Table 2: Comparison between Controls and Wild Type as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         ),
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab2, title = paste(
+      #               "Table 3: Comparison among the Vehicle and Treatment Groups as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         ),
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab3, title = paste(
+      #               "Table 4: Comparison between Doses and Controls/Wild Type as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         )
+      #       )
+      #     } else {
+      #       table_gt <- list(
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab1, title = paste(
+      #               "Table 1: Comparison between Controls and Wild Type as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         ),
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab2, title = paste(
+      #               "Table 2: Comparison among the Vehicle and Treatment Groups as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         ),
+      #         list(
+      #           table = html_table_gt(
+      #             data = tables$tab3, title = paste(
+      #               "Table 3: Comparison between Doses and Controls/Wild Type as to",
+      #               signal()$input_data$endpoint
+      #             ),
+      #             footer = footer, include_summary = F, summary_only = F, transformation = F, analysis_type = analysis_type,
+      #             endpoint = signal()$input_data$endpoint
+      #           )
+      #         )
+      #       )
+      #     }
+      #     
+      #     div(
+      #       map(
+      #         .x = table_gt, .f = function(x) {
+      #           box(
+      #             maximizable = TRUE, collapsible = TRUE,
+      #             width = 12, x$table
+      #           )
+      #         }
+      #       )
+      #     )
+      #   }
+      # })
+      
       # Split data for UI AND Markdown
       test_1_output_data <- reactive({
+        
         req(pre_plot_input())
         req(pre_modeling_output())
-        req(pre_tables_input())
+        # req(pre_tables_input())
         req(signal())
         browser()
         data <- list(
           plot = pre_plot_input(),
-          tables = pre_tables_input(),
+          # tables = pre_tables_input(),
           pre_modeling_input = pre_modeling_output(),
           input_data = signal(),
           inputs = reactiveValuesToList(input)
