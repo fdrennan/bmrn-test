@@ -4,7 +4,7 @@
 \alias{analysis_a_setup}
 \title{analysis_a_setup}
 \usage{
-analysis_a_setup(id = "analysis_a_setup")
+analysis_a_setup(id)
 }
 \description{
 analysis_a_setup

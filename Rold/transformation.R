@@ -24,7 +24,7 @@ transformation_check <- function(analysis_data) {
     filter(basic_model) %>%
     group_by(SubjectID, `Technical Replicate ID`, Treatment) %>%
     summarize(sub_mean = mean(Response))
-  
+
   model <- lm(data = sub_mean, formula = 0 + sub_mean ~ Treatment)
   # Conduct the Shapiro-Wilk Test. The aim of this step is to avoid unnecessary
   # data transformations.

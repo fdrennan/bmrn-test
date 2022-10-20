@@ -40,7 +40,7 @@ analysis_a_setup_server <- function(id, input_data) {
 
       output$typeAssignmentTable <- renderUI({
         shiny$req(input_data())
-        
+
         data <- input_data()$input_data$data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
@@ -73,7 +73,7 @@ analysis_a_setup_server <- function(id, input_data) {
         shiny$req(input_data())
         session_data <- input_data()$session_data
         data <- input_data()$input_data$data
- 
+
         nd <- names(data)
 
         date_cols <- str_detect(names(data), "[0-9]")

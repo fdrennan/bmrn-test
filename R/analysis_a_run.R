@@ -62,15 +62,14 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       ns <- session$ns
 
       input_data <- reactive({
-        
-        if(cache) {
-          input_signal <- read_rds('input_signal.rda')
+        if (cache) {
+          input_signal <- read_rds("input_signal.rda")
         } else {
           req(input_signal())
           input_signal <- input_signal()
-          write_rds(input_signal, 'input_signal.rda')
+          write_rds(input_signal, "input_signal.rda")
         }
-        
+
         change_page("analysisa_run")
         input_data <- input_signal$input_data
         con <- connect_table()
@@ -79,7 +78,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           first() %>%
           collect()
 
-        
+
         list(
           input_data = input_data,
           session_data = session_data
@@ -90,7 +89,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       observeEvent(signal(),
         {
-          
           updateTabItems(
             session,
             inputId = "test_1_tabs",
@@ -103,7 +101,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$typeAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        # 
+        #
         data <- signal()$input_data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
@@ -111,7 +109,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        
+
         data <- input_data()$input_data
 
         treatment_input <-
@@ -132,45 +130,45 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input <- reactive({
         req(signal())
-         
+
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
-        
+
         # Browse[2]> treatment_table
         # # A tibble: 4 × 2
-        # TreatmentNew     treatment_snake        
-        # <chr>            <chr>                  
-        #   1 Treatment        treatment_e_13         
-        # 2 Negative Control treatment_wild_type    
-        # 3 Vehicle          treatment_e_13_no_rap  
+        # TreatmentNew     treatment_snake
+        # <chr>            <chr>
+        #   1 Treatment        treatment_e_13
+        # 2 Negative Control treatment_wild_type
+        # 3 Vehicle          treatment_e_13_no_rap
         # 4 Negative Control treatment_e_13_empty_np
         sig <- signal()
         id <- sig$selections
         input_data <- sig$input_data$data
-        input_data$Type=NULL
-        input_data$Treatment=NULL
         names_input <- names(id)
         type_inputs <- str_detect(names_input, "type_")
         treatment_inputs <- str_detect(names_input, "treatment_")
         type_list <- id[type_inputs]
         treatment_list <- id[treatment_inputs]
-        type_table <- bind_rows(imap(type_list, function(x, y) tibble(Type = x, type_snake = y)))
-
+        type_table <- bind_rows(imap(type_list, function(x, y) tibble(TypeNew = x, type_snake = y)))
+        treatment_table <- bind_rows(imap(treatment_list, function(x, y) tibble(TreatmentNew = x, treatment_snake = y)))
         filtered_1 <- inner_join(input_data, type_table)
-        treatment_table <- bind_rows(imap(treatment_list, function(x, y) tibble(Treatment = x, treatment_snake = y)))
-        filtered_1 <- inner_join(filtered_1, treatment_table)
+        filtered_1 <- left_join(filtered_1, treatment_table)
         filtered_1 <-
           filtered_1 %>%
-          mutate(Treatment = ifelse(Type == "Wild Type", "Wild Type", Treatment))
-
+          mutate(
+            TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
+            Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
+          )
+        # browser()
         filtered_1
       })
 
       analysis_input_data <- reactive({
         req(analysis_input())
-        
+
         data <- analysis_input()
         data <-
           data %>%
@@ -201,7 +199,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
             paste(Treatment, Dose)
           )))
-        
+
         data <- tryCatch(expr = {
           pre_modeling(data, selections$changeFromBaseline)
         }, error = function(err) {
@@ -213,7 +211,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(data)
         data
       })
- 
+
       pre_plot_input <- reactive({
         req(signal())
         endpoint <- signal()$selections$endpoint
@@ -226,7 +224,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           trt_sel = input$treatmentPlotSelectors,
           time_sel = input$timePlotSelectors
         )
-        
+
         times <- unique(data$transformed_data$Time)[
           order(as.numeric(gsub("[A-z]| ", "", unique(data$transformed_data$Time))))
         ]

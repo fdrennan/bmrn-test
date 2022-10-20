@@ -4,7 +4,7 @@
 \alias{analysis_a_setup_server}
 \title{analysis_a_setup_server}
 \usage{
-analysis_a_setup_server(input, output, session, user, is_admin, signal)
+analysis_a_setup_server(id, input_data)
 }
 \description{
 analysis_a_setup_server

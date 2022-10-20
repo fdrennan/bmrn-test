@@ -4,15 +4,7 @@
 \alias{analysis_a_run_server}
 \title{analysis_a_run_server}
 \usage{
-analysis_a_run_server(
-  input,
-  output,
-  session,
-  user,
-  is_admin,
-  signal,
-  cache = TRUE
-)
+analysis_a_run_server(id, input_signal, cache = FALSE)
 }
 \description{
 analysis_a_run_server
