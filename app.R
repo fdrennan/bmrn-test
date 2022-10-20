@@ -1,5 +1,5 @@
 options(require_validation = FALSE)
-# library(test)
+library(test)
 # devtools::document()
 # devtools::load_all()
 plan(multiprocess)

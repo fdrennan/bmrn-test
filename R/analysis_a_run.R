@@ -168,23 +168,20 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input_data <- reactive({
         req(analysis_input())
-
         data <- analysis_input()
+        base_col = which(colnames(data) == 'Baseline')
+        type_snake_col = which(colnames(data) == 'type_snake')
         data <-
           data %>%
           mutate(
-            trt = Treatment,
-            Treatment = replace_na(Treatment, "Wild Type"),
-            basic_model = str_detect(Treatment, "Vehicle|Treatment")
+            trt = TreatmentNew,
+            TreatmentNew = if_else(TypeNew == 'Wild Type', "Wild Type", TreatmentNew),
+            basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
           )
-
-        data <- pivot_longer(data, cols = c(
-          contains("Week"), contains("Day"),
-          contains("Year"), contains("Month"),
-          contains("Second"), contains("Minute"),
-          contains("Time"),
-        ), names_to = "Time", values_to = "Response")
-
+        data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
+                             names_to = "Time", values_to = "Response") %>%
+          mutate(Time = as_factor(Time))
+        
         data
       })
 
