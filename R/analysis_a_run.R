@@ -55,7 +55,7 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 
 #' analysis_a_run_server
 #' @export
-analysis_a_run_server <- function(input, output, session, user, 
+analysis_a_run_server <- function(input, output, session, user,
                                   is_admin, signal, cache = TRUE) {
   ns <- session$ns
 
@@ -129,19 +129,21 @@ analysis_a_run_server <- function(input, output, session, user,
   analysis_input_data <- reactive({
     req(analysis_input())
     data <- analysis_input()
-    base_col = which(colnames(data) == 'Baseline')
-    type_snake_col = which(colnames(data) == 'type_snake')
+    base_col <- which(colnames(data) == "Baseline")
+    type_snake_col <- which(colnames(data) == "type_snake")
     data <-
       data %>%
       mutate(
         trt = TreatmentNew,
-        TreatmentNew = if_else(TypeNew == 'Wild Type', "Wild Type", TreatmentNew),
+        TreatmentNew = if_else(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
         basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
       )
-    data <- pivot_longer(data, cols = (base_col + 1):(type_snake_col-1),
-    names_to = "Time", values_to = "Response") %>%
+    data <- pivot_longer(data,
+      cols = (base_col + 1):(type_snake_col - 1),
+      names_to = "Time", values_to = "Response"
+    ) %>%
       mutate(Time = as_factor(Time))
-    
+
     data
   })
 
@@ -152,13 +154,14 @@ analysis_a_run_server <- function(input, output, session, user,
 
     data <-
       data %>%
-      mutate(dose_num = as.numeric(str_extract_all(Dose, '^[:digit:]*', simplify=T))) %>% 
-      arrange(dose_num) %>% 
+      mutate(dose_num = as.numeric(str_extract_all(Dose, "^[:digit:]*", simplify = T))) %>%
+      arrange(dose_num) %>%
       mutate(
         Treatment = as_factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
-        paste(Treatment, Dose)))
-      ) 
-    
+          paste(Treatment, Dose)
+        ))
+      )
+
     data <- tryCatch(expr = {
       pre_modeling(data, signal()$changeFromBaseline)
     }, error = function(err) {
@@ -209,12 +212,12 @@ analysis_a_run_server <- function(input, output, session, user,
     ui_sel <- pre_plot_input()$ui_selections
     endpoint <- pre_plot_input()$endpoint
     baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
-      plots <- vizualization(
-        transformed_data = data$transformed_data,
-        power = data$box_cox,
-        endpoint = endpoint,
-        ui_sel = ui_sel
-      )
+    plots <- vizualization(
+      transformed_data = data$transformed_data,
+      power = data$box_cox,
+      endpoint = endpoint,
+      ui_sel = ui_sel
+    )
 
     return(list(plots = plots, data = data, baseline_selected = baseline_selected))
   })
@@ -558,8 +561,10 @@ analysis_a_run_server <- function(input, output, session, user,
             "transform", "no_transform", "change_from_baseline"
           )
         ),
-        numericInput(ns("num_rows"), label = "Number of Rows for Panel Plots", 
-                     value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1)
+        numericInput(ns("num_rows"),
+          label = "Number of Rows for Panel Plots",
+          value = 1, min = 1, max = length(treatmentPlotSelectors), step = 1
+        )
       )
     )
   })

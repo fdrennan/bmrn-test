@@ -1,36 +1,35 @@
 generate_contrasts <- function(model, toi, data, time_order, analysis_type = "confirm") {
   data <- mutate(data,
     Time = factor(Time, levels = time_order),
-    TreatmentNew = factor(TreatmentNew)
+    Treatment = factor(Treatment)
   ) # Need to figure out a way sort these
 
   num_times <- length(levels(data$Time))
-  num_groups <- length(levels(data$TreatmentNew))
-  num_doses <- length(grep("Dose", levels(data$TreatmentNew)))
+  num_groups <- length(levels(data$Treatment))
+  num_doses <- length(grep("Dose", levels(data$Treatment)))
   toi_num <- which(levels(data$Time) == toi)
   # Contrasts for the effect of a single group averaged (final_AE) and for the single group
   # effect a single time (final_SE)
 
   coef_name <- expand_grid(
     Time = levels(data$Time),
-    TreatmentNew = levels(data$TreatmentNew)
+    Treatment = levels(data$Treatment)
   ) %>%
-    mutate(final_name = paste(Time, TreatmentNew, sep = ":")) %>%
+    mutate(final_name = paste(Time, Treatment, sep = ":")) %>%
     select(final_name) %>%
     unlist()
 
   AE <- diag(1, nrow = num_groups) / num_times
   final_SE <- matrix(0, ncol = num_groups * num_times, nrow = num_groups)
   final_SE[, ((toi_num - 1) * num_groups + 1):(toi_num * num_groups)] <- diag(1, nrow = num_groups)
-  rownames(AE) <- levels(data$TreatmentNew)
-  rownames(final_SE) <- paste0(levels(data$TreatmentNew), "_Time", toi)
+  rownames(AE) <- levels(data$Treatment)
+  rownames(final_SE) <- paste0(levels(data$Treatment), "_Time", toi)
   final_AE <- AE
   for (i in 2:num_times) {
     final_AE <- cbind(final_AE, AE)
   }
-
   contrast_map <- data.frame(
-    Label = LETTERS[1:12],
+    Label = LETTERS[1:9],
     Group_1 = c(
       "Wild Type",
       "Positive Control",
@@ -40,10 +39,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       "Positive Control",
       "Dose",
       "Negative Control",
-      "Negative Control",
-      "Other Comparator",
-      "Wild Type",
-      "Other Comparator"
+      "Negative Control"
     ),
     Group_2 = c(
       "Vehicle",
@@ -54,17 +50,14 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       "Dose",
       "Dose",
       "Vehicle",
-      "Dose",
-      "Vehicle",
-      "Other Comparator",
       "Dose"
     )
   )
 
   # contrast_map <-
   #   contrast_map %>%
-  #   filter(Group_1 %in% unique(data$TreatmentNew),
-  #          Group_2 %in% unique(data$TreatmentNew))
+  #   filter(Group_1 %in% unique(data$Treatment),
+  #          Group_2 %in% unique(data$Treatment))
   # #
   final_list <- list()
   for (i in 1:nrow(contrast_map)) {
@@ -72,9 +65,9 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
     b <- contrast_map$Group_2[i]
     if ((length(grep(
       paste0(a, "|", b),
-      levels(data$TreatmentNew)
+      levels(data$Treatment)
     )) < num_doses + 1 &
-      !all(c(a, b) %in% levels(data$TreatmentNew))) & a != b) {
+      !all(c(a, b) %in% levels(data$Treatment))) & a != b) {
       coi_list <- list()
     } else {
       if (all(c(a, b) == "Dose") == FALSE) {
@@ -102,7 +95,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           data.frame() %>%
           rename("Group_1" = "X1", "Group_2" = "X2")
 
-        coi_tmp <- future_map_dfr(.x = 1:nrow(grid), .f = ~ {
+        coi_tmp <- map_dfr(.x = 1:nrow(grid), .f = ~ {
           a <- grid$Group_1[.x]
           b <- grid$Group_2[.x]
 
@@ -127,9 +120,8 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
     names(final_list)[i] <- contrast_map$Label[i]
   }
 
-
   if (analysis_type == "exp") {
-    for (letter in LETTERS[1:12]) {
+    for (letter in LETTERS[1:9]) {
       if (length(final_list[[letter]]) > 0) {
         keep <- which(unlist(lapply(final_list[[letter]], function(i) {
           all(i %in% c(-1, 0, 1))
@@ -141,6 +133,5 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       }
     }
   }
-
   return(final_list)
 }

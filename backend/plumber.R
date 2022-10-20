@@ -34,8 +34,16 @@ device_size <- function() {
   list(
     h = function() h_,
     w = function() w_,
-    set_h = function(h) if (!is.null(h)) {h_ <<- as.numeric(h)},
-    set_w = function(w) if (!is.null(w)) {w_ <<- as.numeric(w)}
+    set_h = function(h) {
+      if (!is.null(h)) {
+        h_ <<- as.numeric(h)
+      }
+    },
+    set_w = function(w) {
+      if (!is.null(w)) {
+        w_ <<- as.numeric(w)
+      }
+    }
   )
 }
 
@@ -46,8 +54,9 @@ serializer_dynamic_svg <- function(..., type = "image/svg+xml") {
     type = type,
     dev_on = function(filename) {
       grDevices::svg(filename,
-                     width = output_size$w(),
-                     height = output_size$h())
+        width = output_size$w(),
+        height = output_size$h()
+      )
     }
   )
 }
@@ -68,5 +77,5 @@ function(req) {
 #* @param height
 #* @serializer svg
 function() {
-  plot(image_read(rsvg_svg('TEST_logo v3b.png')))
+  plot(image_read(rsvg_svg("TEST_logo v3b.png")))
 }

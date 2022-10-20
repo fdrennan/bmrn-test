@@ -18,13 +18,7 @@ ui_prism <- function(id = "prism") {
           selectInput(ns("plotType"), "Plot Type", c("Bar", "Box"), "Bar"),
           numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
           numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
-          numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
-          numericInput(ns("bottom_percent"), label = "Size Percentage of Data Plot", value = 70, min = 0, max = 100, step = 5),
-          selectInput(
-            ns("palette"), "Color Palette",
-            sort(c("floral", "colorblind_safe", "prism_light", "black_and_white")),
-            "floral"
-          )
+          numericInput(ns("plotHeight"), label = "Height", value = 600, min = 0, max = 3000, step = 50),
         )
       )
     )))
@@ -40,27 +34,31 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       pre_prism_data <- reactive({
+        # input$update
+        # TODO add select y, change from baseline
         data <- isolate(test_1_output_data())
-        plot_data <- data$plot$data$transformed_data
-        print(levels(plot_data$Treatment))
-
+        plot_data <- data$plot$data$transformed_data %>%
+          filter(Treatment %in% input$treatmentPlotSelectors) %>%
+          mutate(Treatment = droplevels(Treatment))
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
           ylab = data$plot$endpoint,
           cfb = data$input_data$changeFromBaseline, endpoint = data$plot$endpoint,
           power = data$tables$power,
-          num_groups = length(levels(plot_data$Treatment))
+          num_groups = length(unique(data$plot$data$transformed_data$Treatment))
         )
       })
 
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
+        toi <- input_prism$tables$tables$tab1$`Time Points`[2]
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
         toi <- input_prism$input_data$timeSelectionInput
+
         fluidRow(
           box(
             title = "Inputs",
@@ -108,27 +106,17 @@ server_prism <- function(id = "prism", test_1_output_data) {
       })
 
 
-      prismData <- reactive({
-        req(test_1_output_data())
-
-        data <- test_1_output_data()
-        tfd <- data$pre_modeling_input$transformed_data
-        pow <- data$tables$power
-        cfb <- data$input_data$changeFromBaseline %>% as.logical()
-        full_path_file <- data$input_data$session_data$full_path_files
-        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
-        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        # showNotification("Storing prism data")
-        list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
-      })
-
       output$download <- downloadHandler(
         filename = function() {
-          paste("prism_data.xlsx", sep = "")
+          paste("prism-output-", Sys.Date(), ".xlsx", sep = "")
         },
         content = function(file) {
-          req(prismData())
-          save_prism_output(file, prismData()$tfd, prismData()$pow, prismData()$cfb)
+          data <- test_1_output_data()
+          tfd <- data$pre_modeling_input$transformed_data
+          pow <- data$tables$power
+          cfb <- data$input_data$changeFromBaseline
+
+          save_prism_output(file, tfd, pow, as.logical(cfb))
         }
       )
 
@@ -153,58 +141,48 @@ server_prism <- function(id = "prism", test_1_output_data) {
         input$update
         input <- reactiveValuesToList(input)
         input$border <- FALSE
+        input$palette <- "black_and_white"
         data <- pre_prism_data()
-        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-          plot <- prism_plot(
-            data = data$plot_data,
-            tables = data$tables,
-            trt_sel = input$treatmentPlotSelectors,
-            time_sel = input$timePlotSelectors,
-            endpoint = data$endpoint,
-            format = "html",
-            cfb = data$cfb,
-            power = data$power,
-            num_groups = data$num_groups,
-            inputs = input,
-            type = "box"
-          )
-          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
-          plot
-        }
+        plot <- prism_plot(
+          data = data$plot_data,
+          tables = data$tables,
+          trt_sel = data$trt_sel,
+          time_sel = data$time_sel,
+          endpoint = data$endpoint,
+          format = "html",
+          cfb = data$cfb,
+          power = data$power,
+          num_groups = data$num_groups,
+          inputs = input,
+          type = "box"
+        )
+        plot
       })
 
       output$prismPlot_bar <- renderPlot({
         isolate(input)
         req(pre_prism_data())
         data <- pre_prism_data()
+        plot <- prism_plot(
+          data = data$plot_data,
+          tables = data$tables,
+          trt_sel = data$trt_sel,
+          time_sel = data$time_sel,
+          endpoint = data$endpoint,
+          format = "html",
+          cfb = data$cfb,
+          power = data$power,
+          num_groups = data$num_groups,
+          inputs = reactiveValuesToList(input),
+          type = "bar"
+        )
 
-        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
-
-        print(path)
-        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-          plot <- prism_plot(
-            data = data$plot_data,
-            tables = data$tables,
-            trt_sel = input$treatmentPlotSelectors,
-            time_sel = input$timePlotSelectors,
-            endpoint = data$endpoint,
-            format = "html",
-            cfb = data$cfb,
-            power = data$power,
-            num_groups = data$num_groups,
-            inputs = reactiveValuesToList(input),
-            type = "bar"
-          )
-          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
-          plot
-        }
+        plot
       })
 
 
 
       observe({
-        req(prismData())
         uuid <- test_1_output_data()$input_data$session_data$uuid
         req(uuid)
         input

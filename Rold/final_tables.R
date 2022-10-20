@@ -3,10 +3,8 @@
 table_1 <- function(final_contrast, os_together, toi) {
   if (!all(!grepl("_st", rownames(final_contrast)))) {
     table_1 <- data.frame(
-      TreatmentNew = c(
-        rep("Wild Type", 2),
-        rep("Other Comparator", 2),
-        rep("Positive Control", 2),
+      Treatment = c(
+        rep("Wild Type", 2), rep("Positive Control", 2),
         rep("Negative Control", 2)
       ),
       Endpoint = c(
@@ -16,24 +14,19 @@ table_1 <- function(final_contrast, os_together, toi) {
       ),
       `Difference from Vehicle` = c(
         "A", "A_st", "B", "B_st",
-        "H", "H_st", "I", "I_st"
+        "H", "H_st"
       ),
       `Difference from Positive Control` = c(
         "E", "E_st", NA, NA,
-        NA, NA, NA, NA
-      ),
-      `Difference from Other Comparator` = c(
-        "K", "K_st", NA, NA,
-        NA, NA, NA, NA
+        NA, NA
       )
     )
   } else {
     table_1 <- data.frame(
-      TreatmentNew = c("Wild Type", "Other Comparator", "Positive Control", "Negative Control"),
-      Endpoint = rep("Specific Time", 4),
-      `Difference from Vehicle` = c("A", "B", "H", "I"),
-      `Difference from Positive Control` = c("E", NA, NA, NA),
-      `Difference from Other Comparator` = c("K", NA, NA, NA)
+      Treatment = c("Wild Type", "Positive Control", "Negative Control"),
+      Endpoint = rep("Specific Time", 3),
+      `Difference from Vehicle` = c("A", "B", "H"),
+      `Difference from Positive Control` = c("E", NA, NA)
     )
   }
   tmp <- final_contrast %>%
@@ -41,7 +34,7 @@ table_1 <- function(final_contrast, os_together, toi) {
     select(Difference, p.value) %>%
     mutate(contrast = row.names(.))
 
-
+  #
   for (i in grep("Difference", colnames(table_1), value = TRUE)) {
     table_1 <- table_1 %>%
       rename("contrast" = i) %>%
@@ -75,27 +68,28 @@ table_2 <- function(final_contrast, os_together, toi) {
     rownames(final_contrast) <- paste0(rownames(final_contrast), "_st")
   }
   os_table_2 <- os_together %>%
-    filter(grepl("Dose|Vehicle", os_together$TreatmentNew)) %>%
+    filter(grepl("Dose|Vehicle", os_together$Treatment)) %>%
     mutate(
-      TreatmentNew = droplevels.factor(TreatmentNew),
-      TreatmentNew = factor(TreatmentNew,
-        levels = c("Vehicle", grep("Dose", levels(TreatmentNew),
+      Treatment = droplevels.factor(Treatment),
+      Treatment = factor(Treatment,
+        levels = c("Vehicle", grep("Dose", levels(Treatment),
           value = TRUE
         ))
       )
     ) %>%
-    arrange(TreatmentNew)
+    arrange(Treatment)
+
   table_2 <- os_table_2 %>%
-    select(TreatmentNew, Endpoint)
-  for (i in grep("Vehicle|Dose", levels(table_2$TreatmentNew)[-1], value = TRUE)) {
+    select(Treatment, Endpoint)
+  for (i in grep("Vehicle|Dose", levels(table_2$Treatment)[-1], value = TRUE)) {
     num <- as.numeric(gsub("[A-z]| ", "", i))
     if (any(table_2$Endpoint == "Average")) {
       contrast_veh <- c(paste0("D", num), paste0("D", num, "_st"))
 
       contrast_dose <- table_2 %>%
-        filter(grepl("Dose", TreatmentNew)) %>%
+        filter(grepl("Dose", Treatment)) %>%
         mutate(
-          X = as.numeric(gsub("[A-z]| ", "", TreatmentNew)),
+          X = as.numeric(gsub("[A-z]| ", "", Treatment)),
           contrast_dose = case_when(
             X < num & Endpoint == "Average" ~
               paste0("G", X, num),
@@ -108,9 +102,9 @@ table_2 <- function(final_contrast, os_together, toi) {
     } else {
       contrast_veh <- paste0("D", num)
       contrast_dose <- table_2 %>%
-        filter(grepl("Dose", TreatmentNew)) %>%
+        filter(grepl("Dose", Treatment)) %>%
         mutate(
-          X = as.numeric(gsub("[A-z]| ", "", TreatmentNew)),
+          X = as.numeric(gsub("[A-z]| ", "", Treatment)),
           contrast_dose = case_when(
             X < num & Endpoint == "Specific Time" ~
               paste0("G", X, num)
@@ -153,16 +147,16 @@ table_2 <- function(final_contrast, os_together, toi) {
 
 #' table_3
 #' @export
-table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
+table_3 <- function(final_contrast, os_together, toi) {
   # Table 3
   # Needs to be generalized to more than 2 groups
   if (!all(!grepl("_st", rownames(final_contrast)))) {
     os_table_3 <- os_together %>%
       select(1:2) %>%
-      filter(grepl("Dose", os_together$TreatmentNew)) %>%
+      filter(grepl("Dose", os_together$Treatment)) %>%
       mutate(
-        TreatmentNew = droplevels.factor(TreatmentNew),
-        Dose = as.numeric(gsub(pattern = "[A-z]| ", "", TreatmentNew)),
+        Treatment = droplevels.factor(Treatment),
+        Dose = as.numeric(gsub(pattern = "[A-z]| ", "", Treatment)),
         `Difference from Wild Type` = ifelse(Endpoint == "Average", paste0("C", Dose),
           paste0("C", Dose, "_st")
         ),
@@ -171,25 +165,21 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
         ),
         `Difference from Negative Control` = ifelse(Endpoint == "Average", paste0("I", Dose),
           paste0("I", Dose, "_st")
-        ),
-        `Difference from Other Comparator` = ifelse(Endpoint == "Average", paste0("L", Dose),
-          paste0("L", Dose, "_st")
         )
       ) %>%
-      arrange(TreatmentNew)
+      arrange(Treatment)
   } else {
     os_table_3 <- os_together %>%
       select(1:2) %>%
-      filter(grepl("Dose", os_together$TreatmentNew)) %>%
+      filter(grepl("Dose", os_together$Treatment)) %>%
       mutate(
-        TreatmentNew = droplevels.factor(TreatmentNew),
-        Dose = as.numeric(gsub(pattern = "[A-z]| ", "", TreatmentNew)),
+        Treatment = droplevels.factor(Treatment),
+        Dose = as.numeric(gsub(pattern = "[A-z]| ", "", Treatment)),
         `Difference from Wild Type` = paste0("C", Dose),
         `Difference from Positive Control` = paste0("F", Dose),
-        `Difference from Negative Control` = paste0("I", Dose),
-        `Difference from Other Comparator` = paste0("L", Dose)
+        `Difference from Negative Control` = paste0("I", Dose)
       ) %>%
-      arrange(TreatmentNew)
+      arrange(Treatment)
   }
 
   tmp <- final_contrast %>%
@@ -208,26 +198,13 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
       gsub("Difference.", "", i)
     ))
   }
-
-
-  if (include_summ_stat) {
-    tab3 <- inner_join(os_together, os_table_3) %>%
-      mutate(Endpoint = ifelse(grepl("Average", Endpoint),
-        "Average Over Time",
-        toi
-      )) %>%
-      rename("Time Points" = Endpoint) %>%
-      select(-Dose)
-    tab3[is.na(tab3)] <- ""
-  } else {
-    tab3 <- os_table_3 %>%
-      select(-Dose) %>%
-      mutate(Endpoint = ifelse(grepl("Average", Endpoint),
-        "Average Over Time",
-        toi
-      )) %>%
-      rename("Time Points" = Endpoint)
-    tab3[is.na(tab3)] <- ""
-  }
+  tab3 <- os_table_3 %>%
+    select(-Dose) %>%
+    mutate(Endpoint = ifelse(grepl("Average", Endpoint),
+      "Average Over Time",
+      toi
+    )) %>%
+    rename("Time Points" = Endpoint)
+  tab3[is.na(tab3)] <- ""
   return(tab3)
 }

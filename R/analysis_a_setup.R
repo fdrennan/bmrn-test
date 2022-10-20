@@ -85,9 +85,9 @@ analysis_a_setup_server <- function(input, output, session, user, is_admin, sign
     req(data)
     nd <- names(data)
 
-    base_col = which(colnames(data) == 'Baseline')
-    type_snake_col = which(colnames(data) == 'type_snake')
-    date_cols = colnames(data)[(base_col+1):(type_snake_col-1)]
+    base_col <- which(colnames(data) == "Baseline")
+    type_snake_col <- which(colnames(data) == "type_snake")
+    date_cols <- colnames(data)[(base_col + 1):(type_snake_col - 1)]
 
     sessionMode <- id$session_data$sessionMode
 

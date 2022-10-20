@@ -28,40 +28,27 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
           collect()
       })
 
-      output$emailUI <- renderUI({
-        req(server_input)
-        data <- req(data())
-        email <- data$email
-        selectizeInput(ns("repemail"), "Email", selected = email, choices = email, options = list(create = TRUE), multiple = TRUE)
-      })
-
       observeEvent(input$runReport, {
         showNotification("Making Report")
+
         data <- req(data())
-        name <- data$name
         uuid <- data$uuid
         email <- data$email
-        studyName <- data$studyName
+        studyId <- data$studyId
         statistician <- data$statistician
-        studyTitle <- data$studyTitle
         uuid <- data$uuid
         full_path_files <- data$full_path_files
-        files <- as.character(dir_ls(full_path_files))
         email_message <-
           as.character(
             html(
               as.character(div(
-                p(paste0("Dear ", name, ",")),
                 p(
-                  paste0("A statistical report has been generated for study ", studyName, " by the TEST 1 Application. ")
+                  paste0("A statistical report has been generated for study ", studyId, " by the TEST 1 Application. ")
                 ),
-                p(paste0("The test analysis id is ", uuid)),
                 p(
-                  paste0("If you have any questions please contact Cheng Su."),
+                  paste0("If you have any questions please contact ", statistician, "."), paste0("The test analysis id is", uuid)
                 ),
-                div("TEST TEAM"),
-                div("Quantitative Science, Data Science"),
-                div("WWRD")
+                tableHTML(data)
               ))
             )
           )
@@ -70,8 +57,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             rmarkdown::render(
               "Test_Report.Rmd",
               params = list(
-                uuid = uuid,
-                title = studyTitle
+                uuid = uuid
               )
             )
           },
@@ -79,25 +65,30 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
             showNotification(as.character(err), duration = NULL, closeButton = TRUE)
           }
         )
-        browser()
+
         tryCatch(
           {
-            showNotification("Generating Email", duration = NULL, closeButton = TRUE)
-            send_email(all_files = TRUE, to = email, files = files, email_message = email_message)
-            # send_email(all_files = FALSE, to = email, files = files, email_message = email_message)
+            files <- dir_ls(data$full_path_files)
+            send.mail(
+              from = Sys.getenv("EMAIL_USER"),
+              to = email,
+              subject = "Report Generated",
+              body = email_message,
+              html = TRUE,
+              smtp = list(host.name = "mail.bmrn.com", user.name = Sys.getenv("EMAIL_USER"), passwd = Sys.getenv("EMAIL_PASSWORD")),
+              attach.files = c("Test_Report.docx", dir_ls(full_path_files)),
+              authenticate = TRUE,
+              send = getOption("send")
+            )
 
             if (!getOption("send")) {
               showNotification("Using development settings, not sending email")
             } else {
-              showNotification("Report Sent",
-                duration = NULL, closeButton = TRUE
-              )
+              showNotification("Report Sent")
             }
           },
           error = function(err) {
-            showNotification(as.character(err),
-              duration = 10, closeButton = TRUE
-            )
+            showNotification(as.character(err), duration = NULL, closeButton = TRUE)
             showNotification("Report failed to email")
           }
         )
