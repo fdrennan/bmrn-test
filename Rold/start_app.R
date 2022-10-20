@@ -2,18 +2,18 @@
 start_app <- function() {
   plan(multiprocess)
   options("test_version" = "Version 1.21")
-
+  
+  options('cachetest' = TRUE)
   if (isTRUE(getOption("production"))) {
-    options(shiny.maxRequestSize = 300 * 1024^2)
-    options(require_validation = TRUE)
+    options(require_valiation = TRUE)
+    Sys.setenv(BASE_DOMAIN = "/qsci/test")
     options(send = TRUE)
     options("devmode" = FALSE)
   } else {
-    options(require_validation = FALSE)
     options(send = FALSE)
-    options("devmode" = TRUE)
+    options("devmode" = FALSE)
   }
-
+  
 
   ui <- function() {
     ui_test_app()

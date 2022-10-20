@@ -1,6 +1,6 @@
-#' analysis_a_session_setup
+#' test_session_setup
 #' @export
-analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_admin) {
+test_session_setup <- function(id = "test_session_setup") {
   ns <- NS(id)
   section_1 <- box(
     width = 12,
@@ -8,7 +8,8 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     textInput(ns("name"), "Name"),
     textInput(ns("email"), "Email"),
     tooltip(
-      selectizeInput(ns("statistician"),
+      selectizeInput(
+        ns("statistician"),
         div(
           class = "d-flex justify-content-between",
           "Contact Statistician",
@@ -30,11 +31,11 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
     selectizeInput(
       ns("program"), "Program (select or type)",
       options = list(create = TRUE),
-      choices = c("Exploratory", unique(program_lists$Program)[-1])
+      choices = unique(program_lists$Program)
     ),
     uiOutput(ns("selectizeInput")),
-    textInput(ns("studyId"), "Study ID", "TB21-02"),
-    textInput(ns("studyTitle"), "Study Title")
+    textInput(ns("studyTitle"), "Study Title"),
+    textInput(ns("studyId"), "Study ID", "TB21-02")
   )
 
   section_2 <- box(
@@ -49,8 +50,7 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
         # options = list(create = TRUE),
         choices = c("Exploratory", "Confirmatory"), selected = "Exploratory"
       ),
-      title =
-        "Exploratory: for early (or first) studies to explore dose and time points\n\nConfirmatory: to confirm treatment effect at a particular time point"
+      title = "TBD by Monika"
     ),
     textAreaInput(ns("description"),
       "Please give research objectives and experiment details",
@@ -96,106 +96,100 @@ analysis_a_session_setup <- function(id = "analysis_a_session_setup", user, is_a
 }
 
 
-#' analysis_a_session_setup_server
+#' test_session_setup_server
 #' @export
-analysis_a_session_setup_server <- function(input, output, session) {
-  iv <- InputValidator$new()
-  iv$add_rule("name", sv_required())
-  iv$add_rule("email", sv_required())
-  iv$add_rule("email", sv_email())
-  iv$add_rule("description", sv_required())
-  iv$add_rule("studyTitle", sv_required())
-  iv$enable()
+test_session_setup_server <- function(id) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      ns <- session$ns
 
-  ns <- session$ns
-  output$selectizeInput <- renderUI({
-    load("data/program_lists.rda")
-    x <- input$program
-    print(input$program)
-    ns <- session$ns
-    print(paste0("NS Server is ", ns("project")))
-    project <- unique(filter(program_lists, Program == input$program)$Project)
-    selectizeInput(
-      {
-        print(paste0("NSUI is ", ns("project")))
-        ns("project")
-      },
-      "Project (select or type)",
-      options = list(create = TRUE),
-      choices = project
-    )
-  })
+      iv <- InputValidator$new()
+      iv$add_rule("name", sv_required())
+      iv$add_rule("email", sv_required())
+      iv$add_rule("email", sv_email())
+      iv$add_rule("description", sv_required())
+      iv$enable()
+
+      output$selectizeInput <- renderUI({
+        load("data/program_lists.rda")
+        x <- input$program
+        ns <- session$ns
+        project <- unique(filter(program_lists, Program == input$program)$Project)
+        selectizeInput(ns("project"),
+          "Project (select or type)",
+          options = list(create = TRUE),
+          choices = project
+        )
+      })
 
 
-  output$template <- downloadHandler(
-    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    filename = function() {
-      "test_example.xlsx"
-    },
-    content = function(con) {
-      file_copy("test_example.xlsx", con)
+      output$template <- downloadHandler(
+        filename = function() {
+          "test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"
+        },
+        content = function(con) {
+          writexl::write_xlsx(
+            readxl::read_xlsx("test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"), con
+          )
+        }
+      )
+
+
+      out <- eventReactive(input$submitForm, {
+        showNotification("Building analysis...", id = "setupnotification")
+        if (!iv$is_valid()) {
+          showNotification("Please complete all required fields.")
+        }
+        if (getOption("require_validation")) {
+          req(iv$is_valid())
+        }
+        input <- reactiveValuesToList(input)
+        input$uuid <- UUIDgenerate()
+        input$project <- input$project %>% to_snake_case()
+
+        rel_path_home <- path_join(c("test_output", input$program, input$project, input$studyId, input$uuid))
+        base_dir <- path_abs(Sys.getenv("BASE_DIR"))
+        full_path_home <- path_join(c(base_dir, rel_path_home))
+        full_path_files <- path_join(c(full_path_home, "files"))
+
+        df <- tibble(
+          base_dir = base_dir,
+          rel_path_home = rel_path_home,
+          full_path_home = full_path_home,
+          full_path_files = full_path_files
+        )
+
+        if (length(input$upload$datapath)) {
+          copy_files(df, input$upload)
+        }
+
+        if (length(input$file$datapath)) {
+          input_data <- clean_excel_data(input$file)
+          copy_files(df, input$file)
+        }
+
+        input$submitForm <- NULL
+        input <- as_tibble(purrr::keep(input, ~ length(.) == 1))
+        df <- bind_cols(input, df)
+        df$timestamp <- with_tz(Sys.time(), "PST")
+        con <- connect_table()
+        on.exit(dbDisconnect(con))
+        if (!dbExistsTable(con, "sessions")) {
+          dbCreateTable(con, "sessions", df)
+        }
+        dbAppendTable(con, "sessions", df)
+        removeNotification(id = "setupnotification")
+        list(
+          session_data = df,
+          input_data = input_data
+        )
+      })
+
+      out
     }
   )
-
-
-  out <- eventReactive(input$submitForm, {
-    showNotification("Building analysis...", id = "setupnotification")
-    if (!iv$is_valid()) {
-      showNotification("Please complete all required fields.")
-    }
-    if (getOption("require_validation")) {
-      req(iv$is_valid())
-    }
-    input <- reactiveValuesToList(input)
-    input$uuid <- UUIDgenerate()
-    input$project <- input$project %>% to_snake_case()
-
-    rel_path_home <- path_join(c("test_output", input$program, input$project, input$studyId, input$uuid))
-    base_dir <- path_abs(Sys.getenv("BASE_DIR"))
-    full_path_home <- path_join(c(base_dir, rel_path_home))
-    full_path_files <- path_join(c(full_path_home, "files"))
-
-    df <- tibble(
-      base_dir = base_dir,
-      rel_path_home = rel_path_home,
-      full_path_home = full_path_home,
-      full_path_files = full_path_files
-    )
-
-    if (length(input$upload$datapath)) {
-      copy_files(df, input$upload)
-    }
-
-    if (length(input$file$datapath)) {
-      input_data <- clean_excel_data(input$file)
-      copy_files(df, input$file)
-    }
-
-    input$submitForm <- NULL
-    input <- as_tibble(purrr::keep(input, ~ length(.) == 1))
-    df <- bind_cols(input, df)
-    df$timestamp <- with_tz(Sys.time(), "PST")
-    con <- connect_table()
-    on.exit(dbDisconnect(con))
-    if (!dbExistsTable(con, "sessions")) {
-      dbCreateTable(con, "sessions", df)
-    }
-    dbAppendTable(con, "sessions", df)
-
-    change_page("analysisa_run")
-    removeNotification(id = "setupnotification")
-
-    write_csv(input_data$data, fs::path_join(c(df$full_path_files, "input_data.csv")))
-
-    list(
-      session_data = df,
-      input_data = input_data
-    )
-  })
-
-  out
 }
-
 
 #' copy_files
 #' @export copy_files

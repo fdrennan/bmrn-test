@@ -8,8 +8,6 @@ vizualization(
   transformed_data,
   power = 1,
   endpoint,
-  baseline,
-  transformation,
   ui_sel,
   palette = "floral"
 )

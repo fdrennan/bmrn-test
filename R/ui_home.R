@@ -1,86 +1,68 @@
-#' make_test
-#' @export
-make_test <- function(ns,
-                      test_name = "TEST 1",
-                      details = c(
-                        "Single Treatment with Multiple Doses",
-                        "Multiple Time Points",
-                        "Controls and Comparators"
-                      )) {
-  column(
-    3,
-    box(
-      title = h4(test_name, class = "display-4"),
-      collapsible = FALSE,
-      width = 12,
-      height = "310px",
-      div(
-        class = "d-flex justify-content-between flex-column h-100 py-4",
-        # class = "h-100",
-        tags$ul(
-          map(details, ~ tags$li(h4(.)))
-        ),
-        div(
-          class = "text-center",
-          actionButton(
-            inputId = ns("analysisaGo"), h6("Start", class = "display-6 m-0 p-0"),
-            class = "btn btn-primary pb-2"
-          )
-        )
-      )
-    )
-  )
-}
-
 #' ui_home
 #' @export
 ui_home <- function(id = "home") {
+  box::use(shiny)
   ns <- NS(id)
   base <- Sys.getenv("BASE_DOMAIN")
-  div(
-    class = "m-5",
-    uiOutput(ns("testLocations"))
-  )
+  uiOutput(ns("testLocations"), container = function(...) {
+    shiny$fluidRow(..., class = "m-5")
+  })
 }
 
 #' server_home
 #' @export
 server_home <- function(id = "home") {
+  box::use(shiny)
   moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
-      observe({
-        showModal(modalDialog(
-          style = "height: 580px;",
-          ui_landing(),
-          easyClose = TRUE,
-          title = NULL,
-          footer = div(
-            class = "text-right",
-            getOption("test_version")
-          ),
-          size = "xl"
-        ))
-      })
-
+      # observe({
+      showModal(modalDialog(
+        style = "height: 500px;",
+        ui_landing(),
+        easyClose = TRUE,
+        title = NULL,
+        footer = div(
+          class = "text-right",
+          "Contact: fr904103@bmrn.com",
+          tags$br(),
+          getOption("test_version"),
+          tags$br(),
+          em("By Quantitative Science, Data Science")
+        ),
+        size = "xl"
+      ))
       output$testLocations <- renderUI({
-        ns <- NS(id)
-        fluidRow(
-          fluidRow(
-            class = "d-flex justify-content-around",
-            make_test(ns),
-            make_test(ns, test_name = "TEST 2", "Under Construction"),
-            make_test(ns, test_name = "TEST 3", "Under Construction")
+        box(
+          title = h4("TEST 1", class = "display-4"),
+          collapsible = FALSE,
+          width = 12,
+          height = "310px",
+          div(
+            class = "h-100",
+            tags$ul(
+              class = "h-75",
+              class = "px-3",
+              map(c(
+                "Single Treatment with Multiple Doses",
+                "Multiple Time Points",
+                "Controls and Comparators"
+              ), ~ tags$li(h4(.)))
+            ),
+            div(
+              class = "text-center",
+              actionButton(
+                inputId = ns("analysisaGo"), h6("Start", class = "display-6 m-0 p-0"),
+                class = "btn btn-primary pb-2"
+              )
+            )
           )
         )
       })
-      observeEvent(
-        input$analysisaGo,
-        {
-          change_page("analysisasetup")
-        }
-      )
+      observeEvent(input$analysisaGo, {
+        change_page("analysisasetup")
+      })
     }
   )
 }

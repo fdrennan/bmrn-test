@@ -57,6 +57,7 @@ server_app <- function(id = "app") {
 
       session_out <- test_session_setup_server("test_session_setup")
 
+
       test_1_output_data <- analysis_a_run_server("analysis_a_run", session_out, getOption('cachetest', FALSE))
 
       # shiny$observe({
