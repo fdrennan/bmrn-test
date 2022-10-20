@@ -606,14 +606,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         )
       })
 
-
-
       # Split data for UI AND Markdown
       test_1_output_data <- reactive({
         req(pre_plot_input())
         req(pre_modeling_output())
         req(pre_tables_input())
         req(signal())
+        browser()
         data <- list(
           plot = pre_plot_input(),
           tables = pre_tables_input(),
