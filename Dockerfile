@@ -17,12 +17,17 @@ COPY R R
 COPY data data
 COPY inputs inputs
 COPY data data
-#RUN R -e "install.packages(c('ggpubr', 'DT'))"
+COPY renv.lock /app/renv.lock
+RUN R -e "install.packages('box')"
+RUN R -e "install.packages('renv')"
+RUN R -e "renv::restore()"
 RUN R -e "devtools::install_deps('.')"
+cker compose u
 RUN R -e "devtools::document('.')"
 RUN R -e "devtools::install('.')"
 RUN R -e "install.packages('mailR')"
 COPY word_style.docx .
+
 COPY bib.bib .
 COPY test_logo.png .
 COPY test_example.xlsx .
