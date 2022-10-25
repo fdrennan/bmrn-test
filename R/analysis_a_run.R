@@ -208,7 +208,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(input$timePlotSelectors)
         req(signal())
         req(pre_modeling_output())
-        
+
         endpoint <- signal()$input_data$endpoint
         data <- pre_modeling_output()
         ui_selections <- list(
@@ -240,11 +240,11 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
- 
-      
+
+
       output$analysisPlot_1 <- renderPlotly({
         shiny$req(interactive_plots())
-        
+
         plots <- interactive_plots()
         plot <- plots$plots$box
         plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
@@ -256,7 +256,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_2 <- renderPlotly({
         shiny$req(interactive_plots())
-        
+
         plot <- plots$plots$bar
         plot <- bold_interactive(plot, panel = FALSE)
         label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
@@ -265,7 +265,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_3 <- renderPlotly({
         req(pre_plot_input())
-        
+
         plots <- interactive_plots()
         tmp <- ggplotly(plots$plots$group_line)
         for (i in 1:length(tmp$x$data)) {
@@ -393,14 +393,14 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           }
         )
       })
-      
-      
-      
-      
-      
 
-# TABLES ------------------------------------------------------------------
-      
+
+
+
+
+
+      # TABLES ------------------------------------------------------------------
+
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
@@ -411,9 +411,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         print_tables <- ifelse(all(!data$error), TRUE, FALSE)
         if (!print_tables) {
           message <- if_else(data$error$error_trans == TRUE,
-                             "Consult Statistician: Transformation did not
+            "Consult Statistician: Transformation did not
                        lead to normally distributed residuals",
-                       "Consult Statistician: Variance within basic model (Vehicle and Treatment
+            "Consult Statistician: Variance within basic model (Vehicle and Treatment
                        groups) are statistically different."
           )
           showNotification(
@@ -429,9 +429,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
           } else {
             final_model <- final_modeling(data,
-                                          toi = signal()$timeSelectionInput,
-                                          analysis_type = analysis_type,
-                                          overall_trend = FALSE # Change this to TRUE to include the overall average
+              toi = signal()$timeSelectionInput,
+              analysis_type = analysis_type,
+              overall_trend = FALSE # Change this to TRUE to include the overall average
             )
           }
 
@@ -462,7 +462,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       observeEvent(input$submitError, {
-
         showNotification("Data submitted for review")
       })
       #
@@ -621,10 +620,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )
         }
       })
-      
+
       # Split data for UI AND Markdown
       test_1_output_data <- reactive({
-        
         req(pre_plot_input())
         req(pre_modeling_output())
         # req(pre_tables_input())
