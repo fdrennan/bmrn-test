@@ -22,7 +22,6 @@ RUN R -e "install.packages('box')"
 RUN R -e "install.packages('renv')"
 RUN R -e "renv::restore()"
 RUN R -e "devtools::install_deps('.')"
-cker compose u
 RUN R -e "devtools::document('.')"
 RUN R -e "devtools::install('.')"
 RUN R -e "install.packages('mailR')"
