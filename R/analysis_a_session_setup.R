@@ -126,11 +126,11 @@ test_session_setup_server <- function(id) {
 
       output$template <- downloadHandler(
         filename = function() {
-          "test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"
+          "test_example.xlsx"
         },
         content = function(con) {
           writexl::write_xlsx(
-            readxl::read_xlsx("test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"), con
+            readxl::read_xlsx("inputs/test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx"), con
           )
         }
       )
