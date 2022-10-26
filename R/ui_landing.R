@@ -4,11 +4,7 @@ ui_landing <- function(id = "landing") {
   ns <- NS(id)
   base <- Sys.getenv("BASE_DOMAIN")
   fluidRow(
-    column(5,
-           # style = "my-5",
-           class = "d-flex justify-content-center align-items-center flex-col",
-           imageOutput(ns("svgIcon"), width = "60%")
-    ),
+    column(5, imageOutput(ns("svgIcon"))),
     column(
       7,
       tags$br(),
@@ -51,7 +47,8 @@ server_landing <- function(id = "landing") {
             src = normalizePath("test_logo.png"),
             contentType = "image/png",
             height = 500,
-            width = 400
+            width = 400,
+            class = 'align-center img-fluid'
           )
         },
         deleteFile = FALSE
