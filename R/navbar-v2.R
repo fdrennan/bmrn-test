@@ -42,7 +42,7 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       output$svgIcon <- renderImage(
         {
           list(
-            src = normalizePath("test_logo.svg"),
+            src = "test_logo.svg",
             contentType = "image/svg+xml",
             width = 100,
             height = 100

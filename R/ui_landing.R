@@ -38,7 +38,7 @@ server_landing <- function(id = "landing") {
       output$svgIcon <- renderImage(
         {
           list(
-            src = normalizePath("test_logo.svg"),
+            src = "test_logo.svg",
             contentType = "image/svg+xml",
             height = 200,
             width = 200
