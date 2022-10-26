@@ -12,7 +12,7 @@ ui_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       inputId = ns("goHome"),
       class = "p-1",
       label = div(
-        style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
+        # style = "filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(6);",
         imageOutput(ns("svgIcon"), height = "90px")
       )
     ),
@@ -42,20 +42,19 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       output$svgIcon <- renderImage(
         {
           list(
-            src = "test_logo.svg",
-            contentType = "image/svg+xml",
-            width = 100,
+            src = normalizePath("test_logo.png"),
+            contentType = "image/png",
+            width = 80,
             height = 100
           )
         },
         deleteFile = FALSE
       )
       observeEvent(input$goHome, {
-        showNotification(input$goHome)
         change_page("home")
       })
-
       observeEvent(input$collapse, {
+        print(reactiveValuesToList(input))
         id <- paste0("#", ns(navbarId))
         toggle(id)
       })

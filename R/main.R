@@ -50,7 +50,7 @@ server_app <- function(id = "app") {
       router <- router(ns)
       router$server(input, output, session)
 
-      server_landing("landing")
+      
       server_home("home")
       server_navbar("navbar")
 

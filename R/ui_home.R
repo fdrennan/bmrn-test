@@ -18,9 +18,10 @@ server_home <- function(id = "home") {
     function(input, output, session) {
       ns <- session$ns
       # observe({
+      server_landing("landing")
       showModal(modalDialog(
         style = "height: 500px;",
-        ui_landing(),
+        ui_landing(ns('landing')),
         easyClose = TRUE,
         title = NULL,
         footer = div(
