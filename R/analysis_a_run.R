@@ -257,7 +257,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_2 <- renderPlotly({
         shiny$req(interactive_plots())
-
+        plots <- interactive_plots()
         plot <- plots$plots$bar
         plot <- bold_interactive(plot, panel = FALSE)
         label_fix(plot = ggplotly(plot)) %>% layout(height = 525)
@@ -626,10 +626,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       test_1_output_data <- reactive({
         req(pre_plot_input())
         req(pre_modeling_output())
-        
-        # req(pre_tables_input())
+        req(pre_tables_input())
         req(signal())
-        # 
+        
         data <- list(
           plot = pre_plot_input(),
           tables = pre_tables_input(),
@@ -642,6 +641,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         id <- paste0(signal()$session_data$uuid, "-final")
         st$set(id, data)
+        
         data
       })
 

@@ -31,3 +31,5 @@ COPY bib.bib .
 COPY www www
 COPY test_example.xlsx .
 COPY Flowcharts.png .
+COPY dslogo.png dslogo.png
+COPY test_logo.png test_logo.png
