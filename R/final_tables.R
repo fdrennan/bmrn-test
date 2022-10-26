@@ -41,7 +41,6 @@ table_1 <- function(final_contrast, os_together, toi) {
     select(Difference, p.value) %>%
     mutate(contrast = row.names(.))
 
-
   for (i in grep("Difference", colnames(table_1), value = TRUE)) {
     table_1 <- table_1 %>%
       rename("contrast" = i) %>%
