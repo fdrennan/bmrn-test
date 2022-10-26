@@ -14,7 +14,7 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
 
   if (analysis_type == "Exploratory") {
 
-    output_tables <- future_map(.progress = TRUE, .options = furrr_options(seed = 123),
+    output_tables <- map(#.progress = TRUE, .options = furrr_options(seed = 123),
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = ~ {
         print('futuremap start')

@@ -1,6 +1,7 @@
 #' pre_modeling
 #' @export
 pre_modeling <- function(input_data, baseline) {
+  
   analysis_data <- data_clean(input_data)
   times <- unique(analysis_data$Time)[
     order(as.numeric(gsub("[A-z]| ", "", unique(analysis_data$Time))))

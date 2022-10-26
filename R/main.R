@@ -63,10 +63,12 @@ server_app <- function(id = "app") {
         # debug(server_prism)
         test_1_output_data()
       })
-
-
-      server_input <- server_prism(test_1_output_data = prism_input)
-      server_analysis_a_report(server_input = server_input)
+      
+      observeEvent(prism_input(), {
+        server_input <- server_prism(test_1_output_data = prism_input())
+        server_analysis_a_report(server_input = server_input)
+      })
+      
     }
   )
 }
