@@ -1,5 +1,6 @@
 options(require_validation = FALSE)
-library(test)
+# library(test)
+devtools::load_all()
 options("cachetest" = FALSE)
 if (isTRUE(getOption("production"))) {
   options(shiny.maxRequestSize = 300 * 1024^2)
