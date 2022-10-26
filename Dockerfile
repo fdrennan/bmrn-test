@@ -25,8 +25,8 @@ RUN R -e "devtools::install_deps('.')"
 RUN R -e "devtools::document('.')"
 RUN R -e "devtools::install('.')"
 RUN R -e "install.packages('mailR')"
-COPY word_style.docx .
 
+COPY word_style.docx .
 COPY bib.bib .
 COPY www www
 COPY test_example.xlsx .
