@@ -1,7 +1,7 @@
 options(require_validation = FALSE)
 # library(test)
 devtools::load_all()
-options("cachetest" = FALSE)
+options("cachetest" = TRUE)
 if (isTRUE(getOption("production"))) {
   options(shiny.maxRequestSize = 300 * 1024^2)
   options(require_validation = TRUE)
@@ -13,7 +13,7 @@ if (isTRUE(getOption("production"))) {
   options("devmode" = TRUE)
 }
 
-plan(multiprocess)
+plan(multisession)
 options("test_version" = "Version 1.22")
 runApp(
   shinyApp(ui = ui, server = server)

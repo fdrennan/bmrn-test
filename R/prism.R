@@ -41,7 +41,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       pre_prism_data <- reactive({
         data <- shiny$req(test_1_output_data())
-        browser()
+        
         # data <- isolate(test_1_output_data())
         plot_data <- data$plot$data$transformed_data
         print(levels(plot_data$Treatment))
@@ -113,7 +113,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
       prismData <- reactive({
         req(test_1_output_data())
         req(input$treatmentPlotSelectors)
-        # browser()
+        # 
         data <- test_1_output_data()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power

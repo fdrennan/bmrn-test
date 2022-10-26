@@ -101,7 +101,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$typeAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        #
+        
         data <- signal()$input_data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
@@ -109,7 +109,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-
+        
         data <- input_data()$input_data
 
         treatment_input <-
@@ -130,7 +130,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input <- reactive({
         req(signal())
-
+        
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
@@ -159,6 +159,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input_data <- reactive({
         req(analysis_input())
+        
         data <- analysis_input()
         base_col <- which(colnames(data) == "Baseline")
         type_snake_col <- which(colnames(data) == "type_snake")
@@ -182,7 +183,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        #
+        
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -208,7 +209,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(input$timePlotSelectors)
         req(signal())
         req(pre_modeling_output())
-
+        
         endpoint <- signal()$input_data$endpoint
         data <- pre_modeling_output()
         ui_selections <- list(
@@ -226,7 +227,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
-
+        browser()
         data <- pre_plot_input()$data
         ui_sel <- pre_plot_input()$ui_selections
         endpoint <- pre_plot_input()$endpoint
@@ -244,7 +245,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_1 <- renderPlotly({
         shiny$req(interactive_plots())
-
+        browser()
         plots <- interactive_plots()
         plot <- plots$plots$box
         plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
@@ -404,7 +405,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
-        # browser()
+        # 
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
@@ -627,7 +628,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(pre_modeling_output())
         # req(pre_tables_input())
         req(signal())
-        # browser()
+        # 
         data <- list(
           plot = pre_plot_input(),
           tables = pre_tables_input(),
