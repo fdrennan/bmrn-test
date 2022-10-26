@@ -18,6 +18,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
 
 
   if (analysis_type == "Exploratory") {
+    
     final_contrast <- future_map_dfr(.x = LETTERS[1:12], .f = ~ {
       keep <- which(sapply(contrast_list[[.x]], function(i) {
         all(i == floor(i))
@@ -41,6 +42,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       }
     })
   } else {
+    
     final_contrast <- future_map_dfr(.x = LETTERS[1:12], .f = ~ {
       if (!overall_trend) {
         keep <- which(sapply(contrast_list[[.x]], function(i) {

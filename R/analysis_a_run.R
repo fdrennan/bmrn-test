@@ -227,7 +227,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
-        browser()
+        # 
         data <- pre_plot_input()$data
         ui_sel <- pre_plot_input()$ui_selections
         endpoint <- pre_plot_input()$endpoint
@@ -245,7 +245,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$analysisPlot_1 <- renderPlotly({
         shiny$req(interactive_plots())
-        browser()
+        
         plots <- interactive_plots()
         plot <- plots$plots$box
         plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)

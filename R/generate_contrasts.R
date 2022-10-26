@@ -101,7 +101,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           t() %>%
           data.frame() %>%
           rename("Group_1" = "X1", "Group_2" = "X2")
-
+        
         coi_tmp <- future_map_dfr(.x = 1:nrow(grid), .f = ~ {
           a <- grid$Group_1[.x]
           b <- grid$Group_2[.x]
@@ -115,7 +115,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           coi <- data.frame(rbind(c1_AE, c1_SE) - rbind(c2_AE, c2_SE))
           colnames(coi) <- coef_name
           return(coi)
-        })
+        },.progress = TRUE, .options = furrr_options(seed = 143))
 
         coi_list <- map(1:nrow(coi_tmp), .f = ~ {
           unlist(coi_tmp[.x, ])

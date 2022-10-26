@@ -50,7 +50,7 @@ pre_modeling <- function(input_data, baseline) {
       if (class(tmp) != "try-error") {
         return(data.frame(model = .x, AIC = AIC(tmp)))
       }
-    })
+    }, .progress = TRUE, .options = furrr_options(seed = 323))
     best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
     ready_final_model$best_model <- best_model
   } else {
