@@ -8,13 +8,6 @@ pre_modeling <- function(input_data, baseline) {
   analysis_data <- analysis_data %>%
     mutate(
       Time = as_factor(Time),
-      # TreatmentNew = factor(TreatmentNew,
-      #   levels = c(
-      #     "Wild Type", "Negative Control", "Positive Control",
-      #     "Other Comparator", "Vehicle",
-      #     grep("Dose", levels(TreatmentNew), value = TRUE)
-      #   )
-      # ),
       TreatmentNew = droplevels(TreatmentNew)
     ) %>%
     arrange(TreatmentNew, SubjectID, Time)
@@ -51,6 +44,7 @@ pre_modeling <- function(input_data, baseline) {
         return(data.frame(model = .x, AIC = AIC(tmp)))
       }
     }, .progress = TRUE, .options = furrr_options(seed = 323))
+    
     best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
     ready_final_model$best_model <- best_model
   } else {
