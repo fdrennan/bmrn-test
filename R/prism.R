@@ -42,7 +42,7 @@ server_prism <- function(id = "prism", signal) {
       
       pre_prism_data <- reactive({
         req(signal())
-        browser()
+        
         data <- signal()
         # # delete below
         #   st <- storr_rds("storr")
@@ -66,7 +66,7 @@ server_prism <- function(id = "prism", signal) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(signal())
-        browser()
+        
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -119,13 +119,14 @@ server_prism <- function(id = "prism", signal) {
       prismData <- reactive({
         req(signal())
         req(input$treatmentPlotSelectors)
-        browser()
+        # 
         data <- signal()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
-        cfb <- data$input_data$changeFromBaseline %>% as.logical()
+        cfb <- data$input_data$selections$changeFromBaseline %>% as.logical()
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
+        # 
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
         # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
