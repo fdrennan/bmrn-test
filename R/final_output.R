@@ -382,11 +382,7 @@ html_UI <- function(transformed_data, tables) {
 #' @export
 column_labels <- function(df_gt, column, label) {
   cli_alert("column_labels")
-  print(df_gt)
-  print(column)
-  print(label)
   cols_list <- as.list(label) %>% purrr::set_names(column)
-  print(cols_list)
   df_gt %>%
     cols_label(.list = cols_list)
 }
@@ -518,13 +514,9 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
 
       j <- 0
       for (i in groups) {
-        print(paste("j is ", j))
         j <- j + 1
-        print(i)
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
-        print(col1)
-        print(col2)
         table_gt <- table_gt %>%
           tab_spanner(
             id = UUIDgenerate(),
@@ -532,16 +524,12 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           )
 
-        print("a")
         table_gt <- table_gt %>%
           column_labels(., col1, "LSMEAN Diff (95% CI)")
-        print("b")
         table_gt <- table_gt %>%
           fmt_markdown(columns = everything())
-        print("c")
         table_gt <- table_gt %>%
           column_labels(., col2, "p value")
-        print("d")
         table_gt <- table_gt %>%
           cols_align(
             align = "center",

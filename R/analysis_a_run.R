@@ -647,7 +647,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(pre_modeling_output())
         req(pre_tables_input())
         req(signal())
-        browser()
+        
 
         data <- list(
           plot = pre_plot_input(),
@@ -658,7 +658,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         )
 
         st <- storr_rds("storr")
-
+        # "4ffb0de7-0274-4005-a413-1de5bfad7790-final"
         id <- paste0(signal()$session_data$uuid, "-final")
         st$set(id, data)
 
@@ -666,7 +666,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
 
-      server_input <- server_prism(test_1_output_data = prism_input)
+      server_prism(test_1_output_data = test_1_output_data)
       # server_analysis_a_report(server_input = server_input)
       #
       # test_1_output_data

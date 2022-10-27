@@ -11,16 +11,16 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
     transformed_data = transformed_data,
     best = best_model, variable = var
   )
-
+  
   if (analysis_type == "Exploratory") {
-    output_tables <- future_map( # .progress = TRUE, .options = furrr_options(seed = 123),
+    plan(multisession)
+    output_tables <- future_map(.progress = TRUE,.options = furrr_options(seed = TRUE),
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
-      .f = ~ {
+      .f = function(x) {
         print("futuremap start")
-        .x <- unname(.x)
-        print(.x)
+        x <- unname(x)
         contrast_list <- generate_contrasts(
-          toi = .x,
+          toi = x,
           data = transformed_data,
           time_order = time_order,
           analysis_type = "Exploratory"
@@ -34,10 +34,9 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
           analysis_type = "Exploratory"
         )
 
-
         output_tables <- final_output(
           transformed_data = transformed_data,
-          toi = .x,
+          toi = x,
           emmeans_obj = contrasts_stats$emmeans_obj,
           final_contrast = contrasts_stats$final_contrast,
           power = power,

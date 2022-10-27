@@ -77,9 +77,7 @@ variance_check <- function(transformed_data, variable) {
   transformed_data <- transformed_data %>%
     left_join(variances)
 
-  print(variances)
 
-  print(table(transformed_data$TreatmentNew, transformed_data$diff_group))
 
   # Output a new dataset with diff_var column which indicates the groupings
   # for the final model

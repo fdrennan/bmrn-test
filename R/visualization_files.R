@@ -34,8 +34,8 @@ pre_modeling <- function(input_data, baseline) {
   ready_final_model$transformed_data <- transformed_data_vc
 
   if (all(ready_final_model$error == FALSE)) {
+    plan(multisession)
     best_model <- future_map_dfr(.x = c("AR1", "ARH1", "CS", "CSH", "TOEP", "UN"), .f = ~ {
-      print(.x)
       tmp <- try(final_model(
         transformed_data = transformed_data_vc %>% filter(basic_model),
         best = .x, var = ready_final_model$variable
@@ -43,7 +43,7 @@ pre_modeling <- function(input_data, baseline) {
       if (class(tmp) != "try-error") {
         return(data.frame(model = .x, AIC = AIC(tmp)))
       }
-    }, .progress = TRUE, .options = furrr_options(seed = 323))
+    }, .options = furrr_options(seed = TRUE), .progress = TRUE)
 
     best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
     ready_final_model$best_model <- best_model

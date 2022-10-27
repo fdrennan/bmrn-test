@@ -27,7 +27,6 @@ update_state <- function(input, user) {
     # state$user_name <- user
     con <- mongo("user_history", "redpul", Sys.getenv("MONGO_URI"))
     con$insert(state)
-    # print(toJSON(input, pretty = TRUE))
     redisSet(user, state)
     redisClose()
   }

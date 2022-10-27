@@ -49,7 +49,6 @@
 #   col1 = paste0('Difference.from.Dose.',i)
 #   col2 = paste0('p.value.from.Dose.',i)
 #
-#   print(c(col1,col2))
 #   tab2_gt = tab2_gt %>%
 #   tab_spanner(
 #     label = paste("Difference from Dose", i),

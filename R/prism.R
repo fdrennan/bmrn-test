@@ -32,20 +32,23 @@ ui_prism <- function(id = "prism") {
 }
 #' server_prism
 #' @export
-server_prism <- function(id = "prism", test_1_output_data) {
+server_prism <- function(id = "prism", signal) {
   moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
 
-
+      observe({
+        req(signal())
+        st <- storr_rds("storr")
+        # "4ffb0de7-0274-4005-a413-1de5bfad7790-final"
+        id <- paste0(signal()$session_data$uuid, "-final")
+        st$get(id)
+      })
+      
       pre_prism_data <- reactive({
-        req(test_1_output_data())
         data <- test_1_output_data()
-        browser()
         plot_data <- data$plot$data$transformed_data
-        print(levels(plot_data$Treatment))
-
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
@@ -59,7 +62,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
-        browser()
+        
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -113,7 +116,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
         req(test_1_output_data())
         req(input$treatmentPlotSelectors)
         browser()
-        #
         data <- test_1_output_data()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
@@ -139,7 +141,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
       output$plots <-
         renderUI({
           req(input$plotType)
-          browser()
+          
           plotHeight <- paste0(input$plotHeight, "px")
           plotWidth <- paste0(input$plotWidth, "px")
           if (input$plotType == "Box") {
@@ -154,7 +156,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
       output$prismPlot_box <- renderPlot({
         isolate(input)
         req(pre_prism_data())
-        browser()
+        
         input$update
         input <- reactiveValuesToList(input)
         input$border <- FALSE
@@ -182,12 +184,11 @@ server_prism <- function(id = "prism", test_1_output_data) {
       output$prismPlot_bar <- renderPlot({
         isolate(input)
         req(pre_prism_data())
-        # browser()
+        # 
         data <- pre_prism_data()
 
         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
 
-        print(path)
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
           plot <- prism_plot(
             data = data$plot_data,
@@ -211,7 +212,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
       observe({
         req(prismData())
-        browser()
+        
         uuid <- test_1_output_data()$input_data$session_data$uuid
         req(uuid)
         input

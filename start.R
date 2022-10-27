@@ -3,7 +3,7 @@ options(require_validation = FALSE)
 # library(test)
 
 devtools::load_all()
-
+#multisession 108.601
 options("cachetest" = TRUE)
 options("test_version" = "Version 1.22")
 
@@ -17,8 +17,6 @@ if (isTRUE(getOption("production"))) {
   options(send = FALSE)
   options("devmode" = TRUE)
 }
-
-plan(multisession)
 
 runApp(
   shinyApp(ui = ui, server = server)

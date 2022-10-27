@@ -223,13 +223,6 @@ prism_plot <- function(data, tables, trt_sel,
         size = ifelse(format == "word", 1.5, 3),
         position = position_jitter(width = 0.2)
       ) +
-      # stat_summary(
-      #   data = data %>% rename(group1 = Treatment),
-      #   fun = "mean",
-      #   color = "black",
-      #   show.legend = FALSE,
-      #   ifelse(format == 'word', 1.5,3),
-      # ) +
       geom_errorbar(
         aes(ymin = ymin, ymax = ymax),
         position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
@@ -240,7 +233,6 @@ prism_plot <- function(data, tables, trt_sel,
       scale_fill_manual(values = colors, breaks = orig_groups) +
       scale_color_manual(values = colors, breaks = orig_groups) +
       theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
-      # , palette = inputs$palette) +
       theme(legend.position = "none") +
       ylab(ylabel) +
       xlab("Treatment")
