@@ -51,7 +51,7 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
         deleteFile = FALSE
       )
       observeEvent(input$goHome, {
-        change_page("home")
+        reset()
       })
       observeEvent(input$collapse, {
         id <- paste0("#", ns(navbarId))

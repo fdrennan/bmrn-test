@@ -3,14 +3,15 @@ options(require_validation = FALSE)
 # library(test)
 
 devtools::load_all()
-#multisession 108.601
-options("cachetest" = TRUE)
+library(shinyjs)
+options("cachetest" = FALSE)
 options("test_version" = "Version 1.22")
 
 if (isTRUE(getOption("production"))) {
   options(shiny.maxRequestSize = 300 * 1024^2)
   options(require_validation = TRUE)
   options(send = TRUE)
+  options("cachetest" = FALSE)
   options("devmode" = FALSE)
 } else {
   options(require_validation = FALSE)

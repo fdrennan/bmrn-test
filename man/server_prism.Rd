@@ -4,7 +4,7 @@
 \alias{server_prism}
 \title{server_prism}
 \usage{
-server_prism(id = "prism", test_1_output_data)
+server_prism(id = "prism", signal)
 }
 \description{
 server_prism
