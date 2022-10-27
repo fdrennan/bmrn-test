@@ -4,7 +4,6 @@ library(test)
 devtools::document()
 devtools::install()
 devtools::load_all()
-library(shinyjs)
 options("cachetest" = FALSE)
 options("test_version" = "Version 1.22")
 
