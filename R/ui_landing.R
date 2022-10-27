@@ -44,20 +44,20 @@ server_landing <- function(id = "landing") {
       output$svgIcon <- renderImage(
         {
           list(
-            src = normalizePath("test_logo.png"),
+            src = normalizePath("./www/test_logo.png"),
             contentType = "image/png",
             height = 500,
             width = 400,
-            class = 'align-center img-fluid'
+            class = "align-center img-fluid"
           )
         },
         deleteFile = FALSE
       )
-      
+
       output$dsIcon <- renderImage(
         {
           list(
-            src = normalizePath("dslogo.png"),
+            src = normalizePath("./www/dslogo.png"),
             contentType = "image/png",
             height = 200,
             width = 200

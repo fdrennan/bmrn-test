@@ -39,13 +39,13 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
       value = "Prism Plots",
       fluidRow(
         class = "p-2",
-        ui_prism()
+        ui_prism(ns("prism"))
       )
     ),
     tabPanel(
       h5("Export", class = "p-2"),
       value = "Export",
-      div(ui_analysis_a_report(), class = "p-3")
+      div(ui_analysis_a_report(ns("analysis_a_report")), class = "p-3")
     )
   )
 }
@@ -101,7 +101,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$typeAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        
+
         data <- signal()$input_data
         type_inputs <- distinct(data, Type, type_snake)
         make_type_assignment_table(type_inputs, ns)
@@ -109,7 +109,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-        
+
         data <- input_data()$input_data
 
         treatment_input <-
@@ -130,7 +130,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input <- reactive({
         req(signal())
-        
+
         if (getOption("devmode")) {
           session_message <- glue("Your session ID is {signal()$session_data$uuid}")
           showNotification(session_message, closeButton = TRUE, duration = NULL)
@@ -159,7 +159,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       analysis_input_data <- reactive({
         req(analysis_input())
-        
+
         data <- analysis_input()
         base_col <- which(colnames(data) == "Baseline")
         type_snake_col <- which(colnames(data) == "type_snake")
@@ -179,11 +179,10 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         data
       })
 
-
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        
+
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -192,11 +191,17 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )))
 
         data <- tryCatch(expr = {
-          pre_modeling(data, selections$changeFromBaseline)
+          tic()
+          data <- pre_modeling(data, selections$changeFromBaseline)
+          time <- toc()
+          timeInSeconds <- as.character(round(time$toc - time$tic, 3))
+          showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+          data
+          data
         }, error = function(err) {
           err <- as.character(err)
           showNotification(err, duration = NULL)
-          showNotification("An error occurred, please check your configuration.")
+          showNotification("An error occurred, please check your configuration.", closeButton = TRUE, duration = NULL)
           FALSE
         })
         req(data)
@@ -209,9 +214,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(input$timePlotSelectors)
         req(signal())
         req(pre_modeling_output())
-        
+
         endpoint <- signal()$input_data$endpoint
+        tic()
         data <- pre_modeling_output()
+        time <- toc()
+        timeInSeconds <- as.character(round(time$toc - time$tic, 3))
+        showNotification(tags$p("pre_modeling_output", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
         ui_selections <- list(
           y_axis = input$y_axis,
           trt_sel = input$treatmentPlotSelectors,
@@ -227,11 +236,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       interactive_plots <- reactive({
         req(input$y_axis)
         req(pre_plot_input())
-        # 
+        #
         data <- pre_plot_input()$data
         ui_sel <- pre_plot_input()$ui_selections
         endpoint <- pre_plot_input()$endpoint
         baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
+
+        tic()
         plots <- vizualization(
           transformed_data = data$transformed_data,
           power = data$box_cox,
@@ -239,13 +250,17 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           ui_sel = ui_sel
         )
 
+        time <- toc()
+        timeInSeconds <- as.character(round(time$toc - time$tic, 3))
+        showNotification(tags$p("vizualization", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
 
 
       output$analysisPlot_1 <- renderPlotly({
         shiny$req(interactive_plots())
-        
+
         plots <- interactive_plots()
         plot <- plots$plots$box
         plot <- ylab_move(plot = ggplotly(plot), x_parameter = 0.06, y_parameter = 0.00)
@@ -405,7 +420,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
-        # 
+        #
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
@@ -426,6 +441,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )
           req(FALSE)
         } else {
+          tic()
           if (analysis_type == "Exploratory") {
             final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
           } else {
@@ -435,6 +451,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               overall_trend = FALSE # Change this to TRUE to include the overall average
             )
           }
+          time <- toc()
+          timeInSeconds <- as.character(round(time$toc - time$tic, 3))
+          showNotification(tags$p("final_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
 
           tables <- html_tables(data$transformed_data, final_model)
 
@@ -628,7 +647,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(pre_modeling_output())
         req(pre_tables_input())
         req(signal())
-        
+        browser()
+
         data <- list(
           plot = pre_plot_input(),
           tables = pre_tables_input(),
@@ -641,11 +661,15 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         id <- paste0(signal()$session_data$uuid, "-final")
         st$set(id, data)
-        
+
         data
       })
 
-      test_1_output_data
+
+      server_input <- server_prism(test_1_output_data = prism_input)
+      # server_analysis_a_report(server_input = server_input)
+      #
+      # test_1_output_data
     }
   )
 }

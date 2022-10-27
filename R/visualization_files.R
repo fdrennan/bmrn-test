@@ -1,7 +1,6 @@
 #' pre_modeling
 #' @export
 pre_modeling <- function(input_data, baseline) {
-  
   analysis_data <- data_clean(input_data)
   times <- unique(analysis_data$Time)[
     order(as.numeric(gsub("[A-z]| ", "", unique(analysis_data$Time))))
@@ -45,7 +44,7 @@ pre_modeling <- function(input_data, baseline) {
         return(data.frame(model = .x, AIC = AIC(tmp)))
       }
     }, .progress = TRUE, .options = furrr_options(seed = 323))
-    
+
     best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
     ready_final_model$best_model <- best_model
   } else {

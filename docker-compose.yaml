@@ -23,9 +23,9 @@ services:
     - '5000:5000'
     expose:
     - '5000'
-    command: ["R", "-e", "shiny::runApp('/app/app.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
+    command: ["R", "-e", "shiny::runApp('/app/start.R', port = 5000, launch.browser=FALSE, host='0.0.0.0')"]
     volumes:
-      - './app.R:/app/app.R'
+      - './start.R:/app/start.R'
       - './.env.container:/app/.env'
       - './.Rprofile.server:/app/.Rprofile'
       - './www:/app/www'

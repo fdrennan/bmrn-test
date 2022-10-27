@@ -21,7 +21,7 @@ server_home <- function(id = "home") {
       server_landing("landing")
       showModal(modalDialog(
         style = "height: 500px;",
-        ui_landing(ns('landing')),
+        ui_landing(ns("landing")),
         easyClose = TRUE,
         title = NULL,
         footer = div(

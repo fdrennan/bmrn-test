@@ -70,6 +70,7 @@ Depends:
     shinyWidgets,
     plumber,
     gridExtra,
+    tictoc,
     forcats,
     ragg,
     R (>= 4.00)

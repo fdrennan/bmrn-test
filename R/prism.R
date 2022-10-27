@@ -40,7 +40,6 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
 
       pre_prism_data <- reactive({
-        
         req(test_1_output_data())
         data <- test_1_output_data()
         browser()
@@ -56,8 +55,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
           num_groups = length(levels(plot_data$Treatment))
         )
       })
-      
-      
+
+
       output$plotsInputs <- renderUI({
         input_prism <- isolate(test_1_output_data())
         browser()
@@ -110,9 +109,7 @@ server_prism <- function(id = "prism", test_1_output_data) {
           downloadButton(ns("download"), "Download Prism Data", class = "text-right")
         )
       })
-# 
       prismData <- reactive({
-
         req(test_1_output_data())
         req(input$treatmentPlotSelectors)
         browser()
@@ -137,8 +134,8 @@ server_prism <- function(id = "prism", test_1_output_data) {
           save_prism_output(file, prismData()$tfd, prismData()$pow, prismData()$cfb)
         }
       )
-# 
-# 
+      #
+      #
       output$plots <-
         renderUI({
           req(input$plotType)
@@ -153,78 +150,78 @@ server_prism <- function(id = "prism", test_1_output_data) {
 
           out
         })
-# 
-#       output$prismPlot_box <- renderPlot({
-#         isolate(input)
-#         req(pre_prism_data())
-#         browser()
-#         input$update
-#         input <- reactiveValuesToList(input)
-#         input$border <- FALSE
-#         data <- pre_prism_data()
-#         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
-#         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-#           plot <- prism_plot(
-#             data = data$plot_data,
-#             tables = data$tables,
-#             trt_sel = input$treatmentPlotSelectors,
-#             time_sel = input$timePlotSelectors,
-#             endpoint = data$endpoint,
-#             format = "html",
-#             cfb = data$cfb,
-#             power = data$power,
-#             num_groups = data$num_groups,
-#             inputs = input,
-#             type = "box"
-#           )
-#           ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
-#           plot
-#         }
-#       })
-# 
-#       output$prismPlot_bar <- renderPlot({
-#         isolate(input)
-#         req(pre_prism_data())
-#         # browser()
-#         data <- pre_prism_data()
-# 
-#         path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
-# 
-#         print(path)
-#         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-#           plot <- prism_plot(
-#             data = data$plot_data,
-#             tables = data$tables,
-#             trt_sel = input$treatmentPlotSelectors,
-#             time_sel = input$timePlotSelectors,
-#             endpoint = data$endpoint,
-#             format = "html",
-#             cfb = data$cfb,
-#             power = data$power,
-#             num_groups = data$num_groups,
-#             inputs = reactiveValuesToList(input),
-#             type = "bar"
-#           )
-#           ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
-#           plot
-#         }
-#       })
+
+      output$prismPlot_box <- renderPlot({
+        isolate(input)
+        req(pre_prism_data())
+        browser()
+        input$update
+        input <- reactiveValuesToList(input)
+        input$border <- FALSE
+        data <- pre_prism_data()
+        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
+        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
+          plot <- prism_plot(
+            data = data$plot_data,
+            tables = data$tables,
+            trt_sel = input$treatmentPlotSelectors,
+            time_sel = input$timePlotSelectors,
+            endpoint = data$endpoint,
+            format = "html",
+            cfb = data$cfb,
+            power = data$power,
+            num_groups = data$num_groups,
+            inputs = input,
+            type = "box"
+          )
+          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
+          plot
+        }
+      })
+
+      output$prismPlot_bar <- renderPlot({
+        isolate(input)
+        req(pre_prism_data())
+        # browser()
+        data <- pre_prism_data()
+
+        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
+
+        print(path)
+        if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
+          plot <- prism_plot(
+            data = data$plot_data,
+            tables = data$tables,
+            trt_sel = input$treatmentPlotSelectors,
+            time_sel = input$timePlotSelectors,
+            endpoint = data$endpoint,
+            format = "html",
+            cfb = data$cfb,
+            power = data$power,
+            num_groups = data$num_groups,
+            inputs = reactiveValuesToList(input),
+            type = "bar"
+          )
+          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
+          plot
+        }
+      })
 
 
 
-      # observe({
-      #   req(prismData())
-      #   browser()
-      #   uuid <- test_1_output_data()$input_data$session_data$uuid
-      #   req(uuid)
-      #   input
-      #   st <- storr_rds("storr")
-      # 
-      #   id <- paste0(uuid, "-prism")
-      #   st$set(id, reactiveValuesToList(input))
-      #   data
-      # })
-      # input
+      observe({
+        req(prismData())
+        browser()
+        uuid <- test_1_output_data()$input_data$session_data$uuid
+        req(uuid)
+        input
+        st <- storr_rds("storr")
+
+        id <- paste0(uuid, "-prism")
+        st$set(id, reactiveValuesToList(input))
+        data
+      })
+      input
     }
   )
 }
