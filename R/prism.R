@@ -37,23 +37,27 @@ server_prism <- function(id = "prism", signal) {
     id,
     function(input, output, session) {
       ns <- session$ns
-
-      observe({
-        req(signal())
-        st <- storr_rds("storr")
-        # "4ffb0de7-0274-4005-a413-1de5bfad7790-final"
-        id <- paste0(signal()$session_data$uuid, "-final")
-        st$get(id)
-      })
+ 
+      observe({signal()})
       
       pre_prism_data <- reactive({
-        data <- test_1_output_data()
+        req(signal())
+        browser()
+        data <- signal()
+        # # delete below
+        #   st <- storr_rds("storr")
+        #   id <- paste0("4ffb0de7-0274-4005-a413-1de5bfad7790", "-final")
+        #   data <- st$get(id)
+        #   # delete above
         plot_data <- data$plot$data$transformed_data
+        # input_data <- data$input_data$selections$changeFromBaseline
+        input <- data$inputs
         list(
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
           ylab = data$plot$endpoint,
-          cfb = data$input_data$changeFromBaseline, endpoint = data$plot$endpoint,
+          cfb = data$input_data$selections$changeFromBaseline, 
+          endpoint = data$plot$endpoint,
           power = data$tables$power,
           num_groups = length(levels(plot_data$Treatment))
         )
@@ -61,8 +65,8 @@ server_prism <- function(id = "prism", signal) {
 
 
       output$plotsInputs <- renderUI({
-        input_prism <- isolate(test_1_output_data())
-        
+        input_prism <- isolate(signal())
+        browser()
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -113,10 +117,10 @@ server_prism <- function(id = "prism", signal) {
         )
       })
       prismData <- reactive({
-        req(test_1_output_data())
+        req(signal())
         req(input$treatmentPlotSelectors)
         browser()
-        data <- test_1_output_data()
+        data <- signal()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
         cfb <- data$input_data$changeFromBaseline %>% as.logical()
@@ -127,17 +131,16 @@ server_prism <- function(id = "prism", signal) {
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
 
-      output$download <- downloadHandler(
-        filename = function() {
-          paste("prism_data.xlsx", sep = "")
-        },
-        content = function(file) {
-          req(prismData())
-          save_prism_output(file, prismData()$tfd, prismData()$pow, prismData()$cfb)
-        }
-      )
-      #
-      #
+      observe({showNotification('fix prism output')})
+      # output$download <- downloadHandler(
+      #   filename = function() {
+      #     paste("prism_data.xlsx", sep = "")
+      #   },
+      #   content = function(file) {
+      #     req(prismData())
+      #     save_prism_output(file, prismData()$tfd, prismData()$pow, prismData()$cfb)
+      #   }
+      # )
       output$plots <-
         renderUI({
           req(input$plotType)
@@ -161,7 +164,7 @@ server_prism <- function(id = "prism", signal) {
         input <- reactiveValuesToList(input)
         input$border <- FALSE
         data <- pre_prism_data()
-        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
+        path <- path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
           plot <- prism_plot(
             data = data$plot_data,
@@ -187,7 +190,7 @@ server_prism <- function(id = "prism", signal) {
         # 
         data <- pre_prism_data()
 
-        path <- path_join(c(test_1_output_data()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
+        path <- path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
 
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
           plot <- prism_plot(
@@ -213,7 +216,7 @@ server_prism <- function(id = "prism", signal) {
       observe({
         req(prismData())
         
-        uuid <- test_1_output_data()$input_data$session_data$uuid
+        uuid <- signal()$input_data$session_data$uuid
         req(uuid)
         input
         st <- storr_rds("storr")
