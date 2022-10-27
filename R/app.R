@@ -17,15 +17,7 @@ ui_app <- function(id = "app") {
       ),
       sidebar = dashboardSidebar(disable = T),
       footer = dashboardFooter(
-        div(
-          class = "d-flex justify-content-around",
-          div(
-            getOption("test_version")
-          ),
-          div(
-            "© 2022 BioMarin"
-          )
-        )
+        ui_footer(ns('footer'))
       )
     )
   )
@@ -41,7 +33,7 @@ server_app <- function(id = "app") {
       router <- router(ns)
       router$server(input, output, session)
 
-
+      server_footer()
       server_home("home")
       server_navbar("navbar")
 
