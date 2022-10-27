@@ -1,7 +1,8 @@
 options(require_validation = FALSE)
 
-# library(test)
-
+library(test)
+devtools::document()
+devtools::install()
 devtools::load_all()
 library(shinyjs)
 options("cachetest" = FALSE)
