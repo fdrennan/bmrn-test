@@ -1,8 +1,8 @@
 #' @export
 router <- function(ns) {
   make_router(
-    route("export", ui_download_historical(ns("download_historical"))),
     route("home", ui_home(ns("home"))),
+    route("export", ui_download_historical(ns("download_historical"))),
     route(
       "analysisasetup",
       test_session_setup(ns("test_session_setup"))
