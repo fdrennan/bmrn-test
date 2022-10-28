@@ -719,10 +719,10 @@
     },
     "emmeans": {
       "Package": "emmeans",
-      "Version": "1.8.1-1",
+      "Version": "1.8.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3cf064fa72eb14cf33bda3ddbb2b0132",
+      "Hash": "3a14b5ca2d720bae9e10a6c572378208",
       "Requirements": [
         "estimability",
         "mvtnorm",
@@ -2146,6 +2146,20 @@
       "Requirements": [
         "htmltools",
         "shiny"
+      ]
+    },
+    "shinyFiles": {
+      "Package": "shinyFiles",
+      "Version": "0.9.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "92c28bcdee44e205a99799f6ea604b82",
+      "Requirements": [
+        "fs",
+        "htmltools",
+        "jsonlite",
+        "shiny",
+        "tibble"
       ]
     },
     "shinyWidgets": {

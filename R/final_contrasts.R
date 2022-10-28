@@ -20,7 +20,6 @@ final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE
   }
 
   if (length(cont_list) > 0) {
-
     # Compute the simulated p-value
     adj_ht <- contrast(est, adjust = adjust, method = cont_list) %>% data.frame()
 

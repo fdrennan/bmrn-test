@@ -37,12 +37,14 @@ server_prism <- function(id = "prism", signal) {
     id,
     function(input, output, session) {
       ns <- session$ns
- 
-      observe({signal()})
-      
+
+      observe({
+        signal()
+      })
+
       pre_prism_data <- reactive({
         req(signal())
-        
+
         data <- signal()
         # # delete below
         #   st <- storr_rds("storr")
@@ -56,7 +58,7 @@ server_prism <- function(id = "prism", signal) {
           plot_data = plot_data, tables = data$tables$tables,
           trt_sel = input$treatmentPlotSelectors, time_sel = input$timePlotSelectors,
           ylab = data$plot$endpoint,
-          cfb = data$input_data$selections$changeFromBaseline, 
+          cfb = data$input_data$selections$changeFromBaseline,
           endpoint = data$plot$endpoint,
           power = data$tables$power,
           num_groups = length(levels(plot_data$Treatment))
@@ -66,7 +68,7 @@ server_prism <- function(id = "prism", signal) {
 
       output$plotsInputs <- renderUI({
         input_prism <- isolate(signal())
-        
+
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
@@ -119,20 +121,22 @@ server_prism <- function(id = "prism", signal) {
       prismData <- reactive({
         req(signal())
         req(input$treatmentPlotSelectors)
-        # 
+        #
         data <- signal()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
         cfb <- data$input_data$selections$changeFromBaseline %>% as.logical()
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
-        # 
+        #
         save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
         # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
 
-      observe({showNotification('fix prism output')})
+      observe({
+        showNotification("fix prism output")
+      })
       # output$download <- downloadHandler(
       #   filename = function() {
       #     paste("prism_data.xlsx", sep = "")
@@ -145,7 +149,7 @@ server_prism <- function(id = "prism", signal) {
       output$plots <-
         renderUI({
           req(input$plotType)
-          
+
           plotHeight <- paste0(input$plotHeight, "px")
           plotWidth <- paste0(input$plotWidth, "px")
           if (input$plotType == "Box") {
@@ -160,7 +164,7 @@ server_prism <- function(id = "prism", signal) {
       output$prismPlot_box <- renderPlot({
         isolate(input)
         req(pre_prism_data())
-        
+
         input$update
         input <- reactiveValuesToList(input)
         input$border <- FALSE
@@ -188,7 +192,7 @@ server_prism <- function(id = "prism", signal) {
       output$prismPlot_bar <- renderPlot({
         isolate(input)
         req(pre_prism_data())
-        # 
+        #
         data <- pre_prism_data()
 
         path <- path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
@@ -216,7 +220,7 @@ server_prism <- function(id = "prism", signal) {
 
       observe({
         req(prismData())
-        
+
         uuid <- signal()$input_data$session_data$uuid
         req(uuid)
         input

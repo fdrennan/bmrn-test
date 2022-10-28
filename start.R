@@ -1,8 +1,8 @@
 options(require_validation = FALSE)
 
-library(test)
-devtools::document()
-devtools::install()
+# library(test)
+# devtools::document()
+# devtools::install()
 devtools::load_all()
 options("cachetest" = FALSE)
 options("test_version" = "Version 1.22")

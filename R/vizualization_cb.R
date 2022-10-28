@@ -124,12 +124,13 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
     color = Treatment, group = Treatment
   )) +
     geom_point(size = 1.25) +
-    geom_line(aes(
-      x = Time, y = Mean_Response,
-      color = Treatment, linetype = Treatment
-    ),
-    size = 1.25,
-    show.legend = F
+    geom_line(
+      aes(
+        x = Time, y = Mean_Response,
+        color = Treatment, linetype = Treatment
+      ),
+      size = 1.25,
+      show.legend = F
     ) +
     geom_errorbar(aes(ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response),
       width = .5, show.legend = F

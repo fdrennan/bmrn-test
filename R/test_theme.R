@@ -54,7 +54,6 @@ test_theme_base <- function() {
 #' headers
 #' @export
 headers <- function() {
-
   # sass(
   #   sass_file("www/styles.scss"),
   #   output = "www/styles.css"

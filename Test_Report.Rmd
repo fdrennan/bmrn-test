@@ -19,18 +19,20 @@ title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
 
 ```{r setup, include=FALSE}
-#key: '6650608c-7988-4f2e-9da7-b46e41b64584-final' positive control and log transformation
-#key: 'f031f88e-6d9a-4fca-a7ab-05d8aba6df8e-final' no transformation
-#key: 'd24fad66-e6a3-4cf6-ba61-beae48eef1e1-final' saving user inputs (name, consulting statis, etc)
-knitr::opts_chunk$set(echo = FALSE,
-                      dpi = 300,
-                      message = FALSE,
-                      fig.show = 'asis',
-                      fig.keep = 'high',
-                      fig.width = 8,
-                      #fig.height = 9,
-                      fig.align='center',
-                      fig.asp = 0.7)
+# key: '6650608c-7988-4f2e-9da7-b46e41b64584-final' positive control and log transformation
+# key: 'f031f88e-6d9a-4fca-a7ab-05d8aba6df8e-final' no transformation
+# key: 'd24fad66-e6a3-4cf6-ba61-beae48eef1e1-final' saving user inputs (name, consulting statis, etc)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  dpi = 300,
+  message = FALSE,
+  fig.show = "asis",
+  fig.keep = "high",
+  fig.width = 8,
+  # fig.height = 9,
+  fig.align = "center",
+  fig.asp = 0.7
+)
 library(test)
 ```
 
@@ -41,8 +43,8 @@ st <- storr_rds("storr")
 # sessions <- tbl(con, 'sessions') %>%
 #   arrange(desc(timestamp)) %>%
 #   head(1)
-key <- paste0(params$uuid,'-final')
-prismInputs <- paste0(params$uuid, '-prism')
+key <- paste0(params$uuid, "-final")
+prismInputs <- paste0(params$uuid, "-prism")
 print(params$uuid)
 data <- st$get(key)
 prismInputs <- st$get(
@@ -50,88 +52,95 @@ prismInputs <- st$get(
 )
 
 trans_name <- transform_table() %>%
-        filter(power == data$plot$data$box_cox) %>%
-        select(transform_name) %>%
-        unlist() %>%
-        unname()
+  filter(power == data$plot$data$box_cox) %>%
+  select(transform_name) %>%
+  unlist() %>%
+  unname()
 
-transform = data$tables$power != 1
+transform <- data$tables$power != 1
 
-groups_diff =  distinct(data$pre_modeling_input$transformed_data,Treatment,diff_group) %>% 
-   filter(diff_group != 'Pooled') %>% 
-   select(Treatment) %>% 
-   unlist() %>%
-   as.character()
+groups_diff <- distinct(data$pre_modeling_input$transformed_data, Treatment, diff_group) %>%
+  filter(diff_group != "Pooled") %>%
+  select(Treatment) %>%
+  unlist() %>%
+  as.character()
 
-if(length(groups_diff) > 2){
-  groups_diff[length(groups_diff)] = paste('and', groups_diff[length(groups_diff)])
-  groups_diff[1:(length(groups_diff)-1)] = paste0(groups_diff[1:(length(groups_diff)-1)], ',')
+if (length(groups_diff) > 2) {
+  groups_diff[length(groups_diff)] <- paste("and", groups_diff[length(groups_diff)])
+  groups_diff[1:(length(groups_diff) - 1)] <- paste0(groups_diff[1:(length(groups_diff) - 1)], ",")
 }
 
-if(length(groups_diff) == 2){
-  groups_diff[length(groups_diff)] = paste('and', groups_diff[length(groups_diff)])
+if (length(groups_diff) == 2) {
+  groups_diff[length(groups_diff)] <- paste("and", groups_diff[length(groups_diff)])
 }
 
-toi = data$tables$tables$tab1$`Time Points`[!grepl('Average',data$tables$tables$tab1$`Time Points`)][1]
-analysis_type = data$input_data$session_data$sessionMode
-if(analysis_type == 'Exploratory'){
-  time= data$inputs$timeTreatmentSelectorsTable
-  }else{
-    time = toi
+toi <- data$tables$tables$tab1$`Time Points`[!grepl("Average", data$tables$tables$tab1$`Time Points`)][1]
+analysis_type <- data$input_data$session_data$sessionMode
+if (analysis_type == "Exploratory") {
+  time <- data$inputs$timeTreatmentSelectorsTable
+} else {
+  time <- toi
 }
-var = data$pre_modeling_input$variable
+var <- data$pre_modeling_input$variable
 
-model_transformed = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = var)
+model_transformed <- final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = var)
 
-model_original = final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = 'Response')
-
-
-data_check = data$plot$data %>% cbind.data.frame(resid_transformed = residuals(model_transformed),
-                                                 resid_orig = residuals(model_original))
-
-assumption.cap = 'Histogram (top) and Q-Q plots (bottom) to assess the normality of the residuals'
+model_original <- final_model(transformed_data = data$plot$data$transformed_data, best = data$pre_modeling_input$best_model, variable = "Response")
 
 
-scale = data$plot$ui_selections$y_axis
+data_check <- data$plot$data %>% cbind.data.frame(
+  resid_transformed = residuals(model_transformed),
+  resid_orig = residuals(model_original)
+)
 
-if(scale == 'transform' & data$plot$data$box_cox != 1){
-  scale = 'Transformed Scale'
-}
+assumption.cap <- "Histogram (top) and Q-Q plots (bottom) to assess the normality of the residuals"
 
 
-if(scale == "no_transform" | (scale == 'transform' & data$plot$data$box_cox == 1)){
-  scale = 'Orignal Scale'
+scale <- data$plot$ui_selections$y_axis
+
+if (scale == "transform" & data$plot$data$box_cox != 1) {
+  scale <- "Transformed Scale"
 }
 
-if(scale == "change_from_baseline"){
-  scale = 'Change from Baseline'
+
+if (scale == "no_transform" | (scale == "transform" & data$plot$data$box_cox == 1)) {
+  scale <- "Orignal Scale"
+}
+
+if (scale == "change_from_baseline") {
+  scale <- "Change from Baseline"
 }
 ```
 
 # TEST Session Summary 
 
 ```{r test-session-summary, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
-session_info = data$input_data$session_data %>% 
-  dplyr::select(-description ) %>%
-  t %>% data.frame(col2 = .) %>% 
-  tibble::rownames_to_column('col1') %>%
-  mutate(col1 = gsub('_', ' ', col1),
-         col1 = case_when(col1 == 'statistician' ~ 'Contact Statistician',
-                         col1 == 'name' ~ 'Researcher',
-                         col1 == 'sessionMode' ~ 'Objective Type',
-                         !(col1 %in% c('statistician', 'name', 'sessionMode')) ~ col1),
-         col1 = str_to_title(col1)) %>%
-  filter(!(col1 %in% c('Uuid','Base Dir', 'Rel Path Home', 'Full Path Files', 'Studytitle')))
+session_info <- data$input_data$session_data %>%
+  dplyr::select(-description) %>%
+  t() %>%
+  data.frame(col2 = .) %>%
+  tibble::rownames_to_column("col1") %>%
+  mutate(
+    col1 = gsub("_", " ", col1),
+    col1 = case_when(
+      col1 == "statistician" ~ "Contact Statistician",
+      col1 == "name" ~ "Researcher",
+      col1 == "sessionMode" ~ "Objective Type",
+      !(col1 %in% c("statistician", "name", "sessionMode")) ~ col1
+    ),
+    col1 = str_to_title(col1)
+  ) %>%
+  filter(!(col1 %in% c("Uuid", "Base Dir", "Rel Path Home", "Full Path Files", "Studytitle")))
 
-session_info %>% flextable() %>% 
-  delete_part(part = "header") %>% 
-  theme_box() %>% 
+session_info %>%
+  flextable() %>%
+  delete_part(part = "header") %>%
+  theme_box() %>%
   width(width = 4) %>%
   fontsize(size = 8) %>%
   align(align = "center", part = "all")
 
-plots_path = data$input_data$session_data$full_path_files
-
+plots_path <- data$input_data$session_data$full_path_files
 ```
 
 # Study Background and Objectives
@@ -193,52 +202,54 @@ If a group is determined to have a difference variance than the basic model then
 In this type of studies, there could be nine group comparisons:
 
 ```{r, echo = F, fig.cap='List of the 9 combinations of experimental groups and their interpretation.'}
-contrasts =  data.frame(
-    Label = LETTERS[1:9],
-    Group_1 = c(
-      "Wild Type",
-      "Positive Control/Other Comparator",
-      "Wild Type",
-      "Vehicle",
-      "Wild Type",
-      "Positive Control/Other Comparator",
-      "Each Dose",
-      "Negative Control",
-      "Negative Control"
-    ),
-    Group_2 = c(
-      "Vehicle",
-      "Vehicle",
-      "Each Dose",
-      "Each Dose",
-      "Positive Control/Other Comparator",
-      "Each Dose",
-      "Every Other Dose",
-      "Vehicle",
-      "Each Dose"
-    ),
-    `Purpose of Comparison` = c('Verify Disease Model.',
-                    'Verify the experiment.',
-                    'Can any doses reverse the disease?',
-                    'Are any treatments effective?',
-                    'Does Positive Control reverse disease?',
-                    'Which doses are similar to Positive Control?',
-                    'Do doses differ from each other?',
-                    'Rule out matrix effect.',
-                    'If H is rejected, then show Negative Control is not as good as treatment.'),
-    `Multiple Testing Procedure` = c('NA','NA', 'None',"Dunnett",'NA','None','Mvt','NA','Dunnett'),
-  check.names = FALSE) %>%
-  mutate(Comparison = paste(Group_1, 'vs.', Group_2))
+contrasts <- data.frame(
+  Label = LETTERS[1:9],
+  Group_1 = c(
+    "Wild Type",
+    "Positive Control/Other Comparator",
+    "Wild Type",
+    "Vehicle",
+    "Wild Type",
+    "Positive Control/Other Comparator",
+    "Each Dose",
+    "Negative Control",
+    "Negative Control"
+  ),
+  Group_2 = c(
+    "Vehicle",
+    "Vehicle",
+    "Each Dose",
+    "Each Dose",
+    "Positive Control/Other Comparator",
+    "Each Dose",
+    "Every Other Dose",
+    "Vehicle",
+    "Each Dose"
+  ),
+  `Purpose of Comparison` = c(
+    "Verify Disease Model.",
+    "Verify the experiment.",
+    "Can any doses reverse the disease?",
+    "Are any treatments effective?",
+    "Does Positive Control reverse disease?",
+    "Which doses are similar to Positive Control?",
+    "Do doses differ from each other?",
+    "Rule out matrix effect.",
+    "If H is rejected, then show Negative Control is not as good as treatment."
+  ),
+  `Multiple Testing Procedure` = c("NA", "NA", "None", "Dunnett", "NA", "None", "Mvt", "NA", "Dunnett"),
+  check.names = FALSE
+) %>%
+  mutate(Comparison = paste(Group_1, "vs.", Group_2))
 
-contrasts_display = contrasts %>%  select(Label, Comparison,`Purpose of Comparison`, `Multiple Testing Procedure`)
+contrasts_display <- contrasts %>% select(Label, Comparison, `Purpose of Comparison`, `Multiple Testing Procedure`)
 
 contrasts_ft <- flextable(contrasts_display) %>%
-  add_footer_lines('Mvt refers to the simulation approach using values sampled from a multivariate t distriution.')
-contrasts_ft <- width(contrasts_ft, width = c(0.75,3, 3, 1))
-contrasts_ft = fontsize(contrasts_ft, size = 9, part = 'header')
-contrasts_ft = fontsize(contrasts_ft, size = 8)
+  add_footer_lines("Mvt refers to the simulation approach using values sampled from a multivariate t distriution.")
+contrasts_ft <- width(contrasts_ft, width = c(0.75, 3, 3, 1))
+contrasts_ft <- fontsize(contrasts_ft, size = 9, part = "header")
+contrasts_ft <- fontsize(contrasts_ft, size = 8)
 contrasts_ft
-    
 ```
 
 Multiple comparisons arise when a statistical analysis involves multiple simultaneous statistical tests, each of which has a potential to produce a discovery. A stated confidence level generally applies only to each test considered individually, but often it is desirable to have a confidence level for the whole family of simultaneous tests. Controlling the overall Type 1 error rate, as opposed to the Type 1 error rate of each individual test, allows us to avoid rejecting a comparison simply due to random error. 
@@ -260,17 +271,17 @@ TEST 1 was developed using the R statistical software [@Rbase]. The nlme::gls [@
 ## Assumptions and Correlation Structure Results
 
 ```{r, include=F}
-if(transform == 'TRUE'){
-transform_result = paste('The residuals from a linear model were not normally distributed, thus', trans_name,' was applied to the data which was determined by a Box-Cox transformation.')
-}else{
-  transform_result = paste('The residuals from a linear model were normally distributed, thus no was applied to the data.')
+if (transform == "TRUE") {
+  transform_result <- paste("The residuals from a linear model were not normally distributed, thus", trans_name, " was applied to the data which was determined by a Box-Cox transformation.")
+} else {
+  transform_result <- paste("The residuals from a linear model were normally distributed, thus no was applied to the data.")
 }
 
-correlation_result = paste(if_else(substr(data$pre_modeling_input$best_model,1,1) == 'A', 'An', 'A'), data$pre_modeling_input$best_model, 'lead to a model with the lowest AIC and thus was selected to model the correlation over time.')
+correlation_result <- paste(if_else(substr(data$pre_modeling_input$best_model, 1, 1) == "A", "An", "A"), data$pre_modeling_input$best_model, "lead to a model with the lowest AIC and thus was selected to model the correlation over time.")
 
-variance_result = if_else(length(groups_diff) == 0, paste('All groups have similar variance, thus a common variance component is estimated for all groups'),
-paste(paste(groups_diff, collapse = ''), 'had a different variance from the basic model, thus the variance', if_else(length(groups_diff) > 1, 'components', 'component'), 'of', paste(groups_diff, collapse = ''), 'were estimated separately.'))
-
+variance_result <- if_else(length(groups_diff) == 0, paste("All groups have similar variance, thus a common variance component is estimated for all groups"),
+  paste(paste(groups_diff, collapse = ""), "had a different variance from the basic model, thus the variance", if_else(length(groups_diff) > 1, "components", "component"), "of", paste(groups_diff, collapse = ""), "were estimated separately.")
+)
 ```
 
 `r transform_result`
@@ -283,49 +294,62 @@ paste(paste(groups_diff, collapse = ''), 'had a different variance from the basi
 
 ```{r, fig.cap=assumption.cap}
 
-if(trans_name != "No transformation"){
-new_trans = ifelse(grepl('An' ,trans_name), gsub('An ', "", trans_name),
-                   gsub('A ', "", trans_name))
-
-assumptions = ggarrange(plotlist = list(
-   ggplot(data = data_check, aes(x = resid_orig)) + 
-    geom_histogram(color = 'white') + theme_bw() + 
-    ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
-    theme(plot.title = element_text(size = 10)),
-  ggplot(data = data_check, aes(x = resid_transformed)) + 
-    geom_histogram(color = 'white') + theme_bw() + 
-    ggtitle(paste('Histogram of the Residuals from', new_trans, data$plot$endpoint)) +
-    theme(plot.title = element_text(size = 10)),
-  ggplot(data = data_check, aes(sample = resid_orig)) + 
-    stat_qq() + stat_qq_line() + theme_bw() + 
-    ggtitle(paste('Q-Q plot from', data$plot$endpoint)) +
-    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
-    theme(plot.title = element_text(size = 10)),
-  ggplot(data = data_check, aes(sample = resid_transformed)) + 
-    stat_qq() + stat_qq_line() + theme_bw() +  
-    ggtitle(paste('Q-Q plot from', new_trans, data$plot$endpoint)) +
-    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
-    theme(plot.title = element_text(size = 10)))
+if (trans_name != "No transformation") {
+  new_trans <- ifelse(grepl("An", trans_name), gsub("An ", "", trans_name),
+    gsub("A ", "", trans_name)
   )
-}else{
-  assumptions = ggarrange(plotlist = list(
-   ggplot(data = data_check, aes(x = resid_orig)) + 
-    geom_histogram(color = 'white') + theme_bw() + 
-    ggtitle(paste('Histogram of the Residuals', data$plot$endpoint)) +
-    theme(plot.title = element_text(size = 10)),
-  ggplot(data = data_check, aes(sample = resid_orig)) + 
-    stat_qq() + stat_qq_line() + theme_bw() + 
-    ggtitle(paste('Q-Q plot from', data$plot$endpoint)) +
-    xlab('Theoretical Quantiles') + ylab('Sample quantile') +
-    theme(plot.title = element_text(size = 10))))
+
+  assumptions <- ggarrange(plotlist = list(
+    ggplot(data = data_check, aes(x = resid_orig)) +
+      geom_histogram(color = "white") +
+      theme_bw() +
+      ggtitle(paste("Histogram of the Residuals", data$plot$endpoint)) +
+      theme(plot.title = element_text(size = 10)),
+    ggplot(data = data_check, aes(x = resid_transformed)) +
+      geom_histogram(color = "white") +
+      theme_bw() +
+      ggtitle(paste("Histogram of the Residuals from", new_trans, data$plot$endpoint)) +
+      theme(plot.title = element_text(size = 10)),
+    ggplot(data = data_check, aes(sample = resid_orig)) +
+      stat_qq() +
+      stat_qq_line() +
+      theme_bw() +
+      ggtitle(paste("Q-Q plot from", data$plot$endpoint)) +
+      xlab("Theoretical Quantiles") +
+      ylab("Sample quantile") +
+      theme(plot.title = element_text(size = 10)),
+    ggplot(data = data_check, aes(sample = resid_transformed)) +
+      stat_qq() +
+      stat_qq_line() +
+      theme_bw() +
+      ggtitle(paste("Q-Q plot from", new_trans, data$plot$endpoint)) +
+      xlab("Theoretical Quantiles") +
+      ylab("Sample quantile") +
+      theme(plot.title = element_text(size = 10))
+  ))
+} else {
+  assumptions <- ggarrange(plotlist = list(
+    ggplot(data = data_check, aes(x = resid_orig)) +
+      geom_histogram(color = "white") +
+      theme_bw() +
+      ggtitle(paste("Histogram of the Residuals", data$plot$endpoint)) +
+      theme(plot.title = element_text(size = 10)),
+    ggplot(data = data_check, aes(sample = resid_orig)) +
+      stat_qq() +
+      stat_qq_line() +
+      theme_bw() +
+      ggtitle(paste("Q-Q plot from", data$plot$endpoint)) +
+      xlab("Theoretical Quantiles") +
+      ylab("Sample quantile") +
+      theme(plot.title = element_text(size = 10))
+  ))
 }
 
-pngfile <- fs::path(knitr::fig_path(),  "assumptions.png")
+pngfile <- fs::path(knitr::fig_path(), "assumptions.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(assumptions)
 invisible(dev.off())
 knitr::include_graphics(pngfile)
-
 ```
 
 
@@ -335,45 +359,44 @@ knitr::include_graphics(pngfile)
 pdata <- data$plot$data
 
 test_plot_theme_word <- function(x) {
-  
-    theme(plot.title = element_text(size = 10),
-        axis.title = element_text(size = 10),
-        axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
-        axis.text.y = element_text(size = 8),
-        strip.text = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+  theme(
+    plot.title = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
+    axis.text.y = element_text(size = 8),
+    strip.text = element_text(size = 8),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 }
 
-      plots <- vizualization(
-        transformed_data = pdata$transformed_data,
-        power = pdata$box_cox,
-        endpoint = data$plot$endpoint,
-        ui_sel = data$plot$ui_selections
-      )
+plots <- vizualization(
+  transformed_data = pdata$transformed_data,
+  power = pdata$box_cox,
+  endpoint = data$plot$endpoint,
+  ui_sel = data$plot$ui_selections
+)
 
-boxplot_caption = paste0("Box plot for each group and time.")
+boxplot_caption <- paste0("Box plot for each group and time.")
 
-barplot_caption = paste0("Bar plot for each group and time.")
-
-
-line_caption = paste0("Group level trajectory across time where the line corresponds to the group average of ", scale, '. The vertical bars are standard error bars for each group at each time point.')
+barplot_caption <- paste0("Bar plot for each group and time.")
 
 
-trajectory_caption = paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
-
-prism_caption_box = paste0('Box plot of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
-prism_caption_bar = paste0('Bar chart of ', scale, ' response values at ', time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
+line_caption <- paste0("Group level trajectory across time where the line corresponds to the group average of ", scale, ". The vertical bars are standard error bars for each group at each time point.")
 
 
+trajectory_caption <- paste0("Subject level trajectory across time where the line corresponds to the average of ", scale, " response in the presence of techinical replicates.")
+
+prism_caption_box <- paste0("Box plot of ", scale, " response values at ", time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
+prism_caption_bar <- paste0("Bar chart of ", scale, " response values at ", time, '. The stars above the horizontal bars correspond to the magnitude of the p-value comparing two groups where "\\*", "\\*\\*" , and "\\*\\*\\*" represent 0.01 <= p-value < 0.05, 0.001 <= p-value < 0.01, and p-value < 0.001, respectively. A p-value summary will only be shown for p-value less than 0.05.')
 ```
 
 ```{r, echo=F, error=F, warning=FALSE, fig.cap=boxplot_caption}
-plot1 = plots[[1]] + test_plot_theme_word()
+plot1 <- plots[[1]] + test_plot_theme_word()
 
-pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(plot1)
 invisible(dev.off())
@@ -381,12 +404,12 @@ knitr::include_graphics(pngfile)
 ```
 
 ```{r, echo=F, error=F, warning=FALSE,fig.cap = line_caption}
-plot2 = plots[[2]] +
+plot2 <- plots[[2]] +
   test_plot_theme_word() +
-    theme(legend.position = 'bottom') + 
+  theme(legend.position = "bottom") +
   guides(color = guide_legend(nrow = 1))
 
-pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(plot2)
 invisible(dev.off())
@@ -395,13 +418,14 @@ knitr::include_graphics(pngfile)
 
 
 ```{r, echo=F, error=F, warning=FALSE,fig.cap=barplot_caption}
-plot3 = plots[[3]] +
+plot3 <- plots[[3]] +
   test_plot_theme_word() +
-    theme(
-        legend.position = 'bottom') + 
+  theme(
+    legend.position = "bottom"
+  ) +
   guides(colour = guide_legend(nrow = 1))
 
-pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(plot3)
 invisible(dev.off())
@@ -411,17 +435,17 @@ knitr::include_graphics(pngfile)
 
 ```{r, echo=F, error=F, warning=FALSE,fig.cap=trajectory_caption}
 
-plot4 = plots[[4]] +
+plot4 <- plots[[4]] +
   test_plot_theme_word() +
-    theme(
-        legend.position = 'bottom')
+  theme(
+    legend.position = "bottom"
+  )
 
-pngfile <- fs::path(knitr::fig_path(),  "sub_line.png")
+pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(plot4)
 invisible(dev.off())
 knitr::include_graphics(pngfile)
-
 ```
 
 <!-- \newpage -->
@@ -441,33 +465,37 @@ knitr::include_graphics(pngfile)
 
 
 ```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar, include = F}
-transformed_data = data$plot$data$transformed_data
-prismInputs$border = TRUE
-prismInputs$fontsize = 30
-prism = prism_plot(data = transformed_data, tables = data$tables$tables, 
-                   trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
-                   endpoint = data$plot$endpoint, format = 'word', 
-                   cfb = data$input_data$changeFromBaseline, 
-                   power = data$tables$power, 
-                   num_groups = length(levels(transformed_data$Treatment)), 
-                   type = 'bar', 
-                   inputs=prismInputs) 
+transformed_data <- data$plot$data$transformed_data
+prismInputs$border <- TRUE
+prismInputs$fontsize <- 30
+prism <- prism_plot(
+  data = transformed_data, tables = data$tables$tables,
+  trt_sel = levels(transformed_data$Treatment),
+  time_sel = time,
+  endpoint = data$plot$endpoint, format = "word",
+  cfb = data$input_data$changeFromBaseline,
+  power = data$tables$power,
+  num_groups = length(levels(transformed_data$Treatment)),
+  type = "bar",
+  inputs = prismInputs
+)
 
-prism_box = prism_plot(data = transformed_data, tables = data$tables$tables, 
-                   trt_sel = levels(transformed_data$Treatment), 
-                   time_sel =  time,
-                   endpoint = data$plot$endpoint, format = 'word', 
-                   cfb = data$input_data$changeFromBaseline, 
-                   power = data$tables$power, 
-                   num_groups = length(levels(transformed_data$Treatment)), 
-                   type = 'box', 
-                   inputs=prismInputs) 
+prism_box <- prism_plot(
+  data = transformed_data, tables = data$tables$tables,
+  trt_sel = levels(transformed_data$Treatment),
+  time_sel = time,
+  endpoint = data$plot$endpoint, format = "word",
+  cfb = data$input_data$changeFromBaseline,
+  power = data$tables$power,
+  num_groups = length(levels(transformed_data$Treatment)),
+  type = "box",
+  inputs = prismInputs
+)
 ```
 
 
 ```{r, echo = FALSE, error=F, warning=FALSE,fig.cap=prism_caption_bar}
-pngfile <- fs::path(knitr::fig_path(),  "bar.png")
+pngfile <- fs::path(knitr::fig_path(), "bar.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(prism)
 invisible(dev.off())
@@ -475,7 +503,7 @@ knitr::include_graphics(pngfile)
 ```
 
 ```{r, echo = FALSE, error=F, warning=FALSE, fig.cap=prism_caption_box}
-pngfile <- fs::path(knitr::fig_path(),  "box.png")
+pngfile <- fs::path(knitr::fig_path(), "box.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
 plot(prism_box)
 invisible(dev.off())
@@ -485,17 +513,17 @@ knitr::include_graphics(pngfile)
 ## Tables
 
 ```{r , echo=FALSE, error=F, warning=FALSE}
-transform = data$tables$power != 1
+transform <- data$tables$power != 1
 show_text <- transform
 footer <- if_else(!show_text,
-        "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
-        paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
-      )
+  "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
+  paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
+)
 
 endpoint <- if_else(!show_text,
-        data$plot$endpoint,
-        paste(substr(x = trans_name, start = 3, stop = nchar(trans_name)), data$plot$endpoint)
-      )
+  data$plot$endpoint,
+  paste(substr(x = trans_name, start = 3, stop = nchar(trans_name)), data$plot$endpoint)
+)
 ```
 
 `r if(!show_text) {"\\begin{comment}"}`
@@ -503,10 +531,12 @@ endpoint <- if_else(!show_text,
 ### `r ifelse(show_text, paste('Table 1: Summary of', data$plot$endpoint),"")`
 
 ```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE}
-tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
-tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
-            footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
-  width(x = ., width = 1) 
+tab0 <- data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
+tab0_ft <- word_tables(tab0,
+  include_summ_stat = F, summary_only = T, transform = transform,
+  footer = "Group level summary on the original scale.", endpoint = data$plot$endpoint
+) %>%
+  width(x = ., width = 1)
 FitFlextableToPage(tab0_ft)
 ```
 `r if(!show_text) {"\\end{comment}"}`
@@ -514,24 +544,27 @@ FitFlextableToPage(tab0_ft)
 ### `r paste(ifelse(show_text, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE}
-tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
+tab1 <- data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
 
-tab1_ft = word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
-            footer = footer, endpoint = data$plot$endpoint)  %>%
-  width(x = ., width = 1) 
+tab1_ft <- word_tables(
+  data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
+  footer = footer, endpoint = data$plot$endpoint
+) %>%
+  width(x = ., width = 1)
 FitFlextableToPage(tab1_ft)
-
 ```
 \newpage
 
 ### `r paste(ifelse(show_text, 'Table 3: Comparison among the Vehicle and Treatment Groups as to', 'Table 2: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE}
-tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
+tab2 <- data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
 
-tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
-            footer = footer, endpoint = data$plot$endpoint)%>%
-  width(x = ., width = 0.75) 
+tab2_ft <- word_tables(tab2,
+  include_summ_stat = T, summary_only = F, transform = transform,
+  footer = footer, endpoint = data$plot$endpoint
+) %>%
+  width(x = ., width = 0.75)
 
 FitFlextableToPage(tab2_ft)
 ```
@@ -539,11 +572,13 @@ FitFlextableToPage(tab2_ft)
 ### `r paste(ifelse(show_text, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = FALSE, error=F, warning=FALSE}
-tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
-#debug(word_tables)
-tab3_ft = word_tables(tab3, include_summ_stat = T, summary_only = F, transform = transform,
-            footer = footer, endpoint = data$plot$endpoint) %>%
-  width(x = ., width = 1) 
+tab3 <- data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
+# debug(word_tables)
+tab3_ft <- word_tables(tab3,
+  include_summ_stat = T, summary_only = F, transform = transform,
+  footer = footer, endpoint = data$plot$endpoint
+) %>%
+  width(x = ., width = 1)
 FitFlextableToPage(tab3_ft)
 ```
 \newpage

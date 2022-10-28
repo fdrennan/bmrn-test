@@ -20,14 +20,16 @@ page_margins:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      dpi = 300)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  dpi = 300
+)
 library(officedown)
 library(flextable)
 library(tidyverse)
 library(officer)
 library(ggpubr)
-source('word_tables.R')
+source("word_tables.R")
 ```
 
 # Background
@@ -76,45 +78,48 @@ The Akaike Information Criterion (AIC) is used to select the correlation structu
 There are 9 group comparisons that have relevant interpretation:
 
 ```{r, echo = F, fig.cap='List of the 9 combinations of experimental groups and their interpretation.'}
-contrasts =  data.frame(
-    Label = LETTERS[1:9],
-    Group_1 = c(
-      "Wild Type",
-      "Positive Control",
-      "Wild Type",
-      "Vehicle",
-      "Wild Type",
-      "Positive Control",
-      "Dose",
-      "Negative Control",
-      "Negative Control"
-    ),
-    Group_2 = c(
-      "Vehicle",
-      "Vehicle",
-      "Dose",
-      "Dose",
-      "Positive Control",
-      "Dose",
-      "Dose",
-      "Vehicle",
-      "Dose"
-    ),
-    `Purpose of Comparison` = c('Verify Disease Model',
-                    'Verify Positive Control',
-                    'Which doses are similar to Wild Type?',
-                    'Which treatment doses are effective?',
-                    'Does Positive Control reverse disease?',
-                    'Which doses are similar to Positive Control',
-                    'Do doses differ from each other?',
-                    'Rule out matrix effect',
-                    'If H is rejected, then show Negative Control is not as good as treatment'),
-  check.names = FALSE)
+contrasts <- data.frame(
+  Label = LETTERS[1:9],
+  Group_1 = c(
+    "Wild Type",
+    "Positive Control",
+    "Wild Type",
+    "Vehicle",
+    "Wild Type",
+    "Positive Control",
+    "Dose",
+    "Negative Control",
+    "Negative Control"
+  ),
+  Group_2 = c(
+    "Vehicle",
+    "Vehicle",
+    "Dose",
+    "Dose",
+    "Positive Control",
+    "Dose",
+    "Dose",
+    "Vehicle",
+    "Dose"
+  ),
+  `Purpose of Comparison` = c(
+    "Verify Disease Model",
+    "Verify Positive Control",
+    "Which doses are similar to Wild Type?",
+    "Which treatment doses are effective?",
+    "Does Positive Control reverse disease?",
+    "Which doses are similar to Positive Control",
+    "Do doses differ from each other?",
+    "Rule out matrix effect",
+    "If H is rejected, then show Negative Control is not as good as treatment"
+  ),
+  check.names = FALSE
+)
 
 contrasts_ft <- flextable(contrasts)
-contrasts_ft <- width(contrasts_ft, width = c(0.75,1,1, 3))
-contrasts_ft = fontsize(contrasts_ft, size = 9, part = 'header')
-contrasts_ft = fontsize(contrasts_ft, size = 8)
+contrasts_ft <- width(contrasts_ft, width = c(0.75, 1, 1, 3))
+contrasts_ft <- fontsize(contrasts_ft, size = 9, part = "header")
+contrasts_ft <- fontsize(contrasts_ft, size = 8)
 contrasts_ft
 ```
 
@@ -141,7 +146,7 @@ The user will be allowed to select whether the raw/transformed values are to be 
 
 ## Plots (One per page? or two per page?)
 ```{r, echo = F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
-load('C:/Users/Christopher.Wilson/Desktop/Test_Report/plots.RData')
+load("C:/Users/Christopher.Wilson/Desktop/Test_Report/plots.RData")
 
 # plots[[1]] +
 #   theme(plot.title = element_text(size = 10),
@@ -154,69 +159,68 @@ load('C:/Users/Christopher.Wilson/Desktop/Test_Report/plots.RData')
 #     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.0)
 
 test_plot_theme_html <- function(x) {
-  
-    theme(plot.title = element_text(size = 12),
-        axis.title = element_text(size = 10),
-        axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
-        axis.text.y = element_text(size = 8),
-        strip.text = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+  theme(
+    plot.title = element_text(size = 12),
+    axis.title = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
+    axis.text.y = element_text(size = 8),
+    strip.text = element_text(size = 8),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 }
 
 ggplot(data = plots[[1]]$data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
-    geom_boxplot(aes(color = Treatment), outlier.size = 1) +
-    geom_jitter(width = 0.1, aes(color = Treatment), size = 0.5) +
-    theme_bw() +
-    labs(color = "Treatment") +
-    facet_wrap(Treatment ~ ., nrow = 1) +
-    ylab(plots[[1]]$labels$y) +
-    stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
-    ggtitle("Box Plot for Each Group Over Time") +
-    test_plot_theme_html() + 
-    theme(legend.position = 'none')
-
+  geom_boxplot(aes(color = Treatment), outlier.size = 1) +
+  geom_jitter(width = 0.1, aes(color = Treatment), size = 0.5) +
+  theme_bw() +
+  labs(color = "Treatment") +
+  facet_wrap(Treatment ~ ., nrow = 1) +
+  ylab(plots[[1]]$labels$y) +
+  stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
+  ggtitle("Box Plot for Each Group Over Time") +
+  test_plot_theme_html() +
+  theme(legend.position = "none")
 ```
 
 ```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
 plots[[2]] +
-  test_plot_theme_html() + 
-    theme(
-        legend.position = 'bottom')
-
-
+  test_plot_theme_html() +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
 ```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
 plots[[3]] +
-  test_plot_theme_html() + 
-    theme(
-        legend.position = 'bottom')
-
-
+  test_plot_theme_html() +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
 
 ```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
 
 plots[[4]] +
-  test_plot_theme_html() + 
-    theme(
-        legend.position = 'bottom')
-
-
+  test_plot_theme_html() +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 \newpage
 
 ## Original Scale Summary 
 ```{r, echo = F, error=F, warning=FALSE}
-load('C:/Users/Christopher.Wilson/Desktop/Test_Report/trans_table.RData')
+load("C:/Users/Christopher.Wilson/Desktop/Test_Report/trans_table.RData")
 
-tab0 = bind_rows(tab1, tab2) %>%
-  dplyr::select(Treatment, `Times Included`,
-                grep('Original Scale', colnames(.), value = TRUE))
+tab0 <- bind_rows(tab1, tab2) %>%
+  dplyr::select(
+    Treatment, `Times Included`,
+    grep("Original Scale", colnames(.), value = TRUE)
+  )
 
 word_tables(data = tab0, summary_only = T)
 ```
@@ -225,20 +229,19 @@ word_tables(data = tab0, summary_only = T)
 ## Table 1
 
 ```{r, echo = F, error=F, warning=FALSE}
-# tab1 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab1.csv', check.names = F) %>% 
+# tab1 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab1.csv', check.names = F) %>%
 #   select(-1) %>%
 #   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
 
 word_tables(data = tab1, include_summ_stat = T, transform = T, summary_only = F)
-
 ```
 <!---BLOCK_LANDSCAPE_START--->
 
 ## Table 2
 
 ```{r, echo = F, error=F, warning=FALSE}
-# tab2 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab2.csv', check.names = F) %>% 
+# tab2 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab2.csv', check.names = F) %>%
 #   select(-1) %>%
 #   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
@@ -252,13 +255,12 @@ word_tables(data = tab2, include_summ_stat = T, transform = T, summary_only = F)
 
 ## Table 3
 ```{r, echo = FALSE, error=F, warning=FALSE}
-# tab3 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab3.csv', check.names = F) %>% 
+# tab3 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab3.csv', check.names = F) %>%
 #   dplyr::select(-1) %>%
 #   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
-# 
+#
 
 word_tables(data = tab3, include_summ_stat = F, transform = T, summary_only = F)
-
 ```
 

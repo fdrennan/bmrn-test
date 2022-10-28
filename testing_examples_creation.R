@@ -59,9 +59,10 @@ lrt <- function(data, basic_model) {
 
 checks <- function(data, group_specs, cfb) {
   data_merged <- data %>%
-    inner_join(group_specs %>%
-      mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
-    by = c("Treatment" = "Treatment Group Name"), .
+    inner_join(
+      group_specs %>%
+        mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
+      by = c("Treatment" = "Treatment Group Name"), .
     ) %>%
     rename("Treatment Group Name" = "Treatment")
 

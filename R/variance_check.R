@@ -1,7 +1,6 @@
 # This function checks that variance of the groups in the basic model is similar
 # This corresponds to box fifth in the flow chart
 variance_check <- function(transformed_data, variable) {
-
   # First find the variance for each TreatmentNew and week combination,
   # then take the average of these variances to estimate the variance
   # for each group
@@ -42,7 +41,6 @@ variance_check <- function(transformed_data, variable) {
   p_value <- 1 - pchisq(as.numeric(loglik_diff), df_diff$df)
 
   if (p_value < 0.05) {
-
     # If the weighted model (full model) has a significantly better fit then the
     # model without weights (reduced model), then we will consider a group variance
     # that is 2 fold change from the pooled variance. Here I look at the log 2

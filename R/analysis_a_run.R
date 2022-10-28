@@ -84,12 +84,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           session_data = session_data
         )
       })
-      
+
       # observe({input_data()})
- 
+
       signal <- analysis_a_setup_server("analysis_a_setup", input_data)
 
-      
+
       observeEvent(signal(),
         {
           updateTabItems(
@@ -671,12 +671,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       # test_1_output_data <- reactive({
       #   TRUE
       # })
-      # 
+      #
       # observe({
-      #   
+      #
       #   test_1_output_data()
       # })
-      
+
       server_prism(
         signal = test_1_output_data
       )

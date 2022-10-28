@@ -115,7 +115,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           coi <- data.frame(rbind(c1_AE, c1_SE) - rbind(c2_AE, c2_SE))
           colnames(coi) <- coef_name
           return(coi)
-        }, .progress = TRUE,.options = furrr_options(seed = TRUE))
+        }, .progress = TRUE, .options = furrr_options(seed = TRUE))
 
         coi_list <- map(1:nrow(coi_tmp), .f = ~ {
           unlist(coi_tmp[.x, ])

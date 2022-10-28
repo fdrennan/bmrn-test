@@ -249,17 +249,19 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
     color = Treatment, group = Treatment
   )) +
     geom_point(size = 1.25, show.legend = F) +
-    geom_line(aes(
-      x = Time, y = Mean_Response, linetype = Treatment, color = Treatment
-    ),
-    size = 1.25,
-    show.legend = T
+    geom_line(
+      aes(
+        x = Time, y = Mean_Response, linetype = Treatment, color = Treatment
+      ),
+      size = 1.25,
+      show.legend = T
     ) +
-    geom_errorbar(aes(
-      ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
-      color = Treatment
-    ),
-    width = .5, show.legend = F
+    geom_errorbar(
+      aes(
+        ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
+        color = Treatment
+      ),
+      width = .5, show.legend = F
     ) +
     theme(legend.position = "bottom") +
     labs(color = "Treatment") +
