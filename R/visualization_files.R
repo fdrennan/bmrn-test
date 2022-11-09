@@ -44,7 +44,7 @@ pre_modeling <- function(input_data, baseline) {
         return(data.frame(model = .x, AIC = AIC(tmp)))
       }
     }, .options = furrr_options(seed = TRUE), .progress = TRUE)
-
+    
     best_model <- best_model$model[which.min(best_model$AIC)] %>% unlist()
     ready_final_model$best_model <- best_model
   } else {

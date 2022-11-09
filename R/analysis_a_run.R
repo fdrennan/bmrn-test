@@ -185,7 +185,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-        browser()
+        
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -194,13 +194,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )))
 
         data <- tryCatch(expr = {
-          browser()
+          
           tic()
           data <- pre_modeling(data, selections$changeFromBaseline)
           time <- toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
           showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
-          data
+          # data
           data
         }, error = function(err) {
           err <- as.character(err)
@@ -424,7 +424,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
-        browser()
+        
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
