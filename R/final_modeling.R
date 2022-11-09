@@ -13,12 +13,12 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   )
 
   if (analysis_type == "Exploratory") {
-    browser()
-    output_tables <- map(
-      #.progress = TRUE, .options = furrr_options(seed = TRUE),
+    
+    output_tables <- future_map(
+      .progress = TRUE, .options = furrr_options(seed = TRUE),
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = function(x) {
-        browser()
+        
         print("futuremap start")
         x <- unname(x)
         contrast_list <- generate_contrasts(
@@ -60,7 +60,7 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
     output_tables$tab2 <- tab2
     output_tables$tab3 <- tab3
   } else {
-    browser()
+    
     contrast_list <- generate_contrasts(
       toi = toi,
       data = transformed_data,
