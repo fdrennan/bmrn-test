@@ -3,7 +3,6 @@ options(require_validation = FALSE)
 devtools::load_all()
 options("cachetest" = FALSE)
 options("test_version" = "Version 1.22")
-
 if (isTRUE(getOption("production"))) {
   options(shiny.maxRequestSize = 300 * 1024^2)
   options(require_validation = TRUE)

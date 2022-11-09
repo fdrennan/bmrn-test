@@ -6,7 +6,6 @@ library(storr)
 library(httr)
 library(furrr)
 
-plan(multiprocess)
 
 devtools::load_all()
 

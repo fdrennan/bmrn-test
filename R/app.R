@@ -30,6 +30,7 @@ server_app <- function(id = "app") {
   shiny$moduleServer(
     id,
     function(input, output, session) {
+      plan(multiprocess)
       ns <- session$ns
       router <- router(ns)
       router$server(input, output, session)

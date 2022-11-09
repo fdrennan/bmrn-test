@@ -101,7 +101,6 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           t() %>%
           data.frame() %>%
           rename("Group_1" = "X1", "Group_2" = "X2")
-        plan(multisession)
         coi_tmp <- future_map_dfr(.x = 1:nrow(grid), .f = ~ {
           a <- grid$Group_1[.x]
           b <- grid$Group_2[.x]
