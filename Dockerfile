@@ -29,7 +29,7 @@ RUN R -e "install.packages('mailR')"
 COPY word_style.docx .
 COPY bib.bib .
 COPY www www
-COPY test_example.xlsx .
-COPY Flowcharts.png .
-COPY dslogo.png dslogo.png
-COPY test_logo.png test_logo.png
+#COPY test_example.xlsx .
+#COPY ./www/Flowcharts.png .
+#COPY ./www/dslogo.png dslogo.png
+#COPY ./www/test_logo.png test_logo.png
