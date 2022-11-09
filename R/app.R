@@ -2,23 +2,29 @@
 #' @export
 ui_app <- function(id = "app") {
   box::use(shiny)
+  box::use(./router)
+  box::use(./headers)
+  box::use(bs4Dash)
+  box::use(./navbar)
+  box::use(./footer)
+  box::use(./test_theme)
   ns <- shiny$NS(id)
-  router <- router(ns)
+  router <- router$router(ns)
   # ui_download_historical(ns('download_historical'))
-  div(
+  shiny$tags$div(
     class = "bg-light",
-    dashboardPage(
+    bs4Dash$dashboardPage(
       fullscreen = FALSE, dark = FALSE,
-      header = dashboardHeader(div(
-        headers(),
-        ui_navbar(ns("navbar"))
+      header = bs4Dash$dashboardHeader(shiny$tags$div(
+        test_theme$headers(),
+        navbar$ui_navbar(ns("navbar"))
       )),
-      body = dashboardBody(
+      body = bs4Dash$dashboardBody(
         router$ui
       ),
-      sidebar = dashboardSidebar(disable = T),
-      footer = dashboardFooter(
-        ui_footer(ns("footer"))
+      sidebar = bs4Dash$dashboardSidebar(disable = T),
+      footer = bs4Dash$dashboardFooter(
+        footer$ui_footer(ns("footer"))
       )
     )
   )
@@ -27,21 +33,26 @@ ui_app <- function(id = "app") {
 #' @export
 server_app <- function(id = "app") {
   box::use(shiny)
+  box::use(./router)
+  box::use(./footer)
+  box::use(./home)
+  box::use(./navbar)
+  box::use(./download_historical)
+  box::use(./analysis_a_session_setup)
+  # library(test)
   shiny$moduleServer(
     id,
     function(input, output, session) {
       plan(multiprocess)
       ns <- session$ns
-      router <- router(ns)
+      router <- router$router(ns)
       router$server(input, output, session)
-
-      server_footer()
-      server_home("home")
-      server_navbar("navbar")
-      server_download_historical("download_historical")
-
+      footer$server_footer()
+      home$server_home("home")
+      navbar$server_navbar("navbar")
+      download_historical$server_download_historical("download_historical")
       session_out <- test_session_setup_server("test_session_setup")
-      analysis_a_run_server("analysis_a_run", session_out, getOption("cachetest", FALSE))
+      analysis_a_session_setup$analysis_a_run_server("analysis_a_run", session_out, getOption("cachetest", FALSE))
     }
   )
 }
