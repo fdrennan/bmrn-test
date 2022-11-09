@@ -165,14 +165,17 @@ test_session_setup_server <- function(id) {
         }
 
         if (length(input$file$datapath)) {
-          input_data <- tryCatch({
-            clean_excel_data(input$file)
-          }, error = function(err) {
-            showModal(modalDialog(
-              tags$pre(as.character(err))
-            ))
-            shiny$req(FALSE)
-          })
+          input_data <- tryCatch(
+            {
+              clean_excel_data(input$file)
+            },
+            error = function(err) {
+              showModal(modalDialog(
+                tags$pre(as.character(err))
+              ))
+              shiny$req(FALSE)
+            }
+          )
           copy_files(df, input$file)
         }
 

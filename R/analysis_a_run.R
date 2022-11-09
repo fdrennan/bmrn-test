@@ -185,7 +185,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
       pre_modeling_output <- reactive({
         req(analysis_input_data())
-
+        browser()
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
@@ -194,6 +194,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )))
 
         data <- tryCatch(expr = {
+          browser()
           tic()
           data <- pre_modeling(data, selections$changeFromBaseline)
           time <- toc()
@@ -423,7 +424,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
-        #
+        browser()
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
@@ -633,7 +634,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
           div(
             map(
-              .x = table_gt, .f = function(x) {
+              table_gt,
+              function(x) {
                 box(
                   maximizable = TRUE, collapsible = TRUE,
                   width = 12, x$table
@@ -651,7 +653,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(pre_tables_input())
         req(signal())
 
-
         data <- list(
           plot = pre_plot_input(),
           tables = pre_tables_input(),
@@ -659,30 +660,16 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           input_data = signal(),
           inputs = reactiveValuesToList(input)
         )
-
         st <- storr_rds("storr")
-        # "4ffb0de7-0274-4005-a413-1de5bfad7790-final"
         id <- paste0(signal()$session_data$uuid, "-final")
         st$set(id, data)
 
         data
       })
 
-      # test_1_output_data <- reactive({
-      #   TRUE
-      # })
-      #
-      # observe({
-      #
-      #   test_1_output_data()
-      # })
-
       server_prism(
         signal = test_1_output_data
       )
-      # server_analysis_a_report(server_input = server_input)
-      #
-      # test_1_output_data
     }
   )
 }

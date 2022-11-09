@@ -34,13 +34,12 @@ server_app <- function(id = "app") {
       router <- router(ns)
       router$server(input, output, session)
 
-server_footer()
-server_home("home")
-server_navbar("navbar")
+      server_footer()
+      server_home("home")
+      server_navbar("navbar")
       server_download_historical("download_historical")
-      
+
       session_out <- test_session_setup_server("test_session_setup")
-      # 
       analysis_a_run_server("analysis_a_run", session_out, getOption("cachetest", FALSE))
     }
   )

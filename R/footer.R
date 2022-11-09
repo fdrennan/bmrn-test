@@ -25,9 +25,6 @@ server_footer <- function(id = "footer") {
           )
         )
       })
-      
     }
   )
 }
-
-
