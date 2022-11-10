@@ -16,7 +16,7 @@ go <- function() {
     options(send = FALSE)
     options("devmode" = TRUE)
   }
-  box::use(./R/main)
+  box::use(. / R / main)
   box::use(shiny)
   shiny$runApp(
     shiny$shinyApp(ui = main$ui_main, server = main$server_main)

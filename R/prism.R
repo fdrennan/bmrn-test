@@ -1,26 +1,27 @@
 #' ui_prism
 #' @export
 ui_prism <- function(id = "prism") {
-  ns <- NS(id)
-  fluidRow(
-    testSpinner(uiOutput(ns("plotsInputs"))),
-    testSpinner(div(class = "py-5", box(
+  box::use(shiny, bs4Dash, ./testSpinner, ./boxSidebarTest)
+  ns <- shiny$NS(id)
+  shiny$fluidRow(
+    testSpinner$testSpinner(shiny$uiOutput(ns("plotsInputs"))),
+    testSpinner$testSpinner(shiny$div(class = "py-5", bs4Dash$box(
       title = "",
-      uiOutput(ns("plots")), maximizable = TRUE, collapsible = TRUE, width = 12,
-      sidebar = boxSidebarTest(
+      shiny$uiOutput(ns("plots")), maximizable = TRUE, collapsible = TRUE, width = 12,
+      sidebar = boxSidebarTest$boxSidebarTest(
         id = ns("boxSidebar"),
         startOpen = TRUE,
         background = "none",
         width = 10,
         easyClose = FALSE,
-        div(
+        shiny$div(
           class = "text-dark p-3", # style='width: 100px;',
-          selectInput(ns("plotType"), "Plot Type", c("Bar", "Box"), "Bar"),
-          numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
-          numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
-          numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
-          numericInput(ns("bottom_percent"), label = "Size Percentage of Data Plot", value = 70, min = 0, max = 100, step = 5),
-          selectInput(
+          shiny$selectInput(ns("plotType"), "Plot Type", c("Bar", "Box"), "Bar"),
+          shiny$numericInput(ns("fontSize"), value = 14, min = 5, max = 40, label = "Font Size"),
+          shiny$numericInput(ns("plotWidth"), label = "Width", value = 1200, min = 0, max = 3000, step = 50),
+          shiny$numericInput(ns("plotHeight"), label = "Height", value = 750, min = 0, max = 3000, step = 50),
+          shiny$numericInput(ns("bottom_percent"), label = "Size Percentage of Data Plot", value = 70, min = 0, max = 100, step = 5),
+          shiny$selectInput(
             ns("palette"), "Color Palette",
             sort(c("floral", "colorblind_safe", "prism_light", "black_and_white")),
             "floral"
@@ -33,7 +34,12 @@ ui_prism <- function(id = "prism") {
 #' server_prism
 #' @export
 server_prism <- function(id = "prism", signal) {
-  moduleServer(
+  box::use(shiny)
+  box::use(fs)
+  box::use(./prism_output)
+  box::use(ggplot2)
+  box::use(storr)
+  shiny$moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
@@ -44,15 +50,8 @@ server_prism <- function(id = "prism", signal) {
 
       pre_prism_data <- reactive({
         req(signal())
-
         data <- signal()
-        # # delete below
-        #   st <- storr_rds("storr")
-        #   id <- paste0("4ffb0de7-0274-4005-a413-1de5bfad7790", "-final")
-        #   data <- st$get(id)
-        #   # delete above
         plot_data <- data$plot$data$transformed_data
-        # input_data <- data$input_data$selections$changeFromBaseline
         input <- data$inputs
         list(
           plot_data = plot_data, tables = data$tables$tables,
@@ -66,40 +65,39 @@ server_prism <- function(id = "prism", signal) {
       })
 
 
-      output$plotsInputs <- renderUI({
-        input_prism <- isolate(signal())
-
+      output$plotsInputs <- shiny$renderUI({
+        input_prism <- shiny$isolate(signal())
         data <- input_prism$pre_modeling_input
         treatmentPlotSelectors <- levels(data$transformed_data$Treatment)
         timePlotSelectors <- levels(data$transformed_data$Time)
         toi <- input_prism$input_data$timeSelectionInput
-        fluidRow(
-          box(
+        shiny$fluidRow(
+          bs4Dash$box(
             title = "Inputs",
             width = 12,
-            div(
+            shiny$div(
               class = "d-flex justify-content-around align-items-center",
-              tooltip(
-                selectizeInput(
+              bs4Dash$tooltip(
+                shiny$selectizeInput(
                   inputId = ns("treatmentPlotSelectors"),
-                  label = div(
+                  label = shiny$div(
                     class = "d-flex justify-content-between",
-                    h4("Select Treatments to be Plotted"),
-                    icon("info-circle")
+                    shiny$h4("Select Treatments to be Plotted"),
+                    shiny$icon("info-circle")
                   ),
                   selected = treatmentPlotSelectors,
                   choices = treatmentPlotSelectors, multiple = TRUE
                 ),
                 "Use delete key to remove, mouse click to add."
               ),
-              radioButtons(
+              shiny$radioButtons(
                 inputId = ns("timePlotSelectors"),
                 label = h4("Select Time to be Plotted"),
                 selected = toi,
                 choices = timePlotSelectors,
                 inline = TRUE
               ),
-              radioButtons(ns("y_axisPrism"), h4("Select y axis"),
+              shiny$radioButtons(ns("y_axisPrism"), shiny$h4("Select y axis"),
                 choiceNames = list(
                   "Transform (suggested by Box-Cox)",
                   "No Transform (original scale)",
@@ -110,15 +108,15 @@ server_prism <- function(id = "prism", signal) {
                 )
               )
             ),
-            div(
+            shiny$div(
               class = "d-flex justify-content-end",
-              actionButton(ns("update"), "Update", class = "btn btn-primary")
+              shiny$actionButton(ns("update"), "Update", class = "btn btn-primary")
             )
           ),
-          downloadButton(ns("download"), "Download Prism Data", class = "text-right")
+          shiny$downloadButton(ns("download"), "Download Prism Data", class = "text-right")
         )
       })
-      prismData <- reactive({
+      prismData <- shiny$reactive({
         req(signal())
         req(input$treatmentPlotSelectors)
         #
@@ -127,15 +125,15 @@ server_prism <- function(id = "prism", signal) {
         pow <- data$tables$power
         cfb <- data$input_data$selections$changeFromBaseline %>% as.logical()
         full_path_file <- data$input_data$session_data$full_path_files
-        full_path_file <- path_join(c(full_path_file, "prism_data.xlsx"))
-        #
-        save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
+        full_path_file <- fs$path_join(c(full_path_file, "prism_data.xlsx"))
+        
+        prism_output$save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
         # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
 
-      observe({
-        showNotification("fix prism output")
+      shiny$observe({
+        shiny$showNotification("fix prism output")
       })
       # output$download <- downloadHandler(
       #   filename = function() {
@@ -147,31 +145,31 @@ server_prism <- function(id = "prism", signal) {
       #   }
       # )
       output$plots <-
-        renderUI({
-          req(input$plotType)
+        shiny$renderUI({
+          shiny$req(input$plotType)
 
           plotHeight <- paste0(input$plotHeight, "px")
           plotWidth <- paste0(input$plotWidth, "px")
           if (input$plotType == "Box") {
-            out <- plotOutput(ns("prismPlot_box"), width = input$plotWidth, height = plotHeight)
+            out <- shiny$plotOutput(ns("prismPlot_box"), width = input$plotWidth, height = plotHeight)
           } else if (input$plotType == "Bar") {
-            out <- plotOutput(ns("prismPlot_bar"), width = input$plotWidth, height = plotHeight)
+            out <- shiny$plotOutput(ns("prismPlot_bar"), width = input$plotWidth, height = plotHeight)
           }
 
           out
         })
 
-      output$prismPlot_box <- renderPlot({
-        isolate(input)
-        req(pre_prism_data())
-
+      output$prismPlot_box <- shiny$renderPlot({
+        shiny$isolate(input)
+        shiny$req(pre_prism_data())
+        
         input$update
-        input <- reactiveValuesToList(input)
+        input <- shiny$reactiveValuesToList(input)
         input$border <- FALSE
         data <- pre_prism_data()
-        path <- path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
+        path <- fs$path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_box.jpg"))
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-          plot <- prism_plot(
+          plot <- prism_plot$prism_plot(
             data = data$plot_data,
             tables = data$tables,
             trt_sel = input$treatmentPlotSelectors,
@@ -184,21 +182,21 @@ server_prism <- function(id = "prism", signal) {
             inputs = input,
             type = "box"
           )
-          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
+          ggplot2$ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 10, units = "in", dpi = 300)
           plot
         }
       })
 
-      output$prismPlot_bar <- renderPlot({
+      output$prismPlot_bar <- shiny$renderPlot({
         isolate(input)
         req(pre_prism_data())
         #
         data <- pre_prism_data()
 
-        path <- path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
+        path <- fs$path_join(c(signal()$input_data$session_data$full_path_files, "prism_plots_bar.jpg"))
 
         if (length(input$timePlotSelectors) > 0 && length(input$treatmentPlotSelectors) > 0) {
-          plot <- prism_plot(
+          plot <- prism_plot$prism_plot(
             data = data$plot_data,
             tables = data$tables,
             trt_sel = input$treatmentPlotSelectors,
@@ -208,26 +206,26 @@ server_prism <- function(id = "prism", signal) {
             cfb = data$cfb,
             power = data$power,
             num_groups = data$num_groups,
-            inputs = reactiveValuesToList(input),
+            inputs = shiny$reactiveValuesToList(input),
             type = "bar"
           )
-          ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
+          ggplot2$ggsave(filename = path, plot = plot, device = "jpg", width = 14, height = 12, units = "in", dpi = 300)
           plot
         }
       })
 
 
 
-      observe({
+      shiny$observe({
         req(prismData())
 
         uuid <- signal()$input_data$session_data$uuid
-        req(uuid)
+        shiny$req(uuid)
         input
-        st <- storr_rds("storr")
+        st <- storr$storr_rds("storr")
 
         id <- paste0(uuid, "-prism")
-        st$set(id, reactiveValuesToList(input))
+        st$set(id, shiny$reactiveValuesToList(input))
         data
       })
       input

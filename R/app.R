@@ -2,15 +2,14 @@
 #' @export
 ui_app <- function(id = "app") {
   box::use(shiny)
-  box::use(./router)
-  box::use(./headers)
+  box::use(. / router)
+  box::use(. / test_theme)
   box::use(bs4Dash)
-  box::use(./navbar)
-  box::use(./footer)
-  box::use(./test_theme)
+  box::use(. / navbar)
+  box::use(. / footer)
+
   ns <- shiny$NS(id)
   router <- router$router(ns)
-  # ui_download_historical(ns('download_historical'))
   shiny$tags$div(
     class = "bg-light",
     bs4Dash$dashboardPage(
@@ -33,12 +32,12 @@ ui_app <- function(id = "app") {
 #' @export
 server_app <- function(id = "app") {
   box::use(shiny)
-  box::use(./router)
-  box::use(./footer)
-  box::use(./home)
-  box::use(./navbar)
-  box::use(./download_historical)
-  box::use(./analysis_a_session_setup)
+  box::use(. / router)
+  box::use(. / footer)
+  box::use(. / home)
+  box::use(. / navbar)
+  box::use(. / download_historical)
+  box::use(. / analysis_a_session_setup)
   # library(test)
   shiny$moduleServer(
     id,

@@ -1,49 +1,59 @@
 #' analysis_a_setup
 #' @export
 analysis_a_setup <- function(id) {
-  ns <- NS(id)
-  uiOutput(ns("analysis_a_body"))
+  box::use(shiny)
+  ns <- shiny$NS(id)
+  shiny$uiOutput(ns("analysis_a_body"))
 }
 
 #' analysis_a_setup_server
 #' @export
 analysis_a_setup_server <- function(id, input_data) {
   box::use(shiny)
-  moduleServer(
+  box::use(bs4Dash)
+  box::use(purrr)
+  box::use(dplyr)
+  box::use(stats[complete.cases])
+  box::use(stringr)
+  box::use(shinyWidgets)
+  box::use(gdata)
+  box::use(storr)
+  box::use(./make_type_assignment_table)
+  shiny$moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
 
-      output$analysis_a_body <- renderUI({
+      output$analysis_a_body <- shiny$renderUI({
         shiny$req(input_data())
-        fluidRow(
-          box(
+        shiny$fluidRow(
+          bs4Dash$box(
             width = 4, collapsible = F,
-            title = h4("Map Subject Type"),
-            uiOutput(ns("typeAssignmentTable"))
+            title = shiny$h4("Map Subject Type"),
+            shiny$uiOutput(ns("typeAssignmentTable"))
           ),
-          box(
+          bs4Dash$box(
             width = 4, collapsible = F,
-            title = h4("Map Treatment Code"),
-            uiOutput(ns("groupAssignmentTable"))
+            title = shiny$h4("Map Treatment Code"),
+            shiny$uiOutput(ns("groupAssignmentTable"))
           ),
-          box(
+          bs4Dash$box(
             width = 4, collapsible = F,
-            uiOutput(ns("analysisInputUI"))
+            shiny$uiOutput(ns("analysisInputUI"))
           ),
-          div(
+          shiny$div(
             class = "d-flex justify-content-end",
-            actionButton(ns("runAnalysis"), h6("Run Analysis"), class = "btn-primary")
+            shiny$actionButton(ns("runAnalysis"), shiny$h6("Run Analysis"), class = "btn-primary")
           )
         )
       })
 
-      output$typeAssignmentTable <- renderUI({
+      output$typeAssignmentTable <- shiny$renderUI({
         shiny$req(input_data())
 
         data <- input_data()$input_data$data
-        type_inputs <- distinct(data, Type, type_snake)
-        make_type_assignment_table(type_inputs, ns)
+        type_inputs <- dplyr$distinct(data, Type, type_snake)
+        make_type_assignment_table$make_type_assignment_table(type_inputs, ns)
       })
 
 
@@ -53,15 +63,15 @@ analysis_a_setup_server <- function(id, input_data) {
         data <- input_data()$input_data$data
 
         treatment_input <-
-          distinct(data, treatment_snake, Treatment) %>%
-          filter(complete.cases(.))
+          dplyr$distinct(data, treatment_snake, Treatment) %>%
+          dplyr$filter(complete.cases(.))
 
 
-        map2(
+        purrr$map2(
           treatment_input$treatment_snake,
           treatment_input$Treatment,
           function(treatmentid, treatment) {
-            selectizeInput(ns(treatmentid), treatment, choices = c(
+            shiny$selectizeInput(ns(treatmentid), treatment, choices = c(
               "Negative Control", "Positive Control", "Vehicle",
               "Treatment", "Other Comparator"
             ))
@@ -76,34 +86,34 @@ analysis_a_setup_server <- function(id, input_data) {
 
         nd <- names(data)
 
-        date_cols <- str_detect(names(data), "[0-9]")
+        date_cols <- stringr$str_detect(names(data), "[0-9]")
         date_cols <- names(data)[date_cols]
         date_cols <- date_cols[order(as.numeric(gsub("[A-z]| ", "", date_cols)))]
 
         sessionMode <- session_data$sessionMode
 
         if (sessionMode == "Exploratory") {
-          selected <- last(date_cols)
-          choices <- last(date_cols)
+          selected <- dplyr$last(date_cols)
+          choices <- dplyr$last(date_cols)
         } else {
           selected <- NULL
           choices <- date_cols
         }
-        div(
-          selectInput(ns("timeSelectionInput"),
-            label = h6("Select the time point for analysis:"),
+        shiny$div(
+          shiny$selectInput(ns("timeSelectionInput"),
+            label = shiny$h6("Select the time point for analysis:"),
             selected = selected,
             choices = choices
           ),
           {
             if (getOption("devmode")) {
-              checkboxInput(
+              shiny$checkboxInput(
                 inputId = ns("changeFromBaseline"),
                 label = "Change from Baseline Analysis",
                 value = FALSE
               )
             } else {
-              prettyCheckbox(
+              shinyWidgets$prettyCheckbox(
                 inputId = ns("changeFromBaseline"),
                 label = "Change from Baseline Analysis",
                 value = FALSE
@@ -113,10 +123,10 @@ analysis_a_setup_server <- function(id, input_data) {
         )
       })
 
-      out <- eventReactive(input$runAnalysis, {
+      out <- shiny$eventReactive(input$runAnalysis, {
         shiny$showNotification("input run analysis pressed")
-        data <- update.list(input_data(), list(selections = reactiveValuesToList(input)))
-        st <- storr_rds("storr")
+        data <- gdata$update.list(input_data(), list(selections = shiny$reactiveValuesToList(input)))
+        st <- storr$storr_rds("storr")
         st$set(unique(data$session_data$uuid), data)
 
         data

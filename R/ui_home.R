@@ -14,7 +14,7 @@ ui_home <- function(id = "home") {
 server_home <- function(id = "home") {
   box::use(shiny)
   box::use(shiny[tags])
-  box::use(./ui_landing)
+  box::use(. / ui_landing)
   box::use(purrr)
   shiny$moduleServer(
     id,

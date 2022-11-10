@@ -3,49 +3,60 @@
 #' @export
 analysis_a_run <- function(id = "analysis_a", user, is_admin) {
   box::use(shiny)
-  ns <- NS(id)
-  tabsetPanel(
+  box::use(./analysis_a_setup)
+  box::use(./testSpinner)
+  box::use(./prism)
+  box::use(./analysis_a_report)
+  box::use(glue)
+  ns <- shiny$NS(id)
+  shiny$tabsetPanel(
     id = ns("test_1_tabs"),
-    tabPanel(
-      h5("Analysis Setup", class = "p-2"),
+    shiny$tabPanel(
+      shiny$h5("Analysis Setup", class = "p-2"),
       value = "Analysis Setup",
-      div(
-        analysis_a_setup(ns("analysis_a_setup")),
+      shiny$div(
+        analysis_a_setup$analysis_a_setup(ns("analysis_a_setup")),
         class = "p-3"
       )
     ),
-    tabPanel(
-      h5("Exploratory Plots", class = "p-2"),
+    shiny$tabPanel(
+      shiny$h5("Exploratory Plots", class = "p-2"),
       value = "Plots",
-      fluidRow(
+      shiny$fluidRow(
         class = "p-2",
-        testSpinner(uiOutput(ns("PlotsPanel"))),
-        testSpinner(uiOutput(ns("Plots")))
-      )
-    ),
-    tabPanel(
-      h5("Analysis Results", class = "p-2"),
-      value = "Analysis Results",
-      fluidRow(
-        class = "p-3",
-        testSpinner(uiOutput(ns("tableSelectors"))),
-        testSpinner(
-          uiOutput(ns("analysisPanel"))
+        shiny$column(
+          12,
+          testSpinner$testSpinner(shiny$uiOutput(ns("PlotsPanel"))),
+          testSpinner$testSpinner(shiny$uiOutput(ns("Plots")))
         )
       )
     ),
-    tabPanel(
-      h5("Custom Plots", class = "p-2"),
-      value = "Prism Plots",
-      fluidRow(
-        class = "p-2",
-        ui_prism(ns("prism"))
+    shiny$tabPanel(
+      shiny$h5("Analysis Results", class = "p-2"),
+      value = "Analysis Results",
+      shiny$fluidRow(
+        class = "p-3",
+        shiny$column(
+          12,
+          testSpinner$testSpinner(shiny$uiOutput(ns("tableSelectors"))),
+          testSpinner$testSpinner(
+            shiny$uiOutput(ns("analysisPanel"))
+          )
+        )
       )
     ),
-    tabPanel(
-      h5("Export", class = "p-2"),
+    shiny$tabPanel(
+      shiny$h5("Custom Plots", class = "p-2"),
+      value = "Prism Plots",
+      shiny$fluidRow(
+        class = "p-2",
+        prism$ui_prism(ns("prism"))
+      )
+    ),
+    shiny$tabPanel(
+      shiny$h5("Export", class = "p-2"),
       value = "Export",
-      div(ui_analysis_a_report(ns("analysis_a_report")), class = "p-3")
+      shiny$div(analysis_a_report$ui_analysis_a_report(ns("analysis_a_report")), class = "p-3")
     )
   )
 }
@@ -56,6 +67,18 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 #' @export
 analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
   box::use(shiny)
+  box::use(readr[read_rds, write_rds])
+  box::use(./connect_table)
+  box::use(shiny.router)
+  box::use(purrr)
+  box::use(dplyr)
+  box::use(stats[complete.cases])
+  box::use(./analysis_a_setup)
+  box::use(stringr)
+  box::use(tibble)
+  box::use(tidyr)
+  box::use(forcats)
+  box::use(tictoc)
   moduleServer(
     id,
     function(input, output, session) {
@@ -70,13 +93,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           write_rds(input_signal, "input_signal.rda")
         }
 
-        change_page("analysisa_run")
+        shiny.router$change_page("analysisa_run")
         input_data <- input_signal$input_data
-        con <- connect_table()
-        session_data <- tbl(con, "sessions") %>%
-          arrange(desc(timestamp)) %>%
-          first() %>%
-          collect()
+        con <- connect_table$connect_table()
+        session_data <- dplyr$tbl(con, "sessions") %>%
+          dplyr$arrange(dplyr@desc(timestamp)) %>%
+          dplyr$first() %>%
+          dplyr$collect()
 
 
         list(
@@ -87,12 +110,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       # observe({input_data()})
 
-      signal <- analysis_a_setup_server("analysis_a_setup", input_data)
+      signal <- analysis_a_setup$analysis_a_setup_server("analysis_a_setup", input_data)
 
 
-      observeEvent(signal(),
+      shiny$observeEvent(signal(),
         {
-          updateTabItems(
+          shiny$updateTabItems(
             session,
             inputId = "test_1_tabs",
             selected = "Plots"
@@ -102,28 +125,27 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       )
 
 
-      output$typeAssignmentTablePlots <- renderUI({
+      output$typeAssignmentTablePlots <- shiny$renderUI({
         shiny$req(signal())
-
+        box::use(./make_type_assignment_table)
         data <- signal()$input_data
-        type_inputs <- distinct(data, Type, type_snake)
-        make_type_assignment_table(type_inputs, ns)
+        type_inputs <- dplyr$distinct(data, Type, type_snake)
+        make_type_assignment_table$make_type_assignment_table(type_inputs, ns)
       })
 
       output$groupAssignmentTablePlots <- renderUI({
         shiny$req(signal())
-
         data <- input_data()$input_data
 
         treatment_input <-
-          distinct(data, treatment_snake, Treatment) %>%
-          filter(complete.cases(.))
+          dplyr$distinct(data, treatment_snake, Treatment) %>%
+          dplyr$filter(complete.cases(.))
 
-        map2(
+        purrr$map2(
           treatment_input$treatment_snake,
           treatment_input$Treatment,
           function(treatmentid, treatment) {
-            selectizeInput(ns(treatmentid), treatment, choices = c(
+           shiny$selectizeInput(ns(treatmentid), treatment, choices = c(
               "Negative Control", "Positive Control", "Vehicle",
               "Treatment", "Other Comparator"
             ))
@@ -135,24 +157,24 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(signal())
 
         if (getOption("devmode")) {
-          session_message <- glue("Your session ID is {signal()$session_data$uuid}")
-          showNotification(session_message, closeButton = TRUE, duration = NULL)
+          session_message <- glue$glue("Your session ID is {signal()$session_data$uuid}")
+          shiny$showNotification(session_message, closeButton = TRUE, duration = NULL)
         }
         sig <- signal()
         id <- sig$selections
         input_data <- sig$input_data$data
         names_input <- names(id)
-        type_inputs <- str_detect(names_input, "type_")
-        treatment_inputs <- str_detect(names_input, "treatment_")
+        type_inputs <- stringr$str_detect(names_input, "type_")
+        treatment_inputs <- stringr$str_detect(names_input, "treatment_")
         type_list <- id[type_inputs]
         treatment_list <- id[treatment_inputs]
-        type_table <- bind_rows(imap(type_list, function(x, y) tibble(TypeNew = x, type_snake = y)))
-        treatment_table <- bind_rows(imap(treatment_list, function(x, y) tibble(TreatmentNew = x, treatment_snake = y)))
-        filtered_1 <- inner_join(input_data, type_table)
-        filtered_1 <- left_join(filtered_1, treatment_table)
+        type_table <- dplyr$bind_rows(imap(type_list, function(x, y) tibble$tibble(TypeNew = x, type_snake = y)))
+        treatment_table <- dplyr$bind_rows(purrr$imap(treatment_list, function(x, y) tibble$tibble(TreatmentNew = x, treatment_snake = y)))
+        filtered_1 <- dplyr$inner_join(input_data, type_table)
+        filtered_1 <- dplyr$left_join(filtered_1, treatment_table)
         filtered_1 <-
           filtered_1 %>%
-          mutate(
+          dplyr$mutate(
             TreatmentNew = ifelse(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
             Treatment = ifelse(TypeNew == "Wild Type", "Wild Type", Treatment)
           )
@@ -160,7 +182,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         filtered_1
       })
 
-      analysis_input_data <- reactive({
+      analysis_input_data <- dplyr$reactive({
         req(analysis_input())
 
         data <- analysis_input()
@@ -168,36 +190,35 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         type_snake_col <- which(colnames(data) == "type_snake")
         data <-
           data %>%
-          mutate(
+          dplyr$mutate(
             trt = TreatmentNew,
-            TreatmentNew = if_else(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
-            basic_model = str_detect(TreatmentNew, "Vehicle|Treatment")
+            TreatmentNew = dplyr$if_else(TypeNew == "Wild Type", "Wild Type", TreatmentNew),
+            basic_model = stringr$str_detect(TreatmentNew, "Vehicle|Treatment")
           )
-        data <- pivot_longer(data,
+        data <- tidyr$pivot_longer(data,
           cols = (base_col + 1):(type_snake_col - 1),
           names_to = "Time", values_to = "Response"
         ) %>%
-          mutate(Time = as_factor(Time))
+          dplyr$mutate(Time = forcats$as_factor(Time))
 
         data
       })
 
       #       # BEGIN BRANCH FOR PLOTS AND TABLES
-      pre_modeling_output <- reactive({
+      pre_modeling_output <- shiny$reactive({
         req(analysis_input_data())
-        
+
         data <- analysis_input_data()
         selections <- signal()$selections
         data <- data %>%
-          mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
-            paste(Treatment, Dose)
+          dplyr$mutate(Treatment = factor(ifelse(is.na(Dose) | Dose == "NA", Treatment,
+            dplyr$paste(Treatment, Dose)
           )))
 
         data <- tryCatch(expr = {
-          
-          tic()
+          tictoc$tic()
           data <- pre_modeling(data, selections$changeFromBaseline)
-          time <- toc()
+          time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
           showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
           # data
@@ -220,9 +241,9 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         req(pre_modeling_output())
 
         endpoint <- signal()$input_data$endpoint
-        tic()
+        tictoc$tic()
         data <- pre_modeling_output()
-        time <- toc()
+        time <- tictoc$toc()
         timeInSeconds <- as.character(round(time$toc - time$tic, 3))
         showNotification(tags$p("pre_modeling_output", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
         ui_selections <- list(
@@ -246,7 +267,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         endpoint <- pre_plot_input()$endpoint
         baseline_selected <- "Baseline" %in% pre_plot_input()$ui_selections$time_sel
 
-        tic()
+        tictoc$tic()
         plots <- vizualization(
           transformed_data = data$transformed_data,
           power = data$box_cox,
@@ -254,7 +275,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           ui_sel = ui_sel
         )
 
-        time <- toc()
+        time <- tictoc$toc()
         timeInSeconds <- as.character(round(time$toc - time$tic, 3))
         showNotification(tags$p("vizualization", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
 
@@ -362,7 +383,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           div(
             class = "d-flex justify-content-around",
             tooltip(
-              selectizeInput(
+             shiny$selectizeInput(
                 inputId = ns("treatmentPlotSelectors"),
                 label = div(
                   class = "d-flex justify-content-between",
@@ -374,7 +395,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               ),
               "Use delete key to remove, mouse click to add."
             ),
-            selectizeInput(
+           shiny$selectizeInput(
               inputId = ns("timePlotSelectors"),
               label = h4("Select Times to be Plotted"),
               selected = timePlotSelectors,
@@ -424,7 +445,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       pre_tables_input <- reactive({
         req(signal())
         req(pre_modeling_output())
-        
+
         input <- signal()$input_data
         data <- pre_modeling_output()
         analysis_type <- signal()$session_data$sessionMode
@@ -445,7 +466,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )
           req(FALSE)
         } else {
-          tic()
+          tictoc$tic()
           if (analysis_type == "Exploratory") {
             final_model <- final_modeling(data, analysis_type = analysis_type, overall_trend = FALSE)
           } else {
@@ -455,7 +476,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
               overall_trend = FALSE # Change this to TRUE to include the overall average
             )
           }
-          time <- toc()
+          time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
           showNotification(tags$p("final_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
 
@@ -512,7 +533,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             div(
               class = "d-flex justify-content-around",
               tooltip(
-                selectizeInput(
+               shiny$selectizeInput(
                   inputId = ns("timeTreatmentSelectorsTable"),
                   label = h4("Select Times (up to 5) to be Displayed"),
                   selected = toi,
@@ -673,3 +694,4 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
     }
   )
 }
+ 

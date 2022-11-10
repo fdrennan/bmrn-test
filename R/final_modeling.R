@@ -13,12 +13,10 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   )
 
   if (analysis_type == "Exploratory") {
-    
     output_tables <- future_map(
       .progress = TRUE, .options = furrr_options(seed = TRUE),
       .x = setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = function(x) {
-        
         print("futuremap start")
         x <- unname(x)
         contrast_list <- generate_contrasts(
