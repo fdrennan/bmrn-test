@@ -30,7 +30,7 @@ final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE
     # It might make for sense to do it later, if we are able to use the scientific
     # notation in excel
 
-    results <- inner_join(adj_ht, adj_ci) %>%
+    results <- dplyr$inner_join(adj_ht, adj_ci) %>%
       dplyr$mutate(
         estimate = round(estimate, 2),
         SE = round(SE, 3),

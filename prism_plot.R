@@ -15,21 +15,21 @@ data <- read.csv("plot_ready_data.csv") %>%
   dplyr$filter(Time == "Day 1") %>%
   dplyr$group_by(Treatment) %>%
   dplyr$mutate(outlier = is.outlier(Response_Transformed)) %>%
-  ungroup()
+  dplyr$ungroup()
 
 # Load in p-values
 load("trans_table.RData")
 
-p_vals <- bind_rows(tab1, tab2, tab3) %>%
+p_vals <- dplyr$bind_rows(tab1, tab2, tab3) %>%
   select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
   tidyr$pivot_longer(cols = 3:ncol(.), names_to = "group2", values_to = "p value") %>%
-  dplyr::rename(group1 = Treatment) %>%
+  dplyr$rename(group1 = Treatment) %>%
   dplyr$filter(complete.cases(.)) %>%
   dplyr$mutate(
     group2 = gsub("p value from ", "", group2),
-    `p value` = if_else(`p value` == "< 0.0001", "0.00001", `p value`),
+    `p value` = dplyr$if_else(`p value` == "< 0.0001", "0.00001", `p value`),
     `p value` = as.numeric(`p value`),
-    sig = case_when(
+    sig = dplyr$case_when(
       `p value` > 0.05 ~ "ns",
       `p value` <= 0.05 & `p value` > 0.01 ~ "*",
       `p value` <= 0.01 & `p value` > 0.001 ~ "**",
@@ -38,7 +38,7 @@ p_vals <- bind_rows(tab1, tab2, tab3) %>%
     )
   ) %>%
   dplyr$filter(`p value` < 0.05) %>%
-  dplyr$mutate(group2 = case_when(
+  dplyr$mutate(group2 = dplyr$case_when(
     group2 == "Dose 3" ~ "e13 300",
     group2 == "Dose 2" ~ "e13 200",
     group2 == "Vehicle" ~ "e13 empty-NP",

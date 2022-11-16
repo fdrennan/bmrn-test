@@ -43,9 +43,9 @@ table_1 <- function(final_contrast, os_together, toi) {
 
   for (i in grep("Difference", colnames(table_1), value = TRUE)) {
     table_1 <- table_1 %>%
-      rename("contrast" = i) %>%
+      dplyr$rename("contrast" = i) %>%
       dplyr$mutate(contrast) %>%
-      left_join(tmp) %>%
+      dplyr$left_join(tmp) %>%
       dplyr$select(-contrast)
 
     colnames(table_1)[(ncol(table_1) - 1):ncol(table_1)] <- c(i, paste0(
@@ -54,12 +54,12 @@ table_1 <- function(final_contrast, os_together, toi) {
     ))
   }
 
-  tab1 <- inner_join(os_together, table_1) %>%
+  tab1 <- dplyr$inner_join(os_together, table_1) %>%
     dplyr$mutate(Endpoint = ifelse(grepl("Average", Endpoint),
       "Average Over All Times",
       toi
     )) %>%
-    rename("Time Points" = Endpoint)
+    dplyr$rename("Time Points" = Endpoint)
 
   tab1[is.na(tab1)] <- ""
   return(tab1)
@@ -95,7 +95,7 @@ table_2 <- function(final_contrast, os_together, toi) {
         dplyr$filter(grepl("Dose", TreatmentNew)) %>%
         dplyr$mutate(
           X = as.numeric(gsub("[A-z]| ", "", TreatmentNew)),
-          contrast_dose = case_when(
+          contrast_dose = dplyr$case_when(
             X < num & Endpoint == "Average" ~
               paste0("G", X, num),
             X < num & Endpoint == "Specific Time" ~
@@ -110,7 +110,7 @@ table_2 <- function(final_contrast, os_together, toi) {
         dplyr$filter(grepl("Dose", TreatmentNew)) %>%
         dplyr$mutate(
           X = as.numeric(gsub("[A-z]| ", "", TreatmentNew)),
-          contrast_dose = case_when(
+          contrast_dose = dplyr$case_when(
             X < num & Endpoint == "Specific Time" ~
               paste0("G", X, num)
           )
@@ -129,8 +129,8 @@ table_2 <- function(final_contrast, os_together, toi) {
 
   for (i in grep("Difference", colnames(table_2), value = TRUE)) {
     table_2 <- table_2 %>%
-      rename("contrast" = i) %>%
-      left_join(summary_stat) %>%
+      dplyr$rename("contrast" = i) %>%
+      dplyr$left_join(summary_stat) %>%
       dplyr$select(-contrast)
 
     colnames(table_2)[(ncol(table_2) - 1):ncol(table_2)] <- c(i, paste0(
@@ -139,12 +139,12 @@ table_2 <- function(final_contrast, os_together, toi) {
     ))
   }
 
-  tab2 <- inner_join(os_together, table_2) %>%
+  tab2 <- dplyr$inner_join(os_together, table_2) %>%
     dplyr$mutate(Endpoint = ifelse(grepl("Average", Endpoint),
       "Average Over Time",
       toi
     )) %>%
-    rename("Time Points" = Endpoint)
+    dplyr$rename("Time Points" = Endpoint)
   tab2[is.na(tab2)] <- ""
 
   return(tab2)
@@ -198,8 +198,8 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
 
   for (i in grep("Difference", colnames(os_table_3), value = TRUE)) {
     os_table_3 <- os_table_3 %>%
-      rename("contrast" = i) %>%
-      left_join(tmp) %>%
+      dplyr$rename("contrast" = i) %>%
+      dplyr$left_join(tmp) %>%
       dplyr$select(-contrast)
 
     colnames(os_table_3)[(ncol(os_table_3) - 1):ncol(os_table_3)] <- c(i, paste0(
@@ -210,12 +210,12 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
 
 
   if (include_summ_stat) {
-    tab3 <- inner_join(os_together, os_table_3) %>%
+    tab3 <- dplyr$inner_join(os_together, os_table_3) %>%
       dplyr$mutate(Endpoint = ifelse(grepl("Average", Endpoint),
         "Average Over Time",
         toi
       )) %>%
-      rename("Time Points" = Endpoint) %>%
+      dplyr$rename("Time Points" = Endpoint) %>%
       dplyr$select(-Dose)
     tab3[is.na(tab3)] <- ""
   } else {
@@ -225,7 +225,7 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
         "Average Over Time",
         toi
       )) %>%
-      rename("Time Points" = Endpoint)
+      dplyr$rename("Time Points" = Endpoint)
     tab3[is.na(tab3)] <- ""
   }
   return(tab3)

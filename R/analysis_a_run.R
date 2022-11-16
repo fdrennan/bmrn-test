@@ -88,6 +88,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
     box::use(. / final_output)
     box::use(. / prism)
     box::use(openxlsx)
+    box::use(. / visualization_files)
   }
   shiny$moduleServer(
     id,
@@ -227,11 +228,11 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         data <- tryCatch(expr = {
           tictoc$tic()
-          data <- pre_modeling(data, selections$changeFromBaseline)
+          
+          data <- visualization_files$pre_modeling(data, selections$changeFromBaseline)
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
           shiny$showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
-          # data
           data
         }, error = function(err) {
           err <- as.character(err)
@@ -249,7 +250,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         shiny$req(input$timePlotSelectors)
         shiny$req(signal())
         shiny$req(pre_modeling_output())
-
+        
         endpoint <- signal()$input_data$endpoint
         tictoc$tic()
         data <- pre_modeling_output()
@@ -476,7 +477,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         analysis_type <- signal()$session_data$sessionMode
         print_tables <- ifelse(all(!data$error), TRUE, FALSE)
         if (!print_tables) {
-          message <- if_else(data$error$error_trans == TRUE,
+          message <- dplyr$if_else(data$error$error_trans == TRUE,
             "Consult Statistician: Transformation did not
                        lead to normally distributed residuals",
             "Consult Statistician: Variance within basic model (Vehicle and Treatment
@@ -520,7 +521,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           )
 
           tables$tab0 <- dplyr$bind_rows(tables$tab1, tables$tab2) %>%
-            dplyr::select(Treatment, `Time Points`, grep("Original", colnames(.)))
+            dplyr$select(Treatment, `Time Points`, grep("Original", colnames(.)))
           if (analysis_type == "Exploratory") {
             tables$tab0 <- tables$tab0 %>%
               dplyr$mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%

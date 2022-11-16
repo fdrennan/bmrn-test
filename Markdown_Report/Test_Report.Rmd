@@ -237,7 +237,7 @@ word_tables(tab2, include_summ_stat = T)
 ## Table 3
 ```{r, echo = FALSE}
 tab3 <- read.csv("~/Test_Report/tab3.csv", check.names = F) %>%
-  dplyr::select(-1) %>%
+  dplyr$select(-1) %>%
   dplyr$mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
     `Times Included`
   ))

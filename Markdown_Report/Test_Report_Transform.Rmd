@@ -216,8 +216,8 @@ plots[[4]] +
 ```{r, echo = F, error=F, warning=FALSE}
 load("C:/Users/Christopher.Wilson/Desktop/Test_Report/trans_table.RData")
 
-tab0 <- bind_rows(tab1, tab2) %>%
-  dplyr::select(
+tab0 <- dplyr$bind_rows(tab1, tab2) %>%
+  dplyr$select(
     Treatment, `Times Included`,
     grep("Original Scale", colnames(.), value = TRUE)
   )
@@ -256,7 +256,7 @@ word_tables(data = tab2, include_summ_stat = T, transform = T, summary_only = F)
 ## Table 3
 ```{r, echo = FALSE, error=F, warning=FALSE}
 # tab3 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab3.csv', check.names = F) %>%
-#   dplyr::select(-1) %>%
+#   dplyr$select(-1) %>%
 #  dplyr$mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
 #

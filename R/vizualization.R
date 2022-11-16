@@ -87,10 +87,10 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
     levels(transformed_data$TreatmentNew)
   )
 
-  orig_groups <- transformed_data %>% distinct(Treatment, TreatmentNew)
+  orig_groups <- transformed_data %>% dplyr$distinct(Treatment, TreatmentNew)
   orig_groups <- orig_groups[order_groups, ] %>%
-   dplyr$mutate(Treatment = as.character(Treatment)) %>%
-   dplyr$select(Treatment) %>%
+    dplyr$mutate(Treatment = as.character(Treatment)) %>%
+    dplyr$select(Treatment) %>%
     unlist()
   colors <- c(
     ggprism_data$colour_palettes[[palette]],
@@ -99,7 +99,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   linetype <- (1:length(orig_groups) %% 6) + 1
 
   # colors = viridis(length(orig_groups))
-  transformed_data <-dplyr$filter(transformed_data, Treatment %in% ui_sel$trt_sel)
+  transformed_data <- dplyr$filter(transformed_data, Treatment %in% ui_sel$trt_sel)
 
   # keep levels of transformed data time, when input updates
   input_time <- ui_sel$time_sel
@@ -107,7 +107,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
 
   input_time <- original_time[original_time %in% input_time]
 
-  transformed_data <-dplyr$filter(transformed_data, Time %in% input_time)
+  transformed_data <- dplyr$filter(transformed_data, Time %in% input_time)
 
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
@@ -121,8 +121,8 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
 
   if ((ui_sel$y_axis == "transform" & power == 1) | ui_sel$y_axis == "no_transform") {
     transformed_data <- transformed_data %>%
-     dplyr$select(-c(Response_Transformed, Baseline_Transformed)) %>%
-      rename(
+      dplyr$select(-c(Response_Transformed, Baseline_Transformed)) %>%
+      dplyr$rename(
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
@@ -139,7 +139,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   if (ui_sel$y_axis != "change_from_baseline" && any(ui_sel$time_sel %in% "Baseline")) {
     times <- setdiff(input_time, "Baseline")
     transformed_data <- transformed_data %>%
-     dplyr$mutate(
+      dplyr$mutate(
         Baseline_Transformed = as.numeric(Baseline_Transformed),
         Response_Transformed = as.numeric(Response_Transformed)
       ) %>%
@@ -148,28 +148,28 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
         cols = c("Baseline_Transformed", times), values_to = "Response_Transformed",
         names_to = "Time"
       ) %>%
-     dplyr$mutate(
+      dplyr$mutate(
         Time = as.character(Time),
-        Time = if_else(Time == "Baseline_Transformed", "Baseline", Time),
+        Time = dplyr$if_else(Time == "Baseline_Transformed", "Baseline", Time),
         Time = factor(Time, levels = c("Baseline", times))
       ) %>%
-     dplyr$filter(
+      dplyr$filter(
         !is.na(Response_Transformed)
       ) %>%
       dplyr$group_by(SubjectID, Treatment, TreatmentNew, Time) %>%
-      dplyr$summarize((Response_Transformed = mean(Response_Transformed)) %>%
-      ungroup()
+      dplyr$summarize(Response_Transformed = mean(Response_Transformed)) %>%
+      dplyr$ungroup()
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power == 1) {
     transformed_data <- transformed_data %>%
-     dplyr$mutate(Response_Transformed = Response_Transformed_bc)
+      dplyr$mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste("Change from Baseline\n", endpoint)
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power != 1) {
     transformed_data <- transformed_data %>%
-     dplyr$mutate(Response_Transformed = Response_Transformed_bc)
+      dplyr$mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste(
       "Change from Baseline\n", transform_table$transform_name[power == transform_table$power],
       endpoint
@@ -179,14 +179,14 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   transformed_data$Treatment <- factor(transformed_data$Treatment, levels = orig_groups)
   transformed_data_sum <- transformed_data %>%
     dplyr$group_by(Treatment, TreatmentNew, Time) %>%
-    dplyr$summarize((
+    dplyr$summarize(
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
     ) %>%
-   dplyr$mutate(
-      error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
-      ymin = if_else(Mean_Response < 0, error, Mean_Response),
-      ymax = if_else(Mean_Response < 0, Mean_Response, error)
+    dplyr$mutate(
+      error = dplyr$if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
+      ymin = dplyr$if_else(Mean_Response < 0, error, Mean_Response),
+      ymax = dplyr$if_else(Mean_Response < 0, Mean_Response, error)
     )
 
 

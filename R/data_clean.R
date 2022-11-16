@@ -18,7 +18,8 @@ data_clean <- function(analysis_data) {
     ),
     TreatmentNew = factor(TreatmentNew)
   )
-  analysis_data <- dplyr$select(-order)
+  # 
+  analysis_data <- dplyr$select(analysis_data, -order)
 
   return(analysis_data)
 }

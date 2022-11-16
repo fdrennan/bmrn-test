@@ -2,16 +2,16 @@ library(test)
 
 norm_check <- function(data) {
   data_long <- data %>%
-   dplyr$filter(basic_model) %>%
+    dplyr$filter(basic_model) %>%
     tidyr$pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
 
-  model <- lm(Response ~ `Treatment Group Name` * Time, data = data_long)
-  shapiro.test(residuals(model))$p.value
+  model <- stats$lm(Response ~ `Treatment Group Name` * Time, data = data_long)
+  stats$shapiro.test(residuals(model))$p.value
 }
 
 boxcox <- function(data) {
   data_long <- data %>%
-   dplyr$filter(basic_model) %>%
+    dplyr$filter(basic_model) %>%
     tidyr$pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
 
   min_obs <- min(data_long$Response)
@@ -19,7 +19,7 @@ boxcox <- function(data) {
 
   if (min_obs < 0) {
     data_long_bc <- data_long_bc %>%
-     dplyr$mutate(Response = Response - 1.1 * min_obs)
+      dplyr$mutate(Response = Response - 1.1 * min_obs)
   }
 
   bc <- MASS::boxcox(Response ~ `Treatment Group Name` * Time,
@@ -34,24 +34,24 @@ boxcox <- function(data) {
 lrt <- function(data, basic_model) {
   if (basic_model) {
     data <- data %>%
-     dplyr$filter(basic_model) %>%
-     dplyr$mutate(`Treatment Group Name` = ifelse(`Treatment Group Name` == "Treatment", paste("Treatment", Dose),
+      dplyr$filter(basic_model) %>%
+      dplyr$mutate(`Treatment Group Name` = ifelse(`Treatment Group Name` == "Treatment", paste("Treatment", Dose),
         `Treatment Group Name`
       ))
   } else {
     data <- data %>%
-     dplyr$mutate(`Treatment Group Name` = ifelse(basic_model, "basic_model", `Treatment Group Name`))
+      dplyr$mutate(`Treatment Group Name` = ifelse(basic_model, "basic_model", `Treatment Group Name`))
   }
 
-  full_model <- gls(
+  full_model <- nlme$gls(
     model = Response ~ Treatment * Time,
-    data = data %>% rename("Treatment" = `Treatment Group Name`),
-    weights = varIdent(form = ~ 1 | Treatment)
+    data = data %>% dplyr$rename("Treatment" = `Treatment Group Name`),
+    weights = nlme$varIdent(form = ~ 1 | Treatment)
   )
 
-  reduced <- gls(
+  reduced <- nlme$gls(
     model = Response ~ Treatment * Time,
-    data = data %>% rename("Treatment" = `Treatment Group Name`)
+    data = data %>% dplyr$rename("Treatment" = `Treatment Group Name`)
   )
 
   anova(full_model, reduced)["reduced", "p-value"] < 0.05
@@ -59,12 +59,12 @@ lrt <- function(data, basic_model) {
 
 checks <- function(data, group_specs, cfb) {
   data_merged <- data %>%
-    inner_join(
+    dplyr$inner_join(
       group_specs %>%
-       dplyr$mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
+        dplyr$mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
       by = c("Treatment" = "Treatment Group Name"), .
     ) %>%
-    rename("Treatment Group Name" = "Treatment")
+    dplyr$rename("Treatment Group Name" = "Treatment")
 
 
   # Normality check
@@ -82,7 +82,7 @@ checks <- function(data, group_specs, cfb) {
   # variance check
   if (cfb) {
     data_merged <- data_merged %>%
-      mutate_at(
+      dplyr$mutate_at(
         .vars = grep("Time", colnames(.), value = TRUE),
         ~ . - Baseline
       )
@@ -93,20 +93,20 @@ checks <- function(data, group_specs, cfb) {
 
   var_check <- data_long %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
-    dplyr$summarize((Response = mean(Response)) %>%
+    dplyr$summarize(Response = mean(Response)) %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose, Time) %>%
-    dplyr$summarize((var = var(Response)) %>%
+    dplyr$summarize(var = var(Response)) %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose) %>%
-    dplyr$summarize((var = mean(var))
+    dplyr$summarize(var = mean(var))
 
   var_check_basic <- data_long %>%
-   dplyr$filter(basic_model) %>%
+    dplyr$filter(basic_model) %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
-    dplyr$summarize((Response = mean(Response)) %>%
+    dplyr$summarize(Response = mean(Response)) %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose, Time) %>%
-    dplyr$summarize((var = var(Response)) %>%
+    dplyr$summarize(var = var(Response)) %>%
     dplyr$group_by(Type, `Treatment Group Name`, Dose) %>%
-    dplyr$summarize((var = mean(var))
+    dplyr$summarize(var = mean(var))
 
   lrt_basic <- lrt(data_long, basic_model = T)
   lrt_controls <- lrt(data_long, basic_model = F)
@@ -293,24 +293,24 @@ bc_var <- data %>%
     cols = grep(pattern = "Time", x = colnames(.), value = TRUE),
     names_to = "Time", values_to = "Response"
   ) %>%
- dplyr$mutate(
+  dplyr$mutate(
     Response = Response - Baseline,
     basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
       T, F
     )
   ) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
-  dplyr$summarize((Response = mean(Response)) %>%
+  dplyr$summarize(Response = mean(Response)) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
-  dplyr$summarize((var = var(Response)) %>%
+  dplyr$summarize(var = var(Response)) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
-  dplyr$summarize((mean_var = mean(var))
+  dplyr$summarize(mean_var = mean(var))
 
 bc_var
 bc_var %>%
- dplyr$filter(basic_model) %>%
-  ungroup() %>%
-  dplyr$summarize((mean(mean_var))
+  dplyr$filter(basic_model) %>%
+  dplyr$ungroup() %>%
+  dplyr$summarize(mean(mean_var))
 
 
 no_bc_var <- data %>%
@@ -318,21 +318,21 @@ no_bc_var <- data %>%
     cols = grep(pattern = "Time", x = colnames(.), value = TRUE),
     names_to = "Time", values_to = "Response"
   ) %>%
- dplyr$mutate(basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
+  dplyr$mutate(basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
     T, F
   )) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
-  dplyr$summarize((Response = mean(Response)) %>%
+  dplyr$summarize(Response = mean(Response)) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
-  dplyr$summarize((var = var(Response)) %>%
+  dplyr$summarize(var = var(Response)) %>%
   dplyr$group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
-  dplyr$summarize((mean_var = mean(var))
+  dplyr$summarize(mean_var = mean(var))
 
 no_bc_var
 no_bc_var %>%
- dplyr$filter(basic_model) %>%
-  ungroup() %>%
-  dplyr$summarize((mean(mean_var))
+  dplyr$filter(basic_model) %>%
+  dplyr$ungroup() %>%
+  dplyr$summarize(mean(mean_var))
 
 
 data %>% write.csv("../Test_Report/tmp.csv")

@@ -59,7 +59,7 @@ trans_name <- transform_table() %>%
 
 transform <- data$tables$power != 1
 
-groups_diff <- distinct(data$pre_modeling_input$transformed_data, Treatment, diff_group) %>%
+groups_diff <- dplyr$distinct(data$pre_modeling_input$transformed_data, Treatment, diff_group) %>%
   dplyr$filter(diff_group != "Pooled") %>%
   dplyr$select(Treatment) %>%
   unlist() %>%
@@ -116,13 +116,13 @@ if (scale == "change_from_baseline") {
 
 ```{r test-session-summary, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
 session_info <- data$input_data$session_data %>%
-  dplyr::select(-description) %>%
+  dplyr$select(-description) %>%
   t() %>%
   data.frame(col2 = .) %>%
   tibble::rownames_to_column("col1") %>%
   dplyr$mutate(
     col1 = gsub("_", " ", col1),
-    col1 = case_when(
+    col1 = dplyr$case_when(
       col1 == "statistician" ~ "Contact Statistician",
       col1 == "name" ~ "Researcher",
       col1 == "sessionMode" ~ "Objective Type",
@@ -279,8 +279,8 @@ if (transform == "TRUE") {
 
 correlation_result <- paste(if_else(substr(data$pre_modeling_input$best_model, 1, 1) == "A", "An", "A"), data$pre_modeling_input$best_model, "lead to a model with the lowest AIC and thus was selected to model the correlation over time.")
 
-variance_result <- if_else(length(groups_diff) == 0, paste("All groups have similar variance, thus a common variance component is estimated for all groups"),
-  paste(paste(groups_diff, collapse = ""), "had a different variance from the basic model, thus the variance", if_else(length(groups_diff) > 1, "components", "component"), "of", paste(groups_diff, collapse = ""), "were estimated separately.")
+variance_result <- dplyr$if_else(length(groups_diff) == 0, paste("All groups have similar variance, thus a common variance component is estimated for all groups"),
+  paste(paste(groups_diff, collapse = ""), "had a different variance from the basic model, thus the variance", dplyr$if_else(length(groups_diff) > 1, "components", "component"), "of", paste(groups_diff, collapse = ""), "were estimated separately.")
 )
 ```
 
@@ -515,12 +515,12 @@ knitr::include_graphics(pngfile)
 ```{r , echo=FALSE, error=F, warning=FALSE}
 transform <- data$tables$power != 1
 show_text <- transform
-footer <- if_else(!show_text,
+footer <- dplyr$if_else(!show_text,
   "No transformation was applied to the data. Difference and CI are estimated using model based LSmean",
   paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
 )
 
-endpoint <- if_else(!show_text,
+endpoint <- dplyr$if_else(!show_text,
   data$plot$endpoint,
   paste(substr(x = trans_name, start = 3, stop = nchar(trans_name)), data$plot$endpoint)
 )

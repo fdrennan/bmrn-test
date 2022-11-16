@@ -14,8 +14,8 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
 
   if (!transformation | power == 1) {
     transformed_data <- transformed_data %>%
-     dplyr$select(-c(Response_Transformed, Baseline_Transformed)) %>%
-      rename(
+      dplyr$select(-c(Response_Transformed, Baseline_Transformed)) %>%
+      dplyr$rename(
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
@@ -29,7 +29,7 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
 
   transformed_data_sum <- transformed_data %>%
     dplyr$group_by(Treatment, Time) %>%
-    dplyr$summarize((
+    dplyr$summarize(
       Mean_Response = mean(Response_Transformed_bc),
       sd_Response = sd(Response_Transformed_bc)
     )

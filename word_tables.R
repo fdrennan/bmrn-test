@@ -5,22 +5,22 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
                         footer_i = 1, footer_j = 1, footer = "footer", endpoint) {
   data <- data %>%
     dplyr$mutate(`Time Points` = gsub("Average.*", "Overall Average", `Time Points`)) %>%
-    mutate_at(
+    dplyr$mutate_at(
       .vars = grep("p value", colnames(.), value = TRUE),
       .funs = ~ as.numeric(ifelse(. == "< 0.001", "0.001", .))
     ) %>%
-    mutate_at(
+    dplyr$mutate_at(
       .vars = grep("p value", colnames(.), value = TRUE),
       .funs = ~ ifelse(. < 0.05, paste0(., "*"), .)
     ) %>%
-    mutate_at(
+    dplyr$mutate_at(
       .vars = grep("p value", colnames(.), value = TRUE),
       .funs = ~ ifelse(. == "0.001*", "< 0.001*", .)
     )
 
   if (summary_only) {
     data <- data %>%
-      dplyr::select(
+      dplyr$select(
         Treatment, `Time Points`,
         grep("Original", colnames(.), value = T)
       )

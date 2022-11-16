@@ -71,8 +71,8 @@ generate_data <- function(group_specs, num_times, num_tech_reps,
       }
     )
   }) %>%
-    bind_rows() %>%
-    rename(
+    dplyr$bind_rows() %>%
+    dplyr$rename(
       `Technical Replicate ID` = "Technical",
       `Treatment Group Name` = "Treatment"
     ) %>%

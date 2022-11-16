@@ -4,7 +4,7 @@
 contrast_padjust <- function(model, contrast_list, data, variable, analysis_type = "Confirmatory",
                              overall_trend = FALSE) {
   analysis_type <- ifelse(overall_trend, "Confirmatory", "Exploratory")
-  data <- data %>% rename(tmp = variable)
+  data <- data %>% dplyr$rename(tmp = variable)
   est <- emmeans(
     object = model, ~ TreatmentNew * Time,
     adjust = "none", data = data,
@@ -64,7 +64,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
               t() %>%
               data.frame() %>%
               dplyr$arrange(X1, X2) %>%
-              dplyr$mutate(final = case_when(
+              dplyr$mutate(final = dplyr$case_when(
                 row_number() %% 2 == 1 ~ paste0("G", X1, X2),
                 row_number() %% 2 == 0 ~ paste0("G", X1, X2, "_st")
               )) %>%

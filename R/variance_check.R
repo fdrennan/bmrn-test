@@ -1,15 +1,17 @@
-# This function checks that variance of the groups in the basic model is similar
-# This corresponds to box fifth in the flow chart
+#' @export
 variance_check <- function(transformed_data, variable) {
+  box::use(dplyr)
+  box::use(stats)
+  box::use(nlme)
   # First find the variance for each TreatmentNew and week combination,
   # then take the average of these variances to estimate the variance
   # for each group
   tmp <- transformed_data
   variances <- transformed_data %>%
     dplyr$group_by(TreatmentNew, basic_model, Time) %>%
-    dplyr$summarize((var = var(get(variable))) %>%
+    dplyr$summarize(var = var(get(variable))) %>%
     dplyr$group_by(TreatmentNew, basic_model) %>%
-    dplyr$summarize((mean_var = mean(var))
+    dplyr$summarize(mean_var = mean(var))
 
   # We really want to make sure that the variance for the groups in the basic model
   # is similar. So we compare their variances to the mean (pooled) variance of these
@@ -20,25 +22,24 @@ variance_check <- function(transformed_data, variable) {
   # Log liklihood test, comparing a model with a one overall variance for the basic
   # model (reduced model) and a model estimating the variances separately (full model)
 
-  full_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")), ,
+  full_model <- nlme$gls(
+    model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data,
-    weights = varIdent(form = ~ 1 | basic_model)
+    weights = nlme$varIdent(form = ~ 1 | basic_model)
   )
 
-  restricted_model <- gls(
-    model = as.formula(paste(variable, "~ TreatmentNew * Time")), ,
+  restricted_model <- nlme$gls(
+    model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data
   )
 
-  pooled_var <- variances %>%
-   dplyr$filter(basic_model) %>%
-    ungroup() %>%
-    dplyr$summarize((pooled = mean(mean_var))
+  pooled_var <- dplyr$filter(variances, basic_model)
+  pooled_var <- dplyr$ungroup(pooled_var)
+  pooled_var <- dplyr$summarize(pooled_var, pooled = mean(mean_var))
 
   loglik_diff <- -2 * (restricted_model$logLik - full_model$logLik)
   df_diff <- attributes(loglik_diff)
-  p_value <- 1 - pchisq(as.numeric(loglik_diff), df_diff$df)
+  p_value <- 1 - stats$pchisq(as.numeric(loglik_diff), df_diff$df)
 
   if (p_value < 0.05) {
     # If the weighted model (full model) has a significantly better fit then the
@@ -48,13 +49,13 @@ variance_check <- function(transformed_data, variable) {
     # to a increase of at 2 in the ratio. In other words, a log2 fold of -3 change means
     # that the pooled variance is 8 times the group variance
     variances <- variances %>%
-     dplyr$mutate(
+      dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 2),
-        diff_group = if_else(abs(fold_change) > 1, as.character(TreatmentNew), "Pooled")
+        diff_group = dplyr$if_else(abs(fold_change) > 1, as.character(TreatmentNew), "Pooled")
       ) %>%
-      ungroup() %>%
-     dplyr$select(-basic_model)
+      dplyr$ungroup() %>%
+      dplyr$select(-basic_model)
   } else {
     # If the weighted model (full model) has a not significantly better fit then the
     # model without weights (reduced model), then there is no benefit of estimating
@@ -63,17 +64,16 @@ variance_check <- function(transformed_data, variable) {
     # to a increase of at 3 in the ratio. In other words, a log3 fold of -3 change means
     # that the pooled variance is 27 times the group variance
     variances <- variances %>%
-     dplyr$mutate(
+      dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 3),
-        diff_group = if_else(abs(fold_change) <= 1, "Pooled", as.character(TreatmentNew))
+        diff_group = dplyr$if_else(abs(fold_change) <= 1, "Pooled", as.character(TreatmentNew))
       ) %>%
-      ungroup() %>%
-     dplyr$select(-basic_model)
+      dplyr$ungroup() %>%
+      dplyr$select(-basic_model)
   }
 
-  transformed_data <- transformed_data %>%
-    left_join(variances)
+  transformed_data <- dplyr$left_join(transformed_data, variances)
 
 
 

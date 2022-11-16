@@ -20,8 +20,8 @@ final_data <- final_modeling(transformed_data, toi = 'Time5', analysis_type = 'c
 
 model1<-gls(Response_Transformed_bc~Time*TreatmentNew,
             data=transformed_data$transformed_data,
-            correlation = corAR1(form=~1|SubjectID),
-            weights = varIdent(form = ~1|Treatment))
+            correlation = nlme$corAR1(form=~1|SubjectID),
+            weights = nlme$varIdent(form = ~1|Treatment))
 
 summary(model1)
 
@@ -112,7 +112,7 @@ final_data <- final_modeling(transformed_data, toi = 'Day 6', analysis_type = 'c
 
 model1<-gls(Response_Transformed~Time*TreatmentNew,
             data=transformed_data$transformed_data,
-            correlation = corAR1(form=~1|SubjectID))
+            correlation = nlme$corAR1(form=~1|SubjectID))
 
 summary(model1)
 

@@ -39,8 +39,8 @@ pre_modeling <- function(input_data, baseline) {
     variance_check$variance_check(
       transformed_data = transformed_data$data,
       variable = ready_final_model$variable
-    ) %>%
-    dplyr$arrange(TreatmentNew, SubjectID, Time)
+    )
+  transformed_data_vc <- dplyr$arrange(transformed_data_vc, TreatmentNew, SubjectID, Time)
 
   ready_final_model$transformed_data <- transformed_data_vc
 
@@ -63,23 +63,3 @@ pre_modeling <- function(input_data, baseline) {
   return(ready_final_model)
 }
 #'
-#' #' quickplot
-#' #' @export
-#' quickplot <- function(ready_final_model) {
-#'   transformed_data <- ready_final_model$transformed_data
-#'   if (all(is.na(transformed_data$Baseline))) {
-#'     var <- "Response_Transformed"
-#'     plots <- vizualization(
-#'       transformed_data = transformed_data,
-#'       power = power
-#'     )
-#'   } else {
-#'     var <- "Response_Transformed_bc"
-#'     transformed_data <- transformed_data %>%
-#'       dplyr$mutate(Response_Transformed_bc = Response_Transformed - Baseline)
-#'     plots <- vizualization_cb(
-#'       transformed_data = transformed_data,
-#'       power = power
-#'     )
-#'   }
-#' }
