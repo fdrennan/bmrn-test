@@ -14,6 +14,7 @@ transformation_check <- function(analysis_data) {
     box::use(tidyr)
     box::use(stats)
     box::use(MASS)
+    box::use(utils)
   }
   
   
@@ -74,11 +75,11 @@ transformation_check <- function(analysis_data) {
     bc_loglik <- data.frame(lambda = bc$x, log_lik = bc$y)
     bc_loglik <- dplyr$filter(bc_loglik, lambda %in% c(-1, -1 / 2, 0, 1 / 2, 1, 2))
     bc_loglik <- dplyr$arrange(bc_loglik, log_lik)
+    bc_loglik <- utils$tail(bc_loglik, 1)
 
     power <- bc_loglik$lambda
     message(paste("A power of", power, "was used to transform the data"))
 
-    browser()
     if (power == 0) {
       analysis_data <-
         dplyr$mutate(analysis_data,
@@ -133,7 +134,7 @@ transformation_check <- function(analysis_data) {
     analysis_data <- dplyr$group_by(analysis_data, SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model)
     analysis_data <- dplyr$summarise(analysis_data, dplyr$across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean))
     analysis_data <- dplyr$ungroup(analysis_data)
-    analysis_data <- dplyr$mutate(Response_Transformed_bc = Response_Transformed - Baseline_Transformed)
+    analysis_data <- dplyr$mutate(analysis_data, Response_Transformed_bc = Response_Transformed - Baseline_Transformed)
   } else {
     analysis_data <- dplyr$select(analysis_data, -`Technical Replicate ID`)
     analysis_data <- dplyr$group_by(analysis_data, Type, Treatment, SubjectID, Dose, TypeNew, TreatmentNew, basic_model, Time)

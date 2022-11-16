@@ -1,3 +1,0 @@
-Variances are the same for all groups.
-Confirm that change from base line is analyzed
-Study means and p-values (No transformation is needed here so it should be easy to come up with mean differences and expected p-values)

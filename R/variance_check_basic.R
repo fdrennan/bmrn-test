@@ -1,7 +1,10 @@
 #' @export
 variance_test_basic <- function(transformed_data, variable) {
-  box::use(dplyr)
-  box::use(nlme)
+  {
+    box::use(dplyr)
+    box::use(nlme)
+    box::use(stats)
+  }
   error_bm_var <- FALSE
 
   orig_data <- transformed_data
@@ -10,7 +13,7 @@ variance_test_basic <- function(transformed_data, variable) {
   # for each group
   variances <- dplyr$filter(transformed_data, basic_model)
   variances <- dplyr$group_by(variances, TreatmentNew, Time)
-  variances <- dplyr$summarize(variances, var = var(get(variable)))
+  variances <- dplyr$summarize(variances, var = stats$var(get(variable)))
   variances <- dplyr$group_by(variances, TreatmentNew)
   variances <- dplyr$summarize(variances, mean_var = mean(var))
 
@@ -28,8 +31,7 @@ variance_test_basic <- function(transformed_data, variable) {
 
   full_model <- nlme$gls(
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
-    data = transformed_data %>%
-      dplyr$filter(basic_model),
+    data = dplyr$filter(transformed_data, basic_model),
     weights = nlme$varIdent(form = ~ 1 | TreatmentNew)
   )
 

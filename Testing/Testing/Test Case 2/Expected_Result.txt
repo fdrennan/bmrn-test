@@ -1,3 +1,0 @@
-Log transformation is needed.
-Study the output Vehicle should be different from others (Alex write out mean estimates
-and expected p-values the data, the trend and group_variance are on the normal scale)
