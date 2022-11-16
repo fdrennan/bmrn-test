@@ -228,7 +228,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         data <- tryCatch(expr = {
           tictoc$tic()
-          
+
           data <- visualization_files$pre_modeling(data, selections$changeFromBaseline)
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
@@ -250,7 +250,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         shiny$req(input$timePlotSelectors)
         shiny$req(signal())
         shiny$req(pre_modeling_output())
-        
+
         endpoint <- signal()$input_data$endpoint
         tictoc$tic()
         data <- pre_modeling_output()

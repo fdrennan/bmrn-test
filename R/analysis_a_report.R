@@ -31,7 +31,7 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
       data <- shiny$reactive({
         con <- connect_table$connect_table()
         data <- dplyr$tbl(con, "sessions")
-        # 
+        #
         data <- dplyr$arrange(data, desc(timestamp))
         data <- dplyr$first(data)
         data <- dplyr$collect(data)

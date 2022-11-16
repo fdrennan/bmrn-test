@@ -16,8 +16,8 @@ transformation_check <- function(analysis_data) {
     box::use(MASS)
     box::use(utils)
   }
-  
-  
+
+
   error_transform <- FALSE
 
   analysis_data <-
