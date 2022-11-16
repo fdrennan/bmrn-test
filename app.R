@@ -81,7 +81,7 @@ server <- function(input, output, session,
 
   observe({
     req(setup_out())
-    showNotification(div(
+    shiny$showNotification(div(
       h6(class = "text-center", "Setup complete, you may now review the other panels.")
     ))
   })

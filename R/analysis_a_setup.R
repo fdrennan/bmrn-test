@@ -104,21 +104,11 @@ analysis_a_setup_server <- function(id, input_data) {
             selected = selected,
             choices = choices
           ),
-          {
-            if (getOption("devmode")) {
-              shiny$checkboxInput(
-                inputId = ns("changeFromBaseline"),
-                label = "Change from Baseline Analysis",
-                value = FALSE
-              )
-            } else {
-              shinyWidgets$prettyCheckbox(
-                inputId = ns("changeFromBaseline"),
-                label = "Change from Baseline Analysis",
-                value = FALSE
-              )
-            }
-          }
+          shinyWidgets$prettyCheckbox(
+            inputId = ns("changeFromBaseline"),
+            label = "Change from Baseline Analysis",
+            value = FALSE
+          )
         )
       })
 

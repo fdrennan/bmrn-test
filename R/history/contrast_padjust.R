@@ -34,7 +34,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
         if (.x == "G") {
           groups <- t(combn(x = sum(grepl("Dose", levels(data$TreatmentNew))), m = 2)) %>%
             data.frame() %>%
-            mutate(combn = paste0("G", X1, X2))
+            dplyr$mutate(combn = paste0("G", X1, X2))
           out$contrast <- groups$combn
         }
         out %>% tibble::column_to_rownames("contrast")
@@ -63,12 +63,12 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
             ) %>%
               t() %>%
               data.frame() %>%
-              arrange(X1, X2) %>%
-              mutate(final = case_when(
+              dplyr$arrange(X1, X2) %>%
+              dplyr$mutate(final = case_when(
                 row_number() %% 2 == 1 ~ paste0("G", X1, X2),
                 row_number() %% 2 == 0 ~ paste0("G", X1, X2, "_st")
               )) %>%
-              select(final) %>%
+              dplyr$select(final) %>%
               unlist()
           }
         } else if (num_pairs == 1) {
@@ -81,7 +81,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
             )
           )
         }
-        final_contrast <- out %>% select(-contrast)
+        final_contrast <- out %>% dplyr$select(-contrast)
       }
     })
   }

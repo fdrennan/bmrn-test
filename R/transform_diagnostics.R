@@ -1,8 +1,8 @@
 #' transform_diagnostics
-#' @export transform_diagnostics
-
+#' @export
 transform_diagnostics <- function(analysis_data, baseline) {
-  transformed <- transformation_check(analysis_data)
+  box::use(. / transformation)
+  transformed <- transformation$transformation_check(analysis_data)
   transformed_data <- transformed$transformed
   power <- transformed$bc_transformation
 

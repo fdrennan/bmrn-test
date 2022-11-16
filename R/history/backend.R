@@ -27,18 +27,18 @@ server_backend <- function(id = "backend") {
 
       data <- reactive({
         input$refresh
-        showNotification("Refreshed backend")
+        shiny$showNotification("Refreshed backend")
         con <- connect_table()
         data <- tbl(con, "sessions") %>%
-          arrange(desc(timestamp)) %>%
+          dplyr$arrange(desc(timestamp)) %>%
           collect()
 
         data |>
-          select(
+          dplyr$select(
             timestamp, description, email, statistician, sessionMode,
             full_path_files, studyId, uuid
           ) |>
-          mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
+          dplyr$mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
       })
 
       output$table <- renderDataTable({
@@ -52,7 +52,7 @@ server_backend <- function(id = "backend") {
       output$files <- renderDataTable({
         req(input$uuid)
         data <- data() |>
-          filter(uuid == input$uuid)
+          dplyr$filter(uuid == input$uuid)
         dir_info(data$full_path_files)
       })
     }

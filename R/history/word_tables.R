@@ -4,7 +4,7 @@
 word_tables <- function(data, include_summ_stat, transform, summary_only,
                         footer_i = 1, footer_j = 1, footer = "footer", endpoint) {
   data <- data %>%
-    mutate(`Time Points` = gsub("Average.*", "Overall Average", `Time Points`)) %>%
+    dplyr$mutate(`Time Points` = gsub("Average.*", "Overall Average", `Time Points`)) %>%
     mutate_at(
       .vars = grep("p value", colnames(.), value = TRUE),
       .funs = ~ as.numeric(ifelse(. == "< 0.001", "0.001", .))
@@ -34,15 +34,15 @@ word_tables <- function(data, include_summ_stat, transform, summary_only,
     )
   } else {
     if (transform) {
-      data <- data %>% select(colnames(.)[!grepl("Orig", colnames(.))])
+      data <- data %>% dplyr$select(colnames(.)[!grepl("Orig", colnames(.))])
     }
 
     if (!transform) {
-      data <- data %>% select(colnames(.)[!grepl("Trans", colnames(.))])
+      data <- data %>% dplyr$select(colnames(.)[!grepl("Trans", colnames(.))])
     }
 
     if (!include_summ_stat) {
-      data <- data %>% select(colnames(.)[!grepl("Orig|Trans", colnames(.))])
+      data <- data %>% dplyr$select(colnames(.)[!grepl("Orig|Trans", colnames(.))])
     }
 
     orig_cols <- colnames(data)

@@ -230,8 +230,8 @@ word_tables(data = tab0, summary_only = T)
 
 ```{r, echo = F, error=F, warning=FALSE}
 # tab1 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab1.csv', check.names = F) %>%
-#   select(-1) %>%
-#   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
+#  dplyr$select(-1) %>%
+#  dplyr$mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
 
 word_tables(data = tab1, include_summ_stat = T, transform = T, summary_only = F)
@@ -242,8 +242,8 @@ word_tables(data = tab1, include_summ_stat = T, transform = T, summary_only = F)
 
 ```{r, echo = F, error=F, warning=FALSE}
 # tab2 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab2.csv', check.names = F) %>%
-#   select(-1) %>%
-#   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
+#  dplyr$select(-1) %>%
+#  dplyr$mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
 
 word_tables(data = tab2, include_summ_stat = T, transform = T, summary_only = F)
@@ -257,7 +257,7 @@ word_tables(data = tab2, include_summ_stat = T, transform = T, summary_only = F)
 ```{r, echo = FALSE, error=F, warning=FALSE}
 # tab3 = read.csv('C:/Users/Christopher.Wilson/Desktop/Test_Report/tab3.csv', check.names = F) %>%
 #   dplyr::select(-1) %>%
-#   mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
+#  dplyr$mutate(`Times Included` = ifelse(`Times Included` == 'Average Over Time', 'Overall Average',
 #                                     `Times Included`))
 #
 

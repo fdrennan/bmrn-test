@@ -31,7 +31,7 @@ final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE
     # notation in excel
 
     results <- inner_join(adj_ht, adj_ci) %>%
-      mutate(
+      dplyr$mutate(
         estimate = round(estimate, 2),
         SE = round(SE, 3),
         df = round(df, 2),

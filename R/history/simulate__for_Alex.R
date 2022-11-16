@@ -76,7 +76,7 @@ generate_data <- function(group_specs, num_times, num_tech_reps,
       `Technical Replicate ID` = "Technical",
       `Treatment Group Name` = "Treatment"
     ) %>%
-    mutate(
+    dplyr$mutate(
       Type = ifelse(`Treatment Group Name` == "Wild Type",
         "Wild Type", "Non-Wild Type"
       ),
@@ -90,9 +90,9 @@ generate_data <- function(group_specs, num_times, num_tech_reps,
         x = `Treatment Group Name`
       )
     ) %>%
-    select(-`Time 1`) %>%
-    arrange(`Treatment Group Name`) %>%
-    select(
+    dplyr$select(-`Time 1`) %>%
+    dplyr$arrange(`Treatment Group Name`) %>%
+    dplyr$select(
       Type, `Treatment Group Name`, SubjectID, `Technical Replicate ID`, Dose,
       Baseline, grep(pattern = "Time", x = colnames(.), value = TRUE)
     )

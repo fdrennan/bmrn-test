@@ -41,7 +41,7 @@ st <- storr_rds("storr")
 # # Treatment
 # con <- connect_table()
 # sessions <- tbl(con, 'sessions') %>%
-#   arrange(desc(timestamp)) %>%
+#  dplyr$arrange(desc(timestamp)) %>%
 #   head(1)
 key <- paste0(params$uuid, "-final")
 prismInputs <- paste0(params$uuid, "-prism")
@@ -52,16 +52,16 @@ prismInputs <- st$get(
 )
 
 trans_name <- transform_table() %>%
-  filter(power == data$plot$data$box_cox) %>%
-  select(transform_name) %>%
+  dplyr$filter(power == data$plot$data$box_cox) %>%
+  dplyr$select(transform_name) %>%
   unlist() %>%
   unname()
 
 transform <- data$tables$power != 1
 
 groups_diff <- distinct(data$pre_modeling_input$transformed_data, Treatment, diff_group) %>%
-  filter(diff_group != "Pooled") %>%
-  select(Treatment) %>%
+  dplyr$filter(diff_group != "Pooled") %>%
+  dplyr$select(Treatment) %>%
   unlist() %>%
   as.character()
 
@@ -120,7 +120,7 @@ session_info <- data$input_data$session_data %>%
   t() %>%
   data.frame(col2 = .) %>%
   tibble::rownames_to_column("col1") %>%
-  mutate(
+  dplyr$mutate(
     col1 = gsub("_", " ", col1),
     col1 = case_when(
       col1 == "statistician" ~ "Contact Statistician",
@@ -130,7 +130,7 @@ session_info <- data$input_data$session_data %>%
     ),
     col1 = str_to_title(col1)
   ) %>%
-  filter(!(col1 %in% c("Uuid", "Base Dir", "Rel Path Home", "Full Path Files", "Studytitle")))
+  dplyr$filter(!(col1 %in% c("Uuid", "Base Dir", "Rel Path Home", "Full Path Files", "Studytitle")))
 
 session_info %>%
   flextable() %>%
@@ -240,9 +240,9 @@ contrasts <- data.frame(
   `Multiple Testing Procedure` = c("NA", "NA", "None", "Dunnett", "NA", "None", "Mvt", "NA", "Dunnett"),
   check.names = FALSE
 ) %>%
-  mutate(Comparison = paste(Group_1, "vs.", Group_2))
+  dplyr$mutate(Comparison = paste(Group_1, "vs.", Group_2))
 
-contrasts_display <- contrasts %>% select(Label, Comparison, `Purpose of Comparison`, `Multiple Testing Procedure`)
+contrasts_display <- contrasts %>% dplyr$select(Label, Comparison, `Purpose of Comparison`, `Multiple Testing Procedure`)
 
 contrasts_ft <- flextable(contrasts_display) %>%
   add_footer_lines("Mvt refers to the simulation approach using values sampled from a multivariate t distriution.")
@@ -531,7 +531,7 @@ endpoint <- if_else(!show_text,
 ### `r ifelse(show_text, paste('Table 1: Summary of', data$plot$endpoint),"")`
 
 ```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE}
-tab0 <- data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
+tab0 <- data$tables$tables$tab0 %>% dplyr$filter(`Time Points` %in% time)
 tab0_ft <- word_tables(tab0,
   include_summ_stat = F, summary_only = T, transform = transform,
   footer = "Group level summary on the original scale.", endpoint = data$plot$endpoint
@@ -544,7 +544,7 @@ FitFlextableToPage(tab0_ft)
 ### `r paste(ifelse(show_text, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE}
-tab1 <- data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
+tab1 <- data$tables$tables$tab1 %>% dplyr$filter(`Time Points` %in% time)
 
 tab1_ft <- word_tables(
   data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
@@ -558,7 +558,7 @@ FitFlextableToPage(tab1_ft)
 ### `r paste(ifelse(show_text, 'Table 3: Comparison among the Vehicle and Treatment Groups as to', 'Table 2: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
 
 ```{r, echo = F, error=F, warning=FALSE}
-tab2 <- data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
+tab2 <- data$tables$tables$tab2 %>% dplyr$filter(`Time Points` %in% time)
 
 tab2_ft <- word_tables(tab2,
   include_summ_stat = T, summary_only = F, transform = transform,
@@ -572,7 +572,7 @@ FitFlextableToPage(tab2_ft)
 ### `r paste(ifelse(show_text, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
 
 ```{r, echo = FALSE, error=F, warning=FALSE}
-tab3 <- data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
+tab3 <- data$tables$tables$tab3 %>% dplyr$filter(`Time Points` %in% time)
 # debug(word_tables)
 tab3_ft <- word_tables(tab3,
   include_summ_stat = T, summary_only = F, transform = transform,

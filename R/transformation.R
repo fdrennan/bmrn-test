@@ -9,34 +9,36 @@
 #' transformation_check
 #' @export
 transformation_check <- function(analysis_data) {
+  box::use(dplyr)
+  box::use(tidyr)
+  box::use(stats)
+  box::use(MASS)
   error_transform <- FALSE
 
   analysis_data <- analysis_data %>%
-    mutate(
+    dplyr$mutate(
       Response = as.numeric(Response),
       Baseline = as.numeric(Baseline)
     )
   # Compute the Subjects means to do Shapiro wilks test for only the basic model
-  sub_mean <- analysis_data %>%
-    select(-Time) %>%
-    pivot_longer(cols = c(Response, Baseline), names_to = "Time", values_to = "Response") %>%
-    mutate(Response = as.numeric(Response)) %>%
-    filter(basic_model) %>%
-    group_by(SubjectID, `Technical Replicate ID`, TreatmentNew) %>%
-    summarize(sub_mean = mean(Response))
-  model <- lm(data = sub_mean, formula = 0 + sub_mean ~ TreatmentNew)
+  sub_mean <- dplyr$select(analysis_data, -Time)
+  sub_mean <- tidyr$pivot_longer(sub_mean, cols = c(Response, Baseline), names_to = "Time", values_to = "Response") 
+    sub_mean <- dplyr$mutate(sub_mean, Response = as.numeric(Response)) 
+    sub_mean <- dplyr$filter(sub_mean, basic_model) 
+    sub_mean <- dplyr$group_by(sub_mean, SubjectID, `Technical Replicate ID`, TreatmentNew) 
+    sub_mean <- dplyr$summarize(sub_mean, sub_mean = mean(Response))
+  model <- stats$lm(data = sub_mean, formula = 0 + sub_mean ~ TreatmentNew)
   # Conduct the Shapiro-Wilk Test. The aim of this step is to avoid unnecessary
   # data transformations.
-  shapiro_wilk <- shapiro.test(model$residuals)$p.value
+  shapiro_wilk <- stats$shapiro.test(model$residuals)$p.value
 
   if (shapiro_wilk < 0.05) {
     # Subject means are not normally distributed, so we seek a transformation
     # that leads to normally distributed data
 
     # Dependent variable must be positive
-    bc_data <- analysis_data %>%
-      select(-Time) %>%
-      pivot_longer(cols = c(Response, Baseline), names_to = "Time", values_to = "Response")
+    bc_data <-  dplyr$select(analysis_data, -Time) 
+    bc_data <- tidyr$pivot_longer(bc_data, cols = c(Response, Baseline), names_to = "Time", values_to = "Response")
     parameter <- 0 # how much to shift the data
     if (min(bc_data$Response) <= 0) {
       # analysis_data$Response!=0 ensures that the data will be shifted
@@ -49,13 +51,13 @@ transformation_check <- function(analysis_data) {
 
 
     bc_data <- bc_data %>%
-      mutate(
+      dplyr$mutate(
         Response = as.numeric(Response),
         Response = Response + parameter
       )
 
     # Coonduct the box cox transformation
-    bc <- MASS::boxcox(Response ~ TreatmentNew * Time,
+    bc <- MASS$boxcox(Response ~ TreatmentNew * Time,
       data = bc_data,
       lambda = seq(-1, 2, 1 / 100),
       plotit = FALSE
@@ -64,29 +66,28 @@ transformation_check <- function(analysis_data) {
     # transformations i.e. inverse (-1), inverse sqrt (-1/2), log (0), sqrt (1/2),
     # identity (1), and squared (2) transformation. We select the tranformation
     # that leads to the largest log liklihood value.
-    bc_loglik <- data.frame(lambda = bc$x, log_lik = bc$y) %>%
-      filter(lambda %in% c(-1, -1 / 2, 0, 1 / 2, 1, 2)) %>%
-      arrange(log_lik) %>%
-      tail(1)
+    bc_loglik <- data.frame(lambda = bc$x, log_lik = bc$y)  
+    bc_loglik <- dplyr$filter(bc_loglik, lambda %in% c(-1, -1 / 2, 0, 1 / 2, 1, 2)) 
+    bc_loglik <- dplyr$arrange(bc_loglik, log_lik) 
 
     power <- bc_loglik$lambda
     message(paste("A power of", power, "was used to transform the data"))
 
     if (power == 0) {
       analysis_data <- analysis_data %>%
-        mutate(
+       dplyr$mutate(
           Baseline_Transformed = log(as.numeric(Baseline)) + parameter,
           Response_Transformed = log(as.numeric(Response) + parameter)
         )
     } else if (power == 1) {
       analysis_data <- analysis_data %>%
-        mutate(
+       dplyr$mutate(
           Baseline_Transformed = as.numeric(Baseline),
           Response_Transformed = as.numeric(Response)
         )
     } else {
       analysis_data <- analysis_data %>%
-        mutate(
+       dplyr$mutate(
           Baseline_Transformed = (as.numeric(Baseline) + parameter)^power,
           Response_Transformed = (as.numeric(Response) + parameter)^power
         )
@@ -97,11 +98,11 @@ transformation_check <- function(analysis_data) {
     # with the basic model
 
     sub_mean2 <- analysis_data %>%
-      select(-Time) %>%
-      pivot_longer(cols = c(Response_Transformed, Baseline_Transformed), names_to = "Time", values_to = "Response_Transformed") %>%
-      filter(basic_model) %>%
-      group_by(SubjectID, `Technical Replicate ID`, TreatmentNew) %>%
-      summarize(sub_mean = mean(Response_Transformed))
+     dplyr$select(-Time) %>%
+      tidyr$pivot_longer(cols = c(Response_Transformed, Baseline_Transformed), names_to = "Time", values_to = "Response_Transformed") %>%
+     dplyr$filter(basic_model) %>%
+      dplyr$group_by(SubjectID, `Technical Replicate ID`, TreatmentNew) %>%
+      dplyr$summarize((sub_mean = mean(Response_Transformed))
 
     model2 <- lm(data = sub_mean2, formula = 0 + sub_mean ~ TreatmentNew)
     shapiro_wilk2 <- shapiro.test(model2$residuals)$p.value
@@ -115,7 +116,7 @@ transformation_check <- function(analysis_data) {
     # Regardless if a transformation was used, Response_Transformed will be on the
     # variable of interest for the rest of the analysis
     analysis_data <- analysis_data %>%
-      mutate(
+     dplyr$mutate(
         Response_Transformed = Response,
         Baseline_Transformed = Baseline
       )
@@ -124,16 +125,16 @@ transformation_check <- function(analysis_data) {
 
   if (!all(is.na(analysis_data$Baseline))) {
     analysis_data <- analysis_data %>%
-      select(-`Technical Replicate ID`) %>%
-      group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
+     dplyr$select(-`Technical Replicate ID`) %>%
+      dplyr$group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
       summarise(across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean)) %>%
       ungroup() %>%
-      mutate(Response_Transformed_bc = Response_Transformed - Baseline_Transformed)
+     dplyr$mutate(Response_Transformed_bc = Response_Transformed - Baseline_Transformed)
   } else {
     analysis_data <- analysis_data %>%
-      select(-`Technical Replicate ID`) %>%
-      group_by(Type, Treatment, SubjectID, Dose, TypeNew, TreatmentNew, basic_model, Time) %>%
-      group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
+     dplyr$select(-`Technical Replicate ID`) %>%
+      dplyr$group_by(Type, Treatment, SubjectID, Dose, TypeNew, TreatmentNew, basic_model, Time) %>%
+      dplyr$group_by(SubjectID, Time, Type, Treatment, TypeNew, TreatmentNew, basic_model) %>%
       summarise(across(c(Response_Transformed, Baseline_Transformed, Baseline, Response), mean)) %>%
       ungroup()
   }

@@ -22,8 +22,8 @@ prism_plot <- function(data, tables, trt_sel,
   )
   orig_groups <- data %>% distinct(Treatment, TreatmentNew)
   orig_groups <- orig_groups[order_groups, ] %>%
-    mutate(Treatment = as.character(Treatment)) %>%
-    select(Treatment) %>%
+   dplyr$mutate(Treatment = as.character(Treatment)) %>%
+   dplyr$select(Treatment) %>%
     unlist()
   colors <- c(
     ggprism_data$colour_palettes[[inputs$palette]],
@@ -46,7 +46,7 @@ prism_plot <- function(data, tables, trt_sel,
   if (power == 1 | y_axis == "no_transform") {
     ylabel <- endpoint
     data <- data %>%
-      mutate(Response_Transformed = Response)
+     dplyr$mutate(Response_Transformed = Response)
     ylabel <- endpoint
   }
 
@@ -58,20 +58,20 @@ prism_plot <- function(data, tables, trt_sel,
 
   if (y_axis == "change_from_baseline" & power == 1) {
     data <- data %>%
-      mutate(Response_Transformed = Response_Transformed_bc)
+     dplyr$mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste0("Change from Baseline \n", endpoint)
   }
 
   if (y_axis == "change_from_baseline" & power != 1) {
     data <- data %>%
-      mutate(Response_Transformed = Response_Transformed_bc)
+     dplyr$mutate(Response_Transformed = Response_Transformed_bc)
     ylabel <- paste0("Change from Baseline \n", trans_name, endpoint)
   }
 
   p_vals <- bind_rows(tab1, tab2, tab3) %>%
-    select(Treatment, `Time Points`, grep("p value from", colnames(.))) %>%
+   dplyr$select(Treatment, `Time Points`, grep("p value from", colnames(.))) %>%
     mutate_at(.vars = 3:ncol(.), .funs = ~ as.character(.)) %>%
-    pivot_longer(
+    tidyr$pivot_longer(
       cols = 3:ncol(.),
       names_to = "group2",
       values_to = "p value"
@@ -80,14 +80,14 @@ prism_plot <- function(data, tables, trt_sel,
   p_vals <-
     p_vals %>%
     rename(group1 = Treatment) %>%
-    filter(
+   dplyr$filter(
       complete.cases(.),
       `Time Points` != "Average Over Time",
       `p value` != ""
     )
   p_vals <-
     p_vals %>%
-    mutate(
+   dplyr$mutate(
       group2 = gsub("p value from ", "", group2),
       `p value` = if_else(`p value` == "< 0.001", "0.001", `p value`),
       `p value` = as.numeric(`p value`),
@@ -101,43 +101,43 @@ prism_plot <- function(data, tables, trt_sel,
         `p value` < 0.001 ~ "****"
       )
     ) %>%
-    filter(`p value` < 0.05) %>%
-    filter(`Time Points` == time_sel) %>%
-    arrange(group2, group1) %>%
-    mutate(y.position = seq(
+   dplyr$filter(`p value` < 0.05) %>%
+   dplyr$filter(`Time Points` == time_sel) %>%
+   dplyr$arrange(group2, group1) %>%
+   dplyr$mutate(y.position = seq(
       1.55 * max(data$Response_Transformed),
       2.5 * max(data$Response_Transformed),
       length.out = nrow(.)
     )) %>%
-    filter(
+   dplyr$filter(
       group1 %in% trt_sel,
       group2 %in% trt_sel
     ) %>%
-    mutate(new_y.position = y.position + 1 * row_number())
+   dplyr$mutate(new_y.position = y.position + 1 * row_number())
 
 
 
   data <- data %>%
-    filter(
+   dplyr$filter(
       Time == time_sel,
       Treatment %in% trt_sel
     ) %>%
-    group_by(Treatment) %>%
-    mutate(
+    dplyr$group_by(Treatment) %>%
+   dplyr$mutate(
       outlier = is.outlier(Response_Transformed)
       #  Treatment = factor(Treatment, levels = correct_level_order)
     ) %>%
     ungroup()
 
   data_max <- data %>%
-    group_by(Treatment) %>%
-    summarize(
+    dplyr$group_by(Treatment) %>%
+    dplyr$summarize((
       max = max(Response_Transformed),
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
     ) %>%
     rename(Response_Transformed = Mean_Response) %>%
-    mutate(
+   dplyr$mutate(
       error = if_else(Response_Transformed < 0, Response_Transformed - sd_Response, Response_Transformed + sd_Response),
       ymin = if_else(Response_Transformed < 0, error, Response_Transformed),
       ymax = if_else(Response_Transformed < 0, Response_Transformed, error)
@@ -162,7 +162,7 @@ prism_plot <- function(data, tables, trt_sel,
         alpha = 0.5
       ) +
       geom_jitter(
-        # data = data %>% filter(outlier) %>% rename(group1 = Treatment),
+        # data = data %>%dplyr$filter(outlier) %>% rename(group1 = Treatment),
         # plot outliers only
         aes(shape = group1),
         size = ifelse(format == "word", 1.5, 3),

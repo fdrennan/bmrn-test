@@ -9,13 +9,13 @@ cor_select <- function(transformed_data, variable) {
   # and let user know which one is 'best' based on smallest AIC
 
   AR1 <- gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corAR1(form = ~ 1 | SubjectID)
   )
   aic_AR1 <- c("AR1" = -2 * logLik(AR1)[1] + 2 * 2)
   ARH1 <- gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corAR1(form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
@@ -23,13 +23,13 @@ cor_select <- function(transformed_data, variable) {
   aic_ARH1 <- c("ARH1" = -2 * logLik(ARH1)[1] +
     2 * (2 + length(levels(transformed_data$Time))))
   CS <- gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corCompSymm(form = ~ 1 | SubjectID)
   )
   aic_CS <- c("CS" = -2 * logLik(CS)[1] + 2 * 2)
   CSH <- gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corCompSymm(form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
@@ -37,7 +37,7 @@ cor_select <- function(transformed_data, variable) {
   aic_CSH <- c("CSH" = -2 * logLik(CSH)[1] +
     2 * (2 + length(levels(transformed_data$Time))))
   TOEP <- gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)
@@ -45,7 +45,7 @@ cor_select <- function(transformed_data, variable) {
   aic_TOEP <- c("TOEP" = -2 * logLik(TOEP)[1] +
     2 * length(levels(transformed_data$Time)))
   UN <- try(gls(
-    data = transformed_data %>% filter(basic_model),
+    data = transformed_data %>% dplyr$filter(basic_model),
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     correlation = corSymm(form = ~ 1 | SubjectID),
     weights = varIdent(form = ~ 1 | Time)

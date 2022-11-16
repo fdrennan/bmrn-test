@@ -21,15 +21,15 @@ administration_server <- function(input, output, session,
     con <- connect_table()
     sessions <-
       tbl(con, "sessions") %>%
-      arrange(desc(timestamp)) %>%
+      dplyr$arrange(desc(timestamp)) %>%
       collect() %>%
-      mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
+      dplyr$mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
     sessions
   })
   output$downloadStudyInformation <- renderDataTable({
     invalidateLater(30000)
     stored_data() %>%
-      select(-rel_path_home, -base_dir, -full_path_files) %>%
-      select(uuid, everything())
+      dplyr$select(-rel_path_home, -base_dir, -full_path_files) %>%
+      dplyr$select(uuid, everything())
   })
 }

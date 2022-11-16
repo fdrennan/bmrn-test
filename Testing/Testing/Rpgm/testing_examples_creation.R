@@ -2,8 +2,8 @@ library(test)
 
 norm_check <- function(data) {
   data_long <- data %>%
-    filter(basic_model) %>%
-    pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
+   dplyr$filter(basic_model) %>%
+    tidyr$pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
 
   model <- lm(Response ~ `Treatment Group Name` * Time, data = data_long)
   shapiro.test(residuals(model))$p.value
@@ -11,15 +11,15 @@ norm_check <- function(data) {
 
 boxcox <- function(data) {
   data_long <- data %>%
-    filter(basic_model) %>%
-    pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
+   dplyr$filter(basic_model) %>%
+    tidyr$pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
 
   min_obs <- min(data_long$Response)
   data_long_bc <- data_long
 
   if (min_obs < 0) {
     data_long_bc <- data_long_bc %>%
-      mutate(Response = Response - 1.1 * min_obs)
+     dplyr$mutate(Response = Response - 1.1 * min_obs)
   }
 
   bc <- MASS::boxcox(Response ~ `Treatment Group Name` * Time,
@@ -34,13 +34,13 @@ boxcox <- function(data) {
 lrt <- function(data, basic_model) {
   if (basic_model) {
     data <- data %>%
-      filter(basic_model) %>%
-      mutate(`Treatment Group Name` = ifelse(`Treatment Group Name` == "Treatment", paste("Treatment", Dose),
+     dplyr$filter(basic_model) %>%
+     dplyr$mutate(`Treatment Group Name` = ifelse(`Treatment Group Name` == "Treatment", paste("Treatment", Dose),
         `Treatment Group Name`
       ))
   } else {
     data <- data %>%
-      mutate(`Treatment Group Name` = ifelse(basic_model, "basic_model", `Treatment Group Name`))
+     dplyr$mutate(`Treatment Group Name` = ifelse(basic_model, "basic_model", `Treatment Group Name`))
   }
 
   full_model <- gls(
@@ -61,7 +61,7 @@ checks <- function(data, group_specs, cfb) {
   data_merged <- data %>%
     inner_join(
       group_specs %>%
-        mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
+       dplyr$mutate(Treatment = gsub("Dose.*", "Treatment", Treatment)),
       by = c("Treatment" = "Treatment Group Name"), .
     ) %>%
     rename("Treatment Group Name" = "Treatment")
@@ -89,24 +89,24 @@ checks <- function(data, group_specs, cfb) {
   }
 
   data_long <- data_merged %>%
-    pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
+    tidyr$pivot_longer(cols = grep("Time", x = colnames(.)), names_to = "Time", values_to = "Response")
 
   var_check <- data_long %>%
-    group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
-    summarize(Response = mean(Response)) %>%
-    group_by(Type, `Treatment Group Name`, Dose, Time) %>%
-    summarize(var = var(Response)) %>%
-    group_by(Type, `Treatment Group Name`, Dose) %>%
-    summarize(var = mean(var))
+    dplyr$group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
+    dplyr$summarize((Response = mean(Response)) %>%
+    dplyr$group_by(Type, `Treatment Group Name`, Dose, Time) %>%
+    dplyr$summarize((var = var(Response)) %>%
+    dplyr$group_by(Type, `Treatment Group Name`, Dose) %>%
+    dplyr$summarize((var = mean(var))
 
   var_check_basic <- data_long %>%
-    filter(basic_model) %>%
-    group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
-    summarize(Response = mean(Response)) %>%
-    group_by(Type, `Treatment Group Name`, Dose, Time) %>%
-    summarize(var = var(Response)) %>%
-    group_by(Type, `Treatment Group Name`, Dose) %>%
-    summarize(var = mean(var))
+   dplyr$filter(basic_model) %>%
+    dplyr$group_by(Type, `Treatment Group Name`, Dose, SubjectID, Time) %>%
+    dplyr$summarize((Response = mean(Response)) %>%
+    dplyr$group_by(Type, `Treatment Group Name`, Dose, Time) %>%
+    dplyr$summarize((var = var(Response)) %>%
+    dplyr$group_by(Type, `Treatment Group Name`, Dose) %>%
+    dplyr$summarize((var = mean(var))
 
   lrt_basic <- lrt(data_long, basic_model = T)
   lrt_controls <- lrt(data_long, basic_model = F)
@@ -289,50 +289,50 @@ data <- generate_data(
 checks(data = data, group_specs = group_specs, cfb = T)
 
 bc_var <- data %>%
-  pivot_longer(
+  tidyr$pivot_longer(
     cols = grep(pattern = "Time", x = colnames(.), value = TRUE),
     names_to = "Time", values_to = "Response"
   ) %>%
-  mutate(
+ dplyr$mutate(
     Response = Response - Baseline,
     basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
       T, F
     )
   ) %>%
-  group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
-  summarize(Response = mean(Response)) %>%
-  group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
-  summarize(var = var(Response)) %>%
-  group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
-  summarize(mean_var = mean(var))
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
+  dplyr$summarize((Response = mean(Response)) %>%
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
+  dplyr$summarize((var = var(Response)) %>%
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
+  dplyr$summarize((mean_var = mean(var))
 
 bc_var
 bc_var %>%
-  filter(basic_model) %>%
+ dplyr$filter(basic_model) %>%
   ungroup() %>%
-  summarize(mean(mean_var))
+  dplyr$summarize((mean(mean_var))
 
 
 no_bc_var <- data %>%
-  pivot_longer(
+  tidyr$pivot_longer(
     cols = grep(pattern = "Time", x = colnames(.), value = TRUE),
     names_to = "Time", values_to = "Response"
   ) %>%
-  mutate(basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
+ dplyr$mutate(basic_model = ifelse(!is.na(Dose) | `Treatment Group Name` == "Vehicle",
     T, F
   )) %>%
-  group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
-  summarize(Response = mean(Response)) %>%
-  group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
-  summarize(var = var(Response)) %>%
-  group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
-  summarize(mean_var = mean(var))
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, SubjectID, basic_model) %>%
+  dplyr$summarize((Response = mean(Response)) %>%
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, Time, basic_model) %>%
+  dplyr$summarize((var = var(Response)) %>%
+  dplyr$group_by(Type, `Treatment Group Name`, Dose, basic_model) %>%
+  dplyr$summarize((mean_var = mean(var))
 
 no_bc_var
 no_bc_var %>%
-  filter(basic_model) %>%
+ dplyr$filter(basic_model) %>%
   ungroup() %>%
-  summarize(mean(mean_var))
+  dplyr$summarize((mean(mean_var))
 
 
 data %>% write.csv("../Test_Report/tmp.csv")

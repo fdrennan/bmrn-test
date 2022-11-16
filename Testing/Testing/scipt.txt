@@ -2,7 +2,7 @@ library(test)
 file = list(datapath = 'Testing/Testing/Test Case 2/test_data2_09062022.xlsx')
 
 data = clean_excel_data(file)$data %>%
-  mutate(
+ dplyr$mutate(
     TypeNew = Type, 
     TreatmentNew = Treatment,
     trt = TreatmentNew,
@@ -10,7 +10,7 @@ data = clean_excel_data(file)$data %>%
     basic_model = str_detect(TreatmentNew, "Vehicle|Treatment"))
 
 data_long = data %>%
-  pivot_longer(cols = grep('Time', colnames(.), value = TRUE),
+  tidyr$pivot_longer(cols = grep('Time', colnames(.), value = TRUE),
                values_to = 'Response', names_to = 'Time')
 
 #Change baseline = TRUE for Test case 5
@@ -90,7 +90,7 @@ com3_dunnett = contrast(est,adjust="dunnett",method=list(#"veh-d1"=rep(c(0,0,1,-
 file = list(datapath = 'test_example_baseline_template_v2_trans_replicates_trend_orig_names.xlsx')
 
 data = clean_excel_data(file)$data %>%
-  mutate(
+ dplyr$mutate(
     TypeNew = Type,
     TreatmentNew = Treatment,
     trt = TreatmentNew,
@@ -98,9 +98,9 @@ data = clean_excel_data(file)$data %>%
     basic_model = str_detect(TreatmentNew, "Vehicle|Treatment"))
 
 data_long = data %>%
-  pivot_longer(cols = grep('Day', colnames(.), value = TRUE),
+  tidyr$pivot_longer(cols = grep('Day', colnames(.), value = TRUE),
                values_to = 'Response', names_to = 'Time') %>%
-  mutate(TreatmentNew = factor(case_when(TreatmentNew == 'e13' ~ paste('Dose', Dose),
+ dplyr$mutate(TreatmentNew = factor(case_when(TreatmentNew == 'e13' ~ paste('Dose', Dose),
                                   TreatmentNew == 'e13 empty-NP' ~ 'Vehicle',
                                   TreatmentNew == 'e13 no rap' ~ 'Negative Control',
                                   TreatmentNew == 'Wild Type' ~ 'Wild Type')),

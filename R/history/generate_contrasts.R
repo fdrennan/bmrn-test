@@ -1,5 +1,5 @@
 generate_contrasts <- function(model, toi, data, time_order, analysis_type = "confirm") {
-  data <- mutate(data,
+  data <- dplyr$mutate(data,
     Time = factor(Time, levels = time_order),
     TreatmentNew = factor(TreatmentNew)
   ) # Need to figure out a way sort these
@@ -15,8 +15,8 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
     Time = levels(data$Time),
     TreatmentNew = levels(data$TreatmentNew)
   ) %>%
-    mutate(final_name = paste(Time, TreatmentNew, sep = ":")) %>%
-    select(final_name) %>%
+    dplyr$mutate(final_name = paste(Time, TreatmentNew, sep = ":")) %>%
+    dplyr$select(final_name) %>%
     unlist()
 
   AE <- diag(1, nrow = num_groups) / num_times
@@ -63,7 +63,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
 
   # contrast_map <-
   #   contrast_map %>%
-  #   filter(Group_1 %in% unique(data$TreatmentNew),
+  #  dplyr$filter(Group_1 %in% unique(data$TreatmentNew),
   #          Group_2 %in% unique(data$TreatmentNew))
   # #
   final_list <- list()

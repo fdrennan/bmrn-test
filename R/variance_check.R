@@ -6,10 +6,10 @@ variance_check <- function(transformed_data, variable) {
   # for each group
   tmp <- transformed_data
   variances <- transformed_data %>%
-    group_by(TreatmentNew, basic_model, Time) %>%
-    summarize(var = var(get(variable))) %>%
-    group_by(TreatmentNew, basic_model) %>%
-    summarize(mean_var = mean(var))
+    dplyr$group_by(TreatmentNew, basic_model, Time) %>%
+    dplyr$summarize((var = var(get(variable))) %>%
+    dplyr$group_by(TreatmentNew, basic_model) %>%
+    dplyr$summarize((mean_var = mean(var))
 
   # We really want to make sure that the variance for the groups in the basic model
   # is similar. So we compare their variances to the mean (pooled) variance of these
@@ -32,9 +32,9 @@ variance_check <- function(transformed_data, variable) {
   )
 
   pooled_var <- variances %>%
-    filter(basic_model) %>%
+   dplyr$filter(basic_model) %>%
     ungroup() %>%
-    summarize(pooled = mean(mean_var))
+    dplyr$summarize((pooled = mean(mean_var))
 
   loglik_diff <- -2 * (restricted_model$logLik - full_model$logLik)
   df_diff <- attributes(loglik_diff)
@@ -48,13 +48,13 @@ variance_check <- function(transformed_data, variable) {
     # to a increase of at 2 in the ratio. In other words, a log2 fold of -3 change means
     # that the pooled variance is 8 times the group variance
     variances <- variances %>%
-      mutate(
+     dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 2),
         diff_group = if_else(abs(fold_change) > 1, as.character(TreatmentNew), "Pooled")
       ) %>%
       ungroup() %>%
-      select(-basic_model)
+     dplyr$select(-basic_model)
   } else {
     # If the weighted model (full model) has a not significantly better fit then the
     # model without weights (reduced model), then there is no benefit of estimating
@@ -63,13 +63,13 @@ variance_check <- function(transformed_data, variable) {
     # to a increase of at 3 in the ratio. In other words, a log3 fold of -3 change means
     # that the pooled variance is 27 times the group variance
     variances <- variances %>%
-      mutate(
+     dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 3),
         diff_group = if_else(abs(fold_change) <= 1, "Pooled", as.character(TreatmentNew))
       ) %>%
       ungroup() %>%
-      select(-basic_model)
+     dplyr$select(-basic_model)
   }
 
   transformed_data <- transformed_data %>%

@@ -209,8 +209,8 @@ plots[[4]] +
 
 ```{r, echo = F}
 tab1 <- read.csv("~/Test_Report/tab1.csv", check.names = F) %>%
-  select(-1) %>%
-  mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
+  dplyr$select(-1) %>%
+  dplyr$mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
     `Times Included`
   ))
 
@@ -222,8 +222,8 @@ word_tables(tab1, include_summ_stat = T)
 
 ```{r, echo = F}
 tab2 <- read.csv("~/Test_Report/tab2.csv", check.names = F) %>%
-  select(-1) %>%
-  mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
+  dplyr$select(-1) %>%
+  dplyr$mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
     `Times Included`
   ))
 
@@ -238,7 +238,7 @@ word_tables(tab2, include_summ_stat = T)
 ```{r, echo = FALSE}
 tab3 <- read.csv("~/Test_Report/tab3.csv", check.names = F) %>%
   dplyr::select(-1) %>%
-  mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
+  dplyr$mutate(`Times Included` = ifelse(`Times Included` == "Average Over Time", "Overall Average",
     `Times Included`
   ))
 

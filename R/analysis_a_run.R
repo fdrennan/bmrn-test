@@ -66,25 +66,29 @@ analysis_a_run <- function(id = "analysis_a", user, is_admin) {
 #' analysis_a_run_server
 #' @export
 analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
-  box::use(shiny)
-  box::use(readr[read_rds, write_rds])
-  box::use(. / connect_table)
-  box::use(shiny.router)
-  box::use(purrr)
-  box::use(dplyr)
-  box::use(stats[complete.cases])
-  box::use(. / analysis_a_setup)
-  box::use(stringr)
-  box::use(tibble)
-  box::use(tidyr)
-  box::use(forcats)
-  box::use(tictoc)
-  box::use(. / vizualization)
-  box::use(. / final_modeling)
-  box::use(plotly)
-  box::use(. / final_output)
-  box::use(. / prism)
-  box::use(openxlsx)
+  {
+    box::use(shiny)
+    box::use(bs4Dash)
+    box::use(readr[read_rds, write_rds])
+    box::use(. / connect_table)
+    box::use(shiny.router)
+    box::use(purrr)
+    box::use(dplyr)
+    box::use(. / testSpinner)
+    box::use(stats[complete.cases])
+    box::use(. / analysis_a_setup)
+    box::use(stringr)
+    box::use(tibble)
+    box::use(tidyr)
+    box::use(forcats)
+    box::use(tictoc)
+    box::use(. / vizualization)
+    box::use(. / final_modeling)
+    box::use(plotly)
+    box::use(. / final_output)
+    box::use(. / prism)
+    box::use(openxlsx)
+  }
   shiny$moduleServer(
     id,
     function(input, output, session) {
@@ -102,9 +106,11 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         input_data <- input_signal$input_data
         con <- connect_table$connect_table()
         session_data <- dplyr$tbl(con, "sessions")
-        browser()
-        session_data <- dplyr$arrange(session_data, desc(timestamp))
-        session_data <- dplyr$first(session_data)
+        session_data <- dplyr$filter(
+          session_data, timestamp == max(timestamp)
+        )
+        # session_data <- dplyr$arrange(session_data, desc(timestamp))
+        # session_data <- dplyr$first(session_data)
         session_data <- dplyr$collect(session_data)
 
 
@@ -119,7 +125,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
       shiny$observeEvent(signal(),
         {
-          shiny$updateTabItems(
+          bs4Dash$updateTabItems(
             session,
             inputId = "test_1_tabs",
             selected = "Plots"
@@ -157,12 +163,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       analysis_input <- shiny$reactive({
-        req(signal())
-
-        if (getOption("devmode")) {
-          session_message <- glue$glue("Your session ID is {signal()$session_data$uuid}")
-          shiny$showNotification(session_message, closeButton = TRUE, duration = NULL)
-        }
+        shiny$req(signal())
         sig <- signal()
         id <- sig$selections
         input_data <- sig$input_data$data
@@ -171,7 +172,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         treatment_inputs <- stringr$str_detect(names_input, "treatment_")
         type_list <- id[type_inputs]
         treatment_list <- id[treatment_inputs]
-        type_table <- dplyr$bind_rows(imap(type_list, function(x, y) tibble$tibble(TypeNew = x, type_snake = y)))
+        type_table <- dplyr$bind_rows(purrr$imap(type_list, function(x, y) tibble$tibble(TypeNew = x, type_snake = y)))
         treatment_table <- dplyr$bind_rows(purrr$imap(treatment_list, function(x, y) tibble$tibble(TreatmentNew = x, treatment_snake = y)))
         filtered_1 <- dplyr$inner_join(input_data, type_table)
         filtered_1 <- dplyr$left_join(filtered_1, treatment_table)
@@ -186,7 +187,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       analysis_input_data <- shiny$reactive({
-        req(analysis_input())
+        shiny$req(analysis_input())
 
         data <- analysis_input()
         base_col <- which(colnames(data) == "Baseline")
@@ -229,16 +230,16 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           data <- pre_modeling(data, selections$changeFromBaseline)
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
-          showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+          shiny$showNotification(tags$p("pre_modeling", tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
           # data
           data
         }, error = function(err) {
           err <- as.character(err)
-          showNotification(err, duration = NULL)
-          showNotification("An error occurred, please check your configuration.", closeButton = TRUE, duration = NULL)
+          shiny$showNotification(err, duration = NULL)
+          shiny$showNotification("An error occurred, please check your configuration.", closeButton = TRUE, duration = NULL)
           FALSE
         })
-        req(data)
+        shiny$req(data)
         data
       })
 
@@ -324,7 +325,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
 
       output$analysisPlot_3 <- plotly$renderPlotly({
-        req(pre_plot_input())
+        shiny$req(pre_plot_input())
         plots <- interactive_plots()
         tmp <- plotly$ggplotly(plots$plots$group_line)
         for (i in 1:length(tmp$x$data)) {
@@ -381,7 +382,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       output$analysisPanel <- shiny$renderUI({
         shiny$req(pre_modeling_output())
         data <- pre_modeling_output()
-        req(data)
+        shiny$req(data)
         treatmentPlotSelectors <- levels(data$transformed_data$TreatmentNew)
         timePlotSelectors <- c("Baseline", unique(as.character(data$transformed_data$Time)))
 
@@ -391,7 +392,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       })
 
       output$PlotsPanel <- shiny$renderUI({
-        req(pre_modeling_output())
+        shiny$req(pre_modeling_output())
 
         data <- pre_modeling_output()
 
@@ -467,8 +468,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
       # TABLES ------------------------------------------------------------------
 
       pre_tables_input <- shiny$reactive({
-        req(signal())
-        req(pre_modeling_output())
+        shiny$req(signal())
+        shiny$req(pre_modeling_output())
 
         input <- signal()$input_data
         data <- pre_modeling_output()

@@ -10,18 +10,18 @@ prism_output <- function(tranformed_data, variable) {
     )
 
   max_n <- tmp %>%
-    group_by(Type, Treatment) %>%
-    summarize(n = n()) %>%
+    dplyr$group_by(Type, Treatment) %>%
+    dplyr$summarize((n = n()) %>%
     ungroup() %>%
     slice_max(n, with_ties = FALSE) %>%
-    select(n) %>%
+   dplyr$select(n) %>%
     unlist()
 
 
   prism <- map_df(.x = 1:length(unique(tmp$Treatment)), .f = ~ {
     out <- tmp %>%
-      filter(Treatment == unique(tmp$Treatment)[.x]) %>%
-      mutate(SubjectID = paste("SubjectID", row_number()))
+     dplyr$filter(Treatment == unique(tmp$Treatment)[.x]) %>%
+     dplyr$mutate(SubjectID = paste("SubjectID", row_number()))
 
     diff <- max_n - nrow(out)
     trt_add <- distinct(.data = out, Type, Treatment)

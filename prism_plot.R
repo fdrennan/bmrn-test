@@ -12,9 +12,9 @@ is.outlier <- function(x) {
 
 
 data <- read.csv("plot_ready_data.csv") %>%
-  filter(Time == "Day 1") %>%
-  group_by(Treatment) %>%
-  mutate(outlier = is.outlier(Response_Transformed)) %>%
+  dplyr$filter(Time == "Day 1") %>%
+  dplyr$group_by(Treatment) %>%
+  dplyr$mutate(outlier = is.outlier(Response_Transformed)) %>%
   ungroup()
 
 # Load in p-values
@@ -22,10 +22,10 @@ load("trans_table.RData")
 
 p_vals <- bind_rows(tab1, tab2, tab3) %>%
   select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
-  pivot_longer(cols = 3:ncol(.), names_to = "group2", values_to = "p value") %>%
+  tidyr$pivot_longer(cols = 3:ncol(.), names_to = "group2", values_to = "p value") %>%
   dplyr::rename(group1 = Treatment) %>%
-  filter(complete.cases(.)) %>%
-  mutate(
+  dplyr$filter(complete.cases(.)) %>%
+  dplyr$mutate(
     group2 = gsub("p value from ", "", group2),
     `p value` = if_else(`p value` == "< 0.0001", "0.00001", `p value`),
     `p value` = as.numeric(`p value`),
@@ -37,17 +37,17 @@ p_vals <- bind_rows(tab1, tab2, tab3) %>%
       `p value` < 0.001 ~ "****"
     )
   ) %>%
-  filter(`p value` < 0.05) %>%
-  mutate(group2 = case_when(
+  dplyr$filter(`p value` < 0.05) %>%
+  dplyr$mutate(group2 = case_when(
     group2 == "Dose 3" ~ "e13 300",
     group2 == "Dose 2" ~ "e13 200",
     group2 == "Vehicle" ~ "e13 empty-NP",
     group2 == "Negative Control" ~ "e13 no rap",
     group2 == "Wild Type" ~ "Wild Type"
   )) %>%
-  filter(`Times Included` == "Day 1") %>%
-  arrange(group2, group1) %>%
-  mutate(y.position = seq(1.25 * max(data$Response_Transformed),
+  dplyr$filter(`Times Included` == "Day 1") %>%
+  dplyr$arrange(group2, group1) %>%
+  dplyr$mutate(y.position = seq(1.25 * max(data$Response_Transformed),
     2.75 * max(data$Response_Transformed),
     length.out = nrow(.)
   ))

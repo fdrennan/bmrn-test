@@ -2,7 +2,7 @@
 
 go <- function() {
   options(shiny.maxRequestSize = 300 * 1024^2)
-  options("cachetest" = FALSE)
+  options("cachetest" = TRUE)
   box::use(. / R / main)
   box::use(shiny)
   shiny$runApp(

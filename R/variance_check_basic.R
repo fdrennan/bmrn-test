@@ -9,15 +9,15 @@ variance_test_basic <- function(transformed_data, variable) {
   # then take the average of these variances to estimate the variance
   # for each group
   variances <- transformed_data %>%
-    filter(basic_model) %>%
-    group_by(TreatmentNew, Time) %>%
-    summarize(var = var(get(variable))) %>%
-    group_by(TreatmentNew) %>%
-    summarize(mean_var = mean(var))
+   dplyr$filter(basic_model) %>%
+    dplyr$group_by(TreatmentNew, Time) %>%
+    dplyr$summarize((var = var(get(variable))) %>%
+    dplyr$group_by(TreatmentNew) %>%
+    dplyr$summarize((mean_var = mean(var))
 
   pooled_var <- variances %>%
     ungroup() %>%
-    summarize(pooled = mean(mean_var))
+    dplyr$summarize((pooled = mean(mean_var))
 
   # We really want to make sure that the variance for the groups in the basic model
   # is similar. So we compare their variances to the mean (pooled) variance of these
@@ -31,14 +31,14 @@ variance_test_basic <- function(transformed_data, variable) {
   full_model <- gls(
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data %>%
-      filter(basic_model),
+     dplyr$filter(basic_model),
     weights = varIdent(form = ~ 1 | TreatmentNew)
   )
 
   restricted_model <- gls(
     model = as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data %>%
-      filter(basic_model)
+     dplyr$filter(basic_model)
   )
 
   loglik_diff <- -2 * (restricted_model$logLik - full_model$logLik)
@@ -48,14 +48,14 @@ variance_test_basic <- function(transformed_data, variable) {
 
   if (p_value < 0.05) {
     variances <- variances %>%
-      mutate(
+     dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 2),
         diff_group = if_else(abs(fold_change) > 1, "Yes", "Pooled")
       )
   } else {
     variances <- variances %>%
-      mutate(
+     dplyr$mutate(
         var_ratio = mean_var / pooled_var$pooled,
         fold_change = log(var_ratio, base = 3),
         diff_group = if_else(abs(fold_change) > 1, "Yes", "Pooled")

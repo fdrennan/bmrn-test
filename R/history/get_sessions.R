@@ -5,8 +5,8 @@ get_sessions <- function() {
   on.exit(dbDisconnect(con))
   sessions <-
     tbl(con, "sessions") %>%
-    arrange(desc(timestamp)) %>%
+    dplyr$arrange(desc(timestamp)) %>%
     collect() %>%
-    mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
+    dplyr$mutate(timestamp = as.POSIXct(timestamp, origin = "1970-01-01"))
   sessions
 }

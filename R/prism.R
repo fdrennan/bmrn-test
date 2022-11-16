@@ -128,7 +128,7 @@ server_prism <- function(id = "prism", signal) {
         full_path_file <- fs$path_join(c(full_path_file, "prism_data.xlsx"))
 
         prism_output$save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        # showNotification("Storing prism data")
+        # shiny$showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
 

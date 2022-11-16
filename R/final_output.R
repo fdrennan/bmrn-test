@@ -3,20 +3,20 @@
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
   final_contrast <- final_contrast %>%
-    mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
+   dplyr$mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
   # Generate Tables
   # Compute Summary statistic for the data on the original scale for both the
   # average and specific time point
   # Average Time
   AT_os <- transformed_data %>%
-    group_by(TreatmentNew, Time) %>%
-    summarize(sd = sd(Response)) %>%
-    group_by(TreatmentNew) %>%
-    summarize(se = mean(sd) / n()) %>%
+    dplyr$group_by(TreatmentNew, Time) %>%
+    dplyr$summarize((sd = sd(Response)) %>%
+    dplyr$group_by(TreatmentNew) %>%
+    dplyr$summarize((se = mean(sd) / n()) %>%
     inner_join(transformed_data %>%
-      group_by(TreatmentNew) %>%
-      summarize(
+      dplyr$group_by(TreatmentNew) %>%
+      dplyr$summarize((
         mean = mean(Response),
         median = median(Response)
       ), .)
@@ -24,29 +24,29 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
 
   # Need to make sure that toi matches above
   ST_os <- transformed_data %>%
-    filter(Time == toi) %>%
-    group_by(TreatmentNew, Time) %>%
-    summarize(
+   dplyr$filter(Time == toi) %>%
+    dplyr$group_by(TreatmentNew, Time) %>%
+    dplyr$summarize((
       mean = mean(Response),
       median = median(Response),
       se = sd(Response) / n()
     )
 
   os_together <- bind_rows(AT_os, ST_os) %>%
-    arrange(TreatmentNew) %>%
-    mutate(
+   dplyr$arrange(TreatmentNew) %>%
+   dplyr$mutate(
       TreatmentNew = factor(TreatmentNew),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, mean, median, se) %>%
-    arrange(TreatmentNew)
+   dplyr$select(TreatmentNew, Endpoint, mean, median, se) %>%
+   dplyr$arrange(TreatmentNew)
   # Back Transformation
   ST_bt <- emmeans_obj$ST %>%
     data.frame() %>%
-    filter(Time == toi) %>%
-    mutate(
+   dplyr$filter(Time == toi) %>%
+   dplyr$mutate(
       emmean_bt = case_when(
         power == 0 ~ exp(emmean),
         !(power %in% c(0, 1)) ~ emmean^(1 / power),
@@ -60,7 +60,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     )
   AT_bt <- emmeans_obj$AT %>%
     data.frame() %>%
-    mutate(
+   dplyr$mutate(
       emmean_bt = case_when(
         power == 0 ~ exp(emmean),
         !(power %in% c(0, 1)) ~ emmean^(1 / power),
@@ -74,34 +74,34 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     )
 
   bt_together <- bind_rows(AT_bt, ST_bt) %>%
-    arrange(TreatmentNew) %>%
-    mutate(
+   dplyr$arrange(TreatmentNew) %>%
+   dplyr$mutate(
       TreatmentNew = factor(TreatmentNew),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, emmean_bt, se_bt) %>%
-    arrange(TreatmentNew)
+   dplyr$select(TreatmentNew, Endpoint, emmean_bt, se_bt) %>%
+   dplyr$arrange(TreatmentNew)
 
   # LSmeans
   ST_lsmeans <- emmeans_obj$ST %>%
     data.frame() %>%
-    filter(Time == toi)
+   dplyr$filter(Time == toi)
 
   AT_lsmeans <- emmeans_obj$AT %>%
     data.frame()
 
   lsmeans_together <- bind_rows(AT_lsmeans, ST_lsmeans) %>%
-    arrange(TreatmentNew) %>%
-    mutate(
+   dplyr$arrange(TreatmentNew) %>%
+   dplyr$mutate(
       TreatmentNew = factor(TreatmentNew),
       Endpoint = if_else((row_number() %% 2) == 1,
         "Average", "Specific Time"
       )
     ) %>%
-    select(TreatmentNew, Endpoint, emmean, SE) %>%
-    arrange(TreatmentNew) %>%
+   dplyr$select(TreatmentNew, Endpoint, emmean, SE) %>%
+   dplyr$arrange(TreatmentNew) %>%
     rename(
       emmean_lsmeans = emmean,
       se_lsmeans = SE
@@ -141,7 +141,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale Mean" = emmean_lsmeans,
       "Transformed Scale SE" = se_lsmeans
     ) %>%
-    select(-grep("emmean|lsmean", colnames(.), value = TRUE))
+   dplyr$select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab1) <- gsub("\\.", " ", colnames(tab1))
 
   empty_col <- tab2 %>% apply(2, function(a) sum(is.na(a)))
@@ -154,7 +154,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale Mean" = emmean_lsmeans,
       "Transformed Scale SE" = se_lsmeans
     ) %>%
-    select(-grep("emmean|lsmean", colnames(.), value = TRUE))
+   dplyr$select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab2) <- gsub("\\.", " ", colnames(tab2))
   empty_col <- tab3 %>% apply(2, function(a) sum(is.na(a)))
   tab3 <- tab3[, which(empty_col < nrow(tab3))] %>%
@@ -166,7 +166,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale Mean" = emmean_lsmeans,
       "Transformed Scale SE" = se_lsmeans
     ) %>%
-    select(-grep("emmean|lsmean", colnames(.), value = TRUE))
+   dplyr$select(-grep("emmean|lsmean", colnames(.), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
   return(list(tab1 = tab1, tab2 = tab2, tab3 = tab3, power = power))
@@ -195,7 +195,7 @@ html_tables <- function(transformed_data, tab_list) {
       "Treatment_orig" = Treatment,
       "Treatment" = TreatmentNew
     ) %>%
-    arrange(Treatment) %>%
+   dplyr$arrange(Treatment) %>%
     inner_join(., tab2) %>%
     dplyr::select(-Treatment) %>%
     rename("Treatment" = Treatment_orig)
@@ -279,7 +279,7 @@ html_UI <- function(transformed_data, tables) {
   if (!any(grepl("Transformed", colnames(tab1)))) {
     group <- unique(word(colnames(tab1)[6:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>%dplyr$filter(TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[6:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[6:ncol(tab1)])
@@ -295,7 +295,7 @@ html_UI <- function(transformed_data, tables) {
   } else {
     group <- unique(word(colnames(tab1)[8:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>%dplyr$filter(TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[8:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[8:ncol(tab1)])
@@ -319,7 +319,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>%dplyr$filter(TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[6:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[6:ncol(tab2)])
@@ -338,7 +338,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% filter(TreatmentNew == .x)
+      tmp <- trt_map %>%dplyr$filter(TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[8:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[8:ncol(tab2)])
@@ -361,7 +361,7 @@ html_UI <- function(transformed_data, tables) {
     group <- c(group, paste(word(colnames(tab3)[i], -c(2, 1)), collapse = " "))
   }
   group <- map_chr(.x = group, .f = ~ {
-    tmp <- trt_map %>% filter(TreatmentNew == .x)
+    tmp <- trt_map %>%dplyr$filter(TreatmentNew == .x)
     as.character(tmp$Treatment)
   })
   colnames(tab3)[3:ncol(tab3)] <- gsub(" from.*", "", colnames(tab3)[3:ncol(tab3)])
@@ -393,15 +393,15 @@ column_labels <- function(df_gt, column, label) {
 html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
   data <- data %>%
     mutate_all(~ replace(., is.na(.), "")) %>%
-    mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
+   dplyr$mutate(`Time Points` = if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`
     ))
   # if (analysis_type == "Exploratory") {
   #   data <- data %>%
-  #     mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
-  #     arrange(Treatment, num) %>%
-  #     select(-num)
+  #    dplyr$mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
+  #    dplyr$arrange(Treatment, num) %>%
+  #    dplyr$select(-num)
   # }
 
   if (summary_only & transformation) {
