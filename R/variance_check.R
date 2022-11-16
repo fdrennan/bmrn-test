@@ -20,7 +20,7 @@ variance_check <- function(transformed_data, variable) {
 
   # Log liklihood test, comparing a model with a one overall variance for the basic
   # model (reduced model) and a model estimating the variances separately (full model)
-
+  browser()
   full_model <- nlme$gls(
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data,

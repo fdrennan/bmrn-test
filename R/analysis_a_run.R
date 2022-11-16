@@ -229,8 +229,6 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         data <- tryCatch(expr = {
           tictoc$tic()
 
-          browser()
-          debug(visualization_files$pre_modeling)
           data <- visualization_files$pre_modeling(data, selections$changeFromBaseline)
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
