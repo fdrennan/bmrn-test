@@ -34,7 +34,8 @@ pre_modeling <- function(input_data, baseline) {
     error_trans = ready_final_model$error_transform,
     error_bm_var = transformed_data$error_bm_var
   )
-
+  browser()
+  debug(variance_check$variance_check)
   transformed_data_vc <-
     variance_check$variance_check(
       transformed_data = transformed_data$data,
