@@ -161,7 +161,7 @@ test_session_setup_server <- function(id) {
       out <- shiny$eventReactive(input$submitForm, {
         shiny$showNotification("Building analysis...", id = "setupnotification")
 
-        if (isFALSE(getOption("cachetest"))) {
+        if (isTRUE(getOption("cachetest"))) {
           shiny$showNotification("Skipping, validation turned off.")
         } else {
           if (!iv$is_valid()) shiny$showNotification("Please complete all required fields.")
@@ -206,7 +206,7 @@ test_session_setup_server <- function(id) {
         input <- tibble$as_tibble(purrr$keep(input, ~ length(.) == 1))
         df <- dplyr$bind_cols(input, df)
         df$timestamp <- lubridate$with_tz(Sys.time(), "PST")
-        con <- connect_table$connect_table()
+        con <- connect_table$connect_table(dir = "./data/app.db")
         on.exit(DBI$dbDisconnect(con))
         if (!DBI$dbExistsTable(con, "sessions")) {
           DBI$dbCreateTable(con, "sessions", df)

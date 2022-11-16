@@ -102,7 +102,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         input_data <- input_signal$input_data
         con <- connect_table$connect_table()
         session_data <- dplyr$tbl(con, "sessions")
-        session_data <- dplyr$arrange(session_data, dplyr$desc(timestamp))
+        browser()
+        session_data <- dplyr$arrange(session_data, desc(timestamp))
         session_data <- dplyr$first(session_data)
         session_data <- dplyr$collect(session_data)
 
