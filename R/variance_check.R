@@ -9,9 +9,12 @@ variance_check <- function(transformed_data, variable) {
   # then take the average of these variances to estimate the variance
   # for each group
   tmp <- transformed_data
-  variances <- dplyr$group_by(transformed_data, TreatmentNew, basic_model, Time)
-  transformed_data <- dplyr$summarize(transformed_data, var = stats$var(get(variable)))
-
+  
+  tmp <- transformed_data
+  variances <- group_by(transformed_data, TreatmentNew, basic_model, Time) 
+  variances <- summarize(variances, var = stats$var(get(variable))) 
+  variances <- group_by(variances, TreatmentNew, basic_model) 
+  variances <- summarize(variances, mean_var = mean(var))
   # We really want to make sure that the variance for the groups in the basic model
   # is similar. So we compare their variances to the mean (pooled) variance of these
   # groups. There will be two conditions to indicate that variances are not similar
@@ -20,7 +23,7 @@ variance_check <- function(transformed_data, variable) {
 
   # Log liklihood test, comparing a model with a one overall variance for the basic
   # model (reduced model) and a model estimating the variances separately (full model)
-  browser()
+  # browser()
   full_model <- nlme$gls(
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
     data = transformed_data,
