@@ -31,9 +31,9 @@ server_home <- function(id = "home") {
         footer = shiny$div(
           class = "text-right",
           "Contact: fr904103@bmrn.com",
-          tags$br(),
+         shiny$tags$br(),
           getOption("test_version"),
-          tags$br(),
+         shiny$tags$br(),
           shiny$tags$em("By Quantitative Science, Data Science")
         ),
         size = "xl"
@@ -53,7 +53,7 @@ server_home <- function(id = "home") {
                 "Single Treatment with Multiple Doses",
                 "Multiple Time Points",
                 "Controls and Comparators"
-              ), ~ tags$li(shiny$h4(.)))
+              ), ~shiny$tags$li(shiny$h4(.)))
             ),
             shiny$div(
               class = "text-center",

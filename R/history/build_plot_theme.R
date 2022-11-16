@@ -9,5 +9,5 @@ ggplot_theme_test <- function() {
   background_color <- theme$ndexr$background
 
   ggthemes::theme_gdocs() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1))
+    ggplot2$theme(axis.text.x =ggplot2$(angle = 45, vjust = 0.5, hjust = 1))
 }

@@ -149,46 +149,46 @@ The user will be allowed to select whether the raw/transformed values are to be 
 load("C:/Users/Christopher.Wilson/Desktop/Test_Report/plots.RData")
 
 # plots[[1]] +
-#   theme(plot.title = element_text(size = 10),
-#         axis.title = element_text(size = 10),
-#         axis.text.x = element_text(size = 6),
-#         axis.text.y = element_text(size = 8),
-#         strip.text = element_text(size = 8),
+#   ggplot2$theme(plot.title =ggplot2$(size = 10),
+#         axis.title =ggplot2$(size = 10),
+#         axis.text.x =ggplot2$(size = 6),
+#         axis.text.y =ggplot2$(size = 8),
+#         strip.text =ggplot2$(size = 8),
 #         legend.position = 'bottom') +
-#   geom_point(aes(color = Treatment), size = 0.7) +
-#     stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.0)
+#   ggplot2$geom_point(ggplot2$aes(color = Treatment), size = 0.7) +
+#     ggplot2$stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.0)
 
 test_plot_theme_html <- function(x) {
-  theme(
-    plot.title = element_text(size = 12),
-    axis.title = element_text(size = 10),
-    axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
-    axis.text.y = element_text(size = 8),
-    strip.text = element_text(size = 8),
-    legend.text = element_text(size = 8),
-    legend.title = element_text(size = 10),
+  ggplot2$theme(
+    plot.title =ggplot2$(size = 12),
+    axis.title =ggplot2$(size = 10),
+    axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
+    axis.text.y =ggplot2$(size = 8),
+    strip.text =ggplot2$(size = 8),
+    legend.text =ggplot2$(size = 8),
+    legend.title =ggplot2$(size = 10),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank()
   )
 }
 
-ggplot(data = plots[[1]]$data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
-  geom_boxplot(aes(color = Treatment), outlier.size = 1) +
-  geom_jitter(width = 0.1, aes(color = Treatment), size = 0.5) +
+ggplot(data = plots[[1]]$data, ggplot2$aes(x = Time, y = Response_Transformed, label = SubjectID)) +
+  ggplot2$geom_boxplot(ggplot2$aes(color = Treatment), outlier.size = 1) +
+  geom_jitter(width = 0.1, ggplot2$aes(color = Treatment), size = 0.5) +
   theme_bw() +
-  labs(color = "Treatment") +
-  facet_wrap(Treatment ~ ., nrow = 1) +
-  ylab(plots[[1]]$labels$y) +
-  stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
-  ggtitle("Box Plot for Each Group Over Time") +
+  ggplot2$labs(color = "Treatment") +
+  ggplot2$facet_wrap(Treatment ~ ., nrow = 1) +
+  ggplot2$ylab(plots[[1]]$labels$y) +
+  ggplot2$stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
+  ggplot2$ggtitle("Box Plot for Each Group Over Time") +
   test_plot_theme_html() +
-  theme(legend.position = "none")
+  ggplot2$theme(legend.position = "none")
 ```
 
 ```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
 plots[[2]] +
   test_plot_theme_html() +
-  theme(
+  ggplot2$theme(
     legend.position = "bottom"
   )
 ```
@@ -196,7 +196,7 @@ plots[[2]] +
 ```{r, echo=F, error=F, warning=FALSE, fig.align='center', fig.width=7, fig.height=4}
 plots[[3]] +
   test_plot_theme_html() +
-  theme(
+  ggplot2$theme(
     legend.position = "bottom"
   )
 ```
@@ -206,7 +206,7 @@ plots[[3]] +
 
 plots[[4]] +
   test_plot_theme_html() +
-  theme(
+  ggplot2$theme(
     legend.position = "bottom"
   )
 ```

@@ -61,17 +61,17 @@ response <- "Creatine Kinase (ng/ml)"
 than
 
 bottom <- full_prism +
-  scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
-  theme(plot.margin = margin(t = -10, r = 0, b = 0, l = 0))
+  ggplot2$scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
+  ggplot2$theme(plot.margin = margin(t = -10, r = 0, b = 0, l = 0))
 
 top <- full_prism +
-  scale_y_continuous(limits = c(1.1 * min(p_vals$y.position), 3 * max(data$Response_Transformed))) +
-  theme(
+  ggplot2$scale_y_continuous(limits = c(1.1 * min(p_vals$y.position), 3 * max(data$Response_Transformed))) +
+  ggplot2$theme(
     line = element_blank(),
     axis.title = element_blank(),
     axis.text = element_blank()
   ) +
-  theme(plot.margin = margin(t = 0, r = 0, b = -10, l = 0))
+  ggplot2$theme(plot.margin = margin(t = 0, r = 0, b = -10, l = 0))
 
 final <- ggarrange(
   plotlist = list(top, bottom), ncol = 1,

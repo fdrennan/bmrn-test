@@ -1,26 +1,28 @@
 #' test_plot_theme
 #' @export test_plot_theme
 test_plot_theme <- function() {
+  {
+    box::use(ggplot2)
+  }
   font_size <- 10
   list(
-    theme_bw(),
-    theme(
-      axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.text = element_text(size = font_size, face = "bold"),
-      axis.title = element_text(size = font_size),
-      strip.text = element_text(size = font_size),
-      plot.title = element_text(size = font_size),
-      axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-      axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
+    ggplot2$theme_bw(),
+    ggplot2$theme(
+      axis.text.x =ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
+      panel.grid.major = ggplot2$element_blank(),
+      panel.grid.minor = ggplot2$element_blank(),
+      axis.text =ggplot2$element_text(size = font_size, face = "bold"),
+      axis.title =ggplot2$element_text(size = font_size),
+      strip.text =ggplot2$element_text(size = font_size),
+      plot.title =ggplot2$element_text(size = font_size),
+      axis.title.y =ggplot2$element_text(margin = ggplot2$margin(t = 0, r = 10, b = 0, l = 0)),
+      axis.title.x =ggplot2$element_text(margin = ggplot2$margin(t = 10, r = 0, b = 0, l = 0))
     )
   )
 }
 
 #' ylab_move
-#' @export ylab_move
-
+#' @export
 ylab_move <- function(plot, x_parameter, y_parameter) {
   str(plot[["x"]][["layout"]][["annotations"]])
   plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -x_parameter
@@ -29,13 +31,14 @@ ylab_move <- function(plot, x_parameter, y_parameter) {
 }
 
 #' bold_interactive
-#' @export bold_interactive
-
+#' @export
 bold_interactive <- function(plot_orig, panel) {
-  #
+  {
+    box::use(plotly)
+  }
   plot <- plot_orig
   if (any(class(plot) == "plotly") == FALSE) {
-    plot <- ggplotly(plot)
+    plot <- plotly$ggplotly(plot)
   }
   plot$x$layout$legend$title$text <- "<b>Treatment"
   plot$x$layout$title$ticktext <- paste("<b>", plot$x$layout$title$ticktext)
@@ -59,7 +62,7 @@ bold_interactive <- function(plot_orig, panel) {
 }
 
 #' label_fix
-#' @export label_fix
+#' @export 
 label_fix <- function(plot) {
   for (i in seq_along(plot$x$data)) {
     # Is the layer the first entry of the group?
@@ -77,8 +80,15 @@ label_fix <- function(plot) {
 
 
 #' vizualization
-#' @export vizualization
+#' @export
 vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette = "floral") {
+  {
+    box::use(dplyr)
+    box::use(tidyr)
+    box::use(ggplot2)
+    box::use(./vizualization)
+  }
+  
   order_groups <- match(
     c(
       "Wild Type", "Negative Control", "Other Comparator", "Positive Control", "Vehicle",
@@ -87,11 +97,12 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
     levels(transformed_data$TreatmentNew)
   )
 
-  orig_groups <- transformed_data %>% dplyr$distinct(Treatment, TreatmentNew)
-  orig_groups <- orig_groups[order_groups, ] %>%
-    dplyr$mutate(Treatment = as.character(Treatment)) %>%
-    dplyr$select(Treatment) %>%
-    unlist()
+  orig_groups <- dplyr$distinct(transformed_data, Treatment, TreatmentNew)
+  orig_groups <-  dplyr$mutate(orig_groups[order_groups, ], Treatment = as.character(Treatment))
+  orig_groups <- dplyr$select(orig_groups, Treatment) 
+  orig_groups <- unlist(orig_groups)
+  
+  
   colors <- c(
     ggprism_data$colour_palettes[[palette]],
     ggprism_data$colour_palettes$pastel
@@ -120,9 +131,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   )
 
   if ((ui_sel$y_axis == "transform" & power == 1) | ui_sel$y_axis == "no_transform") {
-    transformed_data <- transformed_data %>%
-      dplyr$select(-c(Response_Transformed, Baseline_Transformed)) %>%
-      dplyr$rename(
+    transformed_data <- dplyr$select(transformed_data, -c(Response_Transformed, Baseline_Transformed)) 
+      transformed_data <-
+        dplyr$rename(transformed_data,
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
@@ -138,38 +149,41 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
 
   if (ui_sel$y_axis != "change_from_baseline" && any(ui_sel$time_sel %in% "Baseline")) {
     times <- setdiff(input_time, "Baseline")
-    transformed_data <- transformed_data %>%
-      dplyr$mutate(
+    transformed_data <- 
+      dplyr$mutate(transformed_data,
         Baseline_Transformed = as.numeric(Baseline_Transformed),
         Response_Transformed = as.numeric(Response_Transformed)
-      ) %>%
-      pivot_wider(names_from = "Time", values_from = "Response_Transformed") %>%
-      tidyr$pivot_longer(
+      ) 
+    transformed_data <- 
+      tidyr$pivot_wider(transformed_data, names_from = "Time", values_from = "Response_Transformed") %>%
+      transformed_data <- tidyr$pivot_longer(
         cols = c("Baseline_Transformed", times), values_to = "Response_Transformed",
         names_to = "Time"
-      ) %>%
+      ) 
+    transformed_data <- 
       dplyr$mutate(
+        transformed_data,
         Time = as.character(Time),
         Time = dplyr$if_else(Time == "Baseline_Transformed", "Baseline", Time),
         Time = factor(Time, levels = c("Baseline", times))
-      ) %>%
-      dplyr$filter(
+      ) 
+    transformed_data <- 
+      dplyr$filter(transformed_data,
         !is.na(Response_Transformed)
-      ) %>%
-      dplyr$group_by(SubjectID, Treatment, TreatmentNew, Time) %>%
-      dplyr$summarize(Response_Transformed = mean(Response_Transformed)) %>%
-      dplyr$ungroup()
+      )
+    transformed_data <- dplyr$group_by(transformed_data, SubjectID, Treatment, TreatmentNew, Time) 
+    transformed_data <- dplyr$summarize(transformed_data, Response_Transformed = mean(Response_Transformed))
+      transformed_data <- dplyr$ungroup(transformed_data)
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power == 1) {
-    transformed_data <- transformed_data %>%
-      dplyr$mutate(Response_Transformed = Response_Transformed_bc)
+    transformed_data <- dplyr$mutate(transformed_data, Response_Transformed = Response_Transformed_bc)
     ylabel <- paste("Change from Baseline\n", endpoint)
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power != 1) {
-    transformed_data <- transformed_data %>%
-      dplyr$mutate(Response_Transformed = Response_Transformed_bc)
+    transformed_data <- 
+      dplyr$mutate(transformed_data, Response_Transformed = Response_Transformed_bc)
     ylabel <- paste(
       "Change from Baseline\n", transform_table$transform_name[power == transform_table$power],
       endpoint
@@ -177,100 +191,102 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   }
 
   transformed_data$Treatment <- factor(transformed_data$Treatment, levels = orig_groups)
-  transformed_data_sum <- transformed_data %>%
-    dplyr$group_by(Treatment, TreatmentNew, Time) %>%
-    dplyr$summarize(
+  transformed_data_sum <- 
+    dplyr$group_by(transformed_data, Treatment, TreatmentNew, Time) 
+  transformed_data_sum <- dplyr$summarize(transformed_data_sum,
       Mean_Response = mean(Response_Transformed),
       sd_Response = sd(Response_Transformed)
-    ) %>%
-    dplyr$mutate(
+    ) 
+  transformed_data_sum <- dplyr$mutate(transformed_data_sum,
       error = dplyr$if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
       ymin = dplyr$if_else(Mean_Response < 0, error, Mean_Response),
       ymax = dplyr$if_else(Mean_Response < 0, Mean_Response, error)
     )
 
 
-  bar_plot_orig_scale <- ggplot(data = transformed_data_sum, aes(x = Time, y = Mean_Response)) +
-    scale_x_discrete() +
-    scale_y_continuous(
+  bar_plot_orig_scale <- ggplot2$ggplot(
+    data = transformed_data_sum, 
+    ggplot2$aes(x = Time, y = Mean_Response)
+  ) +
+    ggplot2$scale_x_discrete() +
+    ggplot2$scale_y_continuous(
       limits = c(1.5 * min(0, min(transformed_data_sum$ymin)), 1.5 * max(transformed_data_sum$ymax)),
-      expand = expansion(mult = c(0, 0))
+      expand = ggplot2$expansion(mult = c(0, 0))
     ) +
-    geom_bar(
+    ggplot2$geom_bar(
       stat = "identity",
-      aes(color = Treatment), fill = "white",
-      width = 0.5, position = position_dodge(width = 0.7)
+      ggplot2$aes(color = Treatment), fill = "white",
+      width = 0.5, position = ggplot2$position_dodge(width = 0.7)
     ) +
-    geom_errorbar(aes(
+    ggplot2$geom_errorbar(ggplot2$aes(
       ymin = ymin, ymax = ymax,
       color = Treatment
-    ), position = position_dodge(width = 0.7), size = 0.75) +
-    geom_point(
-      aes(y = Response_Transformed, color = Treatment),
+    ), position = ggplot2$position_dodge(width = 0.7), size = 0.75) +
+    ggplot2$geom_point(
+      ggplot2$aes(y = Response_Transformed, color = Treatment),
       show.legend = FALSE,
-      data = transformed_data, size = 0.7, position = position_dodge(width = 0.7)
+      data = transformed_data, size = 0.7, position = ggplot2$position_dodge(width = 0.7)
     ) +
-    labs(color = "Treatment") +
-    ylab(ylabel) +
-    ggtitle("Bar Chart for Each Group Over Time") +
-    test_plot_theme() +
-    scale_color_manual(values = colors, breaks = orig_groups)
+    ggplot2$labs(color = "Treatment") +
+    ggplot2$ylab(ylabel) +
+    ggplot2$ggtitle("Bar Chart for Each Group Over Time") +
+    vizualization$test_plot_theme() +
+    ggplot2$scale_color_manual(values = colors, breaks = orig_groups)
 
 
-  box_plot_transformed <- ggplot(data = transformed_data, aes(x = Time, y = Response_Transformed, label = SubjectID)) +
-    geom_boxplot(aes(color = Treatment), show.legend = FALSE) +
-    geom_point(
-      position = position_dodge(width = 0.1), aes(color = Treatment),
+  box_plot_transformed <- ggplot2$ggplot(data = transformed_data, ggplot2$aes(x = Time, y = Response_Transformed, label = SubjectID)) +
+    ggplot2$geom_boxplot(ggplot2$aes(color = Treatment), show.legend = FALSE) +
+    ggplot2$geom_point(
+      position = ggplot2$position_dodge(width = 0.1), ggplot2$aes(color = Treatment),
       show.legend = FALSE, size = 0.7
     ) +
-    labs(color = "Treatment") +
-    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
-    ylab(ylabel) +
-    stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
-    ggtitle("Box Plot for Each Group Over Time") +
-    test_plot_theme() +
-    scale_color_manual(values = colors, breaks = orig_groups)
+    ggplot2$labs(color = "Treatment") +
+    ggplot2$facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
+    ggplot2$ylab(ylabel) +
+    ggplot2$stat_summary(fun = "mean", color = "black", show.legend = FALSE, size = 0.2) +
+    ggplot2$ggtitle("Box Plot for Each Group Over Time") +
+    vizualization$test_plot_theme() +
+    ggplot2$scale_color_manual(values = colors, breaks = orig_groups)
 
 
-  sub_line_plot <- ggplot(
+  sub_line_plot <- ggplot2$ggplot(
     data = transformed_data,
-    aes(x = Time, y = Response_Transformed, group = SubjectID)
+    ggplot2$aes(x = Time, y = Response_Transformed, group = SubjectID)
   ) +
-    geom_line(aes(color = Treatment), size = 0.2, show.legend = FALSE) +
-    geom_point(aes(color = Treatment), show.legend = FALSE) +
-    ylab(ylabel) +
-    facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
-    ggtitle("Trajectory of Each Subject by Group") +
-    test_plot_theme() +
-    scale_color_manual(values = colors, breaks = orig_groups)
+    ggplot2$geom_line(ggplot2$aes(color = Treatment), size = 0.2, show.legend = FALSE) +
+    ggplot2$geom_point(ggplot2$aes(color = Treatment), show.legend = FALSE) +
+    ggplot2$ylab(ylabel) +
+    ggplot2$facet_wrap(Treatment ~ ., nrow = ui_sel$num_rows) +
+    ggplot2$ggtitle("Trajectory of Each Subject by Group") +
+    vizualization$test_plot_theme() +
+    ggplot2$scale_color_manual(values = colors, breaks = orig_groups)
 
-  line_plot <- ggplot(transformed_data_sum, aes(
+  line_plot <- ggplot2$ggplot(transformed_data_sum, ggplot2$aes(
     x = Time, y = Mean_Response,
     color = Treatment, group = Treatment
   )) +
-    geom_point(size = 1.25, show.legend = F) +
-    geom_line(
-      aes(
+    ggplot2$geom_point(size = 1.25, show.legend = F) +
+    ggplot2$geom_line(
+      ggplot2$aes(
         x = Time, y = Mean_Response, linetype = Treatment, color = Treatment
       ),
       size = 1.25,
       show.legend = T
     ) +
-    geom_errorbar(
-      aes(
+    ggplot2$geom_errorbar(
+      ggplot2$aes(
         ymin = Mean_Response - sd_Response, ymax = Mean_Response + sd_Response,
         color = Treatment
       ),
       width = .5, show.legend = F
     ) +
-    theme(legend.position = "bottom") +
-    labs(color = "Treatment") +
-    ylab(ylabel) +
-    ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
-    # guides(colour = guide_legend(override.aes = list(size = 10))) +
-    test_plot_theme() +
-    scale_color_manual(values = colors, breaks = orig_groups) +
-    scale_linetype_manual(values = linetype, breaks = orig_groups)
+    ggplot2$theme(legend.position = "bottom") +
+    ggplot2$labs(color = "Treatment") +
+    ggplot2$ylab(ylabel) +
+    ggplot2$ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
+    vizualization$test_plot_theme() +
+    ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
+   ggplot2$scale_linetype_manual(values = linetype, breaks = orig_groups)
 
   # Has not been implemented yet
   return(list(

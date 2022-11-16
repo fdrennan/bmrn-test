@@ -5,7 +5,7 @@ final_model <- function(transformed_data, best, variable) {
   box::use(nlme)
   transformed_data <- dplyr$rename(transformed_data, tmp = variable)
 
-  num_times <- nrw(dplyr$distinct(transformed_data, Time))
+  num_times <- nrow(dplyr$distinct(transformed_data, Time))
 
   # Autoregression correlation structure
   if (best == "AR1") {

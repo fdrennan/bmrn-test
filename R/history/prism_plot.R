@@ -144,17 +144,17 @@ prism_plot <- function(data, tables, trt_sel,
     )
 
   if (type == "box") {
-    full_prism <- ggplot(
+    full_prism <- ggplot2$ggplot(
       data %>% dplyr$rename(group1 = Treatment),
-      aes(x = group1, y = Response_Transformed, color = group1)
+      ggplot2$aes(x = group1, y = Response_Transformed, color = group1)
     ) +
       stat_boxplot(
         geom = "errorbar",
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
         lwd = 1
       ) +
-      geom_boxplot(
-        aes(fill = group1),
+      ggplot2$geom_boxplot(
+        ggplot2$aes(fill = group1),
         outlier.color = NA,
         lwd = ifelse(format == "word", 1, 2),
         fatten = 1,
@@ -164,24 +164,24 @@ prism_plot <- function(data, tables, trt_sel,
       geom_jitter(
         # data = data %>%dplyr$filter(outlier) %>% dplyr$rename(group1 = Treatment),
         # plot outliers only
-        aes(shape = group1),
+        ggplot2$aes(shape = group1),
         size = ifelse(format == "word", 1.5, 3),
         position = position_jitter(width = 0.2)
       ) +
-      stat_summary(
+      ggplot2$stat_summary(
         fun = "mean",
         color = "black",
         size = ifelse(format == "word", 0.2, 0.5),
         show.legend = FALSE
       ) +
-      scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
+      ggplot2$scale_y_continuous(limits = c(NA, 3 * max(data$Response_Transformed))) +
       scale_fill_manual(values = colors, breaks = orig_groups) +
-      scale_color_manual(values = colors, breaks = orig_groups) +
+      ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
       guides(y = "prism_offset_minor") +
       theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
       # , palette = inputs$palette) +
-      theme(legend.position = "none") +
-      ylab(ylabel) +
+      ggplot2$theme(legend.position = "none") +
+      ggplot2$ylab(ylabel) +
       xlab("Treatment")
 
     if (same_ylim) {
@@ -191,71 +191,71 @@ prism_plot <- function(data, tables, trt_sel,
     }
 
     bottom <- full_prism +
-      scale_y_continuous(
+      ggplot2$scale_y_continuous(
         limits = ylim
       ) +
-      theme(
+      ggplot2$theme(
         plot.margin = margin(
           t = -10,
           r = 0,
           b = 0,
           l = 0
         ),
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
+        axis.title.y =ggplot2$(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x =ggplot2$(margin = margin(t = 10, r = 0, b = 0, l = 0))
       )
   } else {
-    full_prism <- ggplot(
+    full_prism <- ggplot2$ggplot(
       data_max %>% dplyr$rename(group1 = Treatment),
-      aes(x = group1, y = Response_Transformed, color = group1)
+      ggplot2$aes(x = group1, y = Response_Transformed, color = group1)
     ) +
-      geom_bar(
-        aes(fill = group1),
+      ggplot2$geom_bar(
+        ggplot2$aes(fill = group1),
         lwd = ifelse(format == "word", 1, 2),
         stat = "identity",
         width = 3 * length(unique(data$Treatment)) / num_groups^2,
-        position = position_dodge(width = 0.7),
+        position = ggplot2$position_dodge(width = 0.7),
         alpha = 0.5
       ) +
       geom_jitter(
         data = data %>% dplyr$rename(group1 = Treatment),
-        aes(y = Response_Transformed, shape = group1),
+        ggplot2$aes(y = Response_Transformed, shape = group1),
         size = ifelse(format == "word", 1.5, 3),
         position = position_jitter(width = 0.2)
       ) +
-      geom_errorbar(
-        aes(ymin = ymin, ymax = ymax),
-        position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
+      ggplot2$geom_errorbar(
+        ggplot2$aes(ymin = ymin, ymax = ymax),
+        position = ggplot2$position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
         size = ifelse(format == "word", 1, 2)
       ) +
       guides(y = "prism_offset_minor") +
-      scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$new_y.position))) +
+      ggplot2$scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$new_y.position))) +
       scale_fill_manual(values = colors, breaks = orig_groups) +
-      scale_color_manual(values = colors, breaks = orig_groups) +
+      ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
       theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
-      theme(legend.position = "none") +
-      ylab(ylabel) +
+      ggplot2$theme(legend.position = "none") +
+      ggplot2$ylab(ylabel) +
       xlab("Treatment")
     bottom <- full_prism +
-      theme(
+      ggplot2$theme(
         plot.margin = margin(
           t = -10,
           r = 0,
           b = 0,
           l = 0
         ),
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
+        axis.title.y =ggplot2$(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x =ggplot2$(margin = margin(t = 10, r = 0, b = 0, l = 0))
       ) +
-      scale_y_continuous(
+      ggplot2$scale_y_continuous(
         limits = c(1.1 * min(0, min(data$Response_Transformed)), 1.1 * max(data$Response_Transformed)),
-        expand = expansion(mult = c(0, 0))
+        expand = ggplot2$expansion(mult = c(0, 0))
       )
   }
   if (format == "word") {
-    bottom <- bottom + theme(
-      axis.text = element_text(size = 8),
-      axis.title = element_text(size = 10)
+    bottom <- bottom + ggplot2$theme(
+      axis.text =ggplot2$(size = 8),
+      axis.title =ggplot2$(size = 10)
     )
   }
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
@@ -272,19 +272,19 @@ prism_plot <- function(data, tables, trt_sel,
     )
 
     top <- full_prism +
-      scale_y_continuous(
+      ggplot2$scale_y_continuous(
         limits = c(0.9 * min(p_vals$new_y.position), NA),
-        expand = expansion(mult = c(0, 0.1))
+        expand = ggplot2$expansion(mult = c(0, 0.1))
       )
 
     if (format == "word") {
       top <- top +
-        theme(
+        ggplot2$theme(
           line = element_blank(),
           axis.title = element_blank(),
           axis.text = element_blank()
         ) +
-        theme(plot.margin = margin(
+        ggplot2$theme(plot.margin = margin(
           t = 0,
           r = 0,
           b = 0,
@@ -292,16 +292,16 @@ prism_plot <- function(data, tables, trt_sel,
         ))
     } else {
       top <- full_prism +
-        scale_y_continuous(
+        ggplot2$scale_y_continuous(
           limits = c(0.9 * min(p_vals$new_y.position), NA),
-          expand = expansion(mult = c(0.25, 0.1))
+          expand = ggplot2$expansion(mult = c(0.25, 0.1))
         ) +
-        theme(
+        ggplot2$theme(
           line = element_blank(),
           axis.title = element_blank(),
           axis.text = element_blank()
         ) +
-        theme(plot.margin = margin(
+        ggplot2$theme(plot.margin = margin(
           t = 0,
           r = 0,
           b = 0,
@@ -317,12 +317,12 @@ prism_plot <- function(data, tables, trt_sel,
     # }
 
     if (type == "box") {
-      top <- top + ggtitle(paste("Box plot for Treatment Groups at", time_sel))
+      top <- top + ggplot2$ggtitle(paste("Box plot for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
       # ncol = 1,
       # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight, c('in', 'in')))
     } else {
-      top <- top + ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
+      top <- top + ggplot2$ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
       combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
       # ncol = 1,
       # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight,c('in', 'in')))
@@ -332,29 +332,29 @@ prism_plot <- function(data, tables, trt_sel,
   } else {
     if (type == "box") {
       bottom <- bottom +
-        ggtitle(paste("Box Plot for Treatment Groups at", time_sel)) +
-        theme(
+        ggplot2$ggtitle(paste("Box Plot for Treatment Groups at", time_sel)) +
+        ggplot2$theme(
           plot.margin = margin(
             t = 0,
             r = 0,
             b = 0,
             l = 0
           ),
-          axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
+          axis.title.y =ggplot2$(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+          axis.title.x =ggplot2$(margin = margin(t = 10, r = 0, b = 0, l = 0))
         )
     } else {
       bottom <- bottom +
-        ggtitle(paste("Bar Chart for Treatment Groups at", time_sel)) +
-        theme(
+        ggplot2$ggtitle(paste("Bar Chart for Treatment Groups at", time_sel)) +
+        ggplot2$theme(
           plot.margin = margin(
             t = 0,
             r = 0,
             b = 0,
             l = 0
           ),
-          axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))
+          axis.title.y =ggplot2$(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+          axis.title.x =ggplot2$(margin = margin(t = 10, r = 0, b = 0, l = 0))
         )
       return(bottom)
     }

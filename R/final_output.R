@@ -404,7 +404,7 @@ column_labels <- function(df_gt, column, label) {
 
 html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
   data <- data %>%
-    mutate_all(~ replace(., is.na(.), "")) %>%
+    dplyr$mutate_all(~ replace(., is.na(.), "")) %>%
     dplyr$mutate(`Time Points` = dplyr$if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`

@@ -3,7 +3,7 @@
 #'
 prism_output <- function(tranformed_data, variable) {
   tmp <- tranformed_data %>%
-    pivot_wider(
+    tidyr$pivot_wider(
       id_cols = c(Type, Treatment, SubjectID),
       names_from = Time,
       values_from = variable

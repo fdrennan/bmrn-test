@@ -11,10 +11,10 @@ variance_check <- function(transformed_data, variable) {
   tmp <- transformed_data
   
   tmp <- transformed_data
-  variances <- group_by(transformed_data, TreatmentNew, basic_model, Time) 
-  variances <- summarize(variances, var = stats$var(get(variable))) 
-  variances <- group_by(variances, TreatmentNew, basic_model) 
-  variances <- summarize(variances, mean_var = mean(var))
+  variances <- dplyr$group_by(transformed_data, TreatmentNew, basic_model, Time) 
+  variances <- dplyr$summarize(variances, var = stats$var(get(variable))) 
+  variances <- dplyr$group_by(variances, TreatmentNew, basic_model) 
+  variances <- dplyr$summarize(variances, mean_var = mean(var))
   # We really want to make sure that the variance for the groups in the basic model
   # is similar. So we compare their variances to the mean (pooled) variance of these
   # groups. There will be two conditions to indicate that variances are not similar
