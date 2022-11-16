@@ -4,7 +4,8 @@ test_session_setup <- function(id = "test_session_setup") {
   box::use(shiny)
   box::use(bs4Dash)
   box::use(readr)
-  load('./data/program_lists.rda')
+
+  load("./data/program_lists.rda")
   ns <- shiny$NS(id)
   section_1 <- bs4Dash$box(
     width = 12,
@@ -14,7 +15,7 @@ test_session_setup <- function(id = "test_session_setup") {
     bs4Dash$tooltip(
       shiny$selectizeInput(ns("statistician"),
         shiny$div(
-          class = "d-flex justify-content-between","Contact Statistician",
+          class = "d-flex justify-content-between", "Contact Statistician",
           shiny$icon("info-circle")
         ),
         choices = c("Cheng Su", "Other")
@@ -84,14 +85,16 @@ test_session_setup <- function(id = "test_session_setup") {
 
   shiny$fluidRow(
     shiny$column(4, offset = 2, section_1),
-    shiny$column(4,
+    shiny$column(
+      4,
       section_2,
       section_3,
       shiny$div(
         class = "d-flex justify-content-end",
         shiny$actionButton(ns("submitForm"),
-                           shiny$h6("Submit"),
-                           class = "btn-primary")
+          shiny$h6("Submit"),
+          class = "btn-primary"
+        )
       )
     )
   )
@@ -114,6 +117,9 @@ test_session_setup_server <- function(id) {
     box::use(lubridate)
     box::use(purrr)
     box::use(. / clean_excel_data)
+    box::use(. / connect_table)
+    box::use(. / analysis_a_session_setup)
+    box::use(DBI)
   }
   shiny$moduleServer(
     id,
@@ -132,7 +138,7 @@ test_session_setup_server <- function(id) {
         x <- input$program
         ns <- session$ns
         project <- unique(dplyr$filter(program_lists, Program == input$program)$Project)
-        dplyr$selectizeInput(ns("project"),
+        shiny$selectizeInput(ns("project"),
           "Project (select or type)",
           options = list(create = TRUE),
           choices = project
@@ -140,7 +146,7 @@ test_session_setup_server <- function(id) {
       })
 
 
-      output$template <- dplyr$downloadHandler(
+      output$template <- shiny$downloadHandler(
         filename = function() {
           "test_example.xlsx"
         },
@@ -154,15 +160,16 @@ test_session_setup_server <- function(id) {
 
       out <- shiny$eventReactive(input$submitForm, {
         shiny$showNotification("Building analysis...", id = "setupnotification")
-        if (!iv$is_valid()) {
-          shiny$showNotification("Please complete all required fields.")
-        }
-        if (getOption("require_validation")) {
+
+        if (isFALSE(getOption("cachetest"))) {
+          shiny$showNotification("Skipping, validation turned off.")
+        } else {
+          if (!iv$is_valid()) shiny$showNotification("Please complete all required fields.")
           shiny$req(iv$is_valid())
         }
         input <- shiny$reactiveValuesToList(input)
         input$uuid <- uuid$UUIDgenerate()
-        input$project <- input$project %>% snakecase$to_snake_case()
+        input$project <- snakecase$to_snake_case(input$project)
 
         rel_path_home <- fs$path_join(c("test_output", input$program, input$project, input$studyId, input$uuid))
         base_dir <- fs$path_abs(Sys.getenv("BASE_DIR"))
@@ -177,7 +184,7 @@ test_session_setup_server <- function(id) {
         )
 
         if (length(input$upload$datapath)) {
-          fs$copy_files(df, input$upload)
+          analysis_a_session_setup$copy_files(df, input$upload)
         }
 
         if (length(input$file$datapath)) {
@@ -192,10 +199,9 @@ test_session_setup_server <- function(id) {
               shiny$req(FALSE)
             }
           )
-          fs$copy_files(df, input$file)
+          analysis_a_session_setup$copy_files(df, input$file)
         }
-        box::use(. / connect_table)
-        box::use(DBI)
+
         input$submitForm <- NULL
         input <- tibble$as_tibble(purrr$keep(input, ~ length(.) == 1))
         df <- dplyr$bind_cols(input, df)
@@ -219,9 +225,9 @@ test_session_setup_server <- function(id) {
 }
 
 #' copy_files
-#' @export copy_files
+#' @export
 copy_files <- function(df, upload) {
-  box::use(fs[dir_create, path_dir])
+  box::use(fs[dir_create, path_dir, file_move])
   box::use(purrr[walk2])
   box::use(cli[cli_alert_info])
   full_path_files <- df$full_path_files

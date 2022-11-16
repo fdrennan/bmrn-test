@@ -39,7 +39,7 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
   box::use(shiny)
   box::use(shiny.router)
   box::use(shinyjs)
-  moduleServer(
+  shiny$moduleServer(
     id,
     function(input, output, session) {
       ns <- session$ns
@@ -56,9 +56,9 @@ server_navbar <- function(id = "navbar", navbarId = "navbarNav") {
       )
       shiny$observeEvent(input$goHome, {
         shiny.router$change_page("home")
-        reset()
+        shinyjs$reset()
       })
-      observeEvent(input$collapse, {
+      shiny$observeEvent(input$collapse, {
         id <- paste0("#", ns(navbarId))
         shinyjs$toggle(id)
       })

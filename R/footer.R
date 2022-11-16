@@ -1,6 +1,6 @@
 #' @export
 ui_footer <- function(id = "footer", container = function(...) {
-                        column(12, ...)
+                        shiny::column(12, ...)
                       }) {
   box::use(shiny)
   ns <- shiny$NS(id)
@@ -15,12 +15,12 @@ server_footer <- function(id = "footer") {
     function(input, output, session) {
       ns <- session$ns
       output$ui <- shiny$renderUI({
-        div(
+        shiny$div(
           class = "d-flex justify-content-around",
-          div(
+          shiny$div(
             getOption("test_version")
           ),
-          div(
+          shiny$div(
             "© 2022 BioMarin"
           )
         )

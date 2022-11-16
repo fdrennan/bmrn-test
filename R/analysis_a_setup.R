@@ -18,7 +18,7 @@ analysis_a_setup_server <- function(id, input_data) {
   box::use(shinyWidgets)
   box::use(gdata)
   box::use(storr)
-  box::use(./make_type_assignment_table)
+  box::use(. / make_type_assignment_table)
   shiny$moduleServer(
     id,
     function(input, output, session) {
@@ -58,13 +58,12 @@ analysis_a_setup_server <- function(id, input_data) {
 
 
 
-      output$groupAssignmentTable <- renderUI({
+      output$groupAssignmentTable <- shiny$renderUI({
         shiny$req(input_data())
         data <- input_data()$input_data$data
 
-        treatment_input <-
-          dplyr$distinct(data, treatment_snake, Treatment) %>%
-          dplyr$filter(complete.cases(.))
+        treatment_input <- dplyr$distinct(data, treatment_snake, Treatment)
+        treatment_input <- dplyr$filter(treatment_input, complete.cases(treatment_input))
 
 
         purrr$map2(
@@ -79,7 +78,7 @@ analysis_a_setup_server <- function(id, input_data) {
         )
       })
 
-      output$analysisInputUI <- renderUI({
+      output$analysisInputUI <- shiny$renderUI({
         shiny$req(input_data())
         session_data <- input_data()$session_data
         data <- input_data()$input_data$data

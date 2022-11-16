@@ -1,35 +1,36 @@
 #' ui_landing
 #' @export
 ui_landing <- function(id = "landing") {
-  ns <- NS(id)
+  box::use(shiny)
+  ns <- shiny$NS(id)
   base <- Sys.getenv("BASE_DOMAIN")
-  fluidRow(
-    column(5, imageOutput(ns("svgIcon"))),
-    column(
+  shiny$fluidRow(
+    shiny$column(5, shiny$imageOutput(ns("svgIcon"))),
+    shiny$column(
       7,
-      tags$br(),
-      div(
+      shiny$tags$br(),
+      shiny$div(
         class = "d-flex justify-content-start",
-        h2("Treatment", class = "underline-first-letter p-2"),
-        h2("Evaluation", class = "underline-first-letter p-2"),
-        h2("Statistical", class = "underline-first-letter p-2"),
-        h2("Tools", class = "underline-first-letter p-2"),
+        shiny$h2("Treatment", class = "underline-first-letter p-2"),
+        shiny$h2("Evaluation", class = "underline-first-letter p-2"),
+        shiny$h2("Statistical", class = "underline-first-letter p-2"),
+        shiny$h2("Tools", class = "underline-first-letter p-2"),
         class = "font-weight-bold px-3"
       ),
-      div(
+      shiny$div(
         class = "d-flex justify-content-start",
-        h2("for", class = " p-2"),
-        h2("Preclinical", class = "p-2"),
-        h2("Studies", class = "p-2"),
+        shiny$h2("for", class = " p-2"),
+        shiny$h2("Preclinical", class = "p-2"),
+        shiny$h2("Studies", class = "p-2"),
         class = "font-weight-bold px-3"
       ),
-      tags$br(),
-      tags$br(),
-      tags$br(),
-      h4("By Quantitative Science", class = "text-center"),
-      div(
+      shiny$tags$br(),
+      shiny$tags$br(),
+      shiny$tags$br(),
+      shiny$h4("By Quantitative Science", class = "text-center"),
+      shiny$div(
         style = "text-align: center",
-        imageOutput(ns("dsIcon"), height = "200px")
+        shiny$imageOutput(ns("dsIcon"), height = "200px")
       )
     )
   )
@@ -38,10 +39,11 @@ ui_landing <- function(id = "landing") {
 #' server_landing
 #' @export
 server_landing <- function(id = "landing") {
-  moduleServer(
+  box::use(shiny)
+  shiny$moduleServer(
     id,
     function(input, output, session) {
-      output$svgIcon <- renderImage(
+      output$svgIcon <- shiny$renderImage(
         {
           list(
             src = normalizePath("./www/test_logo.png"),
@@ -54,7 +56,7 @@ server_landing <- function(id = "landing") {
         deleteFile = FALSE
       )
 
-      output$dsIcon <- renderImage(
+      output$dsIcon <- shiny$renderImage(
         {
           list(
             src = normalizePath("./www/dslogo.png"),

@@ -16,6 +16,7 @@ server_home <- function(id = "home") {
   box::use(shiny[tags])
   box::use(. / ui_landing)
   box::use(purrr)
+  box::use(bs4Dash)
   shiny$moduleServer(
     id,
     function(input, output, session) {

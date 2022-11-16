@@ -1,7 +1,7 @@
 #' ui_prism
 #' @export
 ui_prism <- function(id = "prism") {
-  box::use(shiny, bs4Dash, ./testSpinner, ./boxSidebarTest)
+  box::use(shiny, bs4Dash, . / testSpinner, . / boxSidebarTest)
   ns <- shiny$NS(id)
   shiny$fluidRow(
     testSpinner$testSpinner(shiny$uiOutput(ns("plotsInputs"))),
@@ -36,7 +36,7 @@ ui_prism <- function(id = "prism") {
 server_prism <- function(id = "prism", signal) {
   box::use(shiny)
   box::use(fs)
-  box::use(./prism_output)
+  box::use(. / prism_output)
   box::use(ggplot2)
   box::use(storr)
   shiny$moduleServer(
@@ -44,12 +44,12 @@ server_prism <- function(id = "prism", signal) {
     function(input, output, session) {
       ns <- session$ns
 
-      observe({
+      shiny$observe({
         signal()
       })
 
-      pre_prism_data <- reactive({
-        req(signal())
+      pre_prism_data <- shiny$reactive({
+        shiny$req(signal())
         data <- signal()
         plot_data <- data$plot$data$transformed_data
         input <- data$inputs
@@ -117,8 +117,8 @@ server_prism <- function(id = "prism", signal) {
         )
       })
       prismData <- shiny$reactive({
-        req(signal())
-        req(input$treatmentPlotSelectors)
+        shiny$req(signal())
+        shiny$req(input$treatmentPlotSelectors)
         #
         data <- signal()
         tfd <- data$pre_modeling_input$transformed_data
@@ -126,7 +126,7 @@ server_prism <- function(id = "prism", signal) {
         cfb <- data$input_data$selections$changeFromBaseline %>% as.logical()
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- fs$path_join(c(full_path_file, "prism_data.xlsx"))
-        
+
         prism_output$save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
         # showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
@@ -162,7 +162,7 @@ server_prism <- function(id = "prism", signal) {
       output$prismPlot_box <- shiny$renderPlot({
         shiny$isolate(input)
         shiny$req(pre_prism_data())
-        
+
         input$update
         input <- shiny$reactiveValuesToList(input)
         input$border <- FALSE
@@ -217,7 +217,7 @@ server_prism <- function(id = "prism", signal) {
 
 
       shiny$observe({
-        req(prismData())
+        shiny$req(prismData())
 
         uuid <- signal()$input_data$session_data$uuid
         shiny$req(uuid)

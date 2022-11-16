@@ -17,12 +17,12 @@ ui_analysis_a_report <- function(id = "analysis_a_report", session_id = "") {
 #' @export
 server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
   box::use(shiny)
-  box::use(./connect_table)
+  box::use(. / connect_table)
   box::use(dplyr)
   box::use(fs)
   box::use(rmarkdown)
   box::use(gt)
-  box::use(./send_email)
+  box::use(. / send_email)
   shiny$moduleServer(
     id,
     function(input, output, session) {
@@ -30,10 +30,10 @@ server_analysis_a_report <- function(id = "analysis_a_report", server_input) {
       ns <- session$ns
       data <- shiny$reactive({
         con <- connect_table$connect_table()
-        data <- dplyr$tbl(con, "sessions") %>%
-          dplyr$arrange(dplyr$desc(timestamp)) %>%
-          dplyr$first() %>%
-          dplyr$collect()
+        data <- dplyr$tbl(con, "sessions")
+        data <- dplyr$arrange(data, dplyr$desc(timestamp))
+        data <- dplyr$first(data)
+        data <- dplyr$collect(data)
       })
 
       output$emailUI <- dplyr$renderUI({
