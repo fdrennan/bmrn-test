@@ -1,7 +1,9 @@
-#' vizualization_cb
-#' @export vizualization_cb
-
+#'
+#' @export
 vizualization_cb <- function(transformed_data, power, endpoint, transformation) {
+  {
+    box::use(stats)
+  }
   transform_table <- data.frame(
     power = c(2, 1, 0.5, 0, -0.5, -1),
     transform_name = c(
@@ -31,7 +33,7 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
     dplyr$group_by(Treatment, Time) %>%
     dplyr$summarize(
       Mean_Response = mean(Response_Transformed_bc),
-      sd_Response = sd(Response_Transformed_bc)
+      sd_Response = stats$sd(Response_Transformed_bc)
     )
 
   bar_plot_orig_scale <- ggplot2$ggplot(data = transformed_data_sum, ggplot2$aes(x = Time, y = Mean_Response)) +
@@ -51,13 +53,13 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
     theme_bw() +
     ggplot2$labs(color = "Treatment") +
     ggplot2$theme(
-      axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75),
+      axis.text.x = ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text =ggplot2$(size = 14),
-      axis.title =ggplot2$(size = 14),
-      strip.text =ggplot2$(size = 14),
-      title =ggplot2$(size = 16)
+      axis.text = ggplot2$element_text(size = 14),
+      axis.title = ggplot2$element_text(size = 14),
+      strip.text = ggplot2$element_text(size = 14),
+      title = ggplot2$element_text(size = 16)
     ) +
     ggplot2$ylab(ylabel) +
     ggplot2$ggtitle("Bar Chart for Each Group Across Time Points")
@@ -65,17 +67,17 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
 
   box_plot_transformed <- ggplot2$ggplot(data = transformed_data, ggplot2$aes(x = Time, y = Response_Transformed_bc)) +
     ggplot2$geom_boxplot(ggplot2$aes(color = Treatment), show.legend = FALSE) +
-    geom_jitter(width = 0.1, ggplot2$aes(color = Treatment), show.legend = FALSE, size = 0.3) +
+    ggplot2$geom_jitter(width = 0.1, ggplot2$aes(color = Treatment), show.legend = FALSE, size = 0.3) +
     theme_bw() +
     ggplot2$labs(color = "Treatment") +
     ggplot2$theme(
-      axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75),
+      axis.text.x = ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text =ggplot2$(size = 14),
-      axis.title =ggplot2$(size = 14),
-      strip.text =ggplot2$(size = 14),
-      title =ggplot2$(size = 16)
+      axis.text = ggplot2$element_text(size = 14),
+      axis.title = ggplot2$element_text(size = 14),
+      strip.text = ggplot2$element_text(size = 14),
+      title = ggplot2$element_text(size = 16)
     ) +
     ggplot2$facet_wrap(Treatment ~ ., nrow = 1) +
     ggplot2$ylab(ylabel) +
@@ -93,14 +95,14 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
       legend.position = "bottom",
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text.x =ggplot2$(
+      axis.text.x = ggplot2$element_text(
         angle = 45, vjust = 0.75, hjust = 0.75,
         size = 14
       ),
-      axis.text.y =ggplot2$(size = 14),
-      axis.title =ggplot2$(size = 14),
-      strip.text =ggplot2$(size = 14),
-      title =ggplot2$(size = 16)
+      axis.text.y = ggplot2$element_text(size = 14),
+      axis.title = ggplot2$element_text(size = 14),
+      strip.text = ggplot2$element_text(size = 14),
+      title = ggplot2$element_text(size = 16)
     ) +
     ggplot2$ylab(ylabel) +
     ggplot2$facet_wrap(Treatment ~ ., nrow = 1) +
@@ -116,7 +118,7 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
   #   theme_bw() +
   #   ggplot2$theme(legend.position = "bottom") +
   #   ggplot2$labs(color = "Treatment", linetype = "Treatment") +
-  #   ggplot2$theme(axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75))
+  #   ggplot2$theme(axis.text.x =ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75))
 
   # Cheng's suggestion 3/8/2022
   line_plot <- ggplot2$ggplot(transformed_data_sum, ggplot2$aes(
@@ -139,19 +141,19 @@ vizualization_cb <- function(transformed_data, power, endpoint, transformation) 
     ggplot2$theme(legend.position = "bottom") +
     ggplot2$labs(color = "Treatment", linetype = "Treatment") +
     ggplot2$theme(
-      axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75),
+      axis.text.x = ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.text =ggplot2$(size = 14),
-      axis.title =ggplot2$(size = 14),
-      strip.text =ggplot2$(size = 14),
-      title =ggplot2$(size = 16),
-      legend.text =ggplot2$(size = 14),
-      legend.title =ggplot2$(size = 16)
+      axis.text = ggplot2$element_text(size = 14),
+      axis.title = ggplot2$element_text(size = 14),
+      strip.text = ggplot2$element_text(size = 14),
+      title = ggplot2$element_text(size = 16),
+      legend.text = ggplot2$element_text(size = 14),
+      legend.title = ggplot2$element_text(size = 16)
     ) +
     ggplot2$ylab(ylabel) +
     ggplot2$ggtitle("Line Plot for Each Group Across Time Points") +
-    guides(colour = guide_legend(override.aes = list(size = 10)))
+    ggplot2$guides(colour = guide_legend(override.aes = list(size = 10)))
 
 
   # ggplotly(line_plot) #Interactive plots

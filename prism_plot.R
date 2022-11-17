@@ -24,7 +24,7 @@ p_vals <- dplyr$bind_rows(tab1, tab2, tab3) %>%
   select(Treatment, `Times Included`, grep("p value from", colnames(.))) %>%
   tidyr$pivot_longer(cols = 3:ncol(.), names_to = "group2", values_to = "p value") %>%
   dplyr$rename(group1 = Treatment) %>%
-  dplyr$filter(complete.cases(.)) %>%
+  dplyr$filter(stats$complete.cases(.)) %>%
   dplyr$mutate(
     group2 = gsub("p value from ", "", group2),
     `p value` = dplyr$if_else(`p value` == "< 0.0001", "0.00001", `p value`),
@@ -62,7 +62,7 @@ than
 
 bottom <- full_prism +
   ggplot2$scale_y_continuous(limits = c(NA, 1.1 * max(data$Response_Transformed))) +
-  ggplot2$theme(plot.margin = margin(t = -10, r = 0, b = 0, l = 0))
+  ggplot2$theme(plot.margin = ggplot2$margin(t = -10, r = 0, b = 0, l = 0))
 
 top <- full_prism +
   ggplot2$scale_y_continuous(limits = c(1.1 * min(p_vals$y.position), 3 * max(data$Response_Transformed))) +
@@ -71,7 +71,7 @@ top <- full_prism +
     axis.title = element_blank(),
     axis.text = element_blank()
   ) +
-  ggplot2$theme(plot.margin = margin(t = 0, r = 0, b = -10, l = 0))
+  ggplot2$theme(plot.margin = ggplot2$margin(t = 0, r = 0, b = -10, l = 0))
 
 final <- ggarrange(
   plotlist = list(top, bottom), ncol = 1,

@@ -2,9 +2,11 @@
 #' @export final_output
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
-  box::use(dplyr)
-  final_contrast <- final_contrast %>%
-    dplyr$mutate(p.value = ifelse(p.value == 0, "< 0.001", p.value))
+  {
+    box::use(dplyr)
+    box::use(stats)
+  }
+  final_contrast <- dplyr$mutate(final_contrast, p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
   # Generate Tables
   # Compute Summary statistic for the data on the original scale for both the
@@ -17,7 +19,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     median = median(Response)
   )
   AT_os <- dplyr$group_by(transformed_data, TreatmentNew, Time)
-  AT_os <- dplyr$summarize(AT_os, sd = sd(Response))
+  AT_os <- dplyr$summarize(AT_os, sd = stats$sd(Response))
   AT_os <- dplyr$group_by(AT_os, TreatmentNew)
   AT_os <- dplyr$summarize(AT_os, se = mean(sd) / n())
   AT_os <- dplyr$inner_join(atos_join, AT_os)
@@ -29,7 +31,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   ST_os <- dplyr$summarize(ST_os,
     mean = mean(Response),
     median = median(Response),
-    se = sd(Response) / n()
+    se = stats$sd(Response) / n()
   )
 
   os_together <- dplyr$bind_rows(AT_os, ST_os)
@@ -192,9 +194,9 @@ html_tables <- function(transformed_data, tab_list) {
     "Treatment_orig" = Treatment,
     "Treatment" = TreatmentNew
   )
-  tab1 <- dplyr$inner_join(tab1, tab_join) %>%
-    tab1() <- dplyr$select(tab1, -Treatment) %>%
-    tab1() <- dplyr$rename(tab1, "Treatment" = Treatment_orig)
+  tab1 <- dplyr$inner_join(tab1, tab_join)
+  tab1 <- dplyr$select(tab1, -Treatment)
+  tab1 <- dplyr$rename(tab1, "Treatment" = Treatment_orig)
 
   tab2 <- tab_list$tab2
   tab2_join <- tab2[, which(apply(tab2, 2, function(a) !all(a == "")))]
@@ -204,9 +206,9 @@ html_tables <- function(transformed_data, tab_list) {
     "Treatment_orig" = Treatment,
     "Treatment" = TreatmentNew
   )
-  tab2 <- dplyr$arrange(tab2, Treatment) %>%
-    tab2() <- dplyr$inner_join(tab2, tab2_join) %>%
-    tab2() <- dplyr$select(tab2, -Treatment)
+  tab2 <- dplyr$arrange(tab2, Treatment)
+  tab2 <- dplyr$inner_join(tab2, tab2_join)
+  tab2 <- dplyr$select(tab2, -Treatment)
   tab2 <- dplyr$rename(tab2, "Treatment" = Treatment_orig)
 
 
@@ -291,7 +293,7 @@ html_UI <- function(transformed_data, tables) {
   if (!any(grepl("Transformed", colnames(tab1)))) {
     group <- unique(word(colnames(tab1)[6:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% dplyr$filter(TreatmentNew == .x)
+      tmp <- dplyr$filter(trt_map, TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[6:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[6:ncol(tab1)])
@@ -307,7 +309,7 @@ html_UI <- function(transformed_data, tables) {
   } else {
     group <- unique(word(colnames(tab1)[8:ncol(tab1)], -1))
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% dplyr$filter(TreatmentNew == .x)
+      tmp <- dplyr$filter(trt_map, TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab1)[8:ncol(tab1)] <- gsub(" from.*", "", colnames(tab1)[8:ncol(tab1)])
@@ -331,7 +333,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% dplyr$filter(TreatmentNew == .x)
+      tmp <- dplyr$filter(trt_map, TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[6:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[6:ncol(tab2)])
@@ -350,7 +352,7 @@ html_UI <- function(transformed_data, tables) {
       group <- c(group, paste(word(colnames(tab2)[i], -c(2, 1)), collapse = " "))
     }
     group <- map_chr(.x = group, .f = ~ {
-      tmp <- trt_map %>% dplyr$filter(TreatmentNew == .x)
+      tmp <- dplyr$filter(trt_map, TreatmentNew == .x)
       as.character(tmp$Treatment)
     })
     colnames(tab2)[8:ncol(tab2)] <- gsub(" from.*", "", colnames(tab2)[8:ncol(tab2)])
@@ -373,7 +375,7 @@ html_UI <- function(transformed_data, tables) {
     group <- c(group, paste(word(colnames(tab3)[i], -c(2, 1)), collapse = " "))
   }
   group <- map_chr(.x = group, .f = ~ {
-    tmp <- trt_map %>% dplyr$filter(TreatmentNew == .x)
+    tmp <- dplyr$filter(trt_map, TreatmentNew == .x)
     as.character(tmp$Treatment)
   })
   colnames(tab3)[3:ncol(tab3)] <- gsub(" from.*", "", colnames(tab3)[3:ncol(tab3)])
@@ -394,59 +396,63 @@ html_UI <- function(transformed_data, tables) {
 #' @export
 column_labels <- function(df_gt, column, label) {
   cli_alert("column_labels")
-  cols_list <- as.list(label) %>% purrr::set_names(column)
-  df_gt %>%
-    cols_label(.list = cols_list)
+  cols_list <- purrr::set_names(as.list(label), column)
+
+  gt$cols_label(df_gt, .list = cols_list)
 }
 
 #' html_table_gt
 #' @export
 
 html_table_gt <- function(data, title, footer, include_summary, summary_only, transformation, analysis_type, endpoint) {
-  data <- data %>%
-    dplyr$mutate_all(~ replace(., is.na(.), "")) %>%
-    dplyr$mutate(`Time Points` = dplyr$if_else(grepl("Average", `Time Points`),
+  {
+    box::use(dplyr)
+    box::use(uuid)
+    box::use(gt)
+  }
+  data <- dplyr$mutate_all(data, ~ replace(., is.na(.), ""))
+
+  data <- dplyr$mutate(data,
+    `Time Points` = dplyr$if_else(grepl("Average", `Time Points`),
       "Overall Average",
       `Time Points`
-    ))
-  # if (analysis_type == "Exploratory") {
-  #   data <- data %>%
-  #    dplyr$mutate(num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) %>%
-  #    dplyr$arrange(Treatment, num) %>%
-  #    dplyr$select(-num)
-  # }
+    )
+  )
 
   if (summary_only & transformation) {
-    table_gt <- data %>%
-      gt() %>%
-      tab_header(
-        title = title
-      ) %>%
-      tab_spanner(
-        id = UUIDgenerate(),
+    table_gt <- gt$gt(data)
+    table_gt <- gt$tab_header(
+      table_gt,
+      title = title
+    )
+    table_gt <-
+      gt$tab_spanner(
+        table_gt,
+        id = uuid$UUIDgenerate(),
         label = endpoint,
         columns = grep("Original", colnames(data), value = TRUE)
-      ) %>%
-      cols_label(
-        `Original Scale Mean` = "Mean",
-        `Original Scale Median` = "Median",
-        `Original Scale SE` = "SE"
       )
+    table_gt <- gt$cols_label(table_gt,
+      `Original Scale Mean` = "Mean",
+      `Original Scale Median` = "Median",
+      `Original Scale SE` = "SE"
+    )
   } else {
-    data <- data %>% dplyr$select(-grep("Original", colnames(.), value = TRUE))
+    data <- dplyr$select(data, -grep("Original", colnames(.), value = TRUE))
 
     if (!include_summary) {
-      table_gt <- data %>%
-        rowwise() %>%
-        dplyr$mutate_at(
-          .vars = grep("Difference", colnames(.), value = TRUE),
-          .funs = ~ gsub(" \\(", "<br>(", .)
-        ) %>%
-        gt() %>%
-        tab_header(
-          title = title
-        ) %>%
-        tab_source_note(source_note = footer)
+      table_gt <- dplyr$rowwise(data)
+      table_gt <- dplyr$mutate_at(
+        table_gt,
+        .vars = grep("Difference", colnames(.), value = TRUE),
+        .funs = ~ gsub(" \\(", "<br>(", .)
+      )
+      table_gt <- gt$gt(table_gt)
+      table_gt <- gt$tab_header(
+        table_gt,
+        title = title
+      )
+      table_gt <- gt$tab_source_note(table_gt, source_note = footer)
 
       groups <- gsub(
         pattern = "Difference from ", replacement = "",
@@ -456,66 +462,68 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       for (i in groups) {
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
-        table_gt <- table_gt %>%
-          tab_spanner(
-            id = UUIDgenerate(),
+        table_gt <-
+          gt$tab_spanner(
+            table_gt,
+            id = uuid$UUIDgenerate(),
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
-          ) %>%
-          column_labels(., col1, "LSMEAN Diff (95% CI)") %>%
-          fmt_markdown(columns = everything()) %>%
-          column_labels(., col2, "p value") %>%
-          cols_align(
-            align = "center",
-            columns = everything()
           )
+        table_gt <- gt$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
+        table_gt <- gt$fmt_markdown(table_gt, columns = dplyr$everything())
+        table_gt <- gt$column_labels(table_gt, col2, "p value")
+        table_gt <- gt$cols_align(
+          table_gt,
+          align = "center",
+          columns = dplyr$everything()
+        )
       }
     } else {
-      table_gt <- data %>%
-        rowwise() %>%
-        dplyr$mutate_at(
+      table_gt <- dplyr$rowwise(data)
+      table_gt <-
+        dplyr$mutate_at(table_gt,
           .vars = grep("Difference", colnames(.), value = TRUE),
           .funs = ~ gsub(" \\(", "<br>(", .)
-        ) %>%
-        gt() %>%
-        tab_header(
-          title = title
-        ) %>%
-        tab_source_note(source_note = footer)
+        )
+      table_gt <- gt(table_gt)
+      table_gt <- tab_header(table_gt,
+        title = title
+      )
+      table_gt <- tab_source_note(table_gt, source_note = footer)
 
 
 
       if (transformation) {
-        table_gt <- table_gt %>%
-          tab_spanner(
-            id = UUIDgenerate(),
+        table_gt <-
+          gt$tab_spanner(table_gt,
+            id = uuid$UUIDgenerate(),
             label = "Transformed Scale",
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
-          ) %>%
-          cols_label(
-            `Transformed Scale Mean` = "Mean",
-            `Transformed Scale SE` = "SE"
-          ) %>%
-          tab_spanner(
-            id = UUIDgenerate(),
-            label = "Back Transformed",
-            columns = grep("Back Transformed", colnames(data), value = TRUE)
-          ) %>%
-          cols_label(
-            `Back Transformed Mean` = "Mean",
-            `Back Transformed SE` = "SE"
           )
+        table_gt <- gt$cols_label(table_gt,
+          `Transformed Scale Mean` = "Mean",
+          `Transformed Scale SE` = "SE"
+        )
+        table_gt <- gt$tab_spanner(table_gt,
+          id = uuid$UUIDgenerate(),
+          label = "Back Transformed",
+          columns = grep("Back Transformed", colnames(data), value = TRUE)
+        )
+        table_gt <- gt$cols_label(table_gt,
+          `Back Transformed Mean` = "Mean",
+          `Back Transformed SE` = "SE"
+        )
       } else {
-        table_gt <- table_gt %>%
-          tab_spanner(
-            id = UUIDgenerate(),
+        table_gt <-
+          gt$tab_spanner(table_gt,
+            id = uuid$UUIDgenerate(),
             label = endpoint,
             columns = grep("Transformed Scale", colnames(data), value = TRUE)
-          ) %>%
-          cols_label(
-            `Transformed Scale Mean` = "Mean",
-            `Transformed Scale SE` = "SE"
           )
+        table_gt <- gt$cols_label(table_gt,
+          `Transformed Scale Mean` = "Mean",
+          `Transformed Scale SE` = "SE"
+        )
       }
 
 
@@ -529,24 +537,20 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
         j <- j + 1
         col1 <- paste0("Difference from ", i)
         col2 <- paste0("p value from ", i)
-        table_gt <- table_gt %>%
-          tab_spanner(
-            id = UUIDgenerate(),
+        table_gt <-
+          gt$tab_spanner(table_gt,
+            id = uuid$UUIDgenerate(),
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           )
 
-        table_gt <- table_gt %>%
-          column_labels(., col1, "LSMEAN Diff (95% CI)")
-        table_gt <- table_gt %>%
-          fmt_markdown(columns = everything())
-        table_gt <- table_gt %>%
-          column_labels(., col2, "p value")
-        table_gt <- table_gt %>%
-          cols_align(
-            align = "center",
-            columns = everything()
-          )
+        table_gt <- gt$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
+        table_gt <- gt$fmt_markdown(table_gt, columns = dplyr$everything())
+        table_gt <- gt$column_labels(table_gt, col2, "p value")
+        table_gt <- gt$cols_align(table_gt,
+          align = "center",
+          columns = dplyr$everything()
+        )
 
         table_gt
       }

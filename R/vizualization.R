@@ -1,5 +1,5 @@
-#' test_plot_theme
-#' @export test_plot_theme
+#'
+#' @export
 test_plot_theme <- function() {
   {
     box::use(ggplot2)
@@ -8,15 +8,15 @@ test_plot_theme <- function() {
   list(
     ggplot2$theme_bw(),
     ggplot2$theme(
-      axis.text.x =ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
+      axis.text.x = ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 8),
       panel.grid.major = ggplot2$element_blank(),
       panel.grid.minor = ggplot2$element_blank(),
-      axis.text =ggplot2$element_text(size = font_size, face = "bold"),
-      axis.title =ggplot2$element_text(size = font_size),
-      strip.text =ggplot2$element_text(size = font_size),
-      plot.title =ggplot2$element_text(size = font_size),
-      axis.title.y =ggplot2$element_text(margin = ggplot2$margin(t = 0, r = 10, b = 0, l = 0)),
-      axis.title.x =ggplot2$element_text(margin = ggplot2$margin(t = 10, r = 0, b = 0, l = 0))
+      axis.text = ggplot2$element_text(size = font_size, face = "bold"),
+      axis.title = ggplot2$element_text(size = font_size),
+      strip.text = ggplot2$element_text(size = font_size),
+      plot.title = ggplot2$element_text(size = font_size),
+      axis.title.y = ggplot2$element_text(margin = ggplot2$margin(t = 0, r = 10, b = 0, l = 0)),
+      axis.title.x = ggplot2$element_text(margin = ggplot2$margin(t = 10, r = 0, b = 0, l = 0))
     )
   )
 }
@@ -24,7 +24,10 @@ test_plot_theme <- function() {
 #' ylab_move
 #' @export
 ylab_move <- function(plot, x_parameter, y_parameter) {
-  str(plot[["x"]][["layout"]][["annotations"]])
+  {
+    box::use(utils)
+  }
+  utils$str(plot[["x"]][["layout"]][["annotations"]])
   plot[["x"]][["layout"]][["annotations"]][[1]][["y"]] <- -x_parameter
   plot[["x"]][["layout"]][["annotations"]][[2]][["x"]] <- -y_parameter
   return(plot)
@@ -62,7 +65,7 @@ bold_interactive <- function(plot_orig, panel) {
 }
 
 #' label_fix
-#' @export 
+#' @export
 label_fix <- function(plot) {
   for (i in seq_along(plot$x$data)) {
     # Is the layer the first entry of the group?
@@ -84,11 +87,13 @@ label_fix <- function(plot) {
 vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette = "floral") {
   {
     box::use(dplyr)
+    box::use(ggprism)
     box::use(tidyr)
     box::use(ggplot2)
-    box::use(./vizualization)
+    box::use(. / vizualization)
+    box::use(stats)
   }
-  
+
   order_groups <- match(
     c(
       "Wild Type", "Negative Control", "Other Comparator", "Positive Control", "Vehicle",
@@ -98,14 +103,14 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   )
 
   orig_groups <- dplyr$distinct(transformed_data, Treatment, TreatmentNew)
-  orig_groups <-  dplyr$mutate(orig_groups[order_groups, ], Treatment = as.character(Treatment))
-  orig_groups <- dplyr$select(orig_groups, Treatment) 
+  orig_groups <- dplyr$mutate(orig_groups[order_groups, ], Treatment = as.character(Treatment))
+  orig_groups <- dplyr$select(orig_groups, Treatment)
   orig_groups <- unlist(orig_groups)
-  
-  
+
+
   colors <- c(
-    ggprism_data$colour_palettes[[palette]],
-    ggprism_data$colour_palettes$pastel
+    ggprism::ggprism_data$colour_palettes[[palette]],
+    ggprism::ggprism_data$colour_palettes$pastel
   )[1:length(orig_groups)]
   linetype <- (1:length(orig_groups) %% 6) + 1
 
@@ -131,9 +136,9 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   )
 
   if ((ui_sel$y_axis == "transform" & power == 1) | ui_sel$y_axis == "no_transform") {
-    transformed_data <- dplyr$select(transformed_data, -c(Response_Transformed, Baseline_Transformed)) 
-      transformed_data <-
-        dplyr$rename(transformed_data,
+    transformed_data <- dplyr$select(transformed_data, -c(Response_Transformed, Baseline_Transformed))
+    transformed_data <-
+      dplyr$rename(transformed_data,
         Baseline_Transformed = Baseline,
         Response_Transformed = Response
       )
@@ -149,31 +154,33 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
 
   if (ui_sel$y_axis != "change_from_baseline" && any(ui_sel$time_sel %in% "Baseline")) {
     times <- setdiff(input_time, "Baseline")
-    transformed_data <- 
+    transformed_data <-
       dplyr$mutate(transformed_data,
         Baseline_Transformed = as.numeric(Baseline_Transformed),
         Response_Transformed = as.numeric(Response_Transformed)
-      ) 
-    transformed_data <- 
-      tidyr$pivot_wider(transformed_data, names_from = "Time", values_from = "Response_Transformed") %>%
-      transformed_data <- tidyr$pivot_longer(
-        cols = c("Baseline_Transformed", times), values_to = "Response_Transformed",
-        names_to = "Time"
-      ) 
-    transformed_data <- 
+      )
+    transformed_data <-
+      tidyr$pivot_wider(transformed_data, names_from = "Time", values_from = "Response_Transformed")
+    transformed_data <- tidyr$pivot_longer(
+      transformed_data,
+      cols = c("Baseline_Transformed", times), values_to = "Response_Transformed",
+      names_to = "Time"
+    )
+    transformed_data <-
       dplyr$mutate(
         transformed_data,
         Time = as.character(Time),
         Time = dplyr$if_else(Time == "Baseline_Transformed", "Baseline", Time),
         Time = factor(Time, levels = c("Baseline", times))
-      ) 
-    transformed_data <- 
-      dplyr$filter(transformed_data,
+      )
+    transformed_data <-
+      dplyr$filter(
+        transformed_data,
         !is.na(Response_Transformed)
       )
-    transformed_data <- dplyr$group_by(transformed_data, SubjectID, Treatment, TreatmentNew, Time) 
+    transformed_data <- dplyr$group_by(transformed_data, SubjectID, Treatment, TreatmentNew, Time)
     transformed_data <- dplyr$summarize(transformed_data, Response_Transformed = mean(Response_Transformed))
-      transformed_data <- dplyr$ungroup(transformed_data)
+    transformed_data <- dplyr$ungroup(transformed_data)
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power == 1) {
@@ -182,7 +189,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   }
 
   if (ui_sel$y_axis == "change_from_baseline" & power != 1) {
-    transformed_data <- 
+    transformed_data <-
       dplyr$mutate(transformed_data, Response_Transformed = Response_Transformed_bc)
     ylabel <- paste(
       "Change from Baseline\n", transform_table$transform_name[power == transform_table$power],
@@ -191,21 +198,21 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
   }
 
   transformed_data$Treatment <- factor(transformed_data$Treatment, levels = orig_groups)
-  transformed_data_sum <- 
-    dplyr$group_by(transformed_data, Treatment, TreatmentNew, Time) 
+  transformed_data_sum <-
+    dplyr$group_by(transformed_data, Treatment, TreatmentNew, Time)
   transformed_data_sum <- dplyr$summarize(transformed_data_sum,
-      Mean_Response = mean(Response_Transformed),
-      sd_Response = sd(Response_Transformed)
-    ) 
+    Mean_Response = mean(Response_Transformed),
+    sd_Response = stats$sd(Response_Transformed)
+  )
   transformed_data_sum <- dplyr$mutate(transformed_data_sum,
-      error = dplyr$if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
-      ymin = dplyr$if_else(Mean_Response < 0, error, Mean_Response),
-      ymax = dplyr$if_else(Mean_Response < 0, Mean_Response, error)
-    )
+    error = dplyr$if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),
+    ymin = dplyr$if_else(Mean_Response < 0, error, Mean_Response),
+    ymax = dplyr$if_else(Mean_Response < 0, Mean_Response, error)
+  )
 
 
   bar_plot_orig_scale <- ggplot2$ggplot(
-    data = transformed_data_sum, 
+    data = transformed_data_sum,
     ggplot2$aes(x = Time, y = Mean_Response)
   ) +
     ggplot2$scale_x_discrete() +
@@ -286,7 +293,7 @@ vizualization <- function(transformed_data, power = 1, endpoint, ui_sel, palette
     ggplot2$ggtitle("Mean and Standard Error Bars for Each Group Over Time") +
     vizualization$test_plot_theme() +
     ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
-   ggplot2$scale_linetype_manual(values = linetype, breaks = orig_groups)
+    ggplot2$scale_linetype_manual(values = linetype, breaks = orig_groups)
 
   # Has not been implemented yet
   return(list(

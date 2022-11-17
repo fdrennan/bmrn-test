@@ -1,7 +1,9 @@
 #' ui_prism
 #' @export
 ui_prism <- function(id = "prism") {
-  box::use(shiny, bs4Dash, . / testSpinner, . / boxSidebarTest)
+  {
+    box::use(shiny, bs4Dash, . / testSpinner, . / boxSidebarTest)
+  }
   ns <- shiny$NS(id)
   shiny$fluidRow(
     testSpinner$testSpinner(shiny$uiOutput(ns("plotsInputs"))),
@@ -119,16 +121,14 @@ server_prism <- function(id = "prism", signal) {
       prismData <- shiny$reactive({
         shiny$req(signal())
         shiny$req(input$treatmentPlotSelectors)
-        #
         data <- signal()
         tfd <- data$pre_modeling_input$transformed_data
         pow <- data$tables$power
-        cfb <- data$input_data$selections$changeFromBaseline %>% as.logical()
+        cfb <- as.logical(data$input_data$selections$changeFromBaseline)
         full_path_file <- data$input_data$session_data$full_path_files
         full_path_file <- fs$path_join(c(full_path_file, "prism_data.xlsx"))
 
         prism_output$save_prism_output(full_path_file, tfd, pow, as.logical(cfb))
-        # shiny$showNotification("Storing prism data")
         list(full_path_file = full_path_file, tfd = tfd, pow = pow, cfb = cfb)
       })
 

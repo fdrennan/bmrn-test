@@ -57,7 +57,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corCompSymm(form = ~ 1 | SubjectID)
+        correlation = nlme$corCompSymm(form = ~ 1 | SubjectID)
       )
     } else {
       # The varIdent allows for a each group to have its own weight which is
@@ -65,7 +65,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corCompSymm(form = ~ 1 | SubjectID),
+        correlation = nlme$corCompSymm(form = ~ 1 | SubjectID),
         weights = nlme$varIdent(form = ~ 1 | diff_group)
       )
     }
@@ -77,7 +77,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corCompSymm(form = ~ 1 | SubjectID),
+        correlation = nlme$corCompSymm(form = ~ 1 | SubjectID),
         weights = nlme$varIdent(form = ~ 1 | Time)
       )
     } else {
@@ -86,7 +86,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corCompSymm(form = ~ 1 | SubjectID),
+        correlation = nlme$corCompSymm(form = ~ 1 | SubjectID),
         weights = nlme$varComb(nlme$varIdent(form = ~ 1 | diff_group), nlme$varIdent(form = ~ 1 | Time))
       )
     }
@@ -98,7 +98,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
+        correlation = nlme$corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
       )
     } else {
       # The varIdent allows for a each group to have its own weight which is
@@ -106,7 +106,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
+        correlation = nlme$corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
         weights = nlme$varComb(nlme$varIdent(form = ~ 1 | diff_group), nlme$varIdent(form = ~ 1 | Time))
       )
     }
@@ -118,7 +118,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corSymm(form = ~ 1 | SubjectID),
+        correlation = nlme$corSymm(form = ~ 1 | SubjectID),
         weights = nlme$varIdent(form = ~ 1 | Time)
       )
     } else {
@@ -127,7 +127,7 @@ final_model <- function(transformed_data, best, variable) {
       final_mod <- nlme$gls(
         data = transformed_data,
         model = tmp ~ TreatmentNew * Time,
-        correlation = corSymm(form = ~ 1 | SubjectID),
+        correlation = nlme$corSymm(form = ~ 1 | SubjectID),
         weights = nlme$varComb(nlme$varIdent(form = ~ 1 | diff_group), nlme$varIdent(form = ~ 1 | Time))
       )
     }

@@ -2,12 +2,14 @@
 #' @description Each test has a letter label
 #' @export
 analysis_a_run <- function(id = "analysis_a", user, is_admin) {
-  box::use(shiny)
-  box::use(. / analysis_a_setup)
-  box::use(. / testSpinner)
-  box::use(. / prism)
-  box::use(. / analysis_a_report)
-  box::use(glue)
+  {
+    box::use(shiny)
+    box::use(. / analysis_a_setup)
+    box::use(. / testSpinner)
+    box::use(. / prism)
+    box::use(. / analysis_a_report)
+    box::use(glue)
+  }
   ns <- shiny$NS(id)
   shiny$tabsetPanel(
     id = ns("test_1_tabs"),
@@ -149,7 +151,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         data <- input_data()$input_data
 
         treatment_input <- dplyr$distinct(data, treatment_snake, Treatment)
-        treatment_input <- dplyr$filter(treatment_input, complete.cases(data))
+        treatment_input <- dplyr$filter(treatment_input, stats$complete.cases(data))
 
         purrr$map2(
           treatment_input$treatment_snake,
@@ -232,7 +234,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           data <- visualization_files$pre_modeling(data, selections$changeFromBaseline)
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
-          shiny$showNotification(shiny$tags$p("pre_modeling",shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+          shiny$showNotification(shiny$tags$p("pre_modeling", shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
           data
         }, error = function(err) {
           err <- as.character(err)
@@ -256,7 +258,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         data <- pre_modeling_output()
         time <- tictoc$toc()
         timeInSeconds <- as.character(round(time$toc - time$tic, 3))
-        shiny$showNotification(shiny$tags$p("pre_modeling_output",shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+        shiny$showNotification(shiny$tags$p("pre_modeling_output", shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
         ui_selections <- list(
           y_axis = input$y_axis,
           trt_sel = input$treatmentPlotSelectors,
@@ -289,7 +291,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         time <- tictoc$toc()
         timeInSeconds <- as.character(round(time$toc - time$tic, 3))
-        shiny$showNotification(shiny$tags$p("vizualization",shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+        shiny$showNotification(shiny$tags$p("vizualization", shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
 
         return(list(plots = plots, data = data, baseline_selected = baseline_selected))
       })
@@ -300,7 +302,7 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
 
         plots <- interactive_plots()
         plot <- plots$plots$box
-        plot <- ylab_move(
+        plot <- vizualization$ylab_move(
           plot = plotly$ggplotly(plot),
           x_parameter = 0.06,
           y_parameter = 0.00
@@ -365,20 +367,20 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           }
         }
         tmp <- vizualization$bold_interactive(tmp, panel = FALSE)
-        p <- vizualization$label_fix(plot = plotly$ggplotly(tmp)) 
+        p <- vizualization$label_fix(plot = plotly$ggplotly(tmp))
         plotly$layout(p, height = 600)
       })
 
 
       output$analysisPlot_4 <- plotly$renderPlotly({
         plots <- interactive_plots()
-        plot <- label_fix(ggplotly(plots$plots$sub_line))
+        plot <- vizualization$label_fix(plotly$ggplotly(plots$plots$sub_line))
         plot$x$layout$margin$t <- 75
         plot$x$layout$margin$l <- 75
-        plot <- ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
-        plot <- bold_interactive(plot, panel = TRUE)
-        p <- label_fix(plot = ggplotly(plot)) 
-        layout(p, height = 525)
+        plot <- vizualization$ylab_move(plot = plot, x_parameter = 0.06, y_parameter = 0.00)
+        plot <- vizualization$bold_interactive(plot, panel = TRUE)
+        p <- vizualization$label_fix(plot = plotly$ggplotly(plot))
+        plotly$layout(p, height = 525)
       })
 
 
@@ -506,13 +508,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
           }
           time <- tictoc$toc()
           timeInSeconds <- as.character(round(time$toc - time$tic, 3))
-          shiny$showNotification(shiny$tags$p("final_modeling",shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
+          shiny$showNotification(shiny$tags$p("final_modeling", shiny$tags$pre(timeInSeconds)), closeButton = TRUE, duration = NULL)
 
           tables <- final_output$html_tables(data$transformed_data, final_model)
 
-          trans_name <- dplyr$filter(final_output$transform_table(), power == final_model$power) 
+          trans_name <- dplyr$filter(final_output$transform_table(), power == final_model$power)
           trans_name <- dplyr$select(trans_name, transform_name)
-          trans_name <- unlist(trans_name) 
+          trans_name <- unlist(trans_name)
           trans_name <- unname(trans_name)
 
           footer <- dplyr$if_else(
@@ -521,13 +523,13 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             paste(trans_name, "transformation was applied to the data.  Mean and SE are estimated using model based LSmean")
           )
 
-          tables$tab0 <- dplyr$bind_rows(tables$tab1, tables$tab2) 
+          tables$tab0 <- dplyr$bind_rows(tables$tab1, tables$tab2)
           tables$tab0 <- dplyr$select(
-              tables$tab0, Treatment, `Time Points`, grep("Original", colnames(tables$tab0))
-            )
+            tables$tab0, Treatment, `Time Points`, grep("Original", colnames(tables$tab0))
+          )
           if (analysis_type == "Exploratory") {
-            tables$tab0 <- dplyr$mutate(tables$tab0, num = as.numeric(gsub("[A-z]| ", "", `Time Points`))) 
-            tables$tab0 <- dplyr$arrange(tables$tab0, Treatment, num) 
+            tables$tab0 <- dplyr$mutate(tables$tab0, num = as.numeric(gsub("[A-z]| ", "", `Time Points`)))
+            tables$tab0 <- dplyr$arrange(tables$tab0, Treatment, num)
             tables$tab0 <- dplyr$select(tables$tab0, -num)
           }
           list(tables = tables, footer = footer, power = data$box_cox, print_tables = print_tables)

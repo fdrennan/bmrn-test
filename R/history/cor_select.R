@@ -25,13 +25,13 @@ cor_select <- function(transformed_data, variable) {
   CS <- nlme$gls(
     data = transformed_data %>% dplyr$filter(basic_model),
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
-    correlation = corCompSymm(form = ~ 1 | SubjectID)
+    correlation = nlme$corCompSymm(form = ~ 1 | SubjectID)
   )
   aic_CS <- c("CS" = -2 * logLik(CS)[1] + 2 * 2)
   CSH <- nlme$gls(
     data = transformed_data %>% dplyr$filter(basic_model),
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
-    correlation = corCompSymm(form = ~ 1 | SubjectID),
+    correlation = nlme$corCompSymm(form = ~ 1 | SubjectID),
     weights = nlme$varIdent(form = ~ 1 | Time)
   )
   aic_CSH <- c("CSH" = -2 * logLik(CSH)[1] +
@@ -39,7 +39,7 @@ cor_select <- function(transformed_data, variable) {
   TOEP <- nlme$gls(
     data = transformed_data %>% dplyr$filter(basic_model),
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
-    correlation = corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
+    correlation = nlme$corARMA(p = num_times - 1, q = 0, form = ~ 1 | SubjectID),
     weights = nlme$varIdent(form = ~ 1 | Time)
   )
   aic_TOEP <- c("TOEP" = -2 * logLik(TOEP)[1] +
@@ -47,7 +47,7 @@ cor_select <- function(transformed_data, variable) {
   UN <- try(gls(
     data = transformed_data %>% dplyr$filter(basic_model),
     model = stats$as.formula(paste(variable, "~ TreatmentNew * Time")),
-    correlation = corSymm(form = ~ 1 | SubjectID),
+    correlation = nlme$corSymm(form = ~ 1 | SubjectID),
     weights = nlme$varIdent(form = ~ 1 | Time)
   ))
   aic_UN <- c("UN" = ifelse(class(UN) == "try-error", NA, AIC(UN)))

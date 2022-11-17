@@ -9,16 +9,19 @@ analysis_a_setup <- function(id) {
 #' analysis_a_setup_server
 #' @export
 analysis_a_setup_server <- function(id, input_data) {
-  box::use(shiny)
-  box::use(bs4Dash)
-  box::use(purrr)
-  box::use(dplyr)
-  box::use(stats[complete.cases])
-  box::use(stringr)
-  box::use(shinyWidgets)
-  box::use(gdata)
-  box::use(storr)
-  box::use(. / make_type_assignment_table)
+  {
+    box::use(shiny)
+    box::use(bs4Dash)
+    box::use(purrr)
+    box::use(dplyr)
+    box::use(stats[complete.cases])
+    box::use(stringr)
+    box::use(shinyWidgets)
+    box::use(gdata)
+    box::use(storr)
+    box::use(. / make_type_assignment_table)
+    box::use(stats)
+  }
   shiny$moduleServer(
     id,
     function(input, output, session) {
@@ -63,7 +66,7 @@ analysis_a_setup_server <- function(id, input_data) {
         data <- input_data()$input_data$data
 
         treatment_input <- dplyr$distinct(data, treatment_snake, Treatment)
-        treatment_input <- dplyr$filter(treatment_input, complete.cases(treatment_input))
+        treatment_input <- dplyr$filter(treatment_input, stats$complete.cases(treatment_input))
 
 
         purrr$map2(

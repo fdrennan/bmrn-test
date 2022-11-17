@@ -1,21 +1,21 @@
 #' final_modeling
 #' @export
 final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall_trend = FALSE) {
-  
   {
     box::use(dplyr)
     box::use(furrr)
+    box::use(purrr)
     box::use(stats)
-    box::use(./generate_contrasts)
-    box::use(./final_model)
-    box::use(./contrast_padjust)
-    box::use(./final_output)
-    box::use(./final_modeling)
+    box::use(. / generate_contrasts)
+    box::use(. / final_model)
+    box::use(. / contrast_padjust)
+    box::use(. / final_output)
+    box::use(. / final_modeling)
   }
-  
+
   var <- ready_final_model$var
   power <- ready_final_model$box_cox
-  transformed_data <-  dplyr$arrange(ready_final_model$transformed_data, TreatmentNew, SubjectID, Time)
+  transformed_data <- dplyr$arrange(ready_final_model$transformed_data, TreatmentNew, SubjectID, Time)
   best_model <- ready_final_model$best_model
   time_order <- unique(transformed_data$Time)
   final_model <- final_model$final_model(
@@ -24,8 +24,8 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   )
 
   if (analysis_type == "Exploratory") {
-    output_tables <- furrr$future_map(
-      .progress = TRUE, .options = furrr$furrr_options(seed = TRUE),
+    output_tables <- purrr$map(
+      # .progress = TRUE, .options = furrr$furrr_options(seed = TRUE),
       .x = stats$setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = function(x) {
         print("futuremap start")
@@ -95,15 +95,15 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   }
   if (!overall_trend) {
     # Remove when we include the overall average time
-    tab1 <- output_tables$tab1 %>%
-      dplyr$mutate_all(~ as.character(.)) %>%
-      dplyr$filter(!grepl("Average", `Time Points`))
-    tab2 <- output_tables$tab2 %>%
-      dplyr$mutate_all(~ as.character(.)) %>%
-      dplyr$filter(!grepl("Average", `Time Points`))
-    tab3 <- output_tables$tab3 %>%
-      dplyr$mutate_all(~ as.character(.)) %>%
-      dplyr$filter(!grepl("Average", `Time Points`))
+    tab1 <- dplyr$mutate_all(output_tables$tab1, ~ as.character(.))
+    tab1 <- dplyr$filter(tab1, !grepl("Average", `Time Points`))
+    
+    tab2 <- dplyr$mutate_all(output_tables$tab2, ~ as.character(.))
+    tab2 <- dplyr$filter(tab2, !grepl("Average", `Time Points`))
+    
+    tab3 <- dplyr$mutate_all(output_tables$tab3, ~ as.character(.))
+    tab3 <- dplyr$filter(tab3, !grepl("Average", `Time Points`))
+    
     output_tables$tab1 <- tab1
     output_tables$tab2 <- tab2
     output_tables$tab3 <- tab3
@@ -115,7 +115,7 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
 #' @export
 clean_table <- function(data) {
   box::use(dplyr)
-  data <- dplyr$mutate_all(data, ~ as.character(.)) 
+  data <- dplyr$mutate_all(data, ~ as.character(.))
   data <- dplyr$filter(data, !grepl("Average", `Time Points`))
   data
 }

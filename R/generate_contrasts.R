@@ -1,4 +1,13 @@
+#' @export
 generate_contrasts <- function(model, toi, data, time_order, analysis_type = "confirm") {
+  {
+    box::use(dplyr)
+    box::use(tidyr)
+    box::use(utils)
+    box::use(furrr)
+    box::use(purrr)
+    box::use(rlist)
+  }
   data <- dplyr$mutate(data,
     Time = factor(Time, levels = time_order),
     TreatmentNew = factor(TreatmentNew)
@@ -11,13 +20,13 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
   # Contrasts for the effect of a single group averaged (final_AE) and for the single group
   # effect a single time (final_SE)
 
-  coef_name <- expand_grid(
+  coef_name <- tidyr$expand_grid(
     Time = levels(data$Time),
     TreatmentNew = levels(data$TreatmentNew)
-  ) %>%
-    dplyr$mutate(final_name = paste(Time, TreatmentNew, sep = ":")) %>%
-    dplyr$select(final_name) %>%
-    unlist()
+  )
+  coef_name <- dplyr$mutate(coef_name, final_name = paste(Time, TreatmentNew, sep = ":"))
+  coef_name <- dplyr$select(coef_name, final_name)
+  coef_name <- unlist(coef_name)
 
   AE <- diag(1, nrow = num_groups) / num_times
   final_SE <- matrix(0, ncol = num_groups * num_times, nrow = num_groups)
@@ -61,11 +70,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
     )
   )
 
-  # contrast_map <-
-  #   contrast_map %>%
-  #  dplyr$filter(Group_1 %in% unique(data$TreatmentNew),
-  #          Group_2 %in% unique(data$TreatmentNew))
-  # #
+
   final_list <- list()
   for (i in 1:nrow(contrast_map)) {
     a <- contrast_map$Group_1[i]
@@ -91,17 +96,17 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
 
         coi <- rbind(c1_AE_rep, c1_SE_rep) - rbind(c2_AE, c2_SE)
         colnames(coi) <- coef_name
-        coi_list <- map(.x = 1:nrow(coi), .f = ~ {
+        coi_list <- purrr$map(.x = 1:nrow(coi), .f = ~ {
           coi[.x, ]
         })
       } else {
         dose_names <- grep(a, rownames(final_AE), value = TRUE)
 
-        grid <- combn(dose_names, 2) %>%
-          t() %>%
-          data.frame() %>%
-          dplyr$rename("Group_1" = "X1", "Group_2" = "X2")
-        coi_tmp <- furrr$future_map_dfr(.x = 1:nrow(grid), .f = ~ {
+        grid <- utils$combn(dose_names, 2)
+        grid <- t(grid)
+        grid <- data.frame(grid)
+        grid <- dplyr$rename(grid, "Group_1" = "X1", "Group_2" = "X2")
+        coi_tmp <- purrr$map_dfr(.x = 1:nrow(grid), .f = ~ {
           a <- grid$Group_1[.x]
           b <- grid$Group_2[.x]
 
@@ -116,13 +121,13 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           return(coi)
         }, .progress = TRUE, .options = furrr$furrr_options(seed = TRUE))
 
-        coi_list <- map(1:nrow(coi_tmp), .f = ~ {
+        coi_list <- purrr$map(1:nrow(coi_tmp), .f = ~ {
           unlist(coi_tmp[.x, ])
         })
       }
     }
 
-    final_list <- rlist::list.append(final_list, coi_list)
+    final_list <- rlist$list.append(final_list, coi_list)
     names(final_list)[i] <- contrast_map$Label[i]
   }
 

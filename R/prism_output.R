@@ -21,7 +21,7 @@ prism_output <- function(tranformed_data, variable) {
   prism <- map_df(.x = 1:length(unique(tmp$Treatment)), .f = ~ {
     out <- tmp %>%
       dplyr$filter(Treatment == unique(tmp$Treatment)[.x]) %>%
-      dplyr$mutate(SubjectID = paste("SubjectID", row_number()))
+      dplyr$mutate(SubjectID = paste("SubjectID", dplyr$row_number()))
 
     diff <- max_n - nrow(out)
     trt_add <- dplyr$distinct(.data = out, Type, Treatment)

@@ -30,6 +30,6 @@ administration_server <- function(input, output, session,
     invalidateLater(30000)
     stored_data() %>%
       dplyr$select(-rel_path_home, -base_dir, -full_path_files) %>%
-      dplyr$select(uuid, everything())
+      dplyr$select(uuid, dplyr$everything())
   })
 }

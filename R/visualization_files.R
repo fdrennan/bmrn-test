@@ -1,15 +1,18 @@
 #' pre_modeling
 #' @export
 pre_modeling <- function(input_data, baseline) {
-  box::use(. / data_clean)
-  box::use(. / transform_diagnostics)
-  box::use(dplyr)
-  box::use(forcats)
-  box::use(. / variance_check_basic)
-  box::use(. / variance_check)
-  box::use(furrr)
-  box::use(. / final_model)
-  box::use(stats)
+  {
+    box::use(. / data_clean)
+    box::use(. / transform_diagnostics)
+    box::use(dplyr)
+    box::use(forcats)
+    box::use(. / variance_check_basic)
+    box::use(. / variance_check)
+    box::use(furrr)
+    box::use(. / final_model)
+    box::use(stats)
+    box::use(purrr)
+  }
   analysis_data <- data_clean$data_clean(input_data)
   times <- unique(analysis_data$Time)[
     order(as.numeric(gsub("[A-z]| ", "", unique(analysis_data$Time))))
@@ -44,7 +47,7 @@ pre_modeling <- function(input_data, baseline) {
   ready_final_model$transformed_data <- transformed_data_vc
 
   if (all(ready_final_model$error == FALSE)) {
-    best_model <- furrr$future_map_dfr(.x = c("AR1", "ARH1", "CS", "CSH", "TOEP", "UN"), .f = ~ {
+    best_model <- purrr$map_dfr(.x = c("AR1", "ARH1", "CS", "CSH", "TOEP", "UN"), .f = ~ {
       tmp <- try(final_model$final_model(
         transformed_data = dplyr$filter(transformed_data_vc, basic_model),
         best = .x, var = ready_final_model$variable

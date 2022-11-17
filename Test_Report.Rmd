@@ -51,7 +51,7 @@ prismInputs <- st$get(
   prismInputs
 )
 
-trans_name <- transform_table() %>%
+trans_name <- final_output$transform_table() %>%
   dplyr$filter(power == data$plot$data$box_cox) %>%
   dplyr$select(transform_name) %>%
   unlist() %>%
@@ -304,28 +304,28 @@ if (trans_name != "No transformation") {
       geom_histogram(color = "white") +
       theme_bw() +
       ggplot2$ggtitle(paste("Histogram of the Residuals", data$plot$endpoint)) +
-      ggplot2$theme(plot.title =ggplot2$(size = 10)),
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10)),
     ggplot2$ggplot(data = data_check, ggplot2$aes(x = resid_transformed)) +
       geom_histogram(color = "white") +
       theme_bw() +
       ggplot2$ggtitle(paste("Histogram of the Residuals from", new_trans, data$plot$endpoint)) +
-      ggplot2$theme(plot.title =ggplot2$(size = 10)),
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10)),
     ggplot2$ggplot(data = data_check, ggplot2$aes(sample = resid_orig)) +
       stat_qq() +
       stat_qq_line() +
       theme_bw() +
       ggplot2$ggtitle(paste("Q-Q plot from", data$plot$endpoint)) +
-      xlab("Theoretical Quantiles") +
+      ggplot2$xlab("Theoretical Quantiles") +
       ggplot2$ylab("Sample quantile") +
-      ggplot2$theme(plot.title =ggplot2$(size = 10)),
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10)),
     ggplot2$ggplot(data = data_check, ggplot2$aes(sample = resid_transformed)) +
       stat_qq() +
       stat_qq_line() +
       theme_bw() +
       ggplot2$ggtitle(paste("Q-Q plot from", new_trans, data$plot$endpoint)) +
-      xlab("Theoretical Quantiles") +
+      ggplot2$xlab("Theoretical Quantiles") +
       ggplot2$ylab("Sample quantile") +
-      ggplot2$theme(plot.title =ggplot2$(size = 10))
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10))
   ))
 } else {
   assumptions <- ggarrange(plotlist = list(
@@ -333,15 +333,15 @@ if (trans_name != "No transformation") {
       geom_histogram(color = "white") +
       theme_bw() +
       ggplot2$ggtitle(paste("Histogram of the Residuals", data$plot$endpoint)) +
-      ggplot2$theme(plot.title =ggplot2$(size = 10)),
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10)),
     ggplot2$ggplot(data = data_check, ggplot2$aes(sample = resid_orig)) +
       stat_qq() +
       stat_qq_line() +
       theme_bw() +
       ggplot2$ggtitle(paste("Q-Q plot from", data$plot$endpoint)) +
-      xlab("Theoretical Quantiles") +
+      ggplot2$xlab("Theoretical Quantiles") +
       ggplot2$ylab("Sample quantile") +
-      ggplot2$theme(plot.title =ggplot2$(size = 10))
+      ggplot2$theme(plot.title = ggplot2$element_text(size = 10))
   ))
 }
 
@@ -360,13 +360,13 @@ pdata <- data$plot$data
 
 test_plot_theme_word <- function(x) {
   ggplot2$theme(
-    plot.title =ggplot2$(size = 10),
-    axis.title =ggplot2$(size = 10),
-    axis.text.x =ggplot2$(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
-    axis.text.y =ggplot2$(size = 8),
-    strip.text =ggplot2$(size = 8),
-    legend.text =ggplot2$(size = 8),
-    legend.title =ggplot2$(size = 10),
+    plot.title = ggplot2$element_text(size = 10),
+    axis.title = ggplot2$element_text(size = 10),
+    axis.text.x = ggplot2$element_text(angle = 45, vjust = 0.75, hjust = 0.75, size = 7),
+    axis.text.y = ggplot2$element_text(size = 8),
+    strip.text = ggplot2$element_text(size = 8),
+    legend.text = ggplot2$element_text(size = 8),
+    legend.title = ggplot2$element_text(size = 10),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank()
   )
@@ -407,7 +407,7 @@ knitr::include_graphics(pngfile)
 plot2 <- plots[[2]] +
   test_plot_theme_word() +
   ggplot2$theme(legend.position = "bottom") +
-  guides(color = guide_legend(nrow = 1))
+  ggplot2$guides(color = guide_legend(nrow = 1))
 
 pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)
@@ -423,7 +423,7 @@ plot3 <- plots[[3]] +
   ggplot2$theme(
     legend.position = "bottom"
   ) +
-  guides(colour = guide_legend(nrow = 1))
+  ggplot2$guides(colour = guide_legend(nrow = 1))
 
 pngfile <- fs::path(knitr::fig_path(), "sub_line.png")
 ragg::agg_png(pngfile, width = 60, height = 36, units = "cm", res = 300, scaling = 2.5)

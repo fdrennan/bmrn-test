@@ -333,7 +333,7 @@ $rfs-mq-property-height: if($rfs-mode == max-media-query, max-height, min-height
   @include rfs($value, padding-left);
 }
 
-@mixin margin($value) {
+@mixinggplot2$margin($value) {
   @include rfs($value, margin);
 }
 
