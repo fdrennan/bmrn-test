@@ -22,6 +22,10 @@ prism_plot <- function(data, tables, trt_sel,
     box::use(. / prism_plot)
     box::use(tidyr)
     box::use(gridExtra)
+    library(grid)
+    library(gridExtra)
+    library(lattice)
+    library(ggprism)
   }
   order_groups <- match(
     c(
