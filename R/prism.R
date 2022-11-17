@@ -36,11 +36,15 @@ ui_prism <- function(id = "prism") {
 #' server_prism
 #' @export
 server_prism <- function(id = "prism", signal) {
-  box::use(shiny)
-  box::use(fs)
-  box::use(. / prism_output)
-  box::use(ggplot2)
-  box::use(storr)
+  {
+    box::use(shiny)
+    box::use(fs)
+    box::use(bs4Dash)
+    box::use(. / prism_output)
+    box::use(. / prism_plot)
+    box::use(ggplot2)
+    box::use(storr)
+  }
   shiny$moduleServer(
     id,
     function(input, output, session) {
@@ -94,7 +98,7 @@ server_prism <- function(id = "prism", signal) {
               ),
               shiny$radioButtons(
                 inputId = ns("timePlotSelectors"),
-                label = h4("Select Time to be Plotted"),
+                label = shiny$h4("Select Time to be Plotted"),
                 selected = toi,
                 choices = timePlotSelectors,
                 inline = TRUE
@@ -188,8 +192,8 @@ server_prism <- function(id = "prism", signal) {
       })
 
       output$prismPlot_bar <- shiny$renderPlot({
-        isolate(input)
-        req(pre_prism_data())
+        shiny$isolate(input)
+        shiny$req(pre_prism_data())
         #
         data <- pre_prism_data()
 

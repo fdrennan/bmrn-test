@@ -91,6 +91,8 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
     box::use(. / prism)
     box::use(openxlsx)
     box::use(. / visualization_files)
+    box::use(storr)
+    box::use(fs)
   }
   shiny$moduleServer(
     id,
@@ -392,7 +394,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
         timePlotSelectors <- c("Baseline", unique(as.character(data$transformed_data$Time)))
 
         shiny$fluidRow(
-          shiny$column(12, testSpinner$testSpinner(uiOutput(ns("analysisInputsData"))))
+          shiny$column(
+            12,
+            testSpinner$testSpinner(
+              shiny$uiOutput(ns("analysisInputsData"))
+            )
+          )
         )
       })
 
@@ -560,12 +567,12 @@ analysis_a_run_server <- function(id, input_signal, cache = FALSE) {
             width = 12,
             title = "Options",
             collapsible = TRUE,
-            dplyr$div(
+            shiny$div(
               class = "d-flex justify-content-around",
-              bas4Dash$tooltip(
+              bs4Dash$tooltip(
                 shiny$selectizeInput(
                   inputId = ns("timeTreatmentSelectorsTable"),
-                  label = h4("Select Times (up to 5) to be Displayed"),
+                  label = shiny$h4("Select Times (up to 5) to be Displayed"),
                   selected = toi,
                   choices = timePlotSelectors, multiple = TRUE, options = list(maxItems = 5)
                 ),

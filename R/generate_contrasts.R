@@ -73,6 +73,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
 
   final_list <- list()
   for (i in 1:nrow(contrast_map)) {
+    print("i in contrast_map")
     a <- contrast_map$Group_1[i]
     b <- contrast_map$Group_2[i]
     if ((length(grep(
@@ -82,7 +83,9 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
       !all(c(a, b) %in% levels(data$TreatmentNew))) & a != b) {
       coi_list <- list()
     } else {
+      print("else in contrast_map")
       if (all(c(a, b) == "Dose") == FALSE) {
+        print("else a b")
         # contrast of interest (coi)
         c1_SE <- final_SE[grep(a, rownames(final_SE)), ]
         c1_AE <- final_AE[grep(a, rownames(final_AE)), ]
@@ -100,6 +103,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           coi[.x, ]
         })
       } else {
+        print("else else")
         dose_names <- grep(a, rownames(final_AE), value = TRUE)
 
         grid <- utils$combn(dose_names, 2)
@@ -119,8 +123,8 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
           coi <- data.frame(rbind(c1_AE, c1_SE) - rbind(c2_AE, c2_SE))
           colnames(coi) <- coef_name
           return(coi)
-        }, .progress = TRUE, .options = furrr$furrr_options(seed = TRUE))
-
+        })
+        print("purrr")
         coi_list <- purrr$map(1:nrow(coi_tmp), .f = ~ {
           unlist(coi_tmp[.x, ])
         })

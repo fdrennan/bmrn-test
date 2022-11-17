@@ -176,7 +176,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale SE" = se_lsmeans
     )
 
-  tab3 <- dplyr$select(tab3, -grep("emmean|lsmean", colnames(.), value = TRUE))
+  tab3 <- dplyr$select(tab3, -grep("emmean|lsmean", colnames(tab3), value = TRUE))
   colnames(tab3) <- gsub("\\.", " ", colnames(tab3))
 
   return(list(tab1 = tab1, tab2 = tab2, tab3 = tab3, power = power))
@@ -396,8 +396,9 @@ html_UI <- function(transformed_data, tables) {
 #' column_labels
 #' @export
 column_labels <- function(df_gt, column, label) {
-  cli_alert("column_labels")
-  cols_list <- purrr::set_names(as.list(label), column)
+  box::use(purrr, cli, gt)
+  cli$cli_alert("column_labels")
+  cols_list <- purrr$set_names(as.list(label), column)
 
   gt$cols_label(df_gt, .list = cols_list)
 }
@@ -410,6 +411,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
     box::use(dplyr)
     box::use(uuid)
     box::use(gt)
+    box::use(. / final_output)
   }
   data <- dplyr$mutate_all(data, ~ replace(., is.na(.), ""))
 
@@ -470,9 +472,9 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             label = paste("Difference from", i),
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           )
-        table_gt <- gt$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
+        table_gt <- final_output$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
         table_gt <- gt$fmt_markdown(table_gt, columns = dplyr$everything())
-        table_gt <- gt$column_labels(table_gt, col2, "p value")
+        table_gt <- final_output$column_labels(table_gt, col2, "p value")
         table_gt <- gt$cols_align(
           table_gt,
           align = "center",
@@ -486,11 +488,11 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
           .vars = grep("Difference", colnames(table_gt), value = TRUE),
           .funs = ~ gsub(" \\(", "<br>(", .)
         )
-      table_gt <- gt(table_gt)
-      table_gt <- tab_header(table_gt,
+      table_gt <- gt$gt(table_gt)
+      table_gt <- gt$tab_header(table_gt,
         title = title
       )
-      table_gt <- tab_source_note(table_gt, source_note = footer)
+      table_gt <- gt$tab_source_note(table_gt, source_note = footer)
 
 
 
@@ -545,9 +547,9 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
             columns = grep(pattern = i, x = colnames(data), value = TRUE)
           )
 
-        table_gt <- gt$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
+        table_gt <- final_output$column_labels(table_gt, col1, "LSMEAN Diff (95% CI)")
         table_gt <- gt$fmt_markdown(table_gt, columns = dplyr$everything())
-        table_gt <- gt$column_labels(table_gt, col2, "p value")
+        table_gt <- final_output$column_labels(table_gt, col2, "p value")
         table_gt <- gt$cols_align(table_gt,
           align = "center",
           columns = dplyr$everything()

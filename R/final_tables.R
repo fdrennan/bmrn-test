@@ -46,7 +46,6 @@ table_1 <- function(final_contrast, os_together, toi) {
 
   for (i in grep("Difference", colnames(table_1), value = TRUE)) {
     table_1 <- dplyr$rename(table_1, "contrast" = i)
-    table_1 <- dplyr$mutate(table_1, contrast)
     table_1 <- dplyr$left_join(table_1, tmp)
     table_1 <- dplyr$select(table_1, -contrast)
 
@@ -221,7 +220,7 @@ table_3 <- function(final_contrast, os_together, toi, include_summ_stat = T) {
     tab3 <- dplyr$select(tab3, -Dose)
     tab3[is.na(tab3)] <- ""
   } else {
-    tab3 <-dplyr$select(os_table_3, -Dose)
+    tab3 <- dplyr$select(os_table_3, -Dose)
     tab3 <- dplyr$mutate(tab3, Endpoint = ifelse(grepl("Average", Endpoint),
       "Average Over Time",
       toi

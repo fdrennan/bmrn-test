@@ -24,11 +24,11 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
   )
 
   if (analysis_type == "Exploratory") {
-    output_tables <- purrr$map(
+    output_tables <- purrr$map( # do not use furrr here, it does not seem to help
       # .progress = TRUE, .options = furrr$furrr_options(seed = TRUE),
       .x = stats$setNames(levels(transformed_data$Time), levels(transformed_data$Time)),
       .f = function(x) {
-        print("futuremap start")
+        # print("futuremap start")
         x <- unname(x)
         contrast_list <- generate_contrasts$generate_contrasts(
           toi = x,
