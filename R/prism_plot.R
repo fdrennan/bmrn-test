@@ -21,6 +21,7 @@ prism_plot <- function(data, tables, trt_sel,
     box::use(stats)
     box::use(. / prism_plot)
     box::use(tidyr)
+    box::use(gridExtra)
   }
   order_groups <- match(
     c(
@@ -139,9 +140,9 @@ prism_plot <- function(data, tables, trt_sel,
     Mean_Response = mean(Response_Transformed),
     sd_Response = stats$sd(Response_Transformed)
   )
-  data <- dplyr$rename(data, Response_Transformed = Mean_Response)
-  data <-
-    dplyr$mutate(data,
+  data_max <- dplyr$rename(data_max, Response_Transformed = Mean_Response)
+  data_max <-
+    dplyr$mutate(data_max,
       error = dplyr$if_else(Response_Transformed < 0, Response_Transformed - sd_Response, Response_Transformed + sd_Response),
       ymin = dplyr$if_else(Response_Transformed < 0, error, Response_Transformed),
       ymax = dplyr$if_else(Response_Transformed < 0, Response_Transformed, error)
@@ -180,7 +181,7 @@ prism_plot <- function(data, tables, trt_sel,
       ggplot2$scale_fill_manual(values = colors, breaks = orig_groups) +
       ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
       ggplot2$guides(y = "prism_offset_minor") +
-      ggplot2$theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
+      ggprism$theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
       ggplot2$theme(legend.position = "none") +
       ggplot2$ylab(ylabel) +
       ggplot2$xlab("Treatment")
@@ -233,7 +234,7 @@ prism_plot <- function(data, tables, trt_sel,
       ggplot2$scale_y_continuous(limits = c(NA, 1.1 * max(p_vals$new_y.position))) +
       ggplot2$scale_fill_manual(values = colors, breaks = orig_groups) +
       ggplot2$scale_color_manual(values = colors, breaks = orig_groups) +
-      ggplot2$theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
+      ggprism$theme_prism(base_size = ifelse(format == "word", 16, inputs$fontSize)) +
       ggplot2$theme(legend.position = "none") +
       ggplot2$ylab(ylabel) +
       ggplot2$xlab("Treatment")
@@ -262,7 +263,7 @@ prism_plot <- function(data, tables, trt_sel,
   }
   if (nrow(p_vals) > 0 & ((as.logical(cfb) == TRUE & y_axis == "change_from_baseline") |
     (as.logical(cfb) != TRUE & y_axis != "change_from_baseline"))) {
-    full_prism <- full_prism + add_pvalue(
+    full_prism <- full_prism + ggprism$add_pvalue(
       data = p_vals,
       y.position = "new_y.position",
       label = "{sig}",
@@ -282,9 +283,9 @@ prism_plot <- function(data, tables, trt_sel,
     if (format == "word") {
       top <- top +
         ggplot2$theme(
-          line = element_blank(),
-          axis.title = element_blank(),
-          axis.text = element_blank()
+          line = ggplot2$element_blank(),
+          axis.title = ggplot2$element_blank(),
+          axis.text = ggplot2$element_blank()
         ) +
         ggplot2$theme(plot.margin = ggplot2$margin(
           t = 0,
@@ -299,9 +300,9 @@ prism_plot <- function(data, tables, trt_sel,
           expand = ggplot2$expansion(mult = c(0.25, 0.1))
         ) +
         ggplot2$theme(
-          line = element_blank(),
-          axis.title = element_blank(),
-          axis.text = element_blank()
+          line = ggplot2$element_blank(),
+          axis.title = ggplot2$element_blank(),
+          axis.text = ggplot2$element_blank()
         ) +
         ggplot2$theme(plot.margin = ggplot2$margin(
           t = 0,
@@ -320,12 +321,12 @@ prism_plot <- function(data, tables, trt_sel,
 
     if (type == "box") {
       top <- top + ggplot2$ggtitle(paste("Box plot for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
+      combined <- gridExtra$grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
       # ncol = 1,
       # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight, c('in', 'in')))
     } else {
       top <- top + ggplot2$ggtitle(paste("Bar Chart for Treatment Groups at", time_sel))
-      combined <- grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
+      combined <- gridExtra$grid.arrange(grobs = list(top, bottom), layout_matrix = layout)
       # ncol = 1,
       # heights=unit(c(100-bottom_percent,bottom_percent)/inputs$plotHeight,c('in', 'in')))
     }

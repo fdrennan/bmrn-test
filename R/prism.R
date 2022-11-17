@@ -218,8 +218,6 @@ server_prism <- function(id = "prism", signal) {
         }
       })
 
-
-
       shiny$observe({
         shiny$req(prismData())
 
@@ -230,7 +228,6 @@ server_prism <- function(id = "prism", signal) {
 
         id <- paste0(uuid, "-prism")
         st$set(id, shiny$reactiveValuesToList(input))
-        data
       })
       input
     }
