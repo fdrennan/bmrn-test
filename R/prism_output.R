@@ -11,7 +11,7 @@ prism_output <- function(tranformed_data, variable) {
 
   max_n <- tmp %>%
     dplyr$group_by(Type, Treatment) %>%
-    dplyr$summarize(n = n()) %>%
+    dplyr$summarize(n = dplyr$n()) %>%
     dplyr$ungroup() %>%
     slice_max(n, with_ties = FALSE) %>%
     dplyr$select(n) %>%

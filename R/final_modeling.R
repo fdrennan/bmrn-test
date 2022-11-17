@@ -97,13 +97,13 @@ final_modeling <- function(ready_final_model, toi = NULL, analysis_type, overall
     # Remove when we include the overall average time
     tab1 <- dplyr$mutate_all(output_tables$tab1, ~ as.character(.))
     tab1 <- dplyr$filter(tab1, !grepl("Average", `Time Points`))
-    
+
     tab2 <- dplyr$mutate_all(output_tables$tab2, ~ as.character(.))
     tab2 <- dplyr$filter(tab2, !grepl("Average", `Time Points`))
-    
+
     tab3 <- dplyr$mutate_all(output_tables$tab3, ~ as.character(.))
     tab3 <- dplyr$filter(tab3, !grepl("Average", `Time Points`))
-    
+
     output_tables$tab1 <- tab1
     output_tables$tab2 <- tab2
     output_tables$tab3 <- tab3

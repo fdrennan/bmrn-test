@@ -1,10 +1,11 @@
 #' final_output
-#' @export final_output
+#' @export
 final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, power,
                          variable, save = "No") {
   {
     box::use(dplyr)
     box::use(stats)
+    box::use(. / final_tables)
   }
   final_contrast <- dplyr$mutate(final_contrast, p.value = ifelse(p.value == 0, "< 0.001", p.value))
   ################################################################################
@@ -16,12 +17,12 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   atos_join <- dplyr$summarize(
     atos_join,
     mean = mean(Response),
-    median = median(Response)
+    median = stats$median(Response)
   )
   AT_os <- dplyr$group_by(transformed_data, TreatmentNew, Time)
   AT_os <- dplyr$summarize(AT_os, sd = stats$sd(Response))
   AT_os <- dplyr$group_by(AT_os, TreatmentNew)
-  AT_os <- dplyr$summarize(AT_os, se = mean(sd) / n())
+  AT_os <- dplyr$summarize(AT_os, se = mean(sd) / dplyr$n())
   AT_os <- dplyr$inner_join(atos_join, AT_os)
   # Specific Time pointQ
 
@@ -30,8 +31,8 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
   ST_os <- dplyr$group_by(ST_os, TreatmentNew, Time)
   ST_os <- dplyr$summarize(ST_os,
     mean = mean(Response),
-    median = median(Response),
-    se = stats$sd(Response) / n()
+    median = stats$median(Response),
+    se = stats$sd(Response) / dplyr$n()
   )
 
   os_together <- dplyr$bind_rows(AT_os, ST_os)
@@ -84,7 +85,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Average", "Specific Time"
     )
   )
-  bt_together <- select(bt_together, TreatmentNew, Endpoint, emmean_bt, se_bt)
+  bt_together <- dplyr$select(bt_together, TreatmentNew, Endpoint, emmean_bt, se_bt)
   bt_together <- dplyr$arrange(bt_together, TreatmentNew)
 
   # LSmeans
@@ -123,18 +124,18 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
     )
     summary_stat <- dplyr$mutate_at(
       summary_stat,
-      .vars = grep("Back Transformed", colnames(.), value = TRUE),
+      .vars = grep("Back Transformed", colnames(summary_stat), value = TRUE),
       .funs = ~ round(., 2)
     )
   }
 
   summary_stat <- data.frame(summary_stat)
-  summary_stat <- dplyr$mutate_at(summary_stat, .vars = grep("se", colnames(.)), .funs = ~ round(., 3))
+  summary_stat <- dplyr$mutate_at(summary_stat, .vars = grep("se", colnames(summary_stat)), .funs = ~ round(., 3))
   summary_stat <- dplyr$mutate_at(summary_stat, .vars = c("mean", "median", "emmean_lsmeans"), .funs = ~ round(., 2))
 
-  tab1 <- table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
-  tab2 <- table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
-  tab3 <- table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
+  tab1 <- final_tables$table_1(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
+  tab2 <- final_tables$table_2(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
+  tab3 <- final_tables$table_3(final_contrast = final_contrast, os_together = summary_stat, toi = toi)
   empty_col <- apply(tab1, 2, function(a) sum(is.na(a)))
   tab1 <-
     dplyr$rename(
@@ -147,7 +148,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale Mean" = emmean_lsmeans,
       "Transformed Scale SE" = se_lsmeans
     )
-  tab1 <- dplyr$select(tab1, -grep("emmean|lsmean", colnames(.), value = TRUE))
+  tab1 <- dplyr$select(tab1, -grep("emmean|lsmean", colnames(tab1), value = TRUE))
   colnames(tab1) <- gsub("\\.", " ", colnames(tab1))
 
   empty_col <- apply(tab2, 2, function(a) sum(is.na(a)))
@@ -161,7 +162,7 @@ final_output <- function(transformed_data, toi, emmeans_obj, final_contrast, pow
       "Transformed Scale Mean" = emmean_lsmeans,
       "Transformed Scale SE" = se_lsmeans
     )
-  tab2 <- dplyr$select(tab2, -grep("emmean|lsmean", colnames(.), value = TRUE))
+  tab2 <- dplyr$select(tab2, -grep("emmean|lsmean", colnames(tab2), value = TRUE))
   colnames(tab2) <- gsub("\\.", " ", colnames(tab2))
   empty_col <- apply(tab3, 2, function(a) sum(is.na(a)))
   tab3 <-
@@ -438,13 +439,13 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       `Original Scale SE` = "SE"
     )
   } else {
-    data <- dplyr$select(data, -grep("Original", colnames(.), value = TRUE))
+    data <- dplyr$select(data, -grep("Original", colnames(data), value = TRUE))
 
     if (!include_summary) {
       table_gt <- dplyr$rowwise(data)
       table_gt <- dplyr$mutate_at(
         table_gt,
-        .vars = grep("Difference", colnames(.), value = TRUE),
+        .vars = grep("Difference", colnames(table_gt), value = TRUE),
         .funs = ~ gsub(" \\(", "<br>(", .)
       )
       table_gt <- gt$gt(table_gt)
@@ -482,7 +483,7 @@ html_table_gt <- function(data, title, footer, include_summary, summary_only, tr
       table_gt <- dplyr$rowwise(data)
       table_gt <-
         dplyr$mutate_at(table_gt,
-          .vars = grep("Difference", colnames(.), value = TRUE),
+          .vars = grep("Difference", colnames(table_gt), value = TRUE),
           .funs = ~ gsub(" \\(", "<br>(", .)
         )
       table_gt <- gt(table_gt)
