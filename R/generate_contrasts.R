@@ -96,7 +96,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
         })
       } else {
         dose_names <- grep(a, rownames(final_AE), value = TRUE)
-
+        if(length(dose_names)>1){
         grid <- combn(dose_names, 2) %>%
           t() %>%
           data.frame() %>%
@@ -105,6 +105,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
         coi_tmp <- future_map_dfr(.x = 1:nrow(grid), .f = ~ {
           a <- grid$Group_1[.x]
           b <- grid$Group_2[.x]
+
 
           c1_SE <- final_SE[grep(a, rownames(final_SE)), ]
           c1_AE <- final_AE[grep(a, rownames(final_AE)), ]
@@ -120,6 +121,7 @@ generate_contrasts <- function(model, toi, data, time_order, analysis_type = "co
         coi_list <- map(1:nrow(coi_tmp), .f = ~ {
           unlist(coi_tmp[.x, ])
         })
+      }
       }
     }
 
