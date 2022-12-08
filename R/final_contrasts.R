@@ -19,6 +19,11 @@ final_contrasts <- function(model, cont_list, est, letter, overall_trend = FALSE
     adjust <- adj_table$p.adj[adj_table$letter == letter]
   }
 
+  if(length(cont_list)==1){
+    adjust = 'none'
+  }
+  
+
   if (length(cont_list) > 0) {
 
     # Compute the simulated p-value

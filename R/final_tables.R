@@ -74,6 +74,11 @@ table_2 <- function(final_contrast, os_together, toi) {
   if (all(!grepl("_st", rownames(final_contrast)))) {
     rownames(final_contrast) <- paste0(rownames(final_contrast), "_st")
   }
+  if(all(rownames(final_contrast) %in%  c('D_st','D'))){
+    rownames(final_contrast)[rownames(final_contrast) == 'D'] = 'D1'
+    rownames(final_contrast)[rownames(final_contrast) == 'D_st'] = 'D1_st'
+  }
+  
   os_table_2 <- os_together %>%
     filter(grepl("Dose|Vehicle", os_together$TreatmentNew)) %>%
     mutate(

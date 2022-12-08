@@ -173,7 +173,7 @@ if(ui_sel$y_axis == 'transform' & power != 1){
     group_by(Treatment, TreatmentNew, Time) %>%
     summarize(
       Mean_Response = mean(Response_Transformed),
-      sd_Response = sd(Response_Transformed)
+      sd_Response = sd(Response_Transformed)/sqrt(n())
     ) %>%
     mutate(
       error = if_else(Mean_Response < 0, Mean_Response - sd_Response, Mean_Response + sd_Response),

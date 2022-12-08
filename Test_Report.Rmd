@@ -13,7 +13,7 @@ date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 params:
   # uuid: '90aac960-b67b-4ec9-911f-d0963edfbeb1'
   # uuid: '58c87f1c-0ff5-483c-b508-ff4aef0d0841' 
-  uuid: 'd683673c-f75f-4b37-9bd3-54da99ddd2e3'
+  uuid: '9814f144-9e26-444d-ab50-055dab567549'
   title: 'No title provided'
 title: "`r paste('Statistical Report for the Study Titled:', params$title)`"
 ---
@@ -75,7 +75,7 @@ if(length(groups_diff) == 2){
 toi = data$tables$tables$tab1$`Time Points`[!grepl('Average',data$tables$tables$tab1$`Time Points`)][1]
 analysis_type = data$input_data$session_data$sessionMode
 if(analysis_type == 'Exploratory'){
-  time= data$inputs$timeTreatmentSelectorsTable
+  time = data$inputs$timeTreatmentSelectorsTable
   }else{
     time = toi
 }
@@ -145,6 +145,8 @@ plots_path = data$input_data$session_data$full_path_files
 In a typical study supported by TEST 1, data is collected over time, and the primary interest is to evaluate a treatment in multiple doses. The study typically includes two types of subjects, wild type and non-wild type, and several controls, such as vehicle, negative control, positive control and other comparators. We will denote the Wild Type animals as the Wild Type group and the non-Wild Type groups as vehicle, negative control, positive control, other comparators, and the treatments as doses. Based on the study design and known study objective, TEST 1 defines a set of group comparisons to be evaluated statistically.  
 
 TEST 1 implements an algorithm that carries out a multiple-step analysis for statistical comparisons of groups.  The statistical comparisons are conducted through mixed effect repeated measure modeling. The algorithm is designed to automatically determine the best data transformation, check model assumptions (such as normality and homogeneous variance) and the appropriate correlation structure for the repeated measures (data across time points). In addition, the algorithm generates linear contrasts and carries out multiple testing adjustment for the pre-defined tests. 
+
+Test 1 can also address comparison of only two groups over multiple time points. The steps that check model assumptions and determinations an appropriate correlation structure remain the same. Howevery, multiple testing adjustments are not necessary.  
 
 Explanations of these key steps are described below, and the workflow of TEST 1 is described in Appendix A (section 6) along with a description of the statistical methods for scientific reporting purposes (Section 7, Appendix B).
 
@@ -245,7 +247,7 @@ Multiple comparisons arise when a statistical analysis involves multiple simulta
 
 For comparisons between doses, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry] For comparisons between vehicle and doses, Dunnett's test will be employed which adjust p-values for comparisons between each treatment to a single control [@dunnett]. The comparison between wild type and doses, and positive control and doses are non-inferiority tests and thus the desired result is to fail to reject and these tests do not require multiple adjustment.  
 
-<!-- For each one the comparison groups described above, linear contrasts are constructed to allow for simultaneous testing of the groups, as wells as testing the groups at the pre-selected time point and over time course average. To adjust for multiple comparison and preserve family wise Type I error rate, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry]  -->
+Note: If there are only two groups of interest, then there is no adjustment for multiple comparison. 
 
 ## Change from Baseline Analysis
 
@@ -496,24 +498,27 @@ endpoint <- if_else(!show_text,
         data$plot$endpoint,
         paste(substr(x = trans_name, start = 3, stop = nchar(trans_name)), data$plot$endpoint)
       )
+two_group = is.null(data$tables$tables$tab1)
+
 ```
+`r if(!show_text & two_group) {"\\begin{comment}"}`
 
-`r if(!show_text) {"\\begin{comment}"}`
+### `r ifelse(show_text & !two_group, paste('Table 1: Summary of', data$plot$endpoint),"")`
 
-### `r ifelse(show_text, paste('Table 1: Summary of', data$plot$endpoint),"")`
-
-```{r conditional_block, eval=show_text,echo=FALSE, error=F, warning=FALSE}
+```{r conditional_block, eval=show_text&!two_group,echo=FALSE, error=F, warning=FALSE}
 tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
 tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
             footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
   width(x = ., width = 1) 
 FitFlextableToPage(tab0_ft)
 ```
-`r if(!show_text) {"\\end{comment}"}`
-\newpage
-### `r paste(ifelse(show_text, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
+`r if(!show_text & two_group) {"\\end{comment}"}`
 
-```{r, echo = F, error=F, warning=FALSE}
+`r if(two_group) {"\\begin{comment}"}`
+\newpage
+### `r paste(ifelse(show_text & !two_group, 'Table 2: Comparison between Controls and Wild Type as to', 'Table 1 Comparison between Controls and Wild Type as to'),data$plot$endpoint)`
+
+```{r, echo = F, error=F, warning=FALSE, eval = !two_group}
 tab1 = data$tables$tables$tab1 %>% filter(`Time Points` %in% time)
 
 tab1_ft = word_tables(data = tab1, include_summ_stat = T, summary_only = F, transform = transform,
@@ -524,9 +529,9 @@ FitFlextableToPage(tab1_ft)
 ```
 \newpage
 
-### `r paste(ifelse(show_text, 'Table 3: Comparison among the Vehicle and Treatment Groups as to', 'Table 2: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
+### `r paste(ifelse(show_text& !two_group, 'Table 3: Comparison among the Vehicle and Treatment Groups as to', 'Table 2: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
 
-```{r, echo = F, error=F, warning=FALSE}
+```{r, echo = F, error=F, warning=FALSE, eval = !two_group}
 tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
 
 tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
@@ -535,10 +540,12 @@ tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform =
 
 FitFlextableToPage(tab2_ft)
 ```
-\newpage
-### `r paste(ifelse(show_text, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
 
-```{r, echo = FALSE, error=F, warning=FALSE}
+\newpage
+
+### `r paste(ifelse(show_text& !two_group, 'Table 4: Comparison Doses and Controls/Wild Type as to', 'Table 3: Comparison Doses and Controls/Wild Type as to'),data$plot$endpoint)`
+
+```{r, echo = FALSE, error=F, warning=FALSE, eval =!two_group }
 tab3 = data$tables$tables$tab3 %>% filter(`Time Points` %in% time)
 #debug(word_tables)
 tab3_ft = word_tables(tab3, include_summ_stat = T, summary_only = F, transform = transform,
@@ -546,7 +553,39 @@ tab3_ft = word_tables(tab3, include_summ_stat = T, summary_only = F, transform =
   width(x = ., width = 1) 
 FitFlextableToPage(tab3_ft)
 ```
+
+`r if(two_group) {"\\end{comment}"}`
+
+`r if(!two_group | !show_text) {"\\begin{comment}"}`
+
+### `r ifelse(show_text & two_group, paste('Table 1: Summary of', data$plot$endpoint),"")`
+
+```{r conditional_block_2, eval=show_text &two_group ,echo=FALSE, error=F, warning=FALSE}
+tab0 = data$tables$tables$tab0 %>% filter(`Time Points` %in% time)
+tab0_ft = word_tables(tab0, include_summ_stat = F, summary_only = T, transform = transform,
+            footer = 'Group level summary on the original scale.', endpoint = data$plot$endpoint) %>%
+  width(x = ., width = 1)
+FitFlextableToPage(tab0_ft)
+```
+`r if(!two_group | !show_text) {"\\end{comment}"}`
+
+`r if(!two_group) {"\\begin{comment}"}`
 \newpage
+
+### `r paste(ifelse(show_text & two_group, 'Table 2: Comparison among the Vehicle and Treatment Groups as to', 'Table 1: Comparison among the Vehicle and Treatment Groups as to'),data$plot$endpoint)`
+
+```{r, echo = F, error=F, warning=FALSE, eval = two_group}
+tab2 = data$tables$tables$tab2 %>% filter(`Time Points` %in% time)
+
+tab2_ft = word_tables(tab2, include_summ_stat = T, summary_only = F, transform = transform,
+            footer = footer, endpoint = data$plot$endpoint)%>%
+  width(x = ., width = 0.75)
+
+FitFlextableToPage(tab2_ft)
+```
+`r if(!two_group) {"\\end{comment}"}`
+\newpage
+
 # References
 
 <div id="refs"></div>
@@ -559,4 +598,10 @@ FitFlextableToPage(tab3_ft)
 
 # Appendix B: Statistical Methods for Scientific Publication
 
-A 2-factor mixed effects model with interaction was used to predict `r data$plot$endpoint` with the treatment group and time. To check the normality assumption, a Shapiro-Wilk (SW) test was used on the residuals 2-factor linear model with interaction and if the SW is rejected then a Box-Cox transformation is applied to the data to determine an appropriate transformation. Lastly, another SW test is conducted to ensure that the residuals from the transformed data follow a normal distribution. The correlation structure for the repeated measures was selected by determining the model which led to the smallest the Akaike information criterion (AIC). The candidate correlation structures were autoregressive structure with lag 1 (AR1), heterogeneous AR1, compound symmetry (CS), heterogeneous CS, Toeplitz, and unstructured. To avoid putting too much emphasis on the control and wild type groups, only the groups of prime interest (treatment and vehicle groups) are used for the normality/transformation and correlation structure steps. To determine if groups have common variance a two-step procedure was used 1. Log likelihood was used to determine modeling the variances for each group explains the data more than modeling the data with one common variance 2. Compare the variance of each group to the average variance of the treatment and vehicle groups. This procedure is repeated for the treatment and vehicle groups, and then for all groups.  
+## Multiple Doses and Multiple Time Points
+A 2-factor mixed effects model with interaction was used to predict `r data$plot$endpoint` with the treatment group and time. To check the normality assumption, a Shapiro-Wilk (SW) test was used on the residuals 2-factor linear model with interaction and if the SW is rejected then a Box-Cox transformation is applied to the data to determine an appropriate transformation. Lastly, another SW test is conducted to ensure that the residuals from the transformed data follow a normal distribution. The correlation structure for the repeated measures was selected by determining the model which led to the smallest the Akaike information criterion (AIC). The candidate correlation structures were autoregressive structure with lag 1 (AR1), heterogeneous AR1, compound symmetry (CS), heterogeneous CS, Toeplitz, and unstructured. To avoid putting too much emphasis on the control and wild type groups, only the groups of prime interest (treatment and vehicle groups) are used for the normality/transformation and correlation structure steps. To determine if groups have common variance a two-step procedure was used 1. Log likelihood was used to determine modeling the variances for each group explains the data more than modeling the data with one common variance 2. Compare the variance of each group to the average variance of the treatment and vehicle groups. This procedure is repeated for the treatment and vehicle groups, and then for all groups. For any comparison that involves treatment and a vehicle or control group, p-value adjustment will be conducted using the Dunnett's test.[@dunnett] The comparisons between doses, a simulation based method is used to determine the critical values and p-values based on sampling from the multivariate t distribution.[@Liu] [@berry]    
+
+## Comparision of Two Groups
+A 2-factor mixed effects model with interaction was used to predict `r data$plot$endpoint` with the treatment group and time. To check the normality assumption, a Shapiro-Wilk (SW) test was used on the residuals 2-factor linear model with interaction and if the SW is rejected then a Box-Cox transformation is applied to the data to determine an appropriate transformation. Lastly, another SW test is conducted to ensure that the residuals from the transformed data follow a normal distribution. The correlation structure for the repeated measures was selected by determining the model which led to the smallest the Akaike information criterion (AIC). The candidate correlation structures were autoregressive structure with lag 1 (AR1), heterogeneous AR1, compound symmetry (CS), heterogeneous CS, Toeplitz, and unstructured. To avoid putting too much emphasis on the control and wild type groups, only the groups of prime interest (treatment and vehicle groups) are used for the normality/transformation and correlation structure steps. To determine if groups have common variance a two-step procedure was used 1. Log likelihood was used to determine modeling the variances for each group explains the data more than modeling the data with one common variance 2. Compare the variance of each group to the average variance of the treatment and vehicle groups. 
+
+

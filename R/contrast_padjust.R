@@ -15,8 +15,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
     object = model, ~TreatmentNew, adjust = "none", data = data,
     mode = "auto"
   )
-
-
+  
   if (analysis_type == "Exploratory") {
     final_contrast <- future_map_dfr(.x = LETTERS[1:12], .f = ~ {
       keep <- which(sapply(contrast_list[[.x]], function(i) {
@@ -50,6 +49,7 @@ contrast_padjust <- function(model, contrast_list, data, variable, analysis_type
       } else {
         cont_list <- contrast_list[[.x]]
       }
+      
       out <- final_contrasts(model = model, cont_list = cont_list, est = est, letter = .x)
       if (!is.null(out)) {
         num_pairs <- nrow(out) / 2

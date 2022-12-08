@@ -62,7 +62,12 @@ prism_plot <- function(data, tables, trt_sel,
     ylabel <- paste0("Change from Baseline \n",trans_name, endpoint)
   }
 
-  p_vals <- bind_rows(tab1, tab2, tab3) %>%
+  if(is.null(tab1)){
+    p_vals = tab2
+  }else{
+    p_vals <- bind_rows(tab1, tab2, tab3) 
+    }
+  p_vals = p_vals %>%
     select(Treatment, `Time Points`, grep("p value from", colnames(.))) %>%
     mutate_at(.vars = 3:ncol(.), .funs = ~ as.character(.)) %>%
     pivot_longer(
@@ -128,7 +133,7 @@ prism_plot <- function(data, tables, trt_sel,
     summarize(
       max = max(Response_Transformed),
       Mean_Response = mean(Response_Transformed),
-      sd_Response = sd(Response_Transformed)
+      sd_Response = sd(Response_Transformed)/sqrt(n())
     ) %>%
     rename(Response_Transformed = Mean_Response) %>%
     mutate(
@@ -207,7 +212,7 @@ prism_plot <- function(data, tables, trt_sel,
         aes(fill = group1),
         lwd = ifelse(format == "word", 1, 2),
         stat = "identity",
-        width = 3 * length(unique(data$Treatment)) / num_groups^2,
+        width = ifelse(nrow(data_max)==2,0.75,3 * length(unique(data$Treatment)) / num_groups^2),
         position = position_dodge(width = 0.7),
         alpha = 0.5
       ) +
@@ -226,7 +231,8 @@ prism_plot <- function(data, tables, trt_sel,
       # ) +
       geom_errorbar(
         aes(ymin = ymin, ymax = ymax),
-        position = position_dodge(width = 0.7), width = 3 * length(unique(data$Treatment)) / num_groups^2,
+        position = position_dodge(width = 0.7),
+        width = ifelse(nrow(data_max)==2,0.75,3 * length(unique(data$Treatment)) / num_groups^2),
         size = ifelse(format == "word", 1, 2)
       ) +
       guides(y = "prism_offset_minor") +

@@ -341,13 +341,19 @@ analysis_a_run_server <- function(input, output, session, user,
     if (analysis_type == "Exploratory") {
       times <- input$timeTreatmentSelectorsTable
       tables$tab0 <- tables$tab0 %>% filter(`Time Points` %in% times)
-      tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
       tables$tab2 <- tables$tab2 %>% filter(`Time Points` %in% times)
+      if(!is.null(tables$tab1)){
+      tables$tab1 <- tables$tab1 %>% filter(`Time Points` %in% times)
       tables$tab3 <- tables$tab3 %>% filter(`Time Points` %in% times)
     }
-
+}
     if (print_tables) {
       if (transformation) {
+        table_3_title = ifelse(!is.null(tables$tab1),
+                               paste("Table 3: Comparison among the Vehicle and Treatment Groups as to",
+                                     signal()$input_data$endpoint),
+                               paste("Table 2: Comparison among the Vehicle and Treatment Groups as to",
+                                     signal()$input_data$endpoint))
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -368,10 +374,7 @@ analysis_a_run_server <- function(input, output, session, user,
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = paste(
-                "Table 3: Comparison among the Vehicle and Treatment Groups as to",
-                signal()$input_data$endpoint
-              ),
+              data = tables$tab2, title = table_3_title,
               footer = footer, include_summary = T, summary_only = F, transformation = T, analysis_type = analysis_type,
               endpoint = signal()$input_data$endpoint
             )
@@ -388,6 +391,11 @@ analysis_a_run_server <- function(input, output, session, user,
           )
         )
       } else {
+        table_2_title = ifelse(!is.null(tables$tab1),
+                               paste("Table 2: Comparison among the Vehicle and Treatment Groups as to",
+                                     signal()$input_data$endpoint),
+                               paste("Table 1: Comparison among the Vehicle and Treatment Groups as to",
+                                     signal()$input_data$endpoint))
         table_gt <- list(
           list(
             table = html_table_gt(
@@ -401,10 +409,7 @@ analysis_a_run_server <- function(input, output, session, user,
           ),
           list(
             table = html_table_gt(
-              data = tables$tab2, title = paste(
-                "Table 2: Comparison among the Vehicle and Treatment Groups as to",
-                signal()$input_data$endpoint
-              ),
+              data = tables$tab2, title = table_2_title,
               footer = footer, include_summary = T, summary_only = F, transformation = F, analysis_type = analysis_type,
               endpoint = signal()$input_data$endpoint
             )
@@ -421,15 +426,17 @@ analysis_a_run_server <- function(input, output, session, user,
           )
         )
       }
-
+      
       div(
         map(
           .x = table_gt, .f = function(x) {
+            if(!is.null(x$table)){
             box(
               maximizable = TRUE, collapsible = TRUE,
               width = 12, x$table
             )
-          }
+            }
+            }
         )
       )
     }
